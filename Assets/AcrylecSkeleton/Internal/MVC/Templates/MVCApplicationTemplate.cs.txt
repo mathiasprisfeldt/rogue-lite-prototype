@@ -1,0 +1,20 @@
+﻿using AcrylecSkeleton.MVC;
+
+namespace #NAMESPACE#
+{
+	/// <summary>
+	/// Base state enum for #NAME# MVC object.
+	/// </summary>
+	public enum #NAME#State
+    {
+    }
+
+	/// <summary>
+	/// Application class for #NAME# MVC object.
+	/// Created by: #CREATOR#
+	/// Data: #DATE#
+	/// </summary>
+	public class #NAME#Application : Application<#NAME#Model, #NAME#View, #NAME#Controller, #NAME#State>
+	{
+	}
+}

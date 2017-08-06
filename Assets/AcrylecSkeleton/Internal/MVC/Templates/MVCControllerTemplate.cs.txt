@@ -1,0 +1,13 @@
+﻿using AcrylecSkeleton.MVC;
+
+namespace #NAMESPACE#
+{
+	/// <summary>
+	/// Controller class for #NAME# MVC object.
+	/// Created by: #CREATOR#
+	/// Data: #DATE#
+	/// </summary>
+	public class #NAME#Controller : Controller<#NAME#Application>
+	{
+	}
+}
