@@ -21,6 +21,7 @@
 		NintendoNES,
 		NintendoSNES,
 		Nintendo64,
+		NintendoGameCube,
 		NintendoWii,
 		NintendoWiiU,
 		NintendoSwitch,

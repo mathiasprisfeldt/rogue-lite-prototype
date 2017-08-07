@@ -145,6 +145,16 @@
 
 
 		/// <summary>
+		/// A convenience method for adding a KeyBindingSource to the default bindings.
+		/// </summary>
+		/// <param name="keyCombo">A KeyCombo for the binding source.</param>
+		public void AddDefaultBinding( KeyCombo keyCombo )
+		{
+			AddDefaultBinding( new KeyBindingSource( keyCombo ) );
+		}
+
+
+		/// <summary>
 		/// A convenience method for adding a MouseBindingSource to the default bindings.
 		/// </summary>
 		/// <param name="control">The Mouse control to add.</param>
@@ -577,6 +587,8 @@
 
 		void UpdateBindings( ulong updateTick, float deltaTime )
 		{
+			var preventInput = IsListeningForBinding || (Owner.IsListeningForBinding && Owner.PreventInputWhileListeningForBinding);
+
 			var lastInputType = LastInputType;
 			var lastInputTypeChangedTick = LastInputTypeChangedTick;
 			var lastUpdateTick = UpdateTick;
@@ -595,15 +607,23 @@
 				}
 				else
 				{
-					var value = binding.GetValue( Device );
-					if (UpdateWithValue( value, updateTick, deltaTime ))
+					if (!preventInput)
 					{
-						lastInputType = binding.BindingSourceType;
-						lastInputTypeChangedTick = updateTick;
-						lastDeviceClass = binding.DeviceClass;
-						lastDeviceStyle = binding.DeviceStyle;
+						var value = binding.GetValue( Device );
+						if (UpdateWithValue( value, updateTick, deltaTime ))
+						{
+							lastInputType = binding.BindingSourceType;
+							lastInputTypeChangedTick = updateTick;
+							lastDeviceClass = binding.DeviceClass;
+							lastDeviceStyle = binding.DeviceStyle;
+						}
 					}
 				}
+			}
+
+			if (preventInput || bindingCount == 0)
+			{
+				UpdateWithValue( 0.0f, updateTick, deltaTime );
 			}
 
 			Commit();
@@ -659,8 +679,7 @@
 					return;
 				}
 
-				var onBindingFound = listenOptions.OnBindingFound;
-				if (onBindingFound != null && !onBindingFound( this, binding ))
+				if (!listenOptions.CallOnBindingFound( this, binding ))
 				{
 					// Binding rejected by user.
 					return;
@@ -668,11 +687,15 @@
 
 				if (HasBinding( binding ))
 				{
-					var onBindingRejected = listenOptions.OnBindingRejected;
-					if (onBindingRejected != null)
+					if (listenOptions.RejectRedundantBindings)
 					{
-						onBindingRejected( this, binding, BindingSourceRejectionType.DuplicateBindingOnAction );
+						listenOptions.CallOnBindingRejected( this, binding, BindingSourceRejectionType.DuplicateBindingOnActionSet );
+						return;
 					}
+
+					// By default, we just accept a reduntant binding, do nothing, and move on.
+					StopListeningForBinding();
+					listenOptions.CallOnBindingAdded( this, binding );
 					return;
 				}
 
@@ -683,11 +706,7 @@
 
 				if (!listenOptions.AllowDuplicateBindingsPerSet && Owner.HasBinding( binding ))
 				{
-					var onBindingRejected = listenOptions.OnBindingRejected;
-					if (onBindingRejected != null)
-					{
-						onBindingRejected( this, binding, BindingSourceRejectionType.DuplicateBindingOnActionSet );
-					}
+					listenOptions.CallOnBindingRejected( this, binding, BindingSourceRejectionType.DuplicateBindingOnActionSet );
 					return;
 				}
 
@@ -723,11 +742,7 @@
 
 				UpdateVisibleBindings();
 
-				var onBindingAdded = listenOptions.OnBindingAdded;
-				if (onBindingAdded != null)
-				{
-					onBindingAdded( this, binding );
-				}
+				listenOptions.CallOnBindingAdded( this, binding );
 			}
 		}
 
@@ -831,7 +846,7 @@
 		}
 
 
-		internal void Load( BinaryReader reader )
+		internal void Load( BinaryReader reader, UInt16 dataFormatVersion )
 		{
 			ClearBindings();
 
@@ -866,7 +881,7 @@
 					throw new InControlException( "Don't know how to load BindingSourceType: " + bindingSourceType );
 				}
 
-				bindingSource.Load( reader );
+				bindingSource.Load( reader, dataFormatVersion );
 				AddBinding( bindingSource );
 			}
 		}

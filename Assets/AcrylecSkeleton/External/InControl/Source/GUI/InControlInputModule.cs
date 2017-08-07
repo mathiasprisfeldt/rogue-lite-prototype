@@ -1,4 +1,4 @@
-﻿#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+﻿#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_5_6_OR_NEWER
 namespace InControl
 {
 	using UnityEngine;
@@ -27,7 +27,7 @@ namespace InControl
 		bool allowMobileDevice;
 
 		[FormerlySerializedAs( "allowMobileDevice" )]
-#if UNITY_5 && !(UNITY_5_0 || UNITY_5_1)
+#if (UNITY_5 || UNITY_5_6_OR_NEWER) && !(UNITY_5_0 || UNITY_5_1)
 		new public bool forceModuleActive;
 #else
 		public bool forceModuleActive;
