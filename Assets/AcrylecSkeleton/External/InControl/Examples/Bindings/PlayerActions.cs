@@ -31,7 +31,11 @@
 		{
 			var playerActions = new PlayerActions();
 
-			playerActions.Fire.AddDefaultBinding( Key.Shift, Key.A );
+			// How to set up mutually exclusive keyboard bindings with a modifier key.
+			// playerActions.Back.AddDefaultBinding( Key.Shift, Key.Tab );
+			// playerActions.Next.AddDefaultBinding( KeyCombo.With( Key.Tab ).AndNot( Key.Shift ) );
+
+			playerActions.Fire.AddDefaultBinding( Key.A );
 			playerActions.Fire.AddDefaultBinding( InputControlType.Action1 );
 			playerActions.Fire.AddDefaultBinding( Mouse.LeftButton );
 
@@ -63,9 +67,11 @@
 			playerActions.ListenOptions.MaxAllowedBindings = 4;
 			//playerActions.ListenOptions.MaxAllowedBindingsPerType = 1;
 			//playerActions.ListenOptions.AllowDuplicateBindingsPerSet = true;
-			//playerActions.ListenOptions.UnsetDuplicateBindingsOnSet = true;
+			playerActions.ListenOptions.UnsetDuplicateBindingsOnSet = true;
 			//playerActions.ListenOptions.IncludeMouseButtons = true;
 			//playerActions.ListenOptions.IncludeModifiersAsFirstClassKeys = true;
+			//playerActions.ListenOptions.IncludeMouseButtons = true;
+			//playerActions.ListenOptions.IncludeMouseScrollWheel = true;
 
 			playerActions.ListenOptions.OnBindingFound = ( action, binding ) => {
 				if (binding == new KeyBindingSource( Key.Escape ))

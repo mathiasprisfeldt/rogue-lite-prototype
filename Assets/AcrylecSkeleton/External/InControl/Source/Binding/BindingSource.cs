@@ -138,7 +138,7 @@
 		#region Internal
 
 		internal abstract void Save( BinaryWriter writer );
-		internal abstract void Load( BinaryReader reader );
+		internal abstract void Load( BinaryReader reader, UInt16 dataFormatVersion );
 		internal PlayerAction BoundTo { get; set; }
 
 
