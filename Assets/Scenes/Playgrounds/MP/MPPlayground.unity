@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e495f426e81d3046aee88139c907170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _healthType: 1
+  _healthType: 0
   _lateCheck: 0
   _isInvurnable: 0
   _invurnableTakeDmg: 0

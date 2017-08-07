@@ -45,7 +45,7 @@ namespace Health
         [SerializeField, Tooltip("If its empty it uses GameObject.")]
         private GameObject _responsibleGameObject; //The gameobject responsible for health (The object that gets destroyed when dead)
 
-        [Space, SerializeField]
+        [Space, SerializeField, Tooltip("If true, it wont kill itself, you must do it yourself.")]
         private bool _destroyOnDead = true;
 
         [SerializeField]
@@ -137,14 +137,14 @@ namespace Health
         /// </summary>
         public void CheckHealth()
         {
-            bool gotKilled = HealthAmount <= 0;
+            bool gotKilled = HealthAmount <= _healthInterval.x;
 
             if (!IsDead && gotKilled)
             {
                 DeadEvent.Invoke();
 
                 if (_destroyOnDead)
-                    Destroy(_responsibleGameObject ? _responsibleGameObject : gameObject);
+                    Kill();
             }
 
             IsDead = gotKilled;
@@ -156,6 +156,16 @@ namespace Health
         public float GetContainerSize()
         {
             return _healthAmount / GSManager.Instance.HealthContainerSize;
+        }
+
+        /// <summary>
+        /// Used to kill an object the right way.
+        /// </summary>
+        public void Kill()
+        {
+            IsDead = true;
+            HealthAmount = _healthInterval.x;
+            Destroy(_responsibleGameObject ? _responsibleGameObject : gameObject);
         }
 
         /// <summary>
