@@ -12,7 +12,7 @@ public class CollisionCheck : MonoBehaviour
     private LayerMask _collisionLayers;
 
     [SerializeField]
-    private float _sensitivevity;
+    private float _tolerance;
 
     [Header("Collision Types")]
     [SerializeField]
@@ -86,14 +86,14 @@ public class CollisionCheck : MonoBehaviour
                 {
                     
                     if (sides.Top || (_topCollision && c.bounds.min.y <= t[i].bounds.min.y
-                        && (_sensitivevity == 0 || Mathf.Abs(c.bounds.max.y - t[i].bounds.min.y) <= _sensitivevity)))
+                        && (_tolerance == 0 || Mathf.Abs(c.bounds.max.y - t[i].bounds.min.y) <= _tolerance)))
                     {
                         sides.Top = true;
                         sides.TopColliders.Add(t[i]);
                     }
 
                     if (sides.Bottom || (_bottomCollision && c.bounds.max.y >= t[i].bounds.max.y 
-                        && (_sensitivevity == 0 || Mathf.Abs(c.bounds.min.y - t[i].bounds.max.y) <= _sensitivevity)))
+                        && (_tolerance == 0 || Mathf.Abs(c.bounds.min.y - t[i].bounds.max.y) <= _tolerance)))
                     {
                         sides.Bottom = true;
                         sides.BottomColliders.Add(t[i]);
@@ -101,14 +101,14 @@ public class CollisionCheck : MonoBehaviour
                     
 
                     if (sides.Right || (_rightCollision && c.bounds.min.x <= t[i].bounds.min.x 
-                        && (_sensitivevity == 0 || Mathf.Abs(c.bounds.max.x - t[i].bounds.min.x) <= _sensitivevity)))
+                        && (_tolerance == 0 || Mathf.Abs(c.bounds.max.x - t[i].bounds.min.x) <= _tolerance)))
                     {
                         sides.Right = true;
                         sides.RightColliders.Add(t[i]);
                     }
 
                     if (sides.Left || (_leftCollision && c.bounds.max.x >= t[i].bounds.max.x 
-                        && (_sensitivevity == 0 || Mathf.Abs(c.bounds.min.x - t[i].bounds.max.x) <= _sensitivevity)))
+                        && (_tolerance == 0 || Mathf.Abs(c.bounds.min.x - t[i].bounds.max.x) <= _tolerance)))
                     {
                         sides.Left = true;
                         sides.LeftColliders.Add(t[i]);

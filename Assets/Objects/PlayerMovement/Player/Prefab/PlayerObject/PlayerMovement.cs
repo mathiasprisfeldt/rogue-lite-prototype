@@ -1,20 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
-using RogueLiteInput;
 using UnityEngine;
-using AcrylecSkeleton;
 using AcrylecSkeleton.ModificationSystem;
 
 namespace RogueLiteMovement
 {
+    public enum PlayerState
+    {
+        Idle, Walking, InAir, OnWall
+    }
 
     public class PlayerMovement : MonoBehaviour
     {
         [SerializeField]
         private WallJump _wallJump;
+
+        [SerializeField]
+        private DoubleJump _doubleJump;
+
+        [SerializeField]
+        private WallSlide _wallSlide;
 
         [Header("Component References"),SerializeField]
         private PlayerApplication _app;
@@ -47,34 +53,54 @@ namespace RogueLiteMovement
         private float _maxFallSpeed;
 
         private CollisionSides _collisionSides;
-        private CollisionSides _triggerSides;
+        private CollisionSides _predictSides;
         private bool _shouldJump;
         private bool _shouldWallJump;
         private Vector2 _velocity;
         private float _runTimer;
 
+        public PlayerState PlayerState { get; set; }
+
         public WallJump WallJump
         {
             get { return _wallJump; }
             set { _wallJump = value; }
+        }     
+
+        public DoubleJump DoubleJump
+        {
+            get { return _doubleJump; }
+            set { _doubleJump = value; }
         }
 
-
-        // Use this for initialization
-        void Start()
+        public PlayerApplication App
         {
+            get { return _app; }
+            set { _app = value; }
+        }
 
+        public Rigidbody2D Rigidbody
+        {
+            get { return _rigidbody; }
+            set { _rigidbody = value; }
+        }
+
+        public WallSlide WallSlide
+        {
+            get { return _wallSlide; }
+            set { _wallSlide = value; }
         }
 
         // Update is called once per frame
         void Update()
         {
-            _triggerCheck.IsColliding(out _triggerSides);
+            HandleState();
+            _triggerCheck.IsColliding(out _predictSides);
             _collisionCheck.IsColliding(out _collisionSides);
-            if (_app.C.PlayerActions.Jump.WasPressed && _triggerSides.Bottom)
+            if (App.C.PlayerActions.Jump.WasPressed && _predictSides.Bottom)
                 _shouldJump = true;
 
-            if (_app.C.PlayerActions.Jump.WasPressed && (_collisionSides.Right || _collisionSides.Left))
+            if (App.C.PlayerActions.Jump.WasPressed && (_collisionSides.Right || _collisionSides.Left))
                 _shouldWallJump = true;
         }
 
@@ -86,8 +112,34 @@ namespace RogueLiteMovement
 
         void LateUpdate()
         {
-            _rigidbody.velocity = new Vector2(_rigidbody.velocity.x,
-                Mathf.Clamp(_rigidbody.velocity.y, -_maxFallSpeed, float.MaxValue));
+            Rigidbody.velocity = new Vector2(Rigidbody.velocity.x,
+                Mathf.Clamp(Rigidbody.velocity.y, -_maxFallSpeed, float.MaxValue));
+
+           
+        }
+
+        private void HandleState()
+        {
+            if ((_collisionSides.Left || _collisionSides.Right) && !_collisionSides.Bottom)
+            {
+                _animator.SetInteger("State", 2);
+                PlayerState = PlayerState.OnWall;
+            }
+            else if (!_collisionSides.Bottom)
+            {
+                _animator.SetInteger("State", 2);
+                PlayerState = PlayerState.InAir;
+            }
+            else if (_runTimer < .1f)
+            {
+                _animator.SetInteger("State", 1);
+                PlayerState = PlayerState.Walking;
+            }
+            else
+            {
+                _animator.SetInteger("State", 0);
+                PlayerState = PlayerState.Idle;
+            }
         }
 
         private void HandleVerticalMovement(ref Vector2 velocity, float force)
@@ -104,12 +156,12 @@ namespace RogueLiteMovement
             {
                 List<Collider2D> col = _collisionSides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
 
-                if (col.Count > 0 && _app.C.PlayerActions.Down.IsPressed)
+                if (col.Count > 0 && App.C.PlayerActions.Down.IsPressed)
                 {
                     force = 0;
                     foreach (var c in col)
                     {
-                        _modificationHandler.AddModification(new TemporaryLayerChange(0.15f,
+                        _modificationHandler.AddModification(new TemporaryLayerChange(0.4f,
                             "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
                     }
                 }
@@ -119,8 +171,11 @@ namespace RogueLiteMovement
             else
                 force = 0;
 
+            if (_wallSlide)
+                _wallSlide.ApplyWallSlide(ref force);
+
             if (force != 0)
-                _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, force);
+                Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, force * Time.fixedDeltaTime);
         }
 
 
@@ -128,20 +183,13 @@ namespace RogueLiteMovement
         {
             var horizontal = Input.GetAxisRaw("Horizontal");
             var wallDir = 0f;
-            Flip(horizontal);
+            
 
             var run = horizontal != 0;
             if (run)
                 _runTimer = 0;
             else
-                _runTimer += Time.deltaTime;
-
-            if (!_collisionSides.Bottom && !_triggerSides.Bottom)
-                _animator.SetInteger("State", 2);
-            else if (_runTimer < .1f)
-                _animator.SetInteger("State", 1);
-            else
-                _animator.SetInteger("State", 0);
+                _runTimer += Time.deltaTime;                
 
             if (_collisionSides.Left && horizontal < 0)
                 horizontal = 0;
@@ -149,15 +197,16 @@ namespace RogueLiteMovement
             if (_collisionSides.Right && horizontal > 0)
                 horizontal = 0;
 
-            var dir = Mathf.Clamp(horizontal + wallDir, -1, 1);
+            var dir = horizontal;
+            Debug.Log(horizontal);
 
             if (WallJump && WallJump.Active)
             {
                 speed = WallJump.HorizontalForce;
                 dir = WallJump.Direction;
             }
-
-            _rigidbody.velocity = new Vector2(dir*speed*Time.fixedDeltaTime, _rigidbody.velocity.y);
+            Flip(dir);
+            Rigidbody.velocity = new Vector2(dir*speed*Time.fixedDeltaTime, Rigidbody.velocity.y);
         }
 
         private void Flip(float dir)
