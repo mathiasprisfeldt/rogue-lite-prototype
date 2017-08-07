@@ -1,5 +1,6 @@
 ﻿namespace InControl
 {
+	using System;
 	using System.IO;
 	using UnityEngine;
 
@@ -161,7 +162,7 @@
 		}
 
 
-		internal override void Load( BinaryReader reader )
+		internal override void Load( BinaryReader reader, UInt16 dataFormatVersion )
 		{
 			Control = (InputControlType) reader.ReadInt32();
 		}

@@ -38,6 +38,34 @@ namespace InControl
 			InputManager.OnUpdate += HandleInputUpdate;
 
 			//UnityInputDeviceManager.DumpSystemDeviceProfiles();
+
+#if UNITY_TVOS
+			// This turns off the A button being interpreted as Menu on controllers.
+			// See also:
+			// https://docs.unity3d.com/Manual/tvOS.html
+			// https://docs.unity3d.com/ScriptReference/Apple.TV.Remote-allowExitToHome.html
+			UnityEngine.Apple.TV.Remote.allowExitToHome = false;
+
+			// This enables swiping instead of a touch analog pad.
+			// See also:
+			// https://docs.unity3d.com/ScriptReference/Apple.TV.Remote-reportAbsoluteDpadValues.html
+			UnityEngine.Apple.TV.Remote.reportAbsoluteDpadValues = false;
+
+			// This detects whether the attached device is an Apple TV remote and then
+			// configures it to have an appropriate deadzone and state threshhold for
+			// swiping actions.
+			// You may wish to change these values depending on whether you are in game or
+			// navigating menus / UI.
+			//
+			InputManager.OnDeviceAttached += delegate ( InputDevice inputDevice )
+			{
+				if (inputDevice.DeviceClass == InputDeviceClass.Remote)
+				{
+					inputDevice.LeftStick.LowerDeadZone = 0.5f;  // Default is usually 0.2f
+					inputDevice.LeftStick.StateThreshold = 0.5f; // Default is usually 0.0f
+				}
+			};
+#endif
 		}
 
 
@@ -384,5 +412,4 @@ namespace InControl
 		}
 	}
 }
-
 
