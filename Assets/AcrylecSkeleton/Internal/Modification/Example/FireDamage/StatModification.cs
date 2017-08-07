@@ -5,12 +5,12 @@
 
         protected StatsExample _stats;
 
-        public StatModification(float time, float value, ModificationTypeEnum modificationType, StatsExample stats) : base(time, value, modificationType)
+        public StatModification(float time, StatsExample stats) : base(time)
         {
             _stats = stats;
         }
 
-        public StatModification(float time, float value, ModificationTypeEnum modificationType, string name, StatsExample stats) : base(time, value, modificationType, name)
+        public StatModification(float time, string name, StatsExample stats) : base(time, name)
         {
             _stats = stats;
         }
