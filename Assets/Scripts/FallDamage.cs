@@ -19,22 +19,23 @@ namespace Health
         private float _savedFlyingDistance; //Distance between last position and current to check for excetion.
         private bool _didCollideLastFrame; //Did we collide with the floor last frame?
         private float _lastYPosition;
+        private float _savedYVelocity;
 
         [Header("Settings:")]
         [SerializeField]
         private FallDamageType _damageType;
 
         [SerializeField]
-        private float _distanceBeforeDmg = 1; //Amount of units before taking fall damage.
+        private float _distanceBeforeDmg = 1; //Amount of fall units before taking fall damage.
 
         [SerializeField]
         private bool _isDistanceBeforeDmgInclusive = false;
 
         [SerializeField]
-        private float _fallSegments = 1; //Segments fall distance is splitted in.
+        private float _fallSegments = 1; //Used with last position to split fall units up in segments.
 
         [SerializeField]
-        private float _dmgPerSegment = 15; //How much dmg to inflict per segment.
+        private float _dmgPerFallUnit = 15; //How much dmg to inflict per fall unit or fall segments, chosen by damage type.
 
         [SerializeField]
         private float _maxDmg = Single.PositiveInfinity; //Max amount of fall damage it can take.
@@ -73,10 +74,12 @@ namespace Health
 
                             int segmentAmount = Mathf.RoundToInt(yDist / _fallSegments);
 
-                            dmgAmount = segmentAmount * _dmgPerSegment;
+                            dmgAmount = segmentAmount * _dmgPerFallUnit;
                         }
                         break;
                     case FallDamageType.Magnitude:
+                        if (_savedYVelocity > _distanceBeforeDmg)
+                            dmgAmount = _savedYVelocity * _dmgPerFallUnit;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -101,6 +104,7 @@ namespace Health
             }
                 
             _didCollideLastFrame = isColliding;
+            _savedYVelocity = Mathf.Abs(_rigidbody2D.velocity.y);
         }
     }
 }

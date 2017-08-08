@@ -473,7 +473,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1762265544}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.97, z: 0}
+  m_LocalPosition: {x: 0.72, y: 1.77, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -577,11 +577,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a45ad3003841ef4ab395dccb38f3f29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damageType: 0
+  _damageType: 1
   _distanceBeforeDmg: 1
   _isDistanceBeforeDmgInclusive: 0
   _fallSegments: 1
-  _dmgPerSegment: 5
+  _dmgPerFallUnit: 15
   _maxDmg: Infinity
   _collisionCheck: {fileID: 1762265551}
   _healthComp: {fileID: 1762265545}
