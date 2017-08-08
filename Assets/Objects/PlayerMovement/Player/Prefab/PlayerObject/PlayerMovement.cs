@@ -1,17 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using UnityEngine;
 using AcrylecSkeleton.ModificationSystem;
 
-namespace RogueLiteMovement
+namespace CharacterController
 {
-    public enum PlayerState
-    {
-        Idle, Walking, InAir, OnWall
-    }
-
-    public class PlayerMovement : MonoBehaviour
+    public class PlayerMovement : CharacterController
     {
         [SerializeField]
         private WallJump _wallJump;
@@ -32,9 +28,6 @@ namespace RogueLiteMovement
         private CollisionCheck _triggerCheck;
 
         [SerializeField]
-        private CollisionCheck _collisionCheck;
-
-        [SerializeField]
         private float _horizontalSpeed;
 
         [SerializeField]
@@ -44,20 +37,14 @@ namespace RogueLiteMovement
         private Animator _animator;
 
         [SerializeField]
-        private Rigidbody2D _rigidbody;
-
-        [SerializeField]
-        private GameObject _model;
-
-        [SerializeField]
         private float _maxFallSpeed;
 
         private CollisionSides _collisionSides;
-        private CollisionSides _predictSides;
+        private CollisionSides _triggerSides;
         private bool _shouldJump;
         private bool _shouldWallJump;
         private Vector2 _velocity;
-        private float _runTimer;
+        private bool _falling;
 
         public PlayerState PlayerState { get; set; }
 
@@ -79,11 +66,6 @@ namespace RogueLiteMovement
             set { _app = value; }
         }
 
-        public Rigidbody2D Rigidbody
-        {
-            get { return _rigidbody; }
-            set { _rigidbody = value; }
-        }
 
         public WallSlide WallSlide
         {
@@ -92,15 +74,17 @@ namespace RogueLiteMovement
         }
 
         // Update is called once per frame
-        void Update()
+        public override void Update()
         {
+            base.Update();
             HandleState();
-            _triggerCheck.IsColliding(out _predictSides);
+            _triggerCheck.IsColliding(out _triggerSides);
             _collisionCheck.IsColliding(out _collisionSides);
-            if (App.C.PlayerActions.Jump.WasPressed && _predictSides.Bottom)
+
+            if (App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && _triggerSides.Bottom)
                 _shouldJump = true;
 
-            if (App.C.PlayerActions.Jump.WasPressed && (_collisionSides.Right || _collisionSides.Left))
+            if (App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && (_collisionSides.Right || _collisionSides.Left))
                 _shouldWallJump = true;
         }
 
@@ -112,39 +96,35 @@ namespace RogueLiteMovement
 
         void LateUpdate()
         {
+            
             Rigidbody.velocity = new Vector2(Rigidbody.velocity.x,
-                Mathf.Clamp(Rigidbody.velocity.y, -_maxFallSpeed, float.MaxValue));
-
-           
+                Mathf.Clamp(Rigidbody.velocity.y, -_maxFallSpeed, float.MaxValue));          
         }
 
         private void HandleState()
         {
-            if ((_collisionSides.Left || _collisionSides.Right) && !_collisionSides.Bottom)
+            switch (State)
             {
-                _animator.SetInteger("State", 2);
-                PlayerState = PlayerState.OnWall;
-            }
-            else if (!_collisionSides.Bottom)
-            {
-                _animator.SetInteger("State", 2);
-                PlayerState = PlayerState.InAir;
-            }
-            else if (_runTimer < .1f)
-            {
-                _animator.SetInteger("State", 1);
-                PlayerState = PlayerState.Walking;
-            }
-            else
-            {
-                _animator.SetInteger("State", 0);
-                PlayerState = PlayerState.Idle;
+                case CharacterState.Idle:
+                    _animator.SetInteger("State", 0);
+                    break;
+                case CharacterState.Moving:
+                    _animator.SetInteger("State", 1);
+                    break;
+                case CharacterState.InAir:
+                    _animator.SetInteger("State", 2);
+                    break;
+                case CharacterState.OnWall:
+                    _animator.SetInteger("State", 2);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
         private void HandleVerticalMovement(ref Vector2 velocity, float force)
         {
-            if (_shouldWallJump && (_collisionSides.Left || _collisionSides.Right) && WallJump)
+            if (_shouldWallJump && (_collisionSides.Left || _collisionSides.Right) && !OnGround && WallJump)
             {
                 _shouldWallJump = false;
                 _shouldJump = false;
@@ -161,8 +141,7 @@ namespace RogueLiteMovement
                     force = 0;
                     foreach (var c in col)
                     {
-                        _modificationHandler.AddModification(new TemporaryLayerChange(0.4f,
-                            "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
+                        _modificationHandler.AddModification(new TemporaryLayerChange(0.4f, "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
                     }
                 }
                 _shouldWallJump = false;
@@ -171,25 +150,25 @@ namespace RogueLiteMovement
             else
                 force = 0;
 
-            if (_wallSlide)
+            if (_wallSlide && !(_wallJump && _wallJump.Active) && State == CharacterState.OnWall && force == 0 &&(
+                _rigidbody.velocity.y < -1|| _falling))
+            {
                 _wallSlide.ApplyWallSlide(ref force);
+                _falling = true;
+            }
+
+            if (OnGround)
+                _falling = false;
+            
 
             if (force != 0)
-                Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, force * Time.fixedDeltaTime);
+                Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, force*Time.fixedDeltaTime);
         }
 
 
         private void HandleHorizontalMovement(ref Vector2 velocity, float speed)
         {
             var horizontal = Input.GetAxisRaw("Horizontal");
-            var wallDir = 0f;
-            
-
-            var run = horizontal != 0;
-            if (run)
-                _runTimer = 0;
-            else
-                _runTimer += Time.deltaTime;                
 
             if (_collisionSides.Left && horizontal < 0)
                 horizontal = 0;
@@ -198,24 +177,16 @@ namespace RogueLiteMovement
                 horizontal = 0;
 
             var dir = horizontal;
-            Debug.Log(horizontal);
 
             if (WallJump && WallJump.Active)
             {
                 speed = WallJump.HorizontalForce;
                 dir = WallJump.Direction;
             }
-            Flip(dir);
+
             Rigidbody.velocity = new Vector2(dir*speed*Time.fixedDeltaTime, Rigidbody.velocity.y);
         }
 
-        private void Flip(float dir)
-        {
-            if (dir > 0)
-                _model.transform.localScale = new Vector3(1, transform.localScale.y);
-            if (dir < 0)
-                _model.transform.localScale = new Vector3(-1, transform.localScale.y);
-        }
 
         public class TemporaryLayerChange : Modification
         {
@@ -223,8 +194,7 @@ namespace RogueLiteMovement
             private LayerMask _oldLayer;
             private GameObject _targetObject;
 
-            public TemporaryLayerChange(float time, string name, string targetLayer, GameObject targetObject)
-                : base(time, name)
+            public TemporaryLayerChange(float time, string name, string targetLayer, GameObject targetObject) : base(time, name)
             {
                 _targetLayer = LayerMask.NameToLayer(targetLayer);
                 if (_targetLayer == -1)
@@ -239,7 +209,6 @@ namespace RogueLiteMovement
                     targetObject.layer = _targetLayer;
                     _targetObject = targetObject;
                 }
-
             }
 
             public override void ApplyModificaiton()
@@ -254,12 +223,10 @@ namespace RogueLiteMovement
 
             public override void UpdateModificaiton()
             {
-
             }
 
             public override void FixedUpdateModificaiton()
             {
-
             }
         }
     }

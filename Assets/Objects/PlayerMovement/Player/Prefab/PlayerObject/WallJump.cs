@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RogueLiteMovement
+namespace CharacterController
 {
     /// <summary>
     /// Purpose:
@@ -24,7 +24,10 @@ namespace RogueLiteMovement
 
         public float HorizontalForce
         {
-            get { return _horizontalForce / _duration; }
+            get
+            {
+                    return _horizontalForce / _duration;
+            }
         }
 
         public float VerticalForce

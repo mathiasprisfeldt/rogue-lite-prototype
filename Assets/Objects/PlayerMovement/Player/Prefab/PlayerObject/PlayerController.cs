@@ -21,7 +21,7 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 
         public InputActions PlayerActions { get; set; }
 
-        public void Start()
+        public void Awake()
         {
             _keyboardActions = new KeyboardActions();
             ChangeActionSet(_activeActionSettype);
@@ -43,9 +43,11 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
                     PlayerActions = _keyboardActions;
                     break;
                 case ActionsSetType.Controller:
+                    PlayerActions = _keyboardActions;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("type", type, null);
+                    PlayerActions = _keyboardActions;
+                    break;
             }
         }
     }
