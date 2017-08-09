@@ -117,7 +117,7 @@ public class CollisionCheck : MonoBehaviour
             sides = _collisionSides;
             return sides.Top || sides.Bottom || sides.Right || sides.Left;
         }
-
+        sides.Colliders = Colliders.ToList();
         foreach (var c in Colliders)
         {
             Collider2D[] t = new Collider2D[10];
@@ -150,11 +150,7 @@ public class CollisionCheck : MonoBehaviour
                     {
                         sides.Bottom = true;
                         sides.BottomColliders.Add(t[i]);
-                    }
-                    else
-                    {
-                        
-                    }
+                    }    
 
 
                     if (sides.Right || (c.bounds.min.x <= t[i].bounds.min.x 
@@ -172,11 +168,11 @@ public class CollisionCheck : MonoBehaviour
                     }
                     collision = sides.Top || sides.Bottom || sides.Right || sides.Left;
                     if(collision)
-                        sides.Colliders.Add(t[i]);
+                        sides.TargetColliders.Add(t[i]);
                 }
             }
         }
-        colliders = sides.Colliders.ToList();
+        colliders = sides.TargetColliders.ToList();
 
         if(layer == _collisionLayers)
             SetDirty(sides);
@@ -186,7 +182,7 @@ public class CollisionCheck : MonoBehaviour
     private void SetDirty(CollisionSides sides)
     {
         _collisionSides = sides;
-        _collisionColliders = sides.Colliders;
+        _collisionColliders = sides.TargetColliders;
         _isDirty = true;
 
     }
@@ -213,6 +209,7 @@ public struct CollisionSides
     public List<Collider2D> BottomColliders { get; set; }
     public List<Collider2D> RightColliders { get; set; }
     public List<Collider2D> LeftColliders { get; set; }
+    public List<Collider2D> TargetColliders { get; set; } 
     public List<Collider2D> Colliders { get; set; } 
 
     public CollisionSides(bool top, bool bottom, bool right, bool left) : this()
@@ -226,6 +223,7 @@ public struct CollisionSides
         BottomColliders = new List<Collider2D>();
         RightColliders = new List<Collider2D>();
         LeftColliders = new List<Collider2D>();
+        TargetColliders = new List<Collider2D>();
         Colliders = new List<Collider2D>();
     }
 

@@ -4,7 +4,7 @@ namespace CharacterController
 {
     public enum CharacterState
     {
-        Idle, Moving, InAir, OnWall
+        None,Idle, Moving, InAir, OnWall
     }
 
     /// <summary>
@@ -45,12 +45,14 @@ namespace CharacterController
         {
             get
             {
-                if (!(_collisionCheck && _collisionCheck.Bottom))
-                {
-                    
-                }
-                return _collisionCheck && _collisionCheck.Bottom;
+                return CollisionCheck && CollisionCheck.Bottom;
             }
+        }
+
+        public CollisionCheck CollisionCheck
+        {
+            get { return _collisionCheck; }
+            set { _collisionCheck = value; }
         }
 
         public virtual void Update()
@@ -69,13 +71,13 @@ namespace CharacterController
             if (!_rigidbody)
                 _rigidbody = GetComponent<Rigidbody2D>() ?? gameObject.AddComponent<Rigidbody2D>();
                 
-            if(!_collisionCheck)
-                _collisionCheck = GetComponent<CollisionCheck>() ?? gameObject.AddComponent<CollisionCheck>();
+            if(!CollisionCheck)
+                CollisionCheck = GetComponent<CollisionCheck>() ?? gameObject.AddComponent<CollisionCheck>();
 
             Collider2D col = GetComponent<Collider2D>() ?? gameObject.AddComponent<BoxCollider2D>();
 
-            _collisionCheck.Colliders.Add(col);
-            _collisionCheck.CollisionLayers = ~0;
+            CollisionCheck.Colliders.Add(col);
+            CollisionCheck.CollisionLayers = ~0;
 
             if(!_model)
             _model = gameObject;
@@ -99,12 +101,15 @@ namespace CharacterController
                     State = CharacterState.Idle;
             }
 
-            else if (_collisionCheck && (_collisionCheck.Right || _collisionCheck.Left))
+            else if (CollisionCheck && (CollisionCheck.Right || CollisionCheck.Left))
                 State = CharacterState.OnWall;
             else
             {
-                if (_inAirTimer < 0.2f && State != CharacterState.InAir)
+                if (_inAirTimer < 0.2f && State == CharacterState.Moving)
+                {
                     _inAirTimer += Time.deltaTime;
+                }
+                    
                 else
                 {
                     _inAirTimer = 0;
@@ -116,7 +121,7 @@ namespace CharacterController
         }
 
 
-        private void Flip(float dir)
+        protected void Flip(float dir)
         {
             if (dir > 0)
                 _model.transform.localScale = new Vector3(1, transform.localScale.y);

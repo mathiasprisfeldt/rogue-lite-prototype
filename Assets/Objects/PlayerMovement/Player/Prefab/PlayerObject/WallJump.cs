@@ -7,11 +7,9 @@ namespace CharacterController
     /// Creator:
     /// </summary>
     [RequireComponent(typeof(PlayerMovement)), ExecuteInEditMode]
-    public class WallJump : MonoBehaviour
+    public class WallJump : MovementAbility
     {
         private float _wallJumpTimer;
-        private float _wallJumpDirection;
-        private PlayerMovement _playerMovement;
 
         [SerializeField]
         private float _verticalForce;
@@ -22,21 +20,19 @@ namespace CharacterController
         [SerializeField]
         private float _duration;
 
-        public float HorizontalForce
+        public float Direction { get; private set; }
+
+        public override bool VerticalActive
         {
             get
             {
-                    return _horizontalForce / _duration;
+                var input = _playerMovement.App.C.PlayerActions != null && _playerMovement.App.C.PlayerActions.Jump.WasPressed;
+                var collision = (_playerMovement.Sides.Left || _playerMovement.Sides.Right) && !_playerMovement.Sides.Bottom;
+                return input && collision;
             }
         }
 
-        public float VerticalForce
-        {
-            get { return _verticalForce; }
-        }
-
-        public bool Active { get; set; }
-        public float Direction { get; private set; }
+        public override bool HorizontalActive { get { return _wallJumpTimer > 0; } }
 
         public void Awake()
         {
@@ -44,21 +40,22 @@ namespace CharacterController
             _playerMovement.WallJump = this;
         }
 
-        public virtual void Update()
+        public override void HandleVertical(ref Vector2 velocity)
         {
-            if (_wallJumpTimer > 0)
-            {
-                Active = true;
-                _wallJumpTimer -= Time.deltaTime;
-            }
-            else if (Active)
-                Active = false;
+            Direction = _playerMovement.Sides.Left ? 1 : -1;
+            _wallJumpTimer = _duration;
+            velocity = new Vector2(0,_verticalForce);
         }
 
-        public virtual void StartWallJump(float direction)
+        public override void HandleHorizontal(ref Vector2 velocity)
         {
-            Direction = direction;
-            _wallJumpTimer = _duration;
+            velocity = new Vector2((_horizontalForce / _duration) * Direction,velocity.y);
+        }
+
+        public void Update()
+        {
+            if(_wallJumpTimer > 0)
+                _wallJumpTimer -= Time.deltaTime;
         }
 
         public void OnDisable()

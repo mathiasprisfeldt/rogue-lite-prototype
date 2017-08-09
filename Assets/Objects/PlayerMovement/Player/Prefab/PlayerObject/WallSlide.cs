@@ -4,14 +4,26 @@ using UnityEngine;
 namespace CharacterController
 {
     [RequireComponent(typeof (PlayerMovement)), ExecuteInEditMode]
-    public class WallSlide : MonoBehaviour
+    public class WallSlide : MovementAbility
     {
-        [SerializeField] private float _wallSlideForce;
+        [SerializeField]
+        private float _wallSlideForce;
 
-        [SerializeField] private bool _active;
+        [SerializeField]
+        private bool _active;
 
-        private PlayerMovement _playerMovement;
-        private float _oldGrav;
+        private bool _falling;
+
+        public override bool VerticalActive
+        {
+            get
+            {
+                var wallJumpActive = !(_playerMovement.WallJump && _playerMovement.WallJump.HorizontalActive);
+                var falling = _playerMovement.Rigidbody.velocity.y < -1 || _falling;
+                var rest = _playerMovement.State == CharacterState.OnWall && _playerMovement.Velocity.y == 0;
+                return wallJumpActive && falling && rest;
+            }
+        }
 
         public void Awake()
         {
@@ -19,10 +31,21 @@ namespace CharacterController
             _playerMovement.WallSlide = this;
         }
 
-        public void ApplyWallSlide(ref float force)
+        public void Update()
         {
-            if (_active)
-                force = _playerMovement.Rigidbody.gravityScale*-Physics2D.gravity.y + _wallSlideForce;
+            if (_falling && _playerMovement.OnGround)
+                _falling = false;
+        }
+
+        public override void HandleVertical(ref Vector2 velocity)
+        {
+            _falling = true;
+            velocity += new Vector2(0, _playerMovement.Rigidbody.gravityScale * -Physics2D.gravity.y + _wallSlideForce);
+        }
+
+        public override void HandleHorizontal(ref Vector2 velocity)
+        {
+            
         }
 
         public void OnDisable()

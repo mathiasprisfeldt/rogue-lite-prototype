@@ -18,6 +18,9 @@ namespace CharacterController
         [SerializeField]
         private WallSlide _wallSlide;
 
+        [SerializeField]
+        private LedgeHanging _ledgeHanging;
+
         [Header("Component References"),SerializeField]
         private PlayerApplication _app;
 
@@ -39,12 +42,17 @@ namespace CharacterController
         [SerializeField]
         private float _maxFallSpeed;
 
+        [SerializeField]
+        private float _dashCooldown;
+
+        private float _dashForce;
+
+        private Vector2 _velocity;
         private CollisionSides _collisionSides;
         private CollisionSides _triggerSides;
-        private bool _shouldJump;
-        private bool _shouldWallJump;
-        private Vector2 _velocity;
-        private bool _falling;
+        private bool _shouldDash;
+        private float _dashTimer;
+        private Vector2 _savedVelocity;
 
         public PlayerState PlayerState { get; set; }
 
@@ -53,24 +61,50 @@ namespace CharacterController
             get { return _wallJump; }
             set { _wallJump = value; }
         }     
-
         public DoubleJump DoubleJump
         {
             get { return _doubleJump; }
             set { _doubleJump = value; }
         }
-
         public PlayerApplication App
         {
             get { return _app; }
             set { _app = value; }
         }
-
-
         public WallSlide WallSlide
         {
             get { return _wallSlide; }
             set { _wallSlide = value; }
+        }
+
+        public CollisionSides Sides
+        {
+            get { return _collisionSides; }
+            set { _collisionSides = value; }
+        }
+
+        public CollisionSides TriggerSides
+        {
+            get { return _triggerSides; }
+            set { _triggerSides = value; }
+        }
+
+        public Vector2 Velocity
+        {
+            get { return _velocity; }
+            set { _velocity = value; }
+        }
+
+        public LedgeHanging LedgeHanging
+        {
+            get { return _ledgeHanging; }
+            set { _ledgeHanging = value; }
+        }
+
+        public CollisionCheck TriggerCheck
+        {
+            get { return _triggerCheck; }
+            set { _triggerCheck = value; }
         }
 
         // Update is called once per frame
@@ -78,20 +112,26 @@ namespace CharacterController
         {
             base.Update();
             HandleState();
-            _triggerCheck.IsColliding(out _triggerSides);
-            _collisionCheck.IsColliding(out _collisionSides);
+            TriggerCheck.IsColliding(out _triggerSides);
+            CollisionCheck.IsColliding(out _collisionSides);
 
-            if (App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && _triggerSides.Bottom)
-                _shouldJump = true;
+            if (App.C.PlayerActions != null && App.C.PlayerActions.Dash.WasPressed && _dashTimer <= 0)
+                _shouldDash = true;
 
-            if (App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && (_collisionSides.Right || _collisionSides.Left))
-                _shouldWallJump = true;
+            if (_dashTimer > 0)
+                _dashTimer -= Time.deltaTime;
         }
 
         void FixedUpdate()
         {
-            HandleVerticalMovement(ref _velocity, _jumpForce);
-            HandleHorizontalMovement(ref _velocity, _horizontalSpeed);
+            _velocity = new Vector2(0,0);
+
+            HandleVerticalMovement(ref _velocity);
+            HandleHorizontalMovement(ref _velocity);
+
+            SetVelocity(new Vector2(_velocity.x * Time.fixedDeltaTime, _rigidbody.velocity.y));
+            if(Velocity.y != 0)
+                SetVelocity(new Vector2(_rigidbody.velocity.x, _velocity.y * Time.fixedDeltaTime));
         }
 
         void LateUpdate()
@@ -117,74 +157,74 @@ namespace CharacterController
                 case CharacterState.OnWall:
                     _animator.SetInteger("State", 2);
                     break;
+                case CharacterState.None:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private void HandleVerticalMovement(ref Vector2 velocity, float force)
+        private void HandleVerticalMovement(ref Vector2 velocity)
         {
-            if (_shouldWallJump && (_collisionSides.Left || _collisionSides.Right) && !OnGround && WallJump)
+            if (_shouldDash)
             {
-                _shouldWallJump = false;
-                _shouldJump = false;
-                float dir = _collisionSides.Left ? 1 : -1;
-                WallJump.StartWallJump(dir);
-                force = WallJump.VerticalForce;
+                _dashTimer = _dashCooldown;
+                _shouldDash = false;
+
             }
-            else if (_shouldJump && _collisionSides.Bottom)
+            else if (WallJump && WallJump.VerticalActive)
             {
-                List<Collider2D> col = _collisionSides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
+                WallJump.HandleVertical(ref velocity);
+            }
+            else if (DoubleJump && DoubleJump.VerticalActive)
+            {
+                DoubleJump.HandleVertical(ref velocity);
+            }
+            else if (App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && TriggerSides.Bottom && Sides.Bottom)
+            {
+                List<Collider2D> col = Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
+                velocity += new Vector2(0, _jumpForce);
 
                 if (col.Count > 0 && App.C.PlayerActions.Down.IsPressed)
                 {
-                    force = 0;
+                    velocity = new Vector2(velocity.x,0);
                     foreach (var c in col)
                     {
                         _modificationHandler.AddModification(new TemporaryLayerChange(0.4f, "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
                     }
                 }
-                _shouldWallJump = false;
-                _shouldJump = false;
+            }
+            else if (LedgeHanging && LedgeHanging.VerticalActive)
+            {
+                velocity = new Vector2(velocity.x, Rigidbody.gravityScale * -Physics2D.gravity.y);
+            }
+            else if (_wallSlide && _wallSlide.VerticalActive)
+            {
+                var temp = _wallSlide.VerticalActive;
+                WallSlide.HandleVertical(ref velocity);
             }
             else
-                force = 0;
+                velocity = new Vector2(velocity.x, 0);
 
-            if (_wallSlide && !(_wallJump && _wallJump.Active) && State == CharacterState.OnWall && force == 0 &&(
-                _rigidbody.velocity.y < -1|| _falling))
-            {
-                _wallSlide.ApplyWallSlide(ref force);
-                _falling = true;
-            }
-
-            if (OnGround)
-                _falling = false;
-            
-
-            if (force != 0)
-                Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, force*Time.fixedDeltaTime);
         }
 
 
-        private void HandleHorizontalMovement(ref Vector2 velocity, float speed)
+        private void HandleHorizontalMovement(ref Vector2 velocity)
         {
-            var horizontal = Input.GetAxisRaw("Horizontal");
+            var horizontal = App.C.PlayerActions.HorizontalDirection.RawValue;
 
-            if (_collisionSides.Left && horizontal < 0)
+            if (Sides.Left && horizontal < 0)
                 horizontal = 0;
 
-            if (_collisionSides.Right && horizontal > 0)
+            if (Sides.Right && horizontal > 0)
                 horizontal = 0;
 
-            var dir = horizontal;
+            velocity += new Vector2(_horizontalSpeed * horizontal, 0);
 
-            if (WallJump && WallJump.Active)
+            if (WallJump && WallJump.HorizontalActive)
             {
-                speed = WallJump.HorizontalForce;
-                dir = WallJump.Direction;
+                WallJump.HandleHorizontal(ref velocity);
             }
-
-            Rigidbody.velocity = new Vector2(dir*speed*Time.fixedDeltaTime, Rigidbody.velocity.y);
         }
 
 

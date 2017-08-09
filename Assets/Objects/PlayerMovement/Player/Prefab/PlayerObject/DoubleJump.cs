@@ -9,12 +9,21 @@ using UnityEngine;
 namespace CharacterController
 {
     [RequireComponent(typeof (PlayerMovement)), ExecuteInEditMode]
-    public class DoubleJump : MonoBehaviour
+    public class DoubleJump : MovementAbility
     {
-        [SerializeField] private float _jumpForce;
+        [SerializeField]
+        private float _jumpForce;
 
-        private PlayerMovement _playerMovement;
         private bool _hasJumped;
+
+        public override bool VerticalActive
+        {
+            get
+            {
+                return !_hasJumped && _playerMovement.App.C.PlayerActions.Jump.WasPressed &&
+                       _playerMovement.State == CharacterState.InAir;
+            }
+        }
 
         public void Awake()
         {
@@ -22,18 +31,20 @@ namespace CharacterController
             _playerMovement.DoubleJump = this;
         }
 
-        public void FixedUpdate()
+        public override void HandleVertical(ref Vector2 velocity)
         {
+            velocity = new Vector2(velocity.x, _jumpForce);
+            _hasJumped = true;
+        }
 
-            if (!_hasJumped && _playerMovement.App.C.PlayerActions.Jump.WasPressed &&
-                _playerMovement.State == CharacterState.InAir)
-            {
-                _playerMovement.Rigidbody.velocity = new Vector2(_playerMovement.Rigidbody.velocity.x,
-                    _jumpForce*Time.fixedDeltaTime);
-                _hasJumped = true;
-            }
+        public override void HandleHorizontal(ref Vector2 velocity)
+        {
+            
+        }
 
-            else if (_hasJumped && _playerMovement.State != CharacterState.InAir)
+        public void Update()
+        {
+            if (_hasJumped && _playerMovement.State != CharacterState.InAir)
                 _hasJumped = false;
         }
 
