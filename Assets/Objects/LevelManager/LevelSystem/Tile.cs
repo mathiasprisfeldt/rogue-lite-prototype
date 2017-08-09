@@ -8,10 +8,11 @@ using UnityEngine;
 public class Tile
 {
     //Prefab
-    public GameObject GO { get; set; }
+    public GameObject Prefab { get; set; }
+    public GameObject GoInstance { get; set; }
 
     public Tile(GameObject go)
     {
-        GO = go;
+        Prefab = go;
     }
 }

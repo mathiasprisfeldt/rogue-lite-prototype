@@ -79,16 +79,36 @@ public class Level
                     {
                         // Each tile
                         Tile t = Layouts[i, j].Tiles[x, y];
-                        if (t.GO != null)
+                        if (t.Prefab != null)
                         {
-
-                            GameObject.Instantiate(t.GO,
+                            GameObject go = GameObject.Instantiate(t.Prefab,
                                 transform.position + new Vector3(
                                     (i * Layouts[i, j].Tiles.GetLength(0)) * tileWidth + x * tileWidth,
                                     ((j * Layouts[i, j].Tiles.GetLength(1)) * tileHeight + y * tileHeight) * -1),
                                 Quaternion.identity,
                                 parent.transform);
+
+                            t.GoInstance = go;
                         }
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < Layouts.GetLength(0); i++)
+        {
+            for (int j = 0; j < Layouts.GetLength(1); j++)
+            {
+                // Each layout
+
+                for (int x = 0; x < Layouts[i, j].Tiles.GetLength(0); x++)
+                {
+                    for (int y = 0; y < Layouts[i, j].Tiles.GetLength(1); y++)
+                    {
+                        // Each tile
+                        Tile t = Layouts[i, j].Tiles[x, y];
+                        if (t.GoInstance)
+                            t.GoInstance.GetComponent<TileBehaviour>().CheckSides();
                     }
                 }
             }
@@ -112,8 +132,8 @@ public class Level
             for (int j = 0; j < layout.Tiles.GetLength(1); j++)
             {
                 Tile t = layout.Tiles[i, j];
-                if (t.GO != null)
-                    GameObject.Instantiate(t.GO,
+                if (t.Prefab != null)
+                    GameObject.Instantiate(t.Prefab,
                         transform.position + new Vector3(i * tileWidth, ((j * tileHeight) * -1)),
                         Quaternion.identity,
                         transform);
