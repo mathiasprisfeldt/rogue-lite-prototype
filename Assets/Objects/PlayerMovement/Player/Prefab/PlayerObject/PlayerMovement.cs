@@ -21,14 +21,20 @@ namespace CharacterController
         [SerializeField]
         private LedgeHanging _ledgeHanging;
 
-        [Header("Component References"),SerializeField]
-        private PlayerApplication _app;
-
         [SerializeField]
         private ModificationHandler _modificationHandler;
 
         [SerializeField]
         private CollisionCheck _triggerCheck;
+
+        [SerializeField]
+        protected CollisionCheck _collisionCheck;
+
+        public CollisionCheck CollisionCheck
+        {
+            get { return _collisionCheck; }
+            set { _collisionCheck = value; }
+        }
 
         [SerializeField]
         private float _horizontalSpeed;
@@ -56,6 +62,7 @@ namespace CharacterController
         private bool _shouldHang;
 
         public PlayerState PlayerState { get; set; }
+        public bool Hanging { get; set; }
 
         public WallJump WallJump
         {
@@ -67,11 +74,7 @@ namespace CharacterController
             get { return _doubleJump; }
             set { _doubleJump = value; }
         }
-        public PlayerApplication App
-        {
-            get { return _app; }
-            set { _app = value; }
-        }
+
         public WallSlide WallSlide
         {
             get { return _wallSlide; }
@@ -157,9 +160,6 @@ namespace CharacterController
                 case CharacterState.InAir:
                     _animator.SetInteger("State", 2);
                     break;
-                case CharacterState.OnWall:
-                    _animator.SetInteger("State", 2);
-                    break;
                 case CharacterState.None:
                     break;
                 default:
@@ -169,6 +169,8 @@ namespace CharacterController
 
         private void HandleVerticalMovement(ref Vector2 velocity)
         {
+            Hanging = false;
+
             if (_shouldDash)
             {
                 _dashTimer = _dashCooldown;
@@ -200,6 +202,7 @@ namespace CharacterController
             else if (_shouldHang)
             {
                 LedgeHanging.HandleHorizontal(ref velocity);
+                Hanging = true;
             }
             else if (_wallSlide && _wallSlide.VerticalActive)
             {

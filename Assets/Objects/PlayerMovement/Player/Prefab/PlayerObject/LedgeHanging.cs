@@ -25,7 +25,6 @@ namespace CharacterController
                 var right = _playerMovement.TriggerSides.Right;
                 var horizontalMovement = _playerMovement.App.C.PlayerActions.Right.IsPressed && left ||
                                          _playerMovement.App.C.PlayerActions.Left.IsPressed && right;
-                Debug.Log(horizontalMovement);
                 if ((right || left) && (_playerMovement.WallJump && !_playerMovement.WallJump.HorizontalActive) && !_playerMovement.App.C.PlayerActions.Down.IsPressed && !horizontalMovement)
                 {
                     List<Collider2D> colliders = right ? _playerMovement.TriggerSides.RightColliders : _playerMovement.TriggerSides.LeftColliders;
@@ -48,6 +47,9 @@ namespace CharacterController
                     Vector2 temp = new Vector2(thisColX, _playerMovement.TriggerCheck.Colliders[0].bounds.center.y);
                     if (Mathf.Abs(temp.y -hangPosition.y) <= _sensitivity)
                     {
+                        var tile = col.gameObject.GetComponent<TileBehaviour>();
+                        if (tile && tile.TopCollision)
+                            return false;
                         var extend = right ? -_playerMovement.CollisionCheck.Colliders[0].bounds.extents.x : _playerMovement.CollisionCheck.Colliders[0].bounds.extents.x;
                         _playerMovement.Rigidbody.position = Vector2.Lerp(_playerMovement.Rigidbody.position, new Vector2(hangPosition.x + extend, hangPosition.y), .35f);
                         var dir = left ? 1 : -1;

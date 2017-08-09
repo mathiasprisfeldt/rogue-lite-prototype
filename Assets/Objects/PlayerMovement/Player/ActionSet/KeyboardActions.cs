@@ -30,6 +30,14 @@ namespace RogueLiteInput
             //Dash
             Dash.AddDefaultBinding(Key.LeftShift);
             Dash.AddDefaultBinding(Key.None);
+
+            //PeekUp
+            PeekUp.AddDefaultBinding(Key.UpArrow);
+            PeekUp.AddDefaultBinding(Key.None);
+
+            //PeekDown
+            PeekDown.AddDefaultBinding(Key.DownArrow);
+            PeekDown.AddDefaultBinding(Key.None);
         }
     }
 }

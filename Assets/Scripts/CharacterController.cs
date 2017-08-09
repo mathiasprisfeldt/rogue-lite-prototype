@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using Assets.Objects.PlayerMovement.Player.Prefab.Player;
+using UnityEngine;
 
 namespace CharacterController
 {
     public enum CharacterState
     {
-        None,Idle, Moving, InAir, OnWall
+        None,Idle, Moving, InAir
     }
 
     /// <summary>
@@ -17,9 +18,13 @@ namespace CharacterController
         private bool _runnedSetup;
         private float _idleTimer;
         private float _inAirTimer;
+        private float _onGroundTimer;
 
         [Header("Auto Setup"), SerializeField]
         private bool _setup;
+
+        [Header("Component References"), SerializeField]
+        private PlayerApplication _app;
 
         [SerializeField]
         private bool _flipWithVelocity;
@@ -28,10 +33,10 @@ namespace CharacterController
         protected Rigidbody2D _rigidbody;
 
         [SerializeField]
-        protected CollisionCheck _collisionCheck;
+        private GameObject _model;
 
         [SerializeField]
-        private GameObject _model;
+        private CollisionCheck _groundCollisionCheck;
 
         public CharacterState State { get; set; }
 
@@ -45,14 +50,22 @@ namespace CharacterController
         {
             get
             {
-                return CollisionCheck && CollisionCheck.Bottom;
+                if (_onGroundTimer > 0)
+                    return true;
+                return GroundCollisionCheck && GroundCollisionCheck.Bottom;
             }
         }
 
-        public CollisionCheck CollisionCheck
+        public CollisionCheck GroundCollisionCheck
         {
-            get { return _collisionCheck; }
-            set { _collisionCheck = value; }
+            get { return _groundCollisionCheck; }
+            set { _groundCollisionCheck = value; }
+        }
+
+        public PlayerApplication App
+        {
+            get { return _app; }
+            set { _app = value; }
         }
 
         public virtual void Update()
@@ -63,6 +76,11 @@ namespace CharacterController
 
             if (_flipWithVelocity && _rigidbody)
                 Flip(_rigidbody.velocity.x);
+
+            if (!GroundCollisionCheck.Bottom)
+                _onGroundTimer -= Time.deltaTime;
+            else 
+                _onGroundTimer = 0.05f;
         }
 
         protected virtual void Setup()
@@ -71,13 +89,13 @@ namespace CharacterController
             if (!_rigidbody)
                 _rigidbody = GetComponent<Rigidbody2D>() ?? gameObject.AddComponent<Rigidbody2D>();
                 
-            if(!CollisionCheck)
-                CollisionCheck = GetComponent<CollisionCheck>() ?? gameObject.AddComponent<CollisionCheck>();
+            if(!GroundCollisionCheck)
+                GroundCollisionCheck = GetComponent<CollisionCheck>() ?? gameObject.AddComponent<CollisionCheck>();
 
             Collider2D col = GetComponent<Collider2D>() ?? gameObject.AddComponent<BoxCollider2D>();
 
-            CollisionCheck.Colliders.Add(col);
-            CollisionCheck.CollisionLayers = ~0;
+            GroundCollisionCheck.Colliders.Add(col);
+            GroundCollisionCheck.CollisionLayers = ~0;
 
             if(!_model)
             _model = gameObject;
@@ -90,33 +108,16 @@ namespace CharacterController
                 _idleTimer = 0;
                 State = CharacterState.Moving;
             }                
-            else if (OnGround)
+            else if (OnGround && (!App.C.PlayerActions.Left || !App.C.PlayerActions.Right))
             {
-                if (State != CharacterState.Idle && _idleTimer < 0.2f)
-                {
-                    _idleTimer += Time.deltaTime;
-                    State = CharacterState.Moving;
-                }
-                else   
                     State = CharacterState.Idle;
             }
-
-            else if (CollisionCheck && (CollisionCheck.Right || CollisionCheck.Left))
-                State = CharacterState.OnWall;
             else
             {
-                if (_inAirTimer < 0.2f && State == CharacterState.Moving)
-                {
-                    _inAirTimer += Time.deltaTime;
-                }
-                    
-                else
-                {
-                    _inAirTimer = 0;
                     State = CharacterState.InAir;
-                }
-                    
+  
             }
+            Debug.Log(State);
                 
         }
 

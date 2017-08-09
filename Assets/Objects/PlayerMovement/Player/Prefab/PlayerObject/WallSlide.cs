@@ -20,7 +20,7 @@ namespace CharacterController
             {
                 var wallJumpActive = !(_playerMovement.WallJump && _playerMovement.WallJump.HorizontalActive);
                 var falling = _playerMovement.Rigidbody.velocity.y < -1 || _falling;
-                var rest = _playerMovement.State == CharacterState.OnWall && _playerMovement.Velocity.y == 0;
+                var rest = (_playerMovement.Sides.Left || _playerMovement.Sides.Right) && _playerMovement.Velocity.y == 0;
                 return wallJumpActive && falling && rest;
             }
         }
