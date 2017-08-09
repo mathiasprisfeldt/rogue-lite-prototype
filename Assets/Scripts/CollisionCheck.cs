@@ -187,11 +187,6 @@ public class CollisionCheck : MonoBehaviour
 
     }
 
-    public void Update()
-    {
-        var temp = IsColliding();
-    }
-
     public void LateUpdate()
     {
         _isDirty = false;

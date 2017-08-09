@@ -399,7 +399,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.1}
+  m_Size: {x: 0.2, y: 0.1}
   m_EdgeRadius: 0
 --- !u!70 &70843181140069408
 CapsuleCollider2D:
@@ -551,7 +551,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerMovement: {fileID: 114173897078414380}
   _target: {fileID: 4206036655935330}
-  _peekAmount: 1
+  _peekAmount: 1.5
   _durationUntilPeek: 1
 --- !u!114 &114286498854671988
 MonoBehaviour:

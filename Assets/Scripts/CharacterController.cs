@@ -5,7 +5,7 @@ namespace CharacterController
 {
     public enum CharacterState
     {
-        None,Idle, Moving, InAir
+        None, Idle, Moving, InAir
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ namespace CharacterController
 
             if (!GroundCollisionCheck.Bottom)
                 _onGroundTimer -= Time.deltaTime;
-            else 
+            else
                 _onGroundTimer = 0.05f;
         }
 
@@ -88,8 +88,8 @@ namespace CharacterController
             _runnedSetup = true;
             if (!_rigidbody)
                 _rigidbody = GetComponent<Rigidbody2D>() ?? gameObject.AddComponent<Rigidbody2D>();
-                
-            if(!GroundCollisionCheck)
+
+            if (!GroundCollisionCheck)
                 GroundCollisionCheck = GetComponent<CollisionCheck>() ?? gameObject.AddComponent<CollisionCheck>();
 
             Collider2D col = GetComponent<Collider2D>() ?? gameObject.AddComponent<BoxCollider2D>();
@@ -97,28 +97,26 @@ namespace CharacterController
             GroundCollisionCheck.Colliders.Add(col);
             GroundCollisionCheck.CollisionLayers = ~0;
 
-            if(!_model)
-            _model = gameObject;
+            if (!_model)
+                _model = gameObject;
         }
 
         protected virtual void UpdateState()
         {
-            if (OnGround && _rigidbody.velocity.x != 0)
+            if (OnGround && (App.C.PlayerActions.Left.IsPressed || App.C.PlayerActions.Right.IsPressed))
             {
                 _idleTimer = 0;
                 State = CharacterState.Moving;
-            }                
-            else if (OnGround && (!App.C.PlayerActions.Left || !App.C.PlayerActions.Right))
+            }
+            else if (OnGround)
             {
-                    State = CharacterState.Idle;
+                State = CharacterState.Idle;
             }
             else
             {
-                    State = CharacterState.InAir;
-  
+                State = CharacterState.InAir;
             }
-            Debug.Log(State);
-                
+
         }
 
 
