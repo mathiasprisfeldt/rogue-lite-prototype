@@ -20,7 +20,7 @@ public class Level
 
         for (int i = 0; i < l.GetLength(0); i++)
         {
-            for (int j = 0; j < l.GetLength(0); j++)
+            for (int j = 0; j < l.GetLength(1); j++)
             {
                 Layouts[i, j] = LevelDataManager.Instance.Layouts.Find(x => x.ID == l[i, j]);
             }
@@ -56,6 +56,27 @@ public class Level
                                 transform);
                     }
                 }
+            }
+        }
+    }
+
+    public void Spawn(Transform transform, Layout layout)
+    {
+        //Find the size of one tile, make better in future
+        var test = LevelDataManager.Instance.Tiles[0].transform;
+        var tileHeight = test.localScale.y;
+        var tileWidth = test.localScale.x;
+
+        for (int i = 0; i < layout.Tiles.GetLength(0); i++)
+        {
+            for (int j = 0; j < layout.Tiles.GetLength(1); j++)
+            {
+                Tile t = layout.Tiles[i, j];
+                if (t.GO != null)
+                    GameObject.Instantiate(t.GO,
+                        transform.position + new Vector3(i * tileWidth, ((j * tileHeight) * -1)),
+                        Quaternion.identity,
+                        transform);
             }
         }
     }

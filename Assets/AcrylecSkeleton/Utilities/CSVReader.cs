@@ -83,13 +83,34 @@ public class CSVReader : MonoBehaviour
     {
         var grid = SplitCsvGrid(csvText);
 
-        int[,] outputGrid = new int[grid.GetLength(0), grid.GetLength(1)];
+        int[,] outputGrid = new int[grid.GetLength(0) - 1, grid.GetLength(1)];
 
-        for (int i = 0; i < grid.GetLength(0) - 1; i++)
+        for (int i = 0; i < outputGrid.GetLength(0); i++)
         {
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < outputGrid.GetLength(1); j++)
             {
-                outputGrid[i, j] = Convert.ToInt32(grid[i, j]);
+                int variable = 0;
+                int.TryParse(grid[i, j], out variable);
+                outputGrid[i, j] = variable;
+            }
+        }
+
+        return outputGrid;
+    }
+
+    static public int[,] SplitCsvGridTiled(string csvText)
+    {
+        var grid = SplitCsvGrid(csvText);
+
+        int[,] outputGrid = new int[grid.GetLength(0) - 1, grid.GetLength(1) - 1];
+
+        for (int i = 0; i < outputGrid.GetLength(0); i++)
+        {
+            for (int j = 0; j < outputGrid.GetLength(1); j++)
+            {
+                int variable = 0;
+                int.TryParse(grid[i, j], out variable);
+                outputGrid[i, j] = variable;
             }
         }
 

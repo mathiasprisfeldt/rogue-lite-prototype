@@ -44,7 +44,7 @@ public class LevelManager : Singleton<LevelManager>
             }
             else
             {
-                Debug.Log("There are no levels loaded");
+                Debug.Log("There are no levels to loaded");
             }
         }
 
