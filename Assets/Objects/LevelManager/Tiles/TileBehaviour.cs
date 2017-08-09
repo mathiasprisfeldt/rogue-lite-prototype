@@ -15,10 +15,10 @@ public class TileBehaviour : MonoBehaviour
     [SerializeField]
     private Sprite _centerTexture;
 
-    public bool TopCollision { get; set; }
-    public bool BottomCollision { get; set; }
-    public bool LeftCollision { get; set; }
-    public bool RightCollision { get; set; }
+    public bool TopCollision;
+    public bool BottomCollision;
+    public bool LeftCollision;
+    public bool RightCollision;
 
     [SerializeField]
     private LayerMask _colMask;
@@ -69,5 +69,16 @@ public class TileBehaviour : MonoBehaviour
 
             spr.sprite = newSprite;
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
+        var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
+
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.up * halfHeight));
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.down * halfHeight));
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.left * halfWidth));
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.right * halfWidth));
     }
 }

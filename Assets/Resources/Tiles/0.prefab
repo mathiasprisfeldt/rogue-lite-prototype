@@ -83,6 +83,10 @@ MonoBehaviour:
   _middleTexture: {fileID: 0}
   _rightTexture: {fileID: 0}
   _centerTexture: {fileID: 0}
+  TopCollision: 0
+  BottomCollision: 0
+  LeftCollision: 0
+  RightCollision: 0
   _colMask:
     serializedVersion: 2
     m_Bits: 512
