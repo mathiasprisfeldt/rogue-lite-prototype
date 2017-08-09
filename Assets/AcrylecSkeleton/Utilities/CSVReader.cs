@@ -47,7 +47,11 @@ public class CSVReader : MonoBehaviour
         Debug.Log(textOutput);
     }
 
-    // splits a CSV file into a 2D string array
+    /// <summary>
+    /// splits a CSV file into a 2D string array
+    /// </summary>
+    /// <param name="csvText">string grid</param>
+    /// <returns></returns>
     static public string[,] SplitCsvGrid(string csvText)
     {
         string[] lines = csvText.Split("\n"[0]);
@@ -78,12 +82,17 @@ public class CSVReader : MonoBehaviour
         return outputGrid;
     }
 
-    // splits a CSV file into a 2D string array
-    static public int[,] SplitCsvGridToInt(string csvText)
+    /// <summary>
+    /// Converts string grid to int array, replacing errors with 0
+    /// </summary>
+    /// <param name="csvText">String</param>
+    /// <param name="tiled">Is the file from tiled? they have an extra line on the bottom</param>
+    /// <returns>parsed int array, replacing errors with 0</returns>
+    static public int[,] SplitCsvGridToInt(string csvText, bool tiled)
     {
         var grid = SplitCsvGrid(csvText);
 
-        int[,] outputGrid = new int[grid.GetLength(0) - 1, grid.GetLength(1)];
+        int[,] outputGrid = new int[grid.GetLength(0) - 1, grid.GetLength(1) - (tiled ? 1 : 0)];
 
         for (int i = 0; i < outputGrid.GetLength(0); i++)
         {
@@ -98,26 +107,11 @@ public class CSVReader : MonoBehaviour
         return outputGrid;
     }
 
-    static public int[,] SplitCsvGridTiled(string csvText)
-    {
-        var grid = SplitCsvGrid(csvText);
-
-        int[,] outputGrid = new int[grid.GetLength(0) - 1, grid.GetLength(1) - 1];
-
-        for (int i = 0; i < outputGrid.GetLength(0); i++)
-        {
-            for (int j = 0; j < outputGrid.GetLength(1); j++)
-            {
-                int variable = 0;
-                int.TryParse(grid[i, j], out variable);
-                outputGrid[i, j] = variable;
-            }
-        }
-
-        return outputGrid;
-    }
-
-    // splits a CSV row
+    /// <summary>
+    /// Splits a csv row using regex
+    /// </summary>
+    /// <param name="line">Line</param>
+    /// <returns>String array</returns>
     static public string[] SplitCsvLine(string line)
     {
         return (from System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(line,

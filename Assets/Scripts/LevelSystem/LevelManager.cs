@@ -5,16 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Manages and loads levels
+/// </summary>
 public class LevelManager : Singleton<LevelManager>
 {
-    [SerializeField]
-    private List<TextAsset> _randomLevelsText;
+
+    //Forced levels are loaded in succession, then a random level is loaded randomly
     [SerializeField]
     private List<TextAsset> _forcedLevelsText;
+    [SerializeField]
+    private List<TextAsset> _randomLevelsText;
 
     private List<Level> _forcedLevels = new List<Level>();
     private List<Level> _randomLevels = new List<Level>();
 
+    //Current level
     public Level CurrentLevel { get; set; }
 
     protected override void Awake()
@@ -25,6 +31,9 @@ public class LevelManager : Singleton<LevelManager>
         LoadNextLevel();
     }
 
+    /// <summary>
+    /// Loads the next level
+    /// </summary>
     public void LoadNextLevel()
     {
         //There is already a level loaded, and we are ingame
@@ -51,16 +60,19 @@ public class LevelManager : Singleton<LevelManager>
         CurrentLevel.Spawn(transform);
     }
 
+    /// <summary>
+    /// levels form given level files
+    /// </summary>
     public void LoadLevels()
     {
         foreach (var item in _forcedLevelsText)
         {
-            _forcedLevels.Add(new Level(CSVReader.SplitCsvGridToInt(item.text), Convert.ToInt16(item.name)));
+            _forcedLevels.Add(new Level(CSVReader.SplitCsvGridToInt(item.text, false), Convert.ToInt16(item.name)));
         }
 
         foreach (var item in _randomLevelsText)
         {
-            _randomLevels.Add(new Level(CSVReader.SplitCsvGridToInt(item.text), Convert.ToInt16(item.name)));
+            _randomLevels.Add(new Level(CSVReader.SplitCsvGridToInt(item.text, false), Convert.ToInt16(item.name)));
         }
     }
 }

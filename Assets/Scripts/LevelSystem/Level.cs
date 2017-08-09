@@ -2,22 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class for containing a level
+/// </summary>
 public class Level
 {
+    /// <summary>
+    /// The layouts in the level
+    /// </summary>
     public Layout[,] Layouts { get; set; }
+
+    /// <summary>
+    /// ID
+    /// </summary>
     public int ID { get; set; }
+
+    /// <summary>
+    /// Background image, not used currently
+    /// </summary>
     public Texture2D BG { get; set; }
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="layouts">Layouts array</param>
+    /// <param name="id">id</param>
     public Level(Layout[,] layouts, int id)
     {
         Layouts = layouts;
         ID = id;
     }
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="l">Layout array described in an int array with ids for layouts</param>
+    /// <param name="id">id</param>
     public Level(int[,] l, int id)
     {
+        //Create new array and fill with layouts corresponding to the ids given
         Layouts = new Layout[l.GetLength(0), l.GetLength(1)];
-
         for (int i = 0; i < l.GetLength(0); i++)
         {
             for (int j = 0; j < l.GetLength(1); j++)
@@ -29,13 +53,18 @@ public class Level
         ID = id;
     }
 
+    /// <summary>
+    /// Spawns the current layouts in this level according to a given transform
+    /// </summary>
+    /// <param name="transform">transform to spawn under</param>
     public void Spawn(Transform transform)
     {
-        //Find the size of one tile, make better in future
+        //TODO: Find the size of one tile, make better in future
         var test = LevelDataManager.Instance.Tiles[0].transform;
         var tileHeight = test.localScale.y;
         var tileWidth = test.localScale.x;
 
+        //Go through each tile and spawn, if not null
         for (int i = 0; i < Layouts.GetLength(0); i++)
         {
             for (int j = 0; j < Layouts.GetLength(1); j++)
@@ -60,6 +89,11 @@ public class Level
         }
     }
 
+    /// <summary>
+    /// Spawn only one layout
+    /// </summary>
+    /// <param name="transform">parent to spawn under</param>
+    /// <param name="layout">layout to spawn</param>
     public void Spawn(Transform transform, Layout layout)
     {
         //Find the size of one tile, make better in future
