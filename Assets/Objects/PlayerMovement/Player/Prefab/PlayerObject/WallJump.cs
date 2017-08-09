@@ -27,7 +27,7 @@ namespace CharacterController
             get
             {
                 var input = _playerMovement.App.C.PlayerActions != null && _playerMovement.App.C.PlayerActions.Jump.WasPressed;
-                var collision = (_playerMovement.Sides.Left || _playerMovement.Sides.Right) && !_playerMovement.Sides.Bottom;
+                var collision = (_playerMovement.TriggerSides.Left || _playerMovement.TriggerSides.Right) && !_playerMovement.GroundCollisionCheck.Bottom;
                 return input && collision;
             }
         }
@@ -42,7 +42,7 @@ namespace CharacterController
 
         public override void HandleVertical(ref Vector2 velocity)
         {
-            Direction = _playerMovement.Sides.Left ? 1 : -1;
+            Direction = _playerMovement.TriggerSides.Left ? 1 : -1;
             _wallJumpTimer = _duration;
             velocity = new Vector2(0,_verticalForce);
         }

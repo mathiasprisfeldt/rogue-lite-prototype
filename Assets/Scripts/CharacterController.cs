@@ -16,9 +16,6 @@ namespace CharacterController
     public class CharacterController : MonoBehaviour
     {
         private bool _runnedSetup;
-        private float _idleTimer;
-        private float _inAirTimer;
-        private float _onGroundTimer;
 
         [Header("Auto Setup"), SerializeField]
         private bool _setup;
@@ -48,12 +45,7 @@ namespace CharacterController
 
         public bool OnGround
         {
-            get
-            {
-                if (_onGroundTimer > 0)
-                    return true;
-                return GroundCollisionCheck && GroundCollisionCheck.Bottom;
-            }
+            get { return GroundCollisionCheck && GroundCollisionCheck.Bottom; }
         }
 
         public CollisionCheck GroundCollisionCheck
@@ -76,11 +68,6 @@ namespace CharacterController
 
             if (_flipWithVelocity && _rigidbody)
                 Flip(_rigidbody.velocity.x);
-
-            if (!GroundCollisionCheck.Bottom)
-                _onGroundTimer -= Time.deltaTime;
-            else
-                _onGroundTimer = 0.05f;
         }
 
         protected virtual void Setup()
@@ -105,7 +92,6 @@ namespace CharacterController
         {
             if (OnGround && (App.C.PlayerActions.Left.IsPressed || App.C.PlayerActions.Right.IsPressed))
             {
-                _idleTimer = 0;
                 State = CharacterState.Moving;
             }
             else if (OnGround)
@@ -116,7 +102,6 @@ namespace CharacterController
             {
                 State = CharacterState.InAir;
             }
-
         }
 
 

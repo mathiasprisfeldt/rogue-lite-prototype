@@ -23,21 +23,18 @@ namespace RogueLiteInput
             Down.AddDefaultBinding(Key.S);
             Down.AddDefaultBinding(Key.None);
 
+            //Down
+            Up.AddDefaultBinding(Key.W);
+            Up.AddDefaultBinding(Key.None);
+
             //Jump
-            Jump.AddDefaultBinding(Key.W);
             Jump.AddDefaultBinding(Key.Space);
+            Jump.AddDefaultBinding(Key.None);
 
             //Dash
             Dash.AddDefaultBinding(Key.LeftShift);
             Dash.AddDefaultBinding(Key.None);
 
-            //PeekUp
-            PeekUp.AddDefaultBinding(Key.UpArrow);
-            PeekUp.AddDefaultBinding(Key.None);
-
-            //PeekDown
-            PeekDown.AddDefaultBinding(Key.DownArrow);
-            PeekDown.AddDefaultBinding(Key.None);
         }
     }
 }

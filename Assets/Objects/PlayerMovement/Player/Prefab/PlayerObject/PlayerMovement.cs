@@ -170,24 +170,27 @@ namespace CharacterController
         private void HandleVerticalMovement(ref Vector2 velocity)
         {
             Hanging = false;
-
+            List<Collider2D> col = new List<Collider2D>();
+            if(Sides.BottomColliders != null)
+                col = Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
             if (_shouldDash)
             {
                 _dashTimer = _dashCooldown;
                 _shouldDash = false;
 
             }
-            else if (WallJump && WallJump.VerticalActive)
+            else if (WallJump && WallJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed && _ledgeHanging)
             {
                 WallJump.HandleVertical(ref velocity);
             }
-            else if (DoubleJump && DoubleJump.VerticalActive)
+            else if (DoubleJump && DoubleJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed)
             {
                 DoubleJump.HandleVertical(ref velocity);
             }
-            else if (App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && TriggerSides.Bottom && Sides.Bottom)
+            else if ((App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && TriggerSides.Bottom && Sides.Bottom &&
+                !App.C.PlayerActions.Down.IsPressed) | (col.Count > 0 && App.C.PlayerActions.Down.IsPressed && App.C.PlayerActions.Jump.WasPressed))
             {
-                List<Collider2D> col = Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
+                
                 velocity += new Vector2(0, _jumpForce);
 
                 if (col.Count > 0 && App.C.PlayerActions.Down.IsPressed)

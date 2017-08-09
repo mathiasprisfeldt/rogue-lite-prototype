@@ -36,16 +36,16 @@ public class CameraPoint : MonoBehaviour
             return;
 	    var targetX = _target.transform.localScale.x > 0 ? _xPosition : -_xPosition;
 	    if (targetX != transform.localPosition.x)
-	        transform.localPosition = new Vector3(Mathf.Lerp(transform.localPosition.x, targetX, .1f), transform.localPosition.y);
+	        transform.localPosition = new Vector3(Mathf.Lerp(transform.localPosition.x, targetX, .02f), transform.localPosition.y);
 
-	    if ((_playerMovement.OnGround ||_playerMovement.Hanging) && (_playerMovement.App.C.PlayerActions.PeekUp.IsPressed ||
-	        _playerMovement.App.C.PlayerActions.PeekDown.IsPressed))
+	    if ((_playerMovement.OnGround ||_playerMovement.Hanging) && (_playerMovement.App.C.PlayerActions.Up.IsPressed ||
+	        _playerMovement.App.C.PlayerActions.Down.IsPressed))
 	    {
             if(_peekTimer > 0)
 	            _peekTimer -= Time.deltaTime;
 	        else
 	        {
-	            var dir = _playerMovement.App.C.PlayerActions.PeekUp.IsPressed ? 1 : -1;
+	            var dir = _playerMovement.App.C.PlayerActions.Up.IsPressed ? 1 : -1;
                 if (transform.localPosition.y != _startYPosition + dir * _peekAmount)
                     transform.localPosition = new Vector3(transform.localPosition.x, Mathf.Lerp(transform.localPosition.y, _startYPosition + dir * _peekAmount, .1f));
 

@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212272256490795814}
   - component: {fileID: 114352209082413204}
   - component: {fileID: 61327883700785612}
+  - component: {fileID: 114646739861411970}
   m_Layer: 9
   m_Name: Platform
   m_TagString: Untagged
@@ -65,7 +66,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.71, y: 0.71}
+  m_Size: {x: 0.7, y: 0.7}
   m_EdgeRadius: 0
 --- !u!114 &114352209082413204
 MonoBehaviour:
@@ -84,6 +85,20 @@ MonoBehaviour:
   _right: {fileID: 21300000, guid: 60f8b2ebe0bd02a4aa8e7c9685bd5a21, type: 3}
   _noGrass: {fileID: 21300000, guid: 5e8f332b2c8b6344391d353fdb5efb5b, type: 3}
   _layers:
+    serializedVersion: 2
+    m_Bits: 512
+--- !u!114 &114646739861411970
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1227069432035000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beb2f70a66efdef4ea4c526ff4a7d6f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mask:
     serializedVersion: 2
     m_Bits: 512
 --- !u!212 &212272256490795814

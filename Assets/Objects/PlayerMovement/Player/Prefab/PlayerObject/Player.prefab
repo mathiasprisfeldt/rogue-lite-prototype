@@ -399,7 +399,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.1}
+  m_Size: {x: 0.08, y: 0.1}
   m_EdgeRadius: 0
 --- !u!70 &70843181140069408
 CapsuleCollider2D:
@@ -495,10 +495,10 @@ MonoBehaviour:
   _rigidbody: {fileID: 50863075550868558}
   _model: {fileID: 1382681027286190}
   _groundCollisionCheck: {fileID: 114211182565548322}
-  _wallJump: {fileID: 114227199752316536}
-  _doubleJump: {fileID: 114518903041524674}
-  _wallSlide: {fileID: 114334842691314668}
-  _ledgeHanging: {fileID: 114323172994149904}
+  _wallJump: {fileID: 0}
+  _doubleJump: {fileID: 0}
+  _wallSlide: {fileID: 0}
+  _ledgeHanging: {fileID: 0}
   _modificationHandler: {fileID: 114659536614634588}
   _triggerCheck: {fileID: 114286498854671988}
   _collisionCheck: {fileID: 114051498006790084}
@@ -523,7 +523,7 @@ MonoBehaviour:
   _collisionLayers:
     serializedVersion: 2
     m_Bits: 512
-  _tolerance: 0
+  _tolerance: 0.05
 --- !u!114 &114227199752316536
 MonoBehaviour:
   m_ObjectHideFlags: 1
