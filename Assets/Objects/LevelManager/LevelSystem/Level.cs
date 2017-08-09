@@ -108,7 +108,7 @@ public class Level
                         // Each tile
                         Tile t = Layouts[i, j].Tiles[x, y];
                         if (t.GoInstance)
-                            t.GoInstance.GetComponent<TileBehaviour>().CheckSides();
+                            t.GoInstance.GetComponent<TileBehaviour>().SetupTile();
                     }
                 }
             }

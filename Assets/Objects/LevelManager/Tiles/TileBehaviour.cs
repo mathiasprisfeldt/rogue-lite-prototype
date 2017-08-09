@@ -4,26 +4,70 @@ using UnityEngine;
 
 public class TileBehaviour : MonoBehaviour
 {
+    [SerializeField]
+    private bool _autoTexturize;
+    [SerializeField]
+    private Sprite _leftTexture;
+    [SerializeField]
+    private Sprite _middleTexture;
+    [SerializeField]
+    private Sprite _rightTexture;
+    [SerializeField]
+    private Sprite _centerTexture;
+
     public bool TopCollision { get; set; }
     public bool BottomCollision { get; set; }
     public bool LeftCollision { get; set; }
     public bool RightCollision { get; set; }
 
     [SerializeField]
-    private LayerMask mask;
+    private LayerMask _colMask;
 
-    public void CheckSides()
+    public void SetupTile()
     {
         var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
         var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
 
-        if (Physics2D.RaycastAll(transform.position, Vector2.up, halfHeight, mask).Length > 0)
+        //Up
+        if (Physics2D.RaycastAll(transform.position, Vector2.up, halfHeight, _colMask).Length > 0)
+        {
             TopCollision = true;
-        if (Physics2D.RaycastAll(transform.position, Vector2.down, halfHeight, mask).Length > 0)
+        }
+        //Down
+        if (Physics2D.RaycastAll(transform.position, Vector2.down, halfHeight, _colMask).Length > 0)
+        {
             BottomCollision = true;
-        if (Physics2D.RaycastAll(transform.position, Vector2.left, halfWidth, mask).Length > 0)
+        }
+        //Left
+        if (Physics2D.RaycastAll(transform.position, Vector2.left, halfWidth, _colMask).Length > 0)
+        {
             LeftCollision = true;
-        if (Physics2D.RaycastAll(transform.position, Vector2.right, halfWidth, mask).Length > 0)
+        }
+        //Right
+        if (Physics2D.RaycastAll(transform.position, Vector2.right, halfWidth, _colMask).Length > 0)
+        {
             RightCollision = true;
+        }
+
+        if (_autoTexturize)
+        {
+            var spr = GetComponent<SpriteRenderer>();
+            Sprite newSprite = null;
+
+            if (LeftCollision && !RightCollision)
+                newSprite = _rightTexture;
+
+            if (!LeftCollision && RightCollision)
+                newSprite = _leftTexture;
+
+            if (BottomCollision || (LeftCollision && RightCollision))
+                newSprite = _middleTexture;
+
+            if (TopCollision)
+                newSprite = _centerTexture;
+
+
+            spr.sprite = newSprite;
+        }
     }
 }
