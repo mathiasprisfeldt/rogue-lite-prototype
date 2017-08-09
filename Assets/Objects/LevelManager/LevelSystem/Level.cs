@@ -60,9 +60,9 @@ public class Level
     public void Spawn(Transform transform)
     {
         //TODO: Find the size of one tile, make better in future
-        var test = LevelDataManager.Instance.Tiles[0].transform;
-        var tileHeight = test.localScale.y;
-        var tileWidth = test.localScale.x;
+        var test = LevelDataManager.Instance.Tiles[0].GetComponent<SpriteRenderer>();
+        var tileHeight = test.bounds.size.y;
+        var tileWidth = test.bounds.size.x;
 
         //Go through each tile and spawn, if not null
         for (int i = 0; i < Layouts.GetLength(0); i++)
@@ -70,6 +70,9 @@ public class Level
             for (int j = 0; j < Layouts.GetLength(1); j++)
             {
                 // Each layout
+                var parent = new GameObject("Layout " + Layouts[i, j].ID);
+                parent.transform.SetParent(transform);
+
                 for (int x = 0; x < Layouts[i, j].Tiles.GetLength(0); x++)
                 {
                     for (int y = 0; y < Layouts[i, j].Tiles.GetLength(1); y++)
@@ -77,12 +80,15 @@ public class Level
                         // Each tile
                         Tile t = Layouts[i, j].Tiles[x, y];
                         if (t.GO != null)
+                        {
+
                             GameObject.Instantiate(t.GO,
                                 transform.position + new Vector3(
                                     (i * Layouts[i, j].Tiles.GetLength(0)) * tileWidth + x * tileWidth,
                                     ((j * Layouts[i, j].Tiles.GetLength(1)) * tileHeight + y * tileHeight) * -1),
                                 Quaternion.identity,
-                                transform);
+                                parent.transform);
+                        }
                     }
                 }
             }

@@ -8,6 +8,7 @@ using UnityEngine;
 /// <summary>
 /// Manages and loads levels
 /// </summary>
+[RequireComponent(typeof(LevelDataManager))]
 public class LevelManager : Singleton<LevelManager>
 {
 
