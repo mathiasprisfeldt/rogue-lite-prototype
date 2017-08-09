@@ -949,6 +949,7 @@ Transform:
   - {fileID: 313427652}
   - {fileID: 1303215326}
   - {fileID: 831772108}
+  - {fileID: 64460217}
   m_Father: {fileID: 224733368}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1099,12 +1100,22 @@ CompositeCollider2D:
         Y: -10550003
       - X: 3550000
         Y: -10550003
+  - m_Collider: {fileID: 1300684358}
+    m_ColliderPaths:
+    - - X: 3550000
+        Y: 3550000
+      - X: -3550000
+        Y: 3550000
+      - X: -3550000
+        Y: -3550000
+      - X: 3550000
+        Y: -3550000
   m_CompositePaths:
     m_Paths:
-    - - {x: -0.355, y: -0.3450003}
+    - - {x: -0.355, y: 0.355}
       - {x: -0.355, y: -9.454915}
       - {x: 0.355, y: -9.454915}
-      - {x: 0.355, y: -0.3450003}
+      - {x: 0.355, y: 0.355}
   m_VertexDistance: 0.0005
 --- !u!50 &206352598
 Rigidbody2D:
@@ -1164,7 +1175,6 @@ Transform:
   - {fileID: 779939952}
   - {fileID: 206352596}
   - {fileID: 146862578}
-  - {fileID: 64460217}
   - {fileID: 1410223895}
   - {fileID: 428024050}
   - {fileID: 1862884391}
@@ -1629,7 +1639,7 @@ Transform:
   - {fileID: 290993385}
   - {fileID: 921403710}
   m_Father: {fileID: 224733368}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!66 &428024051
 CompositeCollider2D:
@@ -3281,15 +3291,15 @@ Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 224733368}
+    m_TransformParent: {fileID: 206352596}
     m_Modifications:
     - target: {fileID: 4740437923476846, guid: 11f3ddaf0c7516644bd3010aca56f518, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -7.217996
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4740437923476846, guid: 11f3ddaf0c7516644bd3010aca56f518, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 6.0050836
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4740437923476846, guid: 11f3ddaf0c7516644bd3010aca56f518, type: 2}
       propertyPath: m_LocalPosition.z
@@ -3313,7 +3323,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4740437923476846, guid: 11f3ddaf0c7516644bd3010aca56f518, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 1227069432035000, guid: 11f3ddaf0c7516644bd3010aca56f518, type: 2}
       propertyPath: m_Name
@@ -3807,6 +3817,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 11f3ddaf0c7516644bd3010aca56f518, type: 2}
   m_IsPrefabParent: 0
+--- !u!61 &1300684358 stripped
+BoxCollider2D:
+  m_PrefabParentObject: {fileID: 61327883700785612, guid: 11f3ddaf0c7516644bd3010aca56f518,
+    type: 2}
+  m_PrefabInternal: {fileID: 1132183159}
 --- !u!1 &1300860640 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1228637346484900, guid: 841d69d824d4a674bb5ca8ff0f99432c,
@@ -4179,7 +4194,7 @@ Transform:
   - {fileID: 1800262706}
   - {fileID: 1776934832}
   m_Father: {fileID: 224733368}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!66 &1410223896
 CompositeCollider2D:
@@ -5506,7 +5521,7 @@ Transform:
   - {fileID: 1841585577}
   - {fileID: 1125146323}
   m_Father: {fileID: 224733368}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!66 &1862884392
 CompositeCollider2D:
@@ -5715,7 +5730,7 @@ Transform:
   - {fileID: 983776482}
   - {fileID: 242143920}
   m_Father: {fileID: 224733368}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!66 &1929930270
 CompositeCollider2D:

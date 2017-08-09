@@ -53,6 +53,7 @@ namespace CharacterController
         private bool _shouldDash;
         private float _dashTimer;
         private Vector2 _savedVelocity;
+        private bool _shouldHang;
 
         public PlayerState PlayerState { get; set; }
 
@@ -114,6 +115,8 @@ namespace CharacterController
             HandleState();
             TriggerCheck.IsColliding(out _triggerSides);
             CollisionCheck.IsColliding(out _collisionSides);
+
+            _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
 
             if (App.C.PlayerActions != null && App.C.PlayerActions.Dash.WasPressed && _dashTimer <= 0)
                 _shouldDash = true;
@@ -194,13 +197,12 @@ namespace CharacterController
                     }
                 }
             }
-            else if (LedgeHanging && LedgeHanging.VerticalActive)
+            else if (_shouldHang)
             {
-                velocity = new Vector2(velocity.x, Rigidbody.gravityScale * -Physics2D.gravity.y);
+                LedgeHanging.HandleHorizontal(ref velocity);
             }
             else if (_wallSlide && _wallSlide.VerticalActive)
             {
-                var temp = _wallSlide.VerticalActive;
                 WallSlide.HandleVertical(ref velocity);
             }
             else

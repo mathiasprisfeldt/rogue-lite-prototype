@@ -121,7 +121,7 @@ namespace CharacterController
         }
 
 
-        protected void Flip(float dir)
+        public void Flip(float dir)
         {
             if (dir > 0)
                 _model.transform.localScale = new Vector3(1, transform.localScale.y);
