@@ -11,6 +11,13 @@ using UnityEngine;
 [RequireComponent(typeof(LevelDataManager))]
 public class LevelManager : Singleton<LevelManager>
 {
+    [SerializeField]
+    private GameObject _borderTile;
+    public GameObject BorderTile { get { return _borderTile; } set { _borderTile = value; } }
+
+    [SerializeField]
+    private GameObject _backGround;
+    public GameObject BackGround { get { return _backGround; } set { _backGround = value; } }
 
     //Forced levels are loaded in succession, then a random level is loaded randomly
     [SerializeField]
@@ -59,6 +66,14 @@ public class LevelManager : Singleton<LevelManager>
         }
 
         CurrentLevel.Spawn(transform);
+    }
+
+    public void SpawnBackGround(Vector2 v)
+    {
+        Vector2 size = (v * 2);
+
+        var bg = Instantiate(BackGround, new Vector3(v.x - .5f, v.y + .5f), Quaternion.identity, transform);
+        bg.GetComponent<SpriteRenderer>().size = size;
     }
 
     /// <summary>

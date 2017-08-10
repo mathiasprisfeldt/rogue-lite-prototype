@@ -14,11 +14,17 @@ TagManager:
   - UI
   - 
   - 
+<<<<<<< HEAD
   - Player
   - Platform
   - NonPlayerCollision
-  - BorderTile
   - 
+=======
+  - 
+  - Platform
+  - 
+  - BorderTile
+>>>>>>> LevelSystem
   - 
   - 
   - 

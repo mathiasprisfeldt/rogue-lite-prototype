@@ -2,17 +2,17 @@
 using UnityEngine;
 
 
-    /// <summary>
-    /// Purpose:
-    /// Creator:
-    /// </summary>
-    public class PlatformBehavior : MonoBehaviour 
-    {
-        public List<TileBehaviour> Tiles { get; set; }
-        public bool Istop { get; set; }
+/// <summary>
+/// Purpose:
+/// Creator:
+/// </summary>
+public class PlatformBehavior : MonoBehaviour
+{
+    public List<TileBehaviour> Tiles { get; set; }
+    public bool Istop { get; set; }
 
-        public void Awake()
-        {
-            Tiles = new List<TileBehaviour>();
-        }
+    public void Awake()
+    {
+        Tiles = new List<TileBehaviour>();
     }
+}

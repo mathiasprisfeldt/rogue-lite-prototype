@@ -29,7 +29,7 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 
         public void Update()
         {
-            if(_activeActionSettype != _oldActionSetType)
+            if (_activeActionSettype != _oldActionSetType)
                 ChangeActionSet(_activeActionSettype);
 
             _oldActionSetType = _activeActionSettype;

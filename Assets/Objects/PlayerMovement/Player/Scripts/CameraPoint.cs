@@ -23,47 +23,47 @@ public class CameraPoint : MonoBehaviour
     private float _peekTimer;
     private bool _resetting;
 
-	// Use this for initialization
-	void Start ()
-	{
-	    _xPosition = transform.localPosition.x;
-	    _peekTimer = _durationUntilPeek;
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-        if(_target == null)
-            return;
-	    var targetX = _target.transform.localScale.x > 0 ? _xPosition : -_xPosition;
-	    if (targetX != transform.localPosition.x)
-	        transform.localPosition = new Vector3(Mathf.Lerp(transform.localPosition.x, targetX, .02f), transform.localPosition.y);
+    // Use this for initialization
+    void Start()
+    {
+        _xPosition = transform.localPosition.x;
+        _peekTimer = _durationUntilPeek;
+    }
 
-	    if ((_playerMovement.OnGround ||_playerMovement.Hanging) && (_playerMovement.App.C.PlayerActions.Up.IsPressed ||
-	        _playerMovement.App.C.PlayerActions.Down.IsPressed))
-	    {
-            if(_peekTimer > 0)
-	            _peekTimer -= Time.deltaTime;
-	        else
-	        {
-	            var dir = _playerMovement.App.C.PlayerActions.Up.IsPressed ? 1 : -1;
+    // Update is called once per frame
+    void Update()
+    {
+        if (_target == null)
+            return;
+        var targetX = _target.transform.localScale.x > 0 ? _xPosition : -_xPosition;
+        if (targetX != transform.localPosition.x)
+            transform.localPosition = new Vector3(Mathf.Lerp(transform.localPosition.x, targetX, .02f), transform.localPosition.y);
+
+        if ((_playerMovement.OnGround || _playerMovement.Hanging) && (_playerMovement.App.C.PlayerActions.Up.IsPressed ||
+            _playerMovement.App.C.PlayerActions.Down.IsPressed))
+        {
+            if (_peekTimer > 0)
+                _peekTimer -= Time.deltaTime;
+            else
+            {
+                var dir = _playerMovement.App.C.PlayerActions.Up.IsPressed ? 1 : -1;
                 if (transform.localPosition.y != _startYPosition + dir * _peekAmount)
                     transform.localPosition = new Vector3(transform.localPosition.x, Mathf.Lerp(transform.localPosition.y, _startYPosition + dir * _peekAmount, .1f));
 
             }
-	    }
-	    else
-	    {
+        }
+        else
+        {
             _peekTimer = _durationUntilPeek;
-	        if (Math.Abs(transform.localPosition.y - _startYPosition) > 0.00001f)
-	        {
-	            _resetting = true;
+            if (Math.Abs(transform.localPosition.y - _startYPosition) > 0.00001f)
+            {
+                _resetting = true;
                 transform.localPosition = new Vector3(transform.localPosition.x, Mathf.Lerp(transform.localPosition.y, _startYPosition, .1f));
             }
             else if (_resetting)
                 _resetting = false;
-                
+
         }
-	        
-	}
+
+    }
 }
