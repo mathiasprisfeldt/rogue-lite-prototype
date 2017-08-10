@@ -25,6 +25,7 @@ namespace CharacterController
                 var right = _playerMovement.TriggerSides.Right;
                 var horizontalMovement = _playerMovement.App.C.PlayerActions.Right.IsPressed && left ||
                                          _playerMovement.App.C.PlayerActions.Left.IsPressed && right;
+
                 if ((right || left) && (_playerMovement.WallJump && !_playerMovement.WallJump.HorizontalActive) && 
                     !(_playerMovement.App.C.PlayerActions.Down.IsPressed && _playerMovement.App.C.PlayerActions.Jump.IsPressed) && !horizontalMovement)
                 {

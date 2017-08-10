@@ -89,6 +89,7 @@ public class Level
                                 parent.transform);
 
                             t.GoInstance = go;
+                            go.name = i.ToString() + j.ToString() + x.ToString() + y.ToString();
                         }
                     }
                 }
@@ -109,6 +110,67 @@ public class Level
                         Tile t = Layouts[i, j].Tiles[x, y];
                         if (t.GoInstance)
                             t.GoInstance.GetComponent<TileBehaviour>().CheckSides();
+                    }
+                }
+            }
+        }
+
+        //Todo Check if this is okay, added by Mikkel
+        MakeComposites();
+    }
+
+
+
+    private void MakeComposites()
+    {
+        for (int i = 0; i < Layouts.GetLength(0); i++)
+        {
+            for (int j = 0; j < Layouts.GetLength(1); j++)
+            {
+                // Each layout
+                for (int x = 0; x < Layouts[i, j].Tiles.GetLength(0); x++)
+                {
+                    for (int y = 0; y < Layouts[i, j].Tiles.GetLength(1); y++)
+                    {
+
+                        Tile c = Layouts[i, j].Tiles[x, y];
+                        if (c.GoInstance)
+                        {
+                            // Each tile
+                            Tile t = Layouts[i, j].Tiles[x, y];
+                            TileBehaviour temp = null;
+                            if (t.GoInstance)
+                                temp = t.GoInstance.GetComponent<TileBehaviour>();
+                            if(temp && !temp.Touched)
+                                temp.StartVerticalComposite();
+                        }
+                    }
+                }
+            }
+        }
+
+        //I'm Tired
+        for (int i = 0; i < Layouts.GetLength(0); i++)
+        {
+            for (int j = 0; j < Layouts.GetLength(1); j++)
+            {
+                // Each layout
+                for (int x = 0; x < Layouts[i, j].Tiles.GetLength(0); x++)
+                {
+                    for (int y = 0; y < Layouts[i, j].Tiles.GetLength(1); y++)
+                    {
+
+                        Tile c = Layouts[i, j].Tiles[x, y];
+                        if (c.GoInstance)
+                        {
+                            // Each tile
+                            Tile t = Layouts[i, j].Tiles[x, y];
+                            TileBehaviour temp = null;
+                            if (t.GoInstance)
+                                temp = t.GoInstance.GetComponent<TileBehaviour>();
+                            if (temp && !temp.Touched)
+                                temp.StartHorizontalComposite();
+                        }
                     }
                 }
             }
