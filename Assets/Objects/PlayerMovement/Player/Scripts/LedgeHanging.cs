@@ -49,9 +49,14 @@ namespace CharacterController
                     Vector2 temp = new Vector2(thisColX, _playerMovement.TriggerCheck.Colliders[0].bounds.center.y);
                     if (Mathf.Abs(temp.y -hangPosition.y) <= _sensitivity)
                     {
-                        var tile = col.gameObject.GetComponent<TileBehaviour>();
+                        TileBehaviour tile = col.gameObject.GetComponent<TileBehaviour>();
                         if (tile && tile.TopCollision)
                             return false;
+
+                        PlatformBehavior platform = col.gameObject.GetComponent<PlatformBehavior>();
+                        if (platform && !platform.Istop)
+                            return false;
+
                         var extend = right ? -_playerMovement.CollisionCheck.Colliders[0].bounds.extents.x : _playerMovement.CollisionCheck.Colliders[0].bounds.extents.x;
                         _playerMovement.Rigidbody.position = Vector2.Lerp(_playerMovement.Rigidbody.position, new Vector2(hangPosition.x + extend, hangPosition.y), .35f);
                         var dir = left ? 1 : -1;

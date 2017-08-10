@@ -11,7 +11,6 @@ public class TileBehaviour : MonoBehaviour
 
     private Queue<TileBehaviour> _queue = new Queue<TileBehaviour>();
 
-    private bool Vertical;
     private bool _isTop;
 
     public bool Touched { get; set; }
@@ -98,16 +97,26 @@ public class TileBehaviour : MonoBehaviour
     public void StartHorizontalComposite(ref int amountOfPlatforms)
     {
         List<GameObject> targets = new List<GameObject>();
+        Touched = true;
 
         CheckHorizontalComposite(ref targets, false);
         if (targets.Count <= 1)
+        {
+            Touched = false;
             return;
+        }
+            
 
         var parent = Instantiate(_parent);
         parent.name = parent.name + amountOfPlatforms;
         amountOfPlatforms++;
+        PlatformBehavior pb = parent.AddComponent<PlatformBehavior>();
+
         foreach (var target in targets)
         {
+            if (target == gameObject)
+                pb.Istop = _isTop;
+            pb.Tiles.Add(this);
             target.transform.SetParent(parent.transform, true);
         }
     }
@@ -153,33 +162,26 @@ public class TileBehaviour : MonoBehaviour
     public void StartVerticalComposite(ref int amountOfPlatforms)
     {
         List<GameObject> targets = new List<GameObject>();
+        Touched = true;
 
         CheckVerticalCompisite(ref targets,false);
-        if(targets.Count <= 1)
-            return;
+            if (targets.Count <= 1)
+            {
+                Touched = false;
+                return;
+            }
 
         var parent = Instantiate(_parent);
         parent.name = parent.name + amountOfPlatforms;
         amountOfPlatforms++;
+        PlatformBehavior pb = parent.AddComponent<PlatformBehavior>();
+
         foreach (var target in targets)
-        { 
-            target.transform.SetParent(parent.transform, true);
+        {
             if (target == gameObject)
-            {
-                TileBehaviour temp = target.GetComponent<TileBehaviour>();
-                if (temp)
-                {
-                    TileBehaviour tb = (TileBehaviour)parent.AddComponent(temp.GetType());
-                    if (tb)
-                    {
-                        tb.LeftCollision = temp.LeftCollision;
-                        tb.RightCollision = temp.RightCollision;
-                        tb.TopCollision = temp.TopCollision;
-                        tb.BottomCollision = temp.BottomCollision;
-                        tb.Touched = temp.Touched;
-                    }
-                }
-            }
+                pb.Istop = _isTop;
+            pb.Tiles.Add(this);
+            target.transform.SetParent(parent.transform, true);
         }
     }
 
