@@ -35,7 +35,7 @@ public class CameraPoint : MonoBehaviour
 	    var targetX = _target.transform.localScale.x > 0 ? _xPosition : -_xPosition;
 	    var targetY = 0f;
 
-	    if (_playerMovement.App.C.PlayerActions.Up.IsPressed || _playerMovement.App.C.PlayerActions.Down.IsPressed)
+	    if (_playerMovement.App.C.PlayerActions != null && (_playerMovement.App.C.PlayerActions.Up.IsPressed || _playerMovement.App.C.PlayerActions.Down.IsPressed))
 	    {
 	        if (_peekTImer > 0)
 	            _peekTImer -= Time.fixedDeltaTime;

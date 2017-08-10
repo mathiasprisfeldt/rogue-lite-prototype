@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class TileBehaviour : MonoBehaviour
 {
-    
     [SerializeField]
     private GameObject _parent;
 
@@ -14,12 +13,6 @@ public class TileBehaviour : MonoBehaviour
     private bool _isTop;
 
     public bool Touched { get; set; }
-
-    public bool TopCollision { get; set; }
-    public bool BottomCollision { get; set; }
-    public bool LeftCollision { get; set; }
-    public bool RightCollision { get; set; }
-    
     [SerializeField]
     private bool _autoTexturize;
     [SerializeField]
@@ -30,6 +23,11 @@ public class TileBehaviour : MonoBehaviour
     private Sprite _rightTexture;
     [SerializeField]
     private Sprite _centerTexture;
+
+    public bool TopCollision { get; set; }
+    public bool BottomCollision { get; set; }
+    public bool LeftCollision { get; set; }
+    public bool RightCollision { get; set; }
 
     [SerializeField]
     private LayerMask _colMask;
@@ -82,18 +80,6 @@ public class TileBehaviour : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
-        var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
-
-        Gizmos.DrawLine(transform.position, transform.position + (Vector3.up * halfHeight));
-        Gizmos.DrawLine(transform.position, transform.position + (Vector3.down * halfHeight));
-        Gizmos.DrawLine(transform.position, transform.position + (Vector3.left * halfWidth));
-        Gizmos.DrawLine(transform.position, transform.position + (Vector3.right * halfWidth));
-    }
-
-
     public void StartHorizontalComposite(ref int amountOfPlatforms)
     {
         List<GameObject> targets = new List<GameObject>();
@@ -105,7 +91,6 @@ public class TileBehaviour : MonoBehaviour
             Touched = false;
             return;
         }
-            
 
         var parent = Instantiate(_parent);
         parent.name = parent.name + amountOfPlatforms;
@@ -164,12 +149,12 @@ public class TileBehaviour : MonoBehaviour
         List<GameObject> targets = new List<GameObject>();
         Touched = true;
 
-        CheckVerticalCompisite(ref targets,false);
-            if (targets.Count <= 1)
-            {
-                Touched = false;
-                return;
-            }
+        CheckVerticalCompisite(ref targets, false);
+        if (targets.Count <= 1)
+        {
+            Touched = false;
+            return;
+        }
 
         var parent = Instantiate(_parent);
         parent.name = parent.name + amountOfPlatforms;
@@ -209,7 +194,7 @@ public class TileBehaviour : MonoBehaviour
         if (down.collider != null)
             tDown = down.collider.gameObject.GetComponent<TileBehaviour>();
 
-        if (!tUp && (tLeft|| tRight))
+        if (!tUp && (tLeft || tRight))
             _isTop = true;
 
         if (!_isTop || nextShouldDown)

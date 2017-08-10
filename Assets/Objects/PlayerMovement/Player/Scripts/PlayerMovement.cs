@@ -7,6 +7,12 @@ using AcrylecSkeleton.ModificationSystem;
 
 namespace CharacterController
 {
+    public enum Ability
+    {
+        None, DoubleJump, WallJump, Wallslide, LedgeHanging, Dash, Jump
+    }
+
+
     public class PlayerMovement : CharacterController
     {
 
@@ -68,9 +74,10 @@ namespace CharacterController
         private Vector2 _savedVelocity;
         private bool _shouldHang;
         private float _jumpTimer;
+        private Ability _lastUsedVerticalAbility;
+        private Ability _lastUsedHorizontalAbility;
 
         public PlayerState PlayerState { get; set; }
-        public bool Hanging { get; set; }
 
         public WallJump WallJump
         {
@@ -154,7 +161,7 @@ namespace CharacterController
         {
             _velocity = new Vector2(0,0);
 
-            if (App.C.PlayerActions.Left || App.C.PlayerActions.Right)
+            if (App.C.PlayerActions != null && (App.C.PlayerActions.Left || App.C.PlayerActions.Right))
             {
                 float dir = App.C.PlayerActions.Left ? -1 : 1;
                 Flip(dir);
@@ -173,18 +180,25 @@ namespace CharacterController
             if (_dashTimer > 0)
                 _dashTimer -= Time.fixedDeltaTime;
 
+            //todo Make limit fallspeed work
+            //var predictGravity = Rigidbody.velocity.y + Physics2D.gravity.y * Rigidbody.gravityScale;
+            //if (predictGravity <= -_maxFallSpeed)
+            //{
+            //    Rigidbody.velocity += new Vector2(Rigidbody.velocity.x, Rigidbody.CounterGravity(0));
+            //}
+
         }
 
         void LateUpdate()
         {
             
-            Rigidbody.velocity = new Vector2(Rigidbody.velocity.x,
-                Mathf.Clamp(Rigidbody.velocity.y, -_maxFallSpeed, float.MaxValue));          
+            
+
         }
 
         protected override void UpdateState()
         {
-            if (OnGround && (App.C.PlayerActions.Left.IsPressed || App.C.PlayerActions.Right.IsPressed))
+            if (OnGround && (App.C.PlayerActions != null && (App.C.PlayerActions.Left.IsPressed || App.C.PlayerActions.Right.IsPressed)))
             {
                 State = CharacterState.Moving;
             }
@@ -222,19 +236,25 @@ namespace CharacterController
 
         private void HandleVerticalMovement(ref Vector2 velocity)
         {
-            Hanging = false;
             List<Collider2D> col = new List<Collider2D>();
             if(Sides.BottomColliders != null)
                 col = Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
-                if (Dash && !Dash.HorizontalActive)
+                if (!(Dash && Dash.HorizontalActive))
             {
-                if (WallJump && WallJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed && _ledgeHanging)
+                if (_shouldHang)
+                {
+                    LedgeHanging.HandleVertical(ref velocity);
+                    _lastUsedVerticalAbility = Ability.LedgeHanging;
+                }
+                else if (WallJump && WallJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed && !(LedgeHanging && LedgeHanging.VerticalActive))
                 {
                     WallJump.HandleVertical(ref velocity);
+                    _lastUsedVerticalAbility = Ability.WallJump;
                 }
-                else if (DoubleJump && DoubleJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed)
+                else if (DoubleJump && DoubleJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed )
                 {
                     DoubleJump.HandleVertical(ref velocity);
+                    _lastUsedVerticalAbility = Ability.DoubleJump;
                 }
                 else if ((App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && Sides.Bottom &&
                     !App.C.PlayerActions.Down.IsPressed) || _jumpTimer > 0 
@@ -242,7 +262,7 @@ namespace CharacterController
                 {
                     if (_jumpTimer <= 0)
                         _jumpTimer = _jumpDuration;
-                    velocity += new Vector2(0, _jumpForce / _jumpDuration + Physics2D.gravity.y * Rigidbody.gravityScale);
+                    velocity = new Vector2(0, Rigidbody.CalculateVerticalSpeed(_jumpForce / _jumpDuration));
 
                     if (col.Count > 0 && App.C.PlayerActions.Down.IsPressed)
                     {
@@ -252,15 +272,12 @@ namespace CharacterController
                             _modificationHandler.AddModification(new TemporaryLayerChange(0.4f, "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
                         }
                     }
-                }
-                else if (_shouldHang)
-                {
-                    LedgeHanging.HandleHorizontal(ref velocity);
-                    Hanging = true;
+                    _lastUsedVerticalAbility = Ability.Jump;
                 }
                 else if (_wallSlide && _wallSlide.VerticalActive)
                 {
                     WallSlide.HandleVertical(ref velocity);
+                    _lastUsedVerticalAbility = Ability.Wallslide;
                 }
                 else
                     velocity = new Vector2(velocity.x, 0);
@@ -286,10 +303,12 @@ namespace CharacterController
             if (Dash && Dash.HorizontalActive)
             {
                 Dash.HandleHorizontal(ref velocity);
+                _lastUsedHorizontalAbility = Ability.Dash;
             }
-            else if (WallJump && WallJump.HorizontalActive)
+            else if (WallJump && WallJump.HorizontalActive && !(LedgeHanging && LedgeHanging.VerticalActive))
             {
                 WallJump.HandleHorizontal(ref velocity);
+                _lastUsedHorizontalAbility = Ability.WallJump;
             }
         }
 

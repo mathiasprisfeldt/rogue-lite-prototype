@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace CharacterController
 {
+
     /// <summary>
     /// Purpose:
     /// Creator:
@@ -17,6 +18,25 @@ namespace CharacterController
         [SerializeField]
         private float _sensitivity;
 
+        [SerializeField]
+        private float _pushUpForce;
+
+        [SerializeField]
+        private float _pushUpDuration;
+
+        [SerializeField]
+        private float _pushDownForce;
+
+        [SerializeField]
+        private float _pushDownDuration;
+
+        [SerializeField]
+        private float _hangCooldown;
+
+        private float _hangCooldownTimer;
+        private float _downTimer;
+        private float _upTimer;
+
         public override bool VerticalActive
         {
             get
@@ -25,9 +45,9 @@ namespace CharacterController
                 var right = _playerMovement.TriggerSides.Right;
                 var horizontalMovement = _playerMovement.App.C.PlayerActions.Right.IsPressed && left ||
                                          _playerMovement.App.C.PlayerActions.Left.IsPressed && right;
-
-                if ((right || left) && (_playerMovement.WallJump && !_playerMovement.WallJump.HorizontalActive) && 
-                    !(_playerMovement.App.C.PlayerActions.Down.IsPressed && _playerMovement.App.C.PlayerActions.Jump.IsPressed) && !horizontalMovement)
+                if (_downTimer > 0 || _upTimer > 0)
+                    return true;
+                if ((right || left) && !(_playerMovement.WallJump && _playerMovement.WallJump.HorizontalActive) && _hangCooldownTimer <= 0)
                 {
                     List<Collider2D> colliders = right ? _playerMovement.TriggerSides.RightColliders : _playerMovement.TriggerSides.LeftColliders;
                     Collider2D col = colliders[0];
@@ -57,8 +77,23 @@ namespace CharacterController
                         if (platform && !platform.Istop)
                             return false;
 
+                        if (_playerMovement.App.C.PlayerActions.Down.IsPressed &&
+                            _playerMovement.App.C.PlayerActions.Jump.IsPressed)
+                        {
+                            _downTimer = _pushDownDuration;
+                            return true;
+                        }
+                        else if (_playerMovement.App.C.PlayerActions.Jump.WasPressed)
+                        {
+                            _upTimer = _pushUpDuration; 
+                            return true;
+                        }
+
+                        if (horizontalMovement)
+                            return false;
+
                         var extend = right ? -_playerMovement.CollisionCheck.Colliders[0].bounds.extents.x : _playerMovement.CollisionCheck.Colliders[0].bounds.extents.x;
-                        _playerMovement.Rigidbody.position = Vector2.Lerp(_playerMovement.Rigidbody.position, new Vector2(hangPosition.x + extend, hangPosition.y), .35f);
+                        _playerMovement.Rigidbody.position = Vector2.Lerp(_playerMovement.Rigidbody.position, new Vector2(hangPosition.x + extend, hangPosition.y), .6f);
                         var dir = left ? 1 : -1;
                         _playerMovement.Flip(dir);
                         return true;
@@ -79,14 +114,32 @@ namespace CharacterController
             _playerMovement.LedgeHanging = null;
         }
 
+        public void FixedUpdate()
+        {
+            if (_hangCooldownTimer > 0)
+                _hangCooldownTimer -= Time.fixedDeltaTime;
+
+            if (_upTimer > 0)
+                _upTimer -= Time.fixedDeltaTime;
+            if (_downTimer > 0)
+                _downTimer -= Time.fixedDeltaTime;
+        }
+
         public override void HandleHorizontal(ref Vector2 velocity)
         {
-            velocity = new Vector2(velocity.x, _playerMovement.Rigidbody.gravityScale * -Physics2D.gravity.y);
+            
         }
 
         public override void HandleVertical(ref Vector2 velocity)
         {
-            throw new NotImplementedException();
+            var temp = 0f;
+            if (_upTimer > 0)
+                temp += _pushUpForce / _pushUpDuration;
+            if (_downTimer > 0)
+                temp -= _pushDownForce / _pushDownDuration;
+
+
+            velocity = new Vector2(velocity.x, _playerMovement.Rigidbody.CounterGravity(temp));
         }
     }
 }

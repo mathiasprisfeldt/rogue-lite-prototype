@@ -41,7 +41,7 @@ namespace CharacterController
         public override void HandleVertical(ref Vector2 velocity)
         {
             _falling = true;
-            velocity += new Vector2(0, _playerMovement.Rigidbody.gravityScale * -Physics2D.gravity.y + _wallSlideForce);
+            velocity += new Vector2(0, _playerMovement.Rigidbody.CounterGravity(_wallSlideForce));
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)

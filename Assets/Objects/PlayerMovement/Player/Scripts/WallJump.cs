@@ -33,7 +33,8 @@ namespace CharacterController
         {
             get
             {
-                var input = _playerMovement.App.C.PlayerActions != null && _playerMovement.App.C.PlayerActions.Jump.WasPressed;
+                var input = _playerMovement.App.C.PlayerActions != null && _playerMovement.App.C.PlayerActions.Jump.WasPressed 
+                    && !_playerMovement.App.C.PlayerActions.Down.IsPressed;
                 var collision = (_playerMovement.TriggerSides.Left || _playerMovement.TriggerSides.Right) && !_playerMovement.GroundCollisionCheck.Bottom;
                 if (input && collision && _verticalTimer <= 0 && _horizontalTimer <= 0)
                 {
@@ -56,7 +57,7 @@ namespace CharacterController
 
         public override void HandleVertical(ref Vector2 velocity)
         {           
-            velocity = new Vector2(velocity.x,_verticalForce / _verticalDuration + Physics2D.gravity.y * _playerMovement.Rigidbody.gravityScale);
+            velocity = new Vector2(velocity.x, _playerMovement.Rigidbody.CalculateVerticalSpeed(_verticalForce / _verticalDuration));
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)

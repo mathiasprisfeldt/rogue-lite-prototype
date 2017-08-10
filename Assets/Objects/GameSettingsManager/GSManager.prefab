@@ -52,4 +52,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DontDestroyOnLoadConfig: 1
-  _healthContainerSize: 0
+  _healthContainerSize: 10

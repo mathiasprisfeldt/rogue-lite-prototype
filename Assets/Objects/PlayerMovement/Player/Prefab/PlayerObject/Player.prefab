@@ -187,7 +187,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1182516208491314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.99, z: 0}
+  m_LocalPosition: {x: 5.13, y: -1.74, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4206036655935330}
@@ -335,7 +335,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.8}
+  m_Size: {x: 0.85, y: 1.8}
   m_EdgeRadius: 0
 --- !u!61 &61660256476061986
 BoxCollider2D:
@@ -450,11 +450,11 @@ MonoBehaviour:
   _modificationHandler: {fileID: 114659536614634588}
   _triggerCheck: {fileID: 114286498854671988}
   _collisionCheck: {fileID: 114051498006790084}
-  _horizontalSpeed: 150
-  _jumpForce: 30
-  _jumpDuration: 0.1
+  _horizontalSpeed: 250
+  _jumpForce: 200
+  _jumpDuration: 0.05
   _animator: {fileID: 95023438849079706}
-  _maxFallSpeed: 6
+  _maxFallSpeed: 50
 --- !u!114 &114211182565548322
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -483,10 +483,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d0805789dcb47c428df87c77b9f9a00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _verticalForce: 30
-  _horizontalForce: 15
-  _horizontalDuration: 0.2
-  _verticalDuration: 0.1
+  _verticalForce: 400
+  _horizontalForce: 25
+  _horizontalDuration: 0.15
+  _verticalDuration: 0.15
   _timeLeftToMove: 0
 --- !u!114 &114229662466771864
 MonoBehaviour:
@@ -502,7 +502,7 @@ MonoBehaviour:
   _playerMovement: {fileID: 114173897078414380}
   _target: {fileID: 4206036655935330}
   _peekAmount: 1
-  _durationUntilPeek: 0.2
+  _durationUntilPeek: 0.5
 --- !u!114 &114286498854671988
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -565,6 +565,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hangDistance: 0.35
   _sensitivity: 0.1
+  _pushUpForce: 100
+  _pushUpDuration: 0.3
+  _pushDownForce: 20
+  _pushDownDuration: 0.1
+  _hangCooldown: 0
 --- !u!114 &114334842691314668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -576,7 +581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ee2d05cf979c5419963999f5e35967, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wallSlideForce: -100
+  _wallSlideForce: -150
   _active: 1
 --- !u!114 &114379386173134666
 MonoBehaviour:
@@ -602,8 +607,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 150a19149c9f1b349a6b199dc2222b37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpForce: 30
-  _jumpDuration: 0.1
+  _jumpForce: 200
+  _jumpDuration: 0.05
 --- !u!114 &114583258450556078
 MonoBehaviour:
   m_ObjectHideFlags: 1
