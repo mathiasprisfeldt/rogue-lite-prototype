@@ -14,6 +14,7 @@ using UnityEngine;
 using System.Collections;
 using System.Linq;
 using System;
+using System.Text.RegularExpressions;
 
 public class CSVReader : MonoBehaviour
 {
@@ -54,13 +55,8 @@ public class CSVReader : MonoBehaviour
     /// <returns></returns>
     static public string[,] SplitCsvGrid(string csvText)
     {
-        string esc;
-        if (csvText.Contains("\r"))
-            esc = "\r\n";
-        else
-            esc = "\n";
-
-        string[] lines = csvText.Split(esc[0]);
+        csvText = Regex.Replace(csvText, @"\r\n?|\n|\s+", "@");
+        string[] lines = csvText.Split('@');
 
         // finds the max width of row
         int width = 0;
