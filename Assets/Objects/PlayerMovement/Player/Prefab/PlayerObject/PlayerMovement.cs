@@ -9,6 +9,10 @@ namespace CharacterController
 {
     public class PlayerMovement : CharacterController
     {
+
+        [Header("Component References"), SerializeField]
+        private PlayerApplication _app;
+
         [SerializeField]
         private WallJump _wallJump;
 
@@ -109,6 +113,12 @@ namespace CharacterController
         {
             get { return _triggerCheck; }
             set { _triggerCheck = value; }
+        }
+
+        public PlayerApplication App
+        {
+            get { return _app; }
+            set { _app = value; }
         }
 
         // Update is called once per frame

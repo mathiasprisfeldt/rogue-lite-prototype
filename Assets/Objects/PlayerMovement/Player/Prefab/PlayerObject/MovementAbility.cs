@@ -11,7 +11,7 @@ public abstract class MovementAbility : MonoBehaviour
     public virtual bool VerticalActive { get; set; }
     public virtual bool HorizontalActive { get; set; }
 
-    public void Awake()
+    public virtual void Awake()
     {
         _playerMovement = GetComponent<PlayerMovement>();
     }
