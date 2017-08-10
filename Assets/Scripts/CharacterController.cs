@@ -81,7 +81,7 @@ namespace CharacterController
 
         protected virtual void UpdateState()
         {
-            if (OnGround && (App.C.PlayerActions.Left.IsPressed || App.C.PlayerActions.Right.IsPressed))
+            if (OnGround && !_rigidbody.IsSleeping())
             {
                 State = CharacterState.Moving;
             }
@@ -94,7 +94,6 @@ namespace CharacterController
                 State = CharacterState.InAir;
             }
         }
-
 
         public void Flip(float dir)
         {
