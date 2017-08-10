@@ -41,22 +41,19 @@ namespace Health
         private float _maxDmg = Single.PositiveInfinity; //Max amount of fall damage it can take.
 
         [Header("References: REQUIRED"), SerializeField]
-        private CollisionCheck _collisionCheck;
+        private CharacterController.CharacterController _characterController;
 
         [SerializeField]
         private Health _healthComp;
 
-        [SerializeField]
-        private Rigidbody2D _rigidbody2D;
-
         void Start()
         {
-            _lastYPosition = _rigidbody2D.position.y;
+            _lastYPosition = _characterController.Rigidbody.position.y;
         }
 
         void Update()
         {
-            bool isColliding = _collisionCheck.IsColliding();
+            bool isColliding = _characterController.OnGround;
 
             if (!_didCollideLastFrame && isColliding)
             {
@@ -65,7 +62,7 @@ namespace Health
                 switch (_damageType)
                 {
                     case FallDamageType.LastPosition:
-                        float yDist = Math.Abs(_lastYPosition - _rigidbody2D.position.y);
+                        float yDist = Math.Abs(_lastYPosition - _characterController.Rigidbody.position.y);
 
                         if (yDist >= _distanceBeforeDmg)
                         {
@@ -89,22 +86,22 @@ namespace Health
             }
 
             if (isColliding)
-                _lastYPosition = _rigidbody2D.position.y;
+                _lastYPosition = _characterController.Rigidbody.position.y;
             else
             {
                 //If the distance between current position and old position is increased, update last position.
-                float currDist = Math.Abs(_lastYPosition - _rigidbody2D.position.y);
+                float currDist = Math.Abs(_lastYPosition - _characterController.Rigidbody.position.y);
 
                 if (_savedFlyingDistance > currDist)
                 {
-                    _lastYPosition = _rigidbody2D.position.y;
+                    _lastYPosition = _characterController.Rigidbody.position.y;
                 }
 
                 _savedFlyingDistance = currDist;
             }
                 
             _didCollideLastFrame = isColliding;
-            _savedYVelocity = Mathf.Abs(_rigidbody2D.velocity.y);
+            _savedYVelocity = Mathf.Abs(_characterController.Rigidbody.velocity.y);
         }
     }
 }

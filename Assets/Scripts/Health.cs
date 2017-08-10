@@ -18,7 +18,7 @@ namespace Health
     /// Creator: Mathias Prisfeldt
     /// </summary>
     [DisallowMultipleComponent]
-    public class Health : MonoBehaviour 
+    public class Health : MonoBehaviour
     {
         private bool _isLateChecking; //Are we checking in end of frame if we're dead?
 
@@ -31,10 +31,16 @@ namespace Health
         private bool _lateCheck; //Should you be able to take damage down to 0 and get healed and saved?
 
         [SerializeField]
+        private bool _invurnableOnDmg; //Do you get invurnability when you take damage?
+
+        [SerializeField]
+        private float _invurnabilityDuration; //When you take damge how long will it last?
+
+        [SerializeField]
         private bool _isInvurnable;
 
         [SerializeField]
-        private bool _invurnableTakeDmg; //Do I still take dmg even if im invurnable?
+        private bool _dmgWhileInvurnable; //Do I still take dmg even if im invurnable?
 
         [SerializeField]
         private float _healthAmount = 100; //Amount of health
@@ -80,7 +86,7 @@ namespace Health
 
                 if (IsInvurnable)
                 {
-                    if (_invurnableTakeDmg)
+                    if (_dmgWhileInvurnable)
                         _healthAmount = newHealth;
 
                     return;
@@ -108,7 +114,7 @@ namespace Health
         /// It always rounds to halfs or wholes.
         /// </summary>
         /// <param name="dmg">Amount of damage to deal.</param>
-        public void Damage(float dmg)
+        public void Damage(float dmg, bool giveInvurnability = false)
         {
             var amountToDmg = dmg;
 
@@ -121,6 +127,9 @@ namespace Health
             }
 
             HealthAmount -= amountToDmg;
+
+            if (giveInvurnability || _invurnableOnDmg)
+                StartCoroutine(StartInvurnability(_invurnabilityDuration));
         }
 
         /// <summary>
@@ -177,6 +186,25 @@ namespace Health
             yield return new WaitForEndOfFrame();
             CheckHealth();
             _isLateChecking = false;
+        }
+
+        /// <summary>
+        /// Starts a invurnablity timer.
+        /// </summary>
+        /// <param name="duration">Amount of time you're invurnable</param>
+        /// <returns></returns>
+        IEnumerator StartInvurnability(float duration)
+        {
+            float timer = duration;
+            IsInvurnable = true;
+
+            while (timer > 0 && IsInvurnable)
+            {
+                yield return new WaitForEndOfFrame();
+                timer -= Time.unscaledDeltaTime / duration;
+            }
+
+            IsInvurnable = false;
         }
     }
 }

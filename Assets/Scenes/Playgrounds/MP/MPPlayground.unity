@@ -434,6 +434,7 @@ GameObject:
   - component: {fileID: 1762265549}
   - component: {fileID: 1762265545}
   - component: {fileID: 1762265550}
+  - component: {fileID: 1762265552}
   - component: {fileID: 1762265551}
   m_Layer: 0
   m_Name: Player
@@ -460,7 +461,7 @@ MonoBehaviour:
   _healthAmount: 100
   _healthInterval: {x: 0, y: 100}
   _responsibleGameObject: {fileID: 0}
-  _destroyOnDead: 0
+  _destroyOnDead: 1
   _deadEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -473,7 +474,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1762265544}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.72, y: 1.77, z: 0}
+  m_LocalPosition: {x: -0.69, y: 2.82, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -577,15 +578,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a45ad3003841ef4ab395dccb38f3f29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damageType: 1
-  _distanceBeforeDmg: 1
+  _damageType: 0
+  _distanceBeforeDmg: 2
   _isDistanceBeforeDmgInclusive: 0
   _fallSegments: 1
-  _dmgPerFallUnit: 15
+  _dmgPerFallUnit: 20
   _maxDmg: Infinity
-  _collisionCheck: {fileID: 1762265551}
+  _characterController: {fileID: 1762265552}
   _healthComp: {fileID: 1762265545}
-  _rigidbody2D: {fileID: 1762265547}
 --- !u!114 &1762265551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -602,11 +602,23 @@ MonoBehaviour:
   _collisionLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  _sensitivevity: 0
-  _topCollision: 0
-  _bottomCollision: 1
-  _leftCollision: 0
-  _rightCollision: 0
+  _tolerance: 0
+--- !u!114 &1762265552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1762265544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3acdd29dbce5f6498920973f89d102b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _setup: 0
+  _flipWithVelocity: 0
+  _rigidbody: {fileID: 1762265547}
+  _model: {fileID: 1762265544}
+  _groundCollisionCheck: {fileID: 1762265551}
 --- !u!1 &1990195766
 GameObject:
   m_ObjectHideFlags: 0
