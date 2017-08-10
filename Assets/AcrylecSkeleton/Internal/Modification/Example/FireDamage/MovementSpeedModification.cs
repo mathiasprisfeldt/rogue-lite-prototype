@@ -4,11 +4,11 @@ namespace AcrylecSkeleton.ModificationSystem.Examples
 {
     public class MovementSpeedModification : StatModification {
 
-        public MovementSpeedModification(float time, float value, ModificationTypeEnum modificationType, StatsExample stats) : base(time, value, modificationType, stats)
+        public MovementSpeedModification(float time, StatsExample stats) : base(time, stats)
         {
         }
 
-        public MovementSpeedModification(float time, float value, ModificationTypeEnum modificationType, string name, StatsExample stats) : base(time, value, modificationType, name, stats)
+        public MovementSpeedModification(float time, string name, StatsExample stats) : base(time, name, stats)
         {
         }
 

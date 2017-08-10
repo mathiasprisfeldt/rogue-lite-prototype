@@ -16,12 +16,11 @@
         /// <param name="time">The amount of time the modification should be active(in seconds), only valid if the modification type uses it</param>
         /// <param name="value">The amount of change the modification should do</param>
         /// <param name="modificationType">The modification type</param>
-        protected Modification(float time, float value, ModificationTypeEnum modificationType)
+        protected Modification(float time)
         {
             Time = time;
             Name = "None";
-            Value = value;
-            ModificationType = modificationType;
+            ModificationType = ModificationTypeEnum.Timed;
         }
         /// <summary>
         /// Constructor.
@@ -30,12 +29,32 @@
         /// <param name="value">The amount of change the modification should do</param>
         /// <param name="name">The name of the modification, is used to see if the modification is allready active(Please don't call the modification None)</param>
         /// /// <param name="modificationType">The modification type</param>
-        protected Modification(float time, float value, ModificationTypeEnum modificationType, string name)
+        protected Modification(float time, string name)
         {
             Time = time;
             Name = name;
-            Value = value;
-            ModificationType = modificationType;
+            ModificationType = ModificationTypeEnum.Timed;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        protected Modification()
+        {
+            Time = 0;
+            Name = "None";
+            ModificationType = ModificationTypeEnum.Infinite;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="name">The name of the modification, is used to see if the modification is allready active(Please don't call the modification None)</param>
+        protected Modification(string name)
+        {
+            Time = 0;
+            Name = name;
+            ModificationType = ModificationTypeEnum.Infinite;
         }
 
         //Propterties

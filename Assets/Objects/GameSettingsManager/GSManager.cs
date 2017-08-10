@@ -1,7 +1,7 @@
 ﻿using AcrylecSkeleton.Utilities;
 using UnityEngine;
 
-namespace GSManager
+namespace Managers
 {
     /// <summary>
     /// Purpose: Contains all settings about the game.
@@ -10,7 +10,7 @@ namespace GSManager
     public class GSManager : Singleton<GSManager>
     {
         [SerializeField]
-        private float _healthContainerSize;
+        private float _healthContainerSize = 10;
 
         public float HealthContainerSize
         {
