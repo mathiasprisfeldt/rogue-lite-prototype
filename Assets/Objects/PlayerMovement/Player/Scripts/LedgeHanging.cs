@@ -46,8 +46,8 @@ namespace CharacterController
                     float hangPosX = right ? col.bounds.min.x : col.bounds.max.x;
                     var hangPosition = new Vector2(hangPosX, col.bounds.max.y - _hangDistance);
                     var thisColX = right ? _playerMovement.TriggerCheck.Colliders[0].bounds.max.x : _playerMovement.TriggerCheck.Colliders[0].bounds.min.x;
-                    Vector2 temp = new Vector2(thisColX, _playerMovement.TriggerCheck.Colliders[0].bounds.center.y);
-                    if (Mathf.Abs(temp.y -hangPosition.y) <= _sensitivity)
+                    Vector2 temp = new Vector2(thisColX, _playerMovement.CollisionCheck.Colliders[0].bounds.center.y);
+                    if (Mathf.Abs(temp.y - hangPosition.y) <= _sensitivity)
                     {
                         TileBehaviour tile = col.gameObject.GetComponent<TileBehaviour>();
                         if (tile && tile.TopCollision)
