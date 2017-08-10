@@ -54,7 +54,13 @@ public class CSVReader : MonoBehaviour
     /// <returns></returns>
     static public string[,] SplitCsvGrid(string csvText)
     {
-        string[] lines = csvText.Split("\n"[0]);
+        string esc;
+        if (csvText.Contains("\r"))
+            esc = "\r\n";
+        else
+            esc = "\n";
+
+        string[] lines = csvText.Split(esc[0]);
 
         // finds the max width of row
         int width = 0;
