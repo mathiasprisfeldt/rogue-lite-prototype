@@ -9,10 +9,25 @@ public class FollowTransform : MonoBehaviour {
 
     [SerializeField]
     private Transform _target;
-    	
-	void Update ()
-    {
-        if (_acive && _target)
-            transform.position = new Vector3(_target.position.x, _target.position.y,transform.position.z);
+
+    [SerializeField]
+    private float _smoothX;
+
+    [SerializeField]
+    private float _smoothY;
+
+    private Vector2 velocity;
+
+   	
+	void FixedUpdate ()
+	{
+	    if (_acive && _target)
+	    {
+	        float posX = Mathf.SmoothDamp(transform.position.x, _target.position.x, ref velocity.x, _smoothX);
+	        float posY = Mathf.SmoothDamp(transform.position.y, _target.position.y, ref velocity.y, _smoothY);
+
+            transform.position = new Vector3(posX,posY,transform.position.z);
+
+	    }
 	}
 }

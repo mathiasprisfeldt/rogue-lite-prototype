@@ -50,13 +50,13 @@ namespace CharacterController
         private float _jumpForce;
 
         [SerializeField]
+        private float _jumpDuration;
+
+        [SerializeField]
         private Animator _animator;
 
         [SerializeField]
         private float _maxFallSpeed;
-
-        [SerializeField]
-        private float _dashCooldown;
 
         private float _dashForce;
 
@@ -67,6 +67,7 @@ namespace CharacterController
         private float _dashTimer;
         private Vector2 _savedVelocity;
         private bool _shouldHang;
+        private float _jumpTimer;
 
         public PlayerState PlayerState { get; set; }
         public bool Hanging { get; set; }
@@ -139,19 +140,25 @@ namespace CharacterController
         public override void Update()
         {
             base.Update();
+            if(App.C.PlayerActions != null && App.C.PlayerActions.Attack.WasPressed)
+                _animator.SetTrigger("Attack");
+
             HandleState();
             TriggerCheck.IsColliding(out _triggerSides);
             CollisionCheck.IsColliding(out _collisionSides);
             if(App.C.PlayerActions != null)
                 _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
-
-            if (_dashTimer > 0)
-                _dashTimer -= Time.deltaTime;
         }
 
         void FixedUpdate()
         {
             _velocity = new Vector2(0,0);
+
+            if (App.C.PlayerActions.Left || App.C.PlayerActions.Right)
+            {
+                float dir = App.C.PlayerActions.Left ? -1 : 1;
+                Flip(dir);
+            }
 
             HandleVerticalMovement(ref _velocity);
             HandleHorizontalMovement(ref _velocity);
@@ -159,6 +166,13 @@ namespace CharacterController
             SetVelocity(new Vector2(_velocity.x * Time.fixedDeltaTime, _rigidbody.velocity.y));
             if(Velocity.y != 0)
                 SetVelocity(new Vector2(_rigidbody.velocity.x, _velocity.y * Time.fixedDeltaTime));
+
+            if (_jumpTimer > 0)
+                _jumpTimer -= Time.fixedDeltaTime;
+
+            if (_dashTimer > 0)
+                _dashTimer -= Time.fixedDeltaTime;
+
         }
 
         void LateUpdate()
@@ -222,11 +236,13 @@ namespace CharacterController
                 {
                     DoubleJump.HandleVertical(ref velocity);
                 }
-                else if ((App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && TriggerSides.Bottom && Sides.Bottom &&
-                    !App.C.PlayerActions.Down.IsPressed) | (col.Count > 0 && App.C.PlayerActions.Down.IsPressed && App.C.PlayerActions.Jump.WasPressed))
+                else if ((App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && Sides.Bottom &&
+                    !App.C.PlayerActions.Down.IsPressed) || _jumpTimer > 0 
+                    || (col.Count > 0 && App.C.PlayerActions != null && App.C.PlayerActions.Down.IsPressed && App.C.PlayerActions.Jump.WasPressed))
                 {
-
-                    velocity += new Vector2(0, _jumpForce);
+                    if (_jumpTimer <= 0)
+                        _jumpTimer = _jumpDuration;
+                    velocity += new Vector2(0, _jumpForce / _jumpDuration + Physics2D.gravity.y * Rigidbody.gravityScale);
 
                     if (col.Count > 0 && App.C.PlayerActions.Down.IsPressed)
                     {

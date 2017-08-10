@@ -35,6 +35,10 @@ namespace RogueLiteInput
             Dash.AddDefaultBinding(Key.LeftShift);
             Dash.AddDefaultBinding(Key.None);
 
+            //Attack
+            Attack.AddDefaultBinding(Key.J);
+            Attack.AddDefaultBinding(Key.None);
+
         }
     }
 }

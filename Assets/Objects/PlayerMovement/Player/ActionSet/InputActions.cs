@@ -34,6 +34,7 @@ namespace RogueLiteInput
         public PlayerAction Down { get; set; }
         public PlayerAction Dash { get; set; }
         public PlayerAction Up { get; set; }
+        public PlayerAction Attack { get; set; }
 
         //Directions
         public PlayerOneAxisAction HorizontalDirection { get; set; }
@@ -46,6 +47,7 @@ namespace RogueLiteInput
             Down = CreatePlayerAction("Down");
             Dash = CreatePlayerAction("Dash");
             Up = CreatePlayerAction("Up");
+            Attack = CreatePlayerAction("Attack");
 
             //Directions
             HorizontalDirection = CreateOneAxisPlayerAction(Left, Right);

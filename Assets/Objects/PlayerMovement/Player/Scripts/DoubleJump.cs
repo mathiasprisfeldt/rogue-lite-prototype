@@ -14,14 +14,20 @@ namespace CharacterController
         [SerializeField]
         private float _jumpForce;
 
+        [SerializeField]
+        private float _jumpDuration;
+
         private bool _hasJumped;
+        private float _jumpTimer;
 
         public override bool VerticalActive
         {
             get
             {
-                return !_hasJumped && _playerMovement.App.C.PlayerActions.Jump.WasPressed &&
-                       _playerMovement.State == CharacterState.InAir;
+                if (_playerMovement.App.C.PlayerActions.Jump.WasPressed && _playerMovement.State == CharacterState.InAir 
+                    && _jumpTimer <= 0)
+                    _jumpTimer = _jumpDuration;
+                return _jumpTimer > 0;
             }
         }
 
@@ -33,8 +39,7 @@ namespace CharacterController
 
         public override void HandleVertical(ref Vector2 velocity)
         {
-            velocity = new Vector2(velocity.x, _jumpForce);
-            _hasJumped = true;
+            velocity = new Vector2(velocity.x, _jumpForce / _jumpDuration + Physics2D.gravity.y * _playerMovement.Rigidbody.gravityScale);
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)
@@ -42,10 +47,10 @@ namespace CharacterController
             
         }
 
-        public void Update()
+        public void FixedUpdate()
         {
-            if (_hasJumped && _playerMovement.State != CharacterState.InAir)
-                _hasJumped = false;
+            if(_jumpTimer > 0)
+                _jumpTimer -= Time.fixedDeltaTime;
         }
 
         public void OnDisable()
