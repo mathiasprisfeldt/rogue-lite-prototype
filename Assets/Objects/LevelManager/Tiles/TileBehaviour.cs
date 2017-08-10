@@ -9,12 +9,8 @@ public class TileBehaviour : MonoBehaviour
     [SerializeField]
     private GameObject _parent;
 
-    [SerializeField]
-    private LayerMask mask;
-
     private Queue<TileBehaviour> _queue = new Queue<TileBehaviour>();
 
-    private bool Vertical;
     private bool _isTop;
 
     public bool Touched { get; set; }
@@ -23,36 +19,104 @@ public class TileBehaviour : MonoBehaviour
     public bool BottomCollision { get; set; }
     public bool LeftCollision { get; set; }
     public bool RightCollision { get; set; }
+    
+    [SerializeField]
+    private bool _autoTexturize;
+    [SerializeField]
+    private Sprite _leftTexture;
+    [SerializeField]
+    private Sprite _middleTexture;
+    [SerializeField]
+    private Sprite _rightTexture;
+    [SerializeField]
+    private Sprite _centerTexture;
 
-    public void CheckSides()
+    [SerializeField]
+    private LayerMask _colMask;
+
+    public void SetupTile()
     {
         var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
         var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
 
-        if (Physics2D.RaycastAll(transform.position, Vector2.up, halfHeight, mask).Length > 0)
+        //Up
+        if (Physics2D.RaycastAll(transform.position, Vector2.up, halfHeight, _colMask).Length > 0)
+        {
             TopCollision = true;
-        if (Physics2D.RaycastAll(transform.position, Vector2.down, halfHeight, mask).Length > 0)
+        }
+        //Down
+        if (Physics2D.RaycastAll(transform.position, Vector2.down, halfHeight, _colMask).Length > 0)
+        {
             BottomCollision = true;
-        if (Physics2D.RaycastAll(transform.position, Vector2.left, halfWidth, mask).Length > 0)
+        }
+        //Left
+        if (Physics2D.RaycastAll(transform.position, Vector2.left, halfWidth, _colMask).Length > 0)
+        {
             LeftCollision = true;
-        if (Physics2D.RaycastAll(transform.position, Vector2.right, halfWidth, mask).Length > 0)
+        }
+        //Right
+        if (Physics2D.RaycastAll(transform.position, Vector2.right, halfWidth, _colMask).Length > 0)
+        {
             RightCollision = true;
+        }
+
+        if (_autoTexturize)
+        {
+            var spr = GetComponent<SpriteRenderer>();
+            Sprite newSprite = null;
+
+            if (LeftCollision && !RightCollision)
+                newSprite = _rightTexture;
+
+            if (!LeftCollision && RightCollision)
+                newSprite = _leftTexture;
+
+            if (BottomCollision || (LeftCollision && RightCollision))
+                newSprite = _middleTexture;
+
+            if (TopCollision)
+                newSprite = _centerTexture;
+
+
+            spr.sprite = newSprite;
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
+        var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
+
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.up * halfHeight));
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.down * halfHeight));
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.left * halfWidth));
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.right * halfWidth));
     }
 
 
     public void StartHorizontalComposite(ref int amountOfPlatforms)
     {
         List<GameObject> targets = new List<GameObject>();
+        Touched = true;
 
         CheckHorizontalComposite(ref targets, false);
         if (targets.Count <= 1)
+        {
+            Touched = false;
             return;
+        }
+            
 
         var parent = Instantiate(_parent);
         parent.name = parent.name + amountOfPlatforms;
         amountOfPlatforms++;
+        PlatformBehavior pb = parent.AddComponent<PlatformBehavior>();
+
         foreach (var target in targets)
         {
+            if (target == gameObject)
+                pb.Istop = _isTop;
+            pb.Tiles.Add(this);
             target.transform.SetParent(parent.transform, true);
         }
     }
@@ -65,8 +129,8 @@ public class TileBehaviour : MonoBehaviour
         TileBehaviour tLeft = null;
         TileBehaviour tRight = null;
 
-        var left = Physics2D.Raycast(transform.position, Vector2.left, 1, mask);
-        var right = Physics2D.Raycast(transform.position, Vector2.right, 1, mask);
+        var left = Physics2D.Raycast(transform.position, Vector2.left, 1, _colMask);
+        var right = Physics2D.Raycast(transform.position, Vector2.right, 1, _colMask);
 
         if (left.collider != null)
             tLeft = left.collider.gameObject.GetComponent<TileBehaviour>();
@@ -98,33 +162,26 @@ public class TileBehaviour : MonoBehaviour
     public void StartVerticalComposite(ref int amountOfPlatforms)
     {
         List<GameObject> targets = new List<GameObject>();
+        Touched = true;
 
         CheckVerticalCompisite(ref targets,false);
-        if(targets.Count <= 1)
-            return;
+            if (targets.Count <= 1)
+            {
+                Touched = false;
+                return;
+            }
 
         var parent = Instantiate(_parent);
         parent.name = parent.name + amountOfPlatforms;
         amountOfPlatforms++;
+        PlatformBehavior pb = parent.AddComponent<PlatformBehavior>();
+
         foreach (var target in targets)
-        { 
-            target.transform.SetParent(parent.transform, true);
+        {
             if (target == gameObject)
-            {
-                TileBehaviour temp = target.GetComponent<TileBehaviour>();
-                if (temp)
-                {
-                    TileBehaviour tb = (TileBehaviour)parent.AddComponent(temp.GetType());
-                    if (tb)
-                    {
-                        tb.LeftCollision = temp.LeftCollision;
-                        tb.RightCollision = temp.RightCollision;
-                        tb.TopCollision = temp.TopCollision;
-                        tb.BottomCollision = temp.BottomCollision;
-                        tb.Touched = temp.Touched;
-                    }
-                }
-            }
+                pb.Istop = _isTop;
+            pb.Tiles.Add(this);
+            target.transform.SetParent(parent.transform, true);
         }
     }
 
@@ -138,10 +195,10 @@ public class TileBehaviour : MonoBehaviour
         TileBehaviour tUp = null;
         TileBehaviour tDown = null;
 
-        var left = Physics2D.Raycast(transform.position, Vector2.left, 1, mask);
-        var right = Physics2D.Raycast(transform.position, Vector2.right, 1, mask);
-        var up = Physics2D.Raycast(transform.position, Vector2.up, 1, mask);
-        var down = Physics2D.Raycast(transform.position, Vector2.down, 1, mask);
+        var left = Physics2D.Raycast(transform.position, Vector2.left, 1, _colMask);
+        var right = Physics2D.Raycast(transform.position, Vector2.right, 1, _colMask);
+        var up = Physics2D.Raycast(transform.position, Vector2.up, 1, _colMask);
+        var down = Physics2D.Raycast(transform.position, Vector2.down, 1, _colMask);
 
         if (left.collider != null)
             tLeft = left.collider.gameObject.GetComponent<TileBehaviour>();

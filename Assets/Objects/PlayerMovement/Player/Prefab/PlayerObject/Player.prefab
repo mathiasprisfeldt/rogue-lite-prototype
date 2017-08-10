@@ -77,6 +77,7 @@ GameObject:
   - component: {fileID: 114518903041524674}
   - component: {fileID: 114334842691314668}
   - component: {fileID: 114323172994149904}
+  - component: {fileID: 114303647452529036}
   m_Layer: 8
   m_Name: Controller
   m_TagString: Untagged
@@ -490,15 +491,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _setup: 0
-  _app: {fileID: 114008459180862610}
   _flipWithVelocity: 1
   _rigidbody: {fileID: 50863075550868558}
   _model: {fileID: 1382681027286190}
   _groundCollisionCheck: {fileID: 114211182565548322}
-  _wallJump: {fileID: 0}
-  _doubleJump: {fileID: 0}
-  _wallSlide: {fileID: 0}
-  _ledgeHanging: {fileID: 0}
+  _app: {fileID: 114008459180862610}
+  _wallJump: {fileID: 114227199752316536}
+  _doubleJump: {fileID: 114518903041524674}
+  _wallSlide: {fileID: 114334842691314668}
+  _ledgeHanging: {fileID: 114323172994149904}
+  _dash: {fileID: 0}
   _modificationHandler: {fileID: 114659536614634588}
   _triggerCheck: {fileID: 114286498854671988}
   _collisionCheck: {fileID: 114051498006790084}
@@ -570,6 +572,38 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _tolerance: 0
+--- !u!114 &114303647452529036
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1228637346484900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14221ea3946aac64692acd4ab4e69f36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dashCooldown: 0.5
+  _dashDuration: 0.2
+  _dashForce: 1500
+  _dashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: -2.374526
+      outSlope: -2.374526
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!114 &114323172994149904
 MonoBehaviour:
   m_ObjectHideFlags: 1

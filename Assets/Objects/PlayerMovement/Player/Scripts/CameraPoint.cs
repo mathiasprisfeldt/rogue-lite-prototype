@@ -21,6 +21,7 @@ public class CameraPoint : MonoBehaviour
     private float _xPosition;
     private float _startYPosition;
     private float _peekTimer;
+    private bool _resetting;
 
 	// Use this for initialization
 	void Start ()
@@ -54,8 +55,14 @@ public class CameraPoint : MonoBehaviour
 	    else
 	    {
             _peekTimer = _durationUntilPeek;
-            if(transform.localPosition.y != _startYPosition)
+	        if (Math.Abs(transform.localPosition.y - _startYPosition) > 0.00001f)
+	        {
+	            _resetting = true;
                 transform.localPosition = new Vector3(transform.localPosition.x, Mathf.Lerp(transform.localPosition.y, _startYPosition, .1f));
+            }
+            else if (_resetting)
+                _resetting = false;
+                
         }
 	        
 	}

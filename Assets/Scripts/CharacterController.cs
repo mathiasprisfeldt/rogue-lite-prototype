@@ -27,7 +27,7 @@ namespace CharacterController
         protected Rigidbody2D _rigidbody;
 
         [SerializeField]
-        private GameObject _model;
+        protected GameObject _model;
 
         [SerializeField]
         private CollisionCheck _groundCollisionCheck;
