@@ -83,10 +83,6 @@ MonoBehaviour:
   _middleTexture: {fileID: 21300072, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
   _rightTexture: {fileID: 21300074, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
   _centerTexture: {fileID: 21300038, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
-  TopCollision: 0
-  BottomCollision: 0
-  LeftCollision: 0
-  RightCollision: 0
   _colMask:
     serializedVersion: 2
     m_Bits: 512
