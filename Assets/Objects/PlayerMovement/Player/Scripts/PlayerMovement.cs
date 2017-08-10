@@ -26,6 +26,9 @@ namespace CharacterController
         private LedgeHanging _ledgeHanging;
 
         [SerializeField]
+        private Dash _dash;
+
+        [SerializeField]
         private ModificationHandler _modificationHandler;
 
         [SerializeField]
@@ -121,6 +124,17 @@ namespace CharacterController
             set { _app = value; }
         }
 
+        public Dash Dash
+        {
+            get { return _dash; }
+            set { _dash = value; }
+        }
+
+        public GameObject Model
+        {
+            get { return _model; }
+        }
+
         // Update is called once per frame
         public override void Update()
         {
@@ -128,11 +142,8 @@ namespace CharacterController
             HandleState();
             TriggerCheck.IsColliding(out _triggerSides);
             CollisionCheck.IsColliding(out _collisionSides);
-
-            _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
-
-            if (App.C.PlayerActions != null && App.C.PlayerActions.Dash.WasPressed && _dashTimer <= 0)
-                _shouldDash = true;
+            if(App.C.PlayerActions != null)
+                _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
 
             if (_dashTimer > 0)
                 _dashTimer -= Time.deltaTime;
@@ -155,6 +166,24 @@ namespace CharacterController
             
             Rigidbody.velocity = new Vector2(Rigidbody.velocity.x,
                 Mathf.Clamp(Rigidbody.velocity.y, -_maxFallSpeed, float.MaxValue));          
+        }
+
+        protected override void UpdateState()
+        {
+            if (OnGround && (App.C.PlayerActions.Left.IsPressed || App.C.PlayerActions.Right.IsPressed))
+            {
+                State = CharacterState.Moving;
+            }
+            else if (OnGround)
+            {
+                State = CharacterState.Idle;
+            }
+            else
+            {
+                State = CharacterState.InAir;
+            }
+
+            
         }
 
         private void HandleState()
@@ -183,46 +212,44 @@ namespace CharacterController
             List<Collider2D> col = new List<Collider2D>();
             if(Sides.BottomColliders != null)
                 col = Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
-            if (_shouldDash)
+                if (Dash && !Dash.HorizontalActive)
             {
-                _dashTimer = _dashCooldown;
-                _shouldDash = false;
-
-            }
-            else if (WallJump && WallJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed && _ledgeHanging)
-            {
-                WallJump.HandleVertical(ref velocity);
-            }
-            else if (DoubleJump && DoubleJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed)
-            {
-                DoubleJump.HandleVertical(ref velocity);
-            }
-            else if ((App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && TriggerSides.Bottom && Sides.Bottom &&
-                !App.C.PlayerActions.Down.IsPressed) | (col.Count > 0 && App.C.PlayerActions.Down.IsPressed && App.C.PlayerActions.Jump.WasPressed))
-            {
-                
-                velocity += new Vector2(0, _jumpForce);
-
-                if (col.Count > 0 && App.C.PlayerActions.Down.IsPressed)
+                if (WallJump && WallJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed && _ledgeHanging)
                 {
-                    velocity = new Vector2(velocity.x,0);
-                    foreach (var c in col)
+                    WallJump.HandleVertical(ref velocity);
+                }
+                else if (DoubleJump && DoubleJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed)
+                {
+                    DoubleJump.HandleVertical(ref velocity);
+                }
+                else if ((App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && TriggerSides.Bottom && Sides.Bottom &&
+                    !App.C.PlayerActions.Down.IsPressed) | (col.Count > 0 && App.C.PlayerActions.Down.IsPressed && App.C.PlayerActions.Jump.WasPressed))
+                {
+
+                    velocity += new Vector2(0, _jumpForce);
+
+                    if (col.Count > 0 && App.C.PlayerActions.Down.IsPressed)
                     {
-                        _modificationHandler.AddModification(new TemporaryLayerChange(0.4f, "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
+                        velocity = new Vector2(velocity.x, 0);
+                        foreach (var c in col)
+                        {
+                            _modificationHandler.AddModification(new TemporaryLayerChange(0.4f, "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
+                        }
                     }
                 }
+                else if (_shouldHang)
+                {
+                    LedgeHanging.HandleHorizontal(ref velocity);
+                    Hanging = true;
+                }
+                else if (_wallSlide && _wallSlide.VerticalActive)
+                {
+                    WallSlide.HandleVertical(ref velocity);
+                }
+                else
+                    velocity = new Vector2(velocity.x, 0);
             }
-            else if (_shouldHang)
-            {
-                LedgeHanging.HandleHorizontal(ref velocity);
-                Hanging = true;
-            }
-            else if (_wallSlide && _wallSlide.VerticalActive)
-            {
-                WallSlide.HandleVertical(ref velocity);
-            }
-            else
-                velocity = new Vector2(velocity.x, 0);
+            
 
         }
 
@@ -239,7 +266,12 @@ namespace CharacterController
 
             velocity += new Vector2(_horizontalSpeed * horizontal, 0);
 
-            if (WallJump && WallJump.HorizontalActive)
+
+            if (Dash && Dash.HorizontalActive)
+            {
+                Dash.HandleHorizontal(ref velocity);
+            }
+            else if (WallJump && WallJump.HorizontalActive)
             {
                 WallJump.HandleHorizontal(ref velocity);
             }

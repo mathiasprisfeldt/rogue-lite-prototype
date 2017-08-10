@@ -92,7 +92,7 @@ public class CSVReader : MonoBehaviour
     {
         var grid = SplitCsvGrid(csvText);
 
-        int[,] outputGrid = new int[grid.GetLength(0) - 1, grid.GetLength(1) - (tiled ? 1 : 0)];
+        int[,] outputGrid = new int[grid.GetLength(0), grid.GetLength(1) - (tiled ? 1 : 0)];
 
         for (int i = 0; i < outputGrid.GetLength(0); i++)
         {

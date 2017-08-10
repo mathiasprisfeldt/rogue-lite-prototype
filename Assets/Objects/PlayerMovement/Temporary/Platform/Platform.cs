@@ -39,7 +39,7 @@ public class Platform : MonoBehaviour
 
 	    var temp = GetComponent<TileBehaviour>();
         if(temp)
-            temp.CheckSides();
+            temp.SetupTile();
 
 	}
 
