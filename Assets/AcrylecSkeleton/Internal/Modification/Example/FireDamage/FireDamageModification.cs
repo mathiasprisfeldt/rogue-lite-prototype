@@ -7,11 +7,11 @@ namespace AcrylecSkeleton.ModificationSystem.Examples
 
         private float _timer;
 
-        public FireDamageModification(float time, float value, ModificationTypeEnum modificationType, StatsExample stats) : base(time, value, modificationType, stats)
+        public FireDamageModification(float time, StatsExample stats) : base(time, stats)
         {
         }
 
-        public FireDamageModification(float time, float value, ModificationTypeEnum modificationType, string name, StatsExample stats) : base(time, value, modificationType, name, stats)
+        public FireDamageModification(float time, string name, StatsExample stats) : base(time, name, stats)
         {
         }
 
