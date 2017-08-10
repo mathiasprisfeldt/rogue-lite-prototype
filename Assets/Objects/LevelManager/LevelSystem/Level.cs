@@ -64,6 +64,13 @@ public class Level
         var tileHeight = test.bounds.size.y;
         var tileWidth = test.bounds.size.x;
 
+        bool top = false;
+        bool bottom = false;
+        bool left = false;
+        bool right = false;
+
+        List<Vector2> borderQueue = new List<Vector2>();
+
         //Go through each tile and spawn, if not null
         for (int i = 0; i < Layouts.GetLength(0); i++)
         {
@@ -77,19 +84,66 @@ public class Level
                 {
                     for (int y = 0; y < Layouts[i, j].Tiles.GetLength(1); y++)
                     {
+                        var tilePos =
+                            new Vector3((i * Layouts[i, j].Tiles.GetLength(0)) * tileWidth + x * tileWidth,
+                            ((j * Layouts[i, j].Tiles.GetLength(1)) * tileHeight + y * tileHeight) * -1);
+
                         // Each tile
                         Tile t = Layouts[i, j].Tiles[x, y];
                         if (t.Prefab != null)
                         {
-                            GameObject go = GameObject.Instantiate(t.Prefab,
-                                transform.position + new Vector3(
-                                    (i * Layouts[i, j].Tiles.GetLength(0)) * tileWidth + x * tileWidth,
-                                    ((j * Layouts[i, j].Tiles.GetLength(1)) * tileHeight + y * tileHeight) * -1),
+                            GameObject go = GameObject.Instantiate(
+                                t.Prefab,
+                                transform.position + tilePos,
                                 Quaternion.identity,
                                 parent.transform);
 
                             t.GoInstance = go;
                         }
+
+                        left = x == 0 && i == 0;
+                        top = y == 0 && j == 0;
+                        right = x == Layouts[i, j].Tiles.GetLength(0) - 1 && i == Layouts.GetLength(0) - 1;
+                        bottom = y == Layouts[i, j].Tiles.GetLength(1) - 1 && j == Layouts.GetLength(1) - 1;
+
+                        //Place border blocks
+                        if (left)
+                            borderQueue.Add(new Vector2(tilePos.x - tileWidth, tilePos.y));
+
+                        if (top)
+                            borderQueue.Add(new Vector2(tilePos.x, tilePos.y + tileHeight));
+
+                        if (right)
+                            borderQueue.Add(new Vector2(tilePos.x + tileWidth, tilePos.y));
+
+                        if (bottom)
+                            borderQueue.Add(new Vector2(tilePos.x, tilePos.y - tileHeight));
+
+
+                        //check corners
+                        if (top && left)
+                            borderQueue.Add(new Vector2(tilePos.x - tileWidth, tilePos.y + tileHeight));
+
+                        if (top && right)
+                            borderQueue.Add(new Vector2(tilePos.x + tileWidth, tilePos.y + tileHeight));
+
+                        if (bottom && left)
+                            borderQueue.Add(new Vector2(tilePos.x - tileWidth, tilePos.y - tileHeight));
+
+                        if (bottom && right)
+                            borderQueue.Add(new Vector2(tilePos.x + tileWidth, tilePos.y - tileHeight));
+
+
+                        foreach (var item in borderQueue)
+                        {
+                            SpawnBlock(item, parent.transform);
+                        }
+
+                        borderQueue.Clear();
+                        top = false;
+                        bottom = false;
+                        left = false;
+                        right = false;
                     }
                 }
             }
@@ -113,6 +167,17 @@ public class Level
                 }
             }
         }
+
+        LevelManager.Instance.SpawnBackGround(new Vector2(
+            (Layouts.GetLength(0) / 2 *
+            Layouts[0, 0].Tiles.GetLength(0)),
+            (Layouts.GetLength(1) / 2 *
+            Layouts[0, 0].Tiles.GetLength(1)) * -1));
+    }
+
+    private void SpawnBlock(Vector2 v, Transform t)
+    {
+        GameObject.Instantiate(LevelManager.Instance.BorderTile, v, Quaternion.identity, t);
     }
 
     /// <summary>
