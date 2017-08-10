@@ -7,7 +7,7 @@ namespace CharacterController
     /// Purpose:
     /// Creator:
     /// </summary>
-    [RequireComponent(typeof (PlayerMovement))]
+    [RequireComponent(typeof(PlayerMovement))]
     public class Dash : MovementAbility
     {
         [SerializeField]
@@ -42,7 +42,7 @@ namespace CharacterController
                 var input = _playerMovement.App.C.PlayerActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
                 if ((input || _dashing) && _cooldownTimer <= 0)
                 {
-                    if(input)
+                    if (input)
                     {
                         _direction = _playerMovement.Model.transform.localScale.x > 0 ? 1 : -1;
                         var leftInput = _playerMovement.App.C.PlayerActions.Left.IsPressed;
