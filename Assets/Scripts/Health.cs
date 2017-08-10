@@ -195,16 +195,20 @@ namespace Health
         /// <returns></returns>
         IEnumerator StartInvurnability(float duration)
         {
-            float timer = duration;
-            IsInvurnable = true;
-
-            while (timer > 0 && IsInvurnable)
+            if (!IsDead && !IsInvurnable) //If your not dead and not invurnable start the invurnablity timer
             {
-                yield return new WaitForEndOfFrame();
-                timer -= Time.unscaledDeltaTime / duration;
-            }
+                float timer = duration;
+                IsInvurnable = true;
 
-            IsInvurnable = false;
+                while (timer > 0 && IsInvurnable && !IsDead)
+                {
+                    Debug.Log(timer);
+                    yield return new WaitForEndOfFrame();
+                    timer -= Time.unscaledDeltaTime / duration;
+                }
+
+                IsInvurnable = false;
+            }
         }
     }
 }
