@@ -20,9 +20,6 @@ namespace CharacterController
         [Header("Auto Setup"), SerializeField]
         private bool _setup;
 
-        [Header("Component References"), SerializeField]
-        private PlayerApplication _app;
-
         [SerializeField]
         private bool _flipWithVelocity;
 
@@ -52,12 +49,6 @@ namespace CharacterController
         {
             get { return _groundCollisionCheck; }
             set { _groundCollisionCheck = value; }
-        }
-
-        public PlayerApplication App
-        {
-            get { return _app; }
-            set { _app = value; }
         }
 
         public virtual void Update()

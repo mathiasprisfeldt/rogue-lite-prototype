@@ -34,9 +34,9 @@ namespace CharacterController
 
         public override bool HorizontalActive { get { return _wallJumpTimer > 0; } }
 
-        public void Awake()
+        public override void Awake()
         {
-            _playerMovement = GetComponent<PlayerMovement>();
+            base.Awake();
             _playerMovement.WallJump = this;
         }
 

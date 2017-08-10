@@ -63,9 +63,9 @@ namespace CharacterController
             }
         }
 
-        public void Awake()
+        public override void Awake()
         {
-            _playerMovement = GetComponent<PlayerMovement>();
+            base.Awake();
             _playerMovement.LedgeHanging = this;
         }
 

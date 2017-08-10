@@ -12,7 +12,6 @@ public class TileBehaviour : MonoBehaviour
     [SerializeField]
     private LayerMask mask;
 
-    private List<GameObject> _targets = new List<GameObject>();
     private Queue<TileBehaviour> _queue = new Queue<TileBehaviour>();
 
     private bool Vertical;
@@ -41,7 +40,7 @@ public class TileBehaviour : MonoBehaviour
     }
 
 
-    public void StartHorizontalComposite()
+    public void StartHorizontalComposite(ref int amountOfPlatforms)
     {
         List<GameObject> targets = new List<GameObject>();
 
@@ -50,6 +49,8 @@ public class TileBehaviour : MonoBehaviour
             return;
 
         var parent = Instantiate(_parent);
+        parent.name = parent.name + amountOfPlatforms;
+        amountOfPlatforms++;
         foreach (var target in targets)
         {
             target.transform.SetParent(parent.transform, true);
@@ -63,22 +64,15 @@ public class TileBehaviour : MonoBehaviour
         targets.Add(gameObject);
         TileBehaviour tLeft = null;
         TileBehaviour tRight = null;
-        TileBehaviour tUp = null;
-        TileBehaviour tDown = null;
 
         var left = Physics2D.Raycast(transform.position, Vector2.left, 1, mask);
         var right = Physics2D.Raycast(transform.position, Vector2.right, 1, mask);
-        var up = Physics2D.Raycast(transform.position, Vector2.up, 1, mask);
-        var down = Physics2D.Raycast(transform.position, Vector2.down, 1, mask);
 
         if (left.collider != null)
             tLeft = left.collider.gameObject.GetComponent<TileBehaviour>();
         if (right.collider != null)
             tRight = right.collider.gameObject.GetComponent<TileBehaviour>();
-        if (up.collider != null)
-            tUp = up.collider.gameObject.GetComponent<TileBehaviour>();
-        if (down.collider != null)
-            tDown = down.collider.gameObject.GetComponent<TileBehaviour>();
+
 
         if (tLeft && !tLeft.Touched)
         {
@@ -101,7 +95,7 @@ public class TileBehaviour : MonoBehaviour
         }
     }
 
-    public void StartVerticalComposite()
+    public void StartVerticalComposite(ref int amountOfPlatforms)
     {
         List<GameObject> targets = new List<GameObject>();
 
@@ -110,6 +104,8 @@ public class TileBehaviour : MonoBehaviour
             return;
 
         var parent = Instantiate(_parent);
+        parent.name = parent.name + amountOfPlatforms;
+        amountOfPlatforms++;
         foreach (var target in targets)
         { 
             target.transform.SetParent(parent.transform, true);
@@ -125,6 +121,7 @@ public class TileBehaviour : MonoBehaviour
                         tb.RightCollision = temp.RightCollision;
                         tb.TopCollision = temp.TopCollision;
                         tb.BottomCollision = temp.BottomCollision;
+                        tb.Touched = temp.Touched;
                     }
                 }
             }
@@ -155,7 +152,7 @@ public class TileBehaviour : MonoBehaviour
         if (down.collider != null)
             tDown = down.collider.gameObject.GetComponent<TileBehaviour>();
 
-        if (!tUp && (tLeft || tRight))
+        if (!tUp && (tLeft|| tRight))
             _isTop = true;
 
         if (!_isTop || nextShouldDown)

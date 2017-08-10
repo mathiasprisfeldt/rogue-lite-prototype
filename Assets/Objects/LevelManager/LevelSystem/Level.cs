@@ -123,33 +123,8 @@ public class Level
 
     private void MakeComposites()
     {
-        for (int i = 0; i < Layouts.GetLength(0); i++)
-        {
-            for (int j = 0; j < Layouts.GetLength(1); j++)
-            {
-                // Each layout
-                for (int x = 0; x < Layouts[i, j].Tiles.GetLength(0); x++)
-                {
-                    for (int y = 0; y < Layouts[i, j].Tiles.GetLength(1); y++)
-                    {
-
-                        Tile c = Layouts[i, j].Tiles[x, y];
-                        if (c.GoInstance)
-                        {
-                            // Each tile
-                            Tile t = Layouts[i, j].Tiles[x, y];
-                            TileBehaviour temp = null;
-                            if (t.GoInstance)
-                                temp = t.GoInstance.GetComponent<TileBehaviour>();
-                            if(temp && !temp.Touched)
-                                temp.StartVerticalComposite();
-                        }
-                    }
-                }
-            }
-        }
-
-        //I'm Tired
+        Queue<TileBehaviour> horizontalQueue = new Queue<TileBehaviour>();
+        int amountOfPlatforms = 0;
         for (int i = 0; i < Layouts.GetLength(0); i++)
         {
             for (int j = 0; j < Layouts.GetLength(1); j++)
@@ -169,12 +144,26 @@ public class Level
                             if (t.GoInstance)
                                 temp = t.GoInstance.GetComponent<TileBehaviour>();
                             if (temp && !temp.Touched)
-                                temp.StartHorizontalComposite();
+                            {
+                                temp.StartVerticalComposite(ref amountOfPlatforms);
+                                if(!temp.Touched)
+                                    horizontalQueue.Enqueue(temp);
+                            }
+                                
+
                         }
                     }
                 }
             }
         }
+
+        while (horizontalQueue.Count > 0)
+        {
+            TileBehaviour tb = horizontalQueue.Dequeue();
+            if(!tb.Touched)
+                tb.StartHorizontalComposite(ref amountOfPlatforms);
+        }
+
     }
 
     /// <summary>
