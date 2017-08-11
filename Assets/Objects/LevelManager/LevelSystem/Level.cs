@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// Class for containing a level
@@ -46,8 +47,12 @@ public class Level
         {
             for (int j = 0; j < l.GetLength(1); j++)
             {
-                //TODO: make error handling for index out of range
-                Layouts[i, j] = LevelDataManager.Instance.Layouts.Find(x => x.ID == l[i, j]);
+
+                var temp = LevelDataManager.Instance.Layouts.Where(x => x.ID == l[i, j]);
+                if (temp.Any())
+                    Layouts[i, j] = temp.FirstOrDefault();
+                else
+                    Layouts[i, j] = LevelDataManager.Instance.Layouts.Find(x => x.ID == 0);
             }
         }
 
@@ -60,7 +65,6 @@ public class Level
     /// <param name="transform">transform to spawn under</param>
     public void Spawn(Transform transform)
     {
-        //TODO: Find the size of one tile, make better in future
         var test = LevelDataManager.Instance.Tiles[0].GetComponent<SpriteRenderer>();
         var tileHeight = test.bounds.size.y;
         var tileWidth = test.bounds.size.x;
@@ -71,6 +75,7 @@ public class Level
         bool right = false;
 
         List<Vector2> borderQueue = new List<Vector2>();
+        List<TileBehaviour> tileList = new List<TileBehaviour>();
 
         //Go through each tile and spawn, if not null
         for (int i = 0; i < Layouts.GetLength(0); i++)
@@ -101,6 +106,10 @@ public class Level
 
                             t.GoInstance = go;
                             go.name = i.ToString() + j.ToString() + x.ToString() + y.ToString();
+
+                            TileBehaviour tb = go.GetComponent<TileBehaviour>();
+                            if (tb)
+                                tileList.Add(tb);
                         }
 
                         left = x == 0 && i == 0;
@@ -138,7 +147,9 @@ public class Level
 
                         foreach (var item in borderQueue)
                         {
-                            SpawnBlock(item, parent.transform);
+                            TileBehaviour tb = SpawnBlock(item, parent.transform).GetComponent<TileBehaviour>();
+                            if (tb)
+                                tileList.Add(tb);
                         }
 
                         borderQueue.Clear();
@@ -147,60 +158,25 @@ public class Level
             }
         }
 
-        for (int i = 0; i < Layouts.GetLength(0); i++)
+        foreach (var item in tileList)
         {
-            for (int j = 0; j < Layouts.GetLength(1); j++)
-            {
-                // Each layout
-
-                for (int x = 0; x < Layouts[i, j].Tiles.GetLength(0); x++)
-                {
-                    for (int y = 0; y < Layouts[i, j].Tiles.GetLength(1); y++)
-                    {
-                        // Each tile
-                        Tile t = Layouts[i, j].Tiles[x, y];
-                        if (t.GoInstance)
-                            t.GoInstance.GetComponent<TileBehaviour>().SetupTile();
-                    }
-                }
-            }
+            item.SetupTile();
         }
 
-        //TODO: Include borders in composites
-        MakeComposites();
+        MakeComposites(tileList);
     }
 
-    private void MakeComposites()
+    private void MakeComposites(List<TileBehaviour> list)
     {
         Queue<TileBehaviour> horizontalQueue = new Queue<TileBehaviour>();
         int amountOfPlatforms = 0;
-        for (int i = 0; i < Layouts.GetLength(0); i++)
+        foreach (var item in list)
         {
-            for (int j = 0; j < Layouts.GetLength(1); j++)
+            if (!item.Touched)
             {
-                // Each layout
-                for (int x = 0; x < Layouts[i, j].Tiles.GetLength(0); x++)
-                {
-                    for (int y = 0; y < Layouts[i, j].Tiles.GetLength(1); y++)
-                    {
-
-                        Tile c = Layouts[i, j].Tiles[x, y];
-                        if (c.GoInstance)
-                        {
-                            // Each tile
-                            Tile t = Layouts[i, j].Tiles[x, y];
-                            TileBehaviour temp = null;
-                            if (t.GoInstance)
-                                temp = t.GoInstance.GetComponent<TileBehaviour>();
-                            if (temp && !temp.Touched)
-                            {
-                                temp.StartVerticalComposite(ref amountOfPlatforms);
-                                if (!temp.Touched)
-                                    horizontalQueue.Enqueue(temp);
-                            }
-                        }
-                    }
-                }
+                item.StartVerticalComposite(ref amountOfPlatforms);
+                if (!item.Touched)
+                    horizontalQueue.Enqueue(item);
             }
         }
 
@@ -217,9 +193,9 @@ public class Level
             Layouts[0, 0].Tiles.GetLength(1)) * -1));
     }
 
-    private void SpawnBlock(Vector2 v, Transform t)
+    private GameObject SpawnBlock(Vector2 v, Transform t)
     {
-        GameObject.Instantiate(LevelManager.Instance.BorderTile, v, Quaternion.identity, t);
+        return GameObject.Instantiate(LevelManager.Instance.BorderTile, v, Quaternion.identity, t);
     }
 
     /// <summary>
