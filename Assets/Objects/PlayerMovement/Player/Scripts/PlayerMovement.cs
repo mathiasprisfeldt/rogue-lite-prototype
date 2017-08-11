@@ -234,9 +234,13 @@ namespace CharacterController
 
         private void HandleState()
         {
-        
-            if (LastUsedVerticalAbility == Ability.LedgeHanging)
+            if (LastUsedHorizontalAbility == Ability.Dash)
+                Animator.SetInteger("State", 5);
+            else if (LastUsedVerticalAbility == Ability.LedgeHanging)
                 Animator.SetInteger("State", 3);
+            else if (LastUsedVerticalAbility == Ability.Wallslide)
+                Animator.SetInteger("State", 4);
+
             else
             {
                 switch (State)

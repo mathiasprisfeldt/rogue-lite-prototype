@@ -30,9 +30,6 @@ namespace CharacterController
         [SerializeField]
         private float _pushDownDuration;
 
-        [SerializeField]
-        private float _hangCooldown;
-
         private float _hangCooldownTimer;
         private float _downTimer;
         private float _upTimer;

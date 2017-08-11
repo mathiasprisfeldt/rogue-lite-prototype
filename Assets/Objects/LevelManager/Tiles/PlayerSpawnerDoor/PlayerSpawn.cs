@@ -7,8 +7,12 @@ public class PlayerSpawn : MonoBehaviour
     [SerializeField]
     private GameObject _playerPrefab;
 
+    [SerializeField]
+    private bool _spawnPlayer = true;
+
     private void Start()
     {
-        Instantiate(_playerPrefab, transform.position, Quaternion.identity);
+        if(_spawnPlayer)
+            Instantiate(_playerPrefab, transform.position, Quaternion.identity);
     }
 }

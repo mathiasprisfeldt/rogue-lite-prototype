@@ -24,9 +24,6 @@ namespace CharacterController
         [SerializeField]
         private float _verticalDuration;
 
-        [SerializeField]
-        private float _timeLeftToMove;
-
         public float Direction { get; private set; }
 
         public override bool VerticalActive
@@ -67,8 +64,15 @@ namespace CharacterController
 
         public void FixedUpdate()
         {
+            //If horizontal is active and a collision is detected in the current direction, then cancel horizontal
+            if (_horizontalTimer > 0 && (_playerMovement.TriggerSides.Left && Direction < 0 || _playerMovement.TriggerSides.Right && Direction > 0))
+                _horizontalTimer = 0;
             if(_horizontalTimer > 0)
                 _horizontalTimer -= Time.fixedDeltaTime;
+
+            //If vertical is active and a collision is detected in the current direction, then cancel vertical
+            if (_verticalTimer > 0 && (_playerMovement.TriggerSides.Left && Direction < 0 || _playerMovement.TriggerSides.Right && Direction > 0))
+                _verticalTimer = 0;
             if (_verticalTimer > 0)
                 _verticalTimer -= Time.fixedDeltaTime;
         }
