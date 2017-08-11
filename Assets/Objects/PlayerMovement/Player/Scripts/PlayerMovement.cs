@@ -180,12 +180,11 @@ namespace CharacterController
             if (_dashTimer > 0)
                 _dashTimer -= Time.fixedDeltaTime;
 
-            //todo Make limit fallspeed work
-            //var predictGravity = Rigidbody.velocity.y + Physics2D.gravity.y * Rigidbody.gravityScale;
-            //if (predictGravity <= -_maxFallSpeed)
-            //{
-            //    Rigidbody.velocity += new Vector2(Rigidbody.velocity.x, Rigidbody.CounterGravity(0));
-            //}
+            var predictGravity = Rigidbody.velocity.y + Physics2D.gravity.y * Rigidbody.gravityScale;
+            if (predictGravity <= -_maxFallSpeed)
+            {
+                Rigidbody.velocity -= new Vector2(0,Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed)) * Time.fixedDeltaTime);
+            }
 
         }
 
