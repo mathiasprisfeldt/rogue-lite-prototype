@@ -52,8 +52,7 @@ public class LevelDataManager : Singleton<LevelDataManager>
 
                 foreach (var item in temp)
                 {
-                    var grid = CSVReader.SplitCsvGridToInt(item.text, true);
-
+                    int[,] grid = CSVReader.SplitCsvGridToInt(item.text, true);
 
                     Tile[,] tiles = new Tile[grid.GetLength(0), grid.GetLength(1)];
 

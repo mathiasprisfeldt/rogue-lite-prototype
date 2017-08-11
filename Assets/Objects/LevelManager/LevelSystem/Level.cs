@@ -46,6 +46,7 @@ public class Level
         {
             for (int j = 0; j < l.GetLength(1); j++)
             {
+                //TODO: make error handling for index out of range
                 Layouts[i, j] = LevelDataManager.Instance.Layouts.Find(x => x.ID == l[i, j]);
             }
         }
@@ -141,10 +142,6 @@ public class Level
                         }
 
                         borderQueue.Clear();
-                        top = false;
-                        bottom = false;
-                        left = false;
-                        right = false;
                     }
                 }
             }
@@ -168,11 +165,10 @@ public class Level
                 }
             }
         }
-        //Todo Check if this is okay, added by Mikkel
+
+        //TODO: Include borders in composites
         MakeComposites();
     }
-
-
 
     private void MakeComposites()
     {
