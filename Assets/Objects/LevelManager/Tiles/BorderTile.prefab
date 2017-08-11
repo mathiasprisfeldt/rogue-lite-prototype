@@ -79,7 +79,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parent: {fileID: 0}
-  _autoTexturize: 1
+  _autoTexturize: 0
   _leftTexture: {fileID: 21300070, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
   _middleTexture: {fileID: 21300072, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
   _rightTexture: {fileID: 21300074, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
@@ -119,7 +119,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300038, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ed65ec61c8124864bb88dd366b82cd5d, type: 3}
   m_Color: {r: 0.6544118, g: 0.6544118, b: 0.6544118, a: 1}
   m_FlipX: 0
   m_FlipY: 0
