@@ -92,7 +92,7 @@ public class TileBehaviour : MonoBehaviour
             return;
         }
 
-        var parent = Instantiate(_parent);
+        var parent = Instantiate(_parent, Vector2.zero, Quaternion.identity, transform.root);
         parent.name = parent.name + amountOfPlatforms;
         amountOfPlatforms++;
         PlatformBehavior pb = parent.AddComponent<PlatformBehavior>();
@@ -156,7 +156,7 @@ public class TileBehaviour : MonoBehaviour
             return;
         }
 
-        var parent = Instantiate(_parent);
+        var parent = Instantiate(_parent, Vector2.zero, Quaternion.identity, transform.root);
         parent.name = parent.name + amountOfPlatforms;
         amountOfPlatforms++;
         PlatformBehavior pb = parent.AddComponent<PlatformBehavior>();

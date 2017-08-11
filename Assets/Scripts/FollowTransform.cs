@@ -18,13 +18,19 @@ public class FollowTransform : MonoBehaviour {
 
     private Vector2 velocity;
 
-   	
-	void FixedUpdate ()
+    public Transform Target
+    {
+        get { return _target; }
+        set { _target = value; }
+    }
+
+
+    void FixedUpdate ()
 	{
-	    if (_acive && _target)
+	    if (_acive && Target)
 	    {
-	        float posX = Mathf.SmoothDamp(transform.position.x, _target.position.x, ref velocity.x, _smoothX);
-	        float posY = Mathf.SmoothDamp(transform.position.y, _target.position.y, ref velocity.y, _smoothY);
+	        float posX = Mathf.SmoothDamp(transform.position.x, Target.position.x, ref velocity.x, _smoothX);
+	        float posY = Mathf.SmoothDamp(transform.position.y, Target.position.y, ref velocity.y, _smoothY);
 
             transform.position = new Vector3(posX,posY,transform.position.z);
 

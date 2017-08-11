@@ -76,6 +76,7 @@ namespace CharacterController
         private float _jumpTimer;
         private Ability _lastUsedVerticalAbility;
         private Ability _lastUsedHorizontalAbility;
+        private bool _dashEnded;
 
         public PlayerState PlayerState { get; set; }
 
@@ -143,12 +144,30 @@ namespace CharacterController
             get { return _model; }
         }
 
+        public Animator Animator
+        {
+            get { return _animator; }
+            set { _animator = value; }
+        }
+
+        public Ability LastUsedHorizontalAbility
+        {
+            get { return _lastUsedHorizontalAbility; }
+            set { _lastUsedHorizontalAbility = value; }
+        }
+
+        public Ability LastUsedVerticalAbility
+        {
+            get { return _lastUsedVerticalAbility; }
+            set { _lastUsedVerticalAbility = value; }
+        }
+
         // Update is called once per frame
         public override void Update()
         {
             base.Update();
             if(App.C.PlayerActions != null && App.C.PlayerActions.Attack.WasPressed)
-                _animator.SetTrigger("Attack");
+                Animator.SetTrigger("Attack");
 
             HandleState();
             TriggerCheck.IsColliding(out _triggerSides);
@@ -215,26 +234,35 @@ namespace CharacterController
 
         private void HandleState()
         {
-            switch (State)
+        
+            if (LastUsedVerticalAbility == Ability.LedgeHanging)
+                Animator.SetInteger("State", 3);
+            else
             {
-                case CharacterState.Idle:
-                    _animator.SetInteger("State", 0);
-                    break;
-                case CharacterState.Moving:
-                    _animator.SetInteger("State", 1);
-                    break;
-                case CharacterState.InAir:
-                    _animator.SetInteger("State", 2);
-                    break;
-                case CharacterState.None:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (State)
+                {
+                    case CharacterState.Idle:
+                        Animator.SetInteger("State", 0);
+                        break;
+                    case CharacterState.Moving:
+                        Animator.SetInteger("State", 1);
+                        break;
+                    case CharacterState.InAir:
+                        Animator.SetInteger("State", 2);
+                        break;
+                    case CharacterState.None:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
+
+            
         }
 
         private void HandleVerticalMovement(ref Vector2 velocity)
         {
+            LastUsedVerticalAbility = Ability.None;
             List<Collider2D> col = new List<Collider2D>();
             if(Sides.BottomColliders != null)
                 col = Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
@@ -242,18 +270,18 @@ namespace CharacterController
             {
                 if (_shouldHang)
                 {
-                    LedgeHanging.HandleVertical(ref velocity);
-                    _lastUsedVerticalAbility = Ability.LedgeHanging;
+                    LastUsedVerticalAbility = Ability.LedgeHanging;
+                    LedgeHanging.HandleVertical(ref velocity);                    
                 }
                 else if (WallJump && WallJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed && !(LedgeHanging && LedgeHanging.VerticalActive))
                 {
-                    WallJump.HandleVertical(ref velocity);
-                    _lastUsedVerticalAbility = Ability.WallJump;
+                    LastUsedVerticalAbility = Ability.WallJump;
+                    WallJump.HandleVertical(ref velocity);                    
                 }
                 else if (DoubleJump && DoubleJump.VerticalActive && !App.C.PlayerActions.Down.IsPressed )
                 {
-                    DoubleJump.HandleVertical(ref velocity);
-                    _lastUsedVerticalAbility = Ability.DoubleJump;
+                    LastUsedVerticalAbility = Ability.DoubleJump;
+                    DoubleJump.HandleVertical(ref velocity);                    
                 }
                 else if ((App.C.PlayerActions != null && App.C.PlayerActions.Jump.WasPressed && Sides.Bottom &&
                     !App.C.PlayerActions.Down.IsPressed) || _jumpTimer > 0 
@@ -271,12 +299,12 @@ namespace CharacterController
                             _modificationHandler.AddModification(new TemporaryLayerChange(0.4f, "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
                         }
                     }
-                    _lastUsedVerticalAbility = Ability.Jump;
+                    LastUsedVerticalAbility = Ability.Jump;
                 }
                 else if (_wallSlide && _wallSlide.VerticalActive)
                 {
-                    WallSlide.HandleVertical(ref velocity);
-                    _lastUsedVerticalAbility = Ability.Wallslide;
+                    LastUsedVerticalAbility = Ability.Wallslide;
+                    WallSlide.HandleVertical(ref velocity);                    
                 }
                 else
                     velocity = new Vector2(velocity.x, 0);
@@ -288,6 +316,10 @@ namespace CharacterController
 
         private void HandleHorizontalMovement(ref Vector2 velocity)
         {
+            if (!_dashEnded && !(Dash && Dash.HorizontalActive))
+                _dashEnded = true;
+
+            LastUsedHorizontalAbility = Ability.None;
             var horizontal = App.C.PlayerActions.HorizontalDirection.RawValue;
 
             if (Sides.Left && horizontal < 0)
@@ -302,12 +334,12 @@ namespace CharacterController
             if (Dash && Dash.HorizontalActive)
             {
                 Dash.HandleHorizontal(ref velocity);
-                _lastUsedHorizontalAbility = Ability.Dash;
+                LastUsedHorizontalAbility = Ability.Dash;
             }
             else if (WallJump && WallJump.HorizontalActive && !(LedgeHanging && LedgeHanging.VerticalActive))
             {
                 WallJump.HandleHorizontal(ref velocity);
-                _lastUsedHorizontalAbility = Ability.WallJump;
+                LastUsedHorizontalAbility = Ability.WallJump;
             }
         }
 

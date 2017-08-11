@@ -1,4 +1,5 @@
 ﻿using System;
+using CharacterController;
 using UnityEngine;
 
 namespace Health
@@ -16,6 +17,7 @@ namespace Health
     [DisallowMultipleComponent]
     public class FallDamage : MonoBehaviour
     {
+        private PlayerMovement _playerMovement;
         private float _savedFlyingDistance; //Distance between last position and current to check for excetion.
         private bool _didCollideLastFrame; //Did we collide with the floor last frame?
         private float _lastYPosition;
@@ -49,6 +51,7 @@ namespace Health
         void Start()
         {
             _lastYPosition = _characterController.Rigidbody.position.y;
+            _playerMovement = _characterController as PlayerMovement;
         }
 
         void Update()
@@ -78,14 +81,15 @@ namespace Health
                         if (_savedYVelocity > _distanceBeforeDmg)
                             dmgAmount = _savedYVelocity * _dmgPerFallUnit;
                         break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
 
                 _healthComp.Damage(Mathf.Clamp(dmgAmount, 0, _maxDmg));
             }
 
-            if (isColliding)
+            //If controller is wall sliding save position when sliding.s
+            bool isWallSliding = _playerMovement && (_playerMovement.WallSlide && _playerMovement.WallSlide.VerticalActive);
+
+            if (isColliding || isWallSliding)
                 _lastYPosition = _characterController.Rigidbody.position.y;
             else
             {
@@ -102,6 +106,11 @@ namespace Health
                 
             _didCollideLastFrame = isColliding;
             _savedYVelocity = Mathf.Abs(_characterController.Rigidbody.velocity.y);
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.DrawSphere(new Vector3(_characterController.Rigidbody.position.x, _lastYPosition), 0.1f );
         }
     }
 }

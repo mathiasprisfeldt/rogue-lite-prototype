@@ -85,7 +85,8 @@ namespace CharacterController
                         }
                         else if (_playerMovement.App.C.PlayerActions.Jump.WasPressed)
                         {
-                            _upTimer = _pushUpDuration; 
+                            _upTimer = _pushUpDuration;
+                            _playerMovement.LastUsedVerticalAbility = Ability.None;
                             return true;
                         }
 
@@ -94,7 +95,7 @@ namespace CharacterController
 
                         var extend = right ? -_playerMovement.CollisionCheck.Colliders[0].bounds.extents.x : _playerMovement.CollisionCheck.Colliders[0].bounds.extents.x;
                         _playerMovement.Rigidbody.position = Vector2.Lerp(_playerMovement.Rigidbody.position, new Vector2(hangPosition.x + extend, hangPosition.y), .6f);
-                        var dir = left ? 1 : -1;
+                        var dir = left ? -1 : 1;
                         _playerMovement.Flip(dir);
                         return true;
                     }
@@ -120,7 +121,10 @@ namespace CharacterController
                 _hangCooldownTimer -= Time.fixedDeltaTime;
 
             if (_upTimer > 0)
+            {
                 _upTimer -= Time.fixedDeltaTime;
+            }
+                
             if (_downTimer > 0)
                 _downTimer -= Time.fixedDeltaTime;
         }

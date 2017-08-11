@@ -80,10 +80,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _parent: {fileID: 1335697151304256, guid: c2ff78c21bc11d743947fc4b2805fe13, type: 2}
   _autoTexturize: 1
-  _leftTexture: {fileID: 21300070, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
-  _middleTexture: {fileID: 21300072, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
-  _rightTexture: {fileID: 21300074, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
-  _centerTexture: {fileID: 21300038, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
+  _leftTexture: {fileID: 21300000, guid: 7e9f9ff76f62ed2499ffce59f87f9a45, type: 3}
+  _middleTexture: {fileID: 21300000, guid: 91f253aee633fb448b344ad31680ccf9, type: 3}
+  _rightTexture: {fileID: 21300000, guid: 5e9f0b1240fcfac40a9a1a76e48a2bca, type: 3}
+  _centerTexture: {fileID: 21300000, guid: ed65ec61c8124864bb88dd366b82cd5d, type: 3}
   _colMask:
     serializedVersion: 2
     m_Bits: 512
@@ -100,7 +100,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 26cda5f419f4fe54fa83cfdc667c0324, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -119,7 +119,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -10
-  m_Sprite: {fileID: 21300036, guid: faa7fbeef76666e4cbdc53b6d8e1de41, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 91f253aee633fb448b344ad31680ccf9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

@@ -25,6 +25,14 @@ public class CameraPoint : MonoBehaviour
 	void Start ()
 	{
 	    _xPosition = transform.localPosition.x;
+	    GameObject mainCam = Camera.main.gameObject;
+	    if (mainCam)
+	    {
+	        FollowTransform ft = mainCam.GetComponent<FollowTransform>();
+	        ft.Target = gameObject.transform;
+
+	    }
+        
 	}
 	
 	// Update is called once per frame

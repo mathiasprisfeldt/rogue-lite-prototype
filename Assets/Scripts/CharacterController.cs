@@ -74,7 +74,7 @@ namespace CharacterController
 
             GroundCollisionCheck.Colliders.Add(col);
             GroundCollisionCheck.CollisionLayers = ~0;
-
+            
             if (!_model)
                 _model = gameObject;
         }
