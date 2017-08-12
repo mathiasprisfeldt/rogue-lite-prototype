@@ -19,51 +19,46 @@ public class CameraPoint : MonoBehaviour
     private float _durationUntilPeek;
 
     private float _xPosition;
-    private float _startYPosition;
-    private float _peekTimer;
-    private bool _resetting;
+    private float _peekTImer;
 
-    // Use this for initialization
-    void Start()
-    {
-        _xPosition = transform.localPosition.x;
-        _peekTimer = _durationUntilPeek;
-    }
+	// Use this for initialization
+	void Start ()
+	{
+	    _xPosition = transform.localPosition.x;
+	    GameObject mainCam = Camera.main.gameObject;
+	    if (mainCam)
+	    {
+	        FollowTransform ft = mainCam.GetComponent<FollowTransform>();
+	        ft.Target = gameObject.transform;
 
-    // Update is called once per frame
-    void Update()
-    {
+	    }
+        
+	}
+	
+	// Update is called once per frame
+	void Update ()
+	{
         if (_target == null)
             return;
-        var targetX = _target.transform.localScale.x > 0 ? _xPosition : -_xPosition;
-        if (targetX != transform.localPosition.x)
-            transform.localPosition = new Vector3(Mathf.Lerp(transform.localPosition.x, targetX, .02f), transform.localPosition.y);
+	    var targetX = _target.transform.localScale.x > 0 ? _xPosition : -_xPosition;
+	    var targetY = 0f;
 
-        if ((_playerMovement.OnGround || _playerMovement.Hanging) && (_playerMovement.App.C.PlayerActions.Up.IsPressed ||
-            _playerMovement.App.C.PlayerActions.Down.IsPressed))
-        {
-            if (_peekTimer > 0)
-                _peekTimer -= Time.deltaTime;
-            else
-            {
-                var dir = _playerMovement.App.C.PlayerActions.Up.IsPressed ? 1 : -1;
-                if (transform.localPosition.y != _startYPosition + dir * _peekAmount)
-                    transform.localPosition = new Vector3(transform.localPosition.x, Mathf.Lerp(transform.localPosition.y, _startYPosition + dir * _peekAmount, .1f));
-
+	    if (_playerMovement.App.C.PlayerActions != null && (_playerMovement.App.C.PlayerActions.Up || _playerMovement.App.C.PlayerActions.Down))
+	    {
+	        if (_peekTImer > 0)
+	            _peekTImer -= Time.fixedDeltaTime;
+	        else
+	        {
+	            var dir = _playerMovement.App.C.PlayerActions.Up ? 1 :-1;
+                targetY = dir * _peekAmount;
             }
-        }
-        else
-        {
-            _peekTimer = _durationUntilPeek;
-            if (Math.Abs(transform.localPosition.y - _startYPosition) > 0.00001f)
-            {
-                _resetting = true;
-                transform.localPosition = new Vector3(transform.localPosition.x, Mathf.Lerp(transform.localPosition.y, _startYPosition, .1f));
-            }
-            else if (_resetting)
-                _resetting = false;
+	        
+	    }
+	    else
+	        _peekTImer = _durationUntilPeek;
 
-        }
-
-    }
+        if (transform.localPosition != new Vector3(targetX,targetY,transform.localPosition.z))
+            transform.localPosition = new Vector3(targetX, targetY, transform.localPosition.z);
+	        
+	}
 }

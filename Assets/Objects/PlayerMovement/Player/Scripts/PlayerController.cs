@@ -1,6 +1,7 @@
 using System;
 using AcrylecSkeleton.MVC;
 using BindingsExample;
+using InControl;
 using UnityEngine;
 using RogueLiteInput;
 
@@ -13,42 +14,12 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
     /// </summary>
     public class PlayerController : Controller<PlayerApplication>
     {
-        [SerializeField]
-        private ActionsSetType _activeActionSettype;
-
-        private ActionsSetType _oldActionSetType;
-        private KeyboardActions _keyboardActions;
-
         public InputActions PlayerActions { get; set; }
 
         public void Awake()
         {
-            _keyboardActions = new KeyboardActions();
-            ChangeActionSet(_activeActionSettype);
+            PlayerActions = new InputActions();
         }
 
-        public void Update()
-        {
-            if (_activeActionSettype != _oldActionSetType)
-                ChangeActionSet(_activeActionSettype);
-
-            _oldActionSetType = _activeActionSettype;
-        }
-
-        private void ChangeActionSet(ActionsSetType type)
-        {
-            switch (type)
-            {
-                case ActionsSetType.Keyboard:
-                    PlayerActions = _keyboardActions;
-                    break;
-                case ActionsSetType.Controller:
-                    PlayerActions = _keyboardActions;
-                    break;
-                default:
-                    PlayerActions = _keyboardActions;
-                    break;
-            }
-        }
     }
 }

@@ -77,6 +77,9 @@ public class Level
         List<Vector2> borderQueue = new List<Vector2>();
         List<TileBehaviour> tileList = new List<TileBehaviour>();
 
+        //A number to name borders
+        int numberOfBorders = 0;
+
         //Go through each tile and spawn, if not null
         for (int i = 0; i < Layouts.GetLength(0); i++)
         {
@@ -145,11 +148,21 @@ public class Level
                             borderQueue.Add(new Vector2(tilePos.x + tileWidth, tilePos.y - tileHeight));
 
 
+                        
+                        //Places borders
                         foreach (var item in borderQueue)
                         {
                             TileBehaviour tb = SpawnBlock(item, parent.transform).GetComponent<TileBehaviour>();
                             if (tb)
+                            {
+                                //Name border
+                                numberOfBorders++;
+                                tb.gameObject.name += numberOfBorders.ToString();
+
+                                //Add tile to the tiles list
                                 tileList.Add(tb);
+                            }
+                                
                         }
 
                         borderQueue.Clear();

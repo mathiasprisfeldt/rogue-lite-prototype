@@ -39,14 +39,14 @@ namespace CharacterController
         {
             get
             {
-                var input = _playerMovement.App.C.PlayerActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
+                var input = _playerMovement.App.C.PlayerActions != null&& _playerMovement.App.C.PlayerActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
                 if ((input || _dashing) && _cooldownTimer <= 0)
                 {
                     if (input)
                     {
                         _direction = _playerMovement.Model.transform.localScale.x > 0 ? 1 : -1;
-                        var leftInput = _playerMovement.App.C.PlayerActions.Left.IsPressed;
-                        var rightInput = _playerMovement.App.C.PlayerActions.Right.IsPressed;
+                        var leftInput = _playerMovement.App.C.PlayerActions.Left;
+                        var rightInput = _playerMovement.App.C.PlayerActions.Right;
 
                         if (leftInput || rightInput)
                             _direction = leftInput ? -1 : 1;
@@ -67,6 +67,11 @@ namespace CharacterController
             }
         }
 
+        public override bool VerticalActive
+        {
+            get { return HorizontalActive; }
+        }
+
         public void Update()
         {
             if (_cooldownTimer > 0)
@@ -85,12 +90,12 @@ namespace CharacterController
             }
             else
                 velocity = new Vector2(_dashCurve.Evaluate((_dashDuration - Mathf.Abs(_dashingTimer)) / _dashDuration) * _dashForce * _direction,
-                    _playerMovement.Rigidbody.gravityScale * Physics2D.gravity.y);
+                    velocity.y);
         }
 
         public override void HandleVertical(ref Vector2 velocity)
         {
-            throw new NotImplementedException();
+                velocity = new Vector2(velocity.x, _playerMovement.Rigidbody.CounterGravity(0));          
         }
     }
 }

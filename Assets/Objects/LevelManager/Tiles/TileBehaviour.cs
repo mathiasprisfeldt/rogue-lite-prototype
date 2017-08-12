@@ -97,6 +97,14 @@ public class TileBehaviour : MonoBehaviour
         amountOfPlatforms++;
         PlatformBehavior pb = parent.AddComponent<PlatformBehavior>();
 
+        GameObject superParent = GameObject.FindObjectOfType<Platforms>().gameObject;
+
+        if (!superParent)
+        {
+            superParent = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity);
+            superParent.name = "Platforms";
+        }
+
         foreach (var target in targets)
         {
             if (target == gameObject)
@@ -104,6 +112,9 @@ public class TileBehaviour : MonoBehaviour
             pb.Tiles.Add(this);
             target.transform.SetParent(parent.transform, true);
         }
+
+        Platforms p = superParent.GetComponent<Platforms>();
+        p.ParentToThis(parent.transform, pb.Tiles.Count, false);
     }
 
     public void CheckHorizontalComposite(ref List<GameObject> targets, bool continueDown)
@@ -142,6 +153,7 @@ public class TileBehaviour : MonoBehaviour
             temp.Touched = true;
             temp.CheckHorizontalComposite(ref targets, nextShouldDown);
         }
+
     }
 
     public void StartVerticalComposite(ref int amountOfPlatforms)
@@ -157,6 +169,14 @@ public class TileBehaviour : MonoBehaviour
         }
 
         var parent = Instantiate(_parent, Vector2.zero, Quaternion.identity, transform.root);
+        GameObject superParent = GameObject.FindObjectOfType<Platforms>().gameObject;
+
+        if (!superParent)
+        {
+            superParent = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity);
+            superParent.name = "Platforms";
+        }
+
         parent.name = parent.name + amountOfPlatforms;
         amountOfPlatforms++;
         PlatformBehavior pb = parent.AddComponent<PlatformBehavior>();
@@ -168,6 +188,10 @@ public class TileBehaviour : MonoBehaviour
             pb.Tiles.Add(this);
             target.transform.SetParent(parent.transform, true);
         }
+
+        Platforms p = superParent.GetComponent<Platforms>();
+        p.ParentToThis(parent.transform, pb.Tiles.Count, true);
+
     }
 
     public void CheckVerticalCompisite(ref List<GameObject> targets, bool continueDown)
