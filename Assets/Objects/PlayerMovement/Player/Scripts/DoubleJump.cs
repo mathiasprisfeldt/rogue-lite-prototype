@@ -29,6 +29,7 @@ namespace CharacterController
                 {
                     _jumpTimer = _jumpDuration;
                     _hasJumped = true;
+                    _playerMovement.Animator.SetTrigger("DoubleJump");
                 }
                     
                 return _jumpTimer > 0;

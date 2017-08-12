@@ -30,9 +30,6 @@ namespace CharacterController
         [SerializeField]
         private float _pushDownDuration;
 
-        [SerializeField]
-        private float _hangCooldown;
-
         private float _hangCooldownTimer;
         private float _downTimer;
         private float _upTimer;
@@ -43,8 +40,8 @@ namespace CharacterController
             {
                 var left = _playerMovement.TriggerSides.Left;
                 var right = _playerMovement.TriggerSides.Right;
-                var horizontalMovement = _playerMovement.App.C.PlayerActions.Right.IsPressed && left ||
-                                         _playerMovement.App.C.PlayerActions.Left.IsPressed && right;
+                var horizontalMovement = _playerMovement.App.C.PlayerActions.Right && left ||
+                                         _playerMovement.App.C.PlayerActions.Left && right;
                 if (_downTimer > 0 || _upTimer > 0)
                     return true;
                 if ((right || left) && !(_playerMovement.WallJump && _playerMovement.WallJump.HorizontalActive) && _hangCooldownTimer <= 0)
@@ -77,7 +74,7 @@ namespace CharacterController
                         if (platform && !platform.Istop)
                             return false;
 
-                        if (_playerMovement.App.C.PlayerActions.Down.IsPressed &&
+                        if (_playerMovement.App.C.PlayerActions.Down &&
                             _playerMovement.App.C.PlayerActions.Jump.IsPressed)
                         {
                             _downTimer = _pushDownDuration;

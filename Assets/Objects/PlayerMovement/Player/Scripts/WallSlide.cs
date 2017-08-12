@@ -10,9 +10,11 @@ namespace CharacterController
         private float _wallSlideForce;
 
         [SerializeField]
-        private bool _active;
+        private float _timeUntilSlide;
 
         private bool _falling;
+        private float dir;
+        private float _slideTimer;
 
         public override bool VerticalActive
         {
@@ -22,7 +24,20 @@ namespace CharacterController
                 var falling = _playerMovement.Rigidbody.velocity.y < -1 || _falling;
                 var rest = (_playerMovement.TriggerSides.Left || _playerMovement.TriggerSides.Right);
 
-                return wallJumpActive && falling && rest;
+                if(wallJumpActive && falling && rest)
+                {
+                    dir = _playerMovement.TriggerSides.Left ? 1 : -1;
+                    if (_slideTimer > 0)
+                    {
+                        _slideTimer -= Time.fixedDeltaTime;
+                        return false;
+                    }                       
+                    return true;
+                }
+                else
+                    _slideTimer = _timeUntilSlide;
+
+                return false;
             }
         }
 
@@ -42,6 +57,7 @@ namespace CharacterController
         {
             _falling = true;
             velocity += new Vector2(0, _playerMovement.Rigidbody.CounterGravity(_wallSlideForce));
+            _playerMovement.Flip(dir);
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)
