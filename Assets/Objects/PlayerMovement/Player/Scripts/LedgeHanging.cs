@@ -38,15 +38,15 @@ namespace CharacterController
         {
             get
             {
-                var left = _playerMovement.TriggerSides.Left;
-                var right = _playerMovement.TriggerSides.Right;
+                var left = _playerMovement.TriggerCheck.Sides.Left;
+                var right = _playerMovement.TriggerCheck.Sides.Right;
                 var horizontalMovement = _playerMovement.App.C.PlayerActions.Right && left ||
                                          _playerMovement.App.C.PlayerActions.Left && right;
                 if (_downTimer > 0 || _upTimer > 0)
                     return true;
                 if ((right || left) && !(_playerMovement.WallJump && _playerMovement.WallJump.HorizontalActive) && _hangCooldownTimer <= 0)
                 {
-                    List<Collider2D> colliders = right ? _playerMovement.TriggerSides.RightColliders : _playerMovement.TriggerSides.LeftColliders;
+                    List<Collider2D> colliders = right ? _playerMovement.TriggerCheck.Sides.RightColliders : _playerMovement.TriggerCheck.Sides.LeftColliders;
                     Collider2D col = colliders[0];
                     var distance = float.MaxValue;
                     foreach (var c in colliders)
@@ -83,7 +83,6 @@ namespace CharacterController
                         else if (_playerMovement.App.C.PlayerActions.Jump.WasPressed)
                         {
                             _upTimer = _pushUpDuration;
-                            _playerMovement.LastUsedVerticalAbility = Ability.None;
                             return true;
                         }
 
@@ -133,6 +132,9 @@ namespace CharacterController
 
         public override void HandleVertical(ref Vector2 velocity)
         {
+            if(_upTimer > 0 || _downTimer > 0)
+                _playerMovement.LastUsedVerticalAbility = Ability.None;
+
             var temp = 0f;
             if (_upTimer > 0)
                 temp += _pushUpForce / _pushUpDuration;

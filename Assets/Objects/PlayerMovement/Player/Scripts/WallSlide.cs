@@ -22,11 +22,11 @@ namespace CharacterController
             {
                 var wallJumpActive = !(_playerMovement.WallJump && _playerMovement.WallJump.HorizontalActive);
                 var falling = _playerMovement.Rigidbody.velocity.y < -1 || _falling;
-                var rest = (_playerMovement.TriggerSides.Left || _playerMovement.TriggerSides.Right);
+                var rest = (_playerMovement.WallSlideCheck.Left || _playerMovement.WallSlideCheck.Right);
 
                 if(wallJumpActive && falling && rest)
                 {
-                    dir = _playerMovement.TriggerSides.Left ? 1 : -1;
+                    dir = _playerMovement.TriggerCheck.Sides.Left ? 1 : -1;
                     if (_slideTimer > 0)
                     {
                         _slideTimer -= Time.fixedDeltaTime;
@@ -38,6 +38,16 @@ namespace CharacterController
                     _slideTimer = _timeUntilSlide;
 
                 return false;
+            }
+        }
+
+        public override bool HorizontalActive
+        {
+            get
+            {
+                return VerticalActive &&
+                       !(_playerMovement.WallSlideCheck.Left && _playerMovement.App.C.PlayerActions.Right ||
+                       _playerMovement.WallSlideCheck.Right && _playerMovement.App.C.PlayerActions.Left);
             }
         }
 
@@ -62,7 +72,7 @@ namespace CharacterController
 
         public override void HandleHorizontal(ref Vector2 velocity)
         {
-            
+            velocity = new Vector2(0,velocity.y);
         }
 
         public void OnDisable()

@@ -39,7 +39,7 @@ public class CollisionCheck : MonoBehaviour
         get
         {
             if (_isDirty)
-                return _collisionSides.Top;
+                return Sides.Top;
             CollisionSides temp = new CollisionSides(false, false, false, false);
             IsColliding(out temp);
             return temp.Top;
@@ -50,7 +50,7 @@ public class CollisionCheck : MonoBehaviour
         get
         {
             if (_isDirty)
-                return _collisionSides.Bottom;
+                return Sides.Bottom;
             CollisionSides temp = new CollisionSides(false, false, false, false);
             IsColliding(out temp);
             return temp.Bottom;
@@ -61,7 +61,7 @@ public class CollisionCheck : MonoBehaviour
         get
         {
             if (_isDirty)
-                return _collisionSides.Left;
+                return Sides.Left;
             CollisionSides temp = new CollisionSides(false, false, false, false);
             IsColliding(out temp);
             return temp.Left;
@@ -72,11 +72,23 @@ public class CollisionCheck : MonoBehaviour
         get
         {
             if (_isDirty)
-                return _collisionSides.Right;
+                return Sides.Right;
             CollisionSides temp = new CollisionSides(false, false, false, false);
             IsColliding(out temp);
             return temp.Right;
         }
+    }
+
+    public CollisionSides Sides
+    {
+        get
+        {
+            if(_isDirty)
+                return _collisionSides;
+            IsColliding(out _collisionSides);
+            return _collisionSides;
+        }
+
     }
 
     public bool IsColliding()
@@ -114,7 +126,7 @@ public class CollisionCheck : MonoBehaviour
         if (_isDirty && layer == _collisionLayers)
         {
             colliders = _collisionColliders.ToList();
-            sides = _collisionSides;
+            sides = Sides;
             return sides.Top || sides.Bottom || sides.Right || sides.Left;
         }
         sides.Colliders = Colliders.ToList();

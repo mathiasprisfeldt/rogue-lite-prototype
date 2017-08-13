@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace CharacterController
@@ -39,7 +40,7 @@ namespace CharacterController
         {
             get
             {
-                var input = _playerMovement.App.C.PlayerActions != null&& _playerMovement.App.C.PlayerActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
+                var input = _playerMovement.App.C.PlayerActions != null && _playerMovement.App.C.PlayerActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
                 if ((input || _dashing) && _cooldownTimer <= 0)
                 {
                     if (input)
@@ -51,11 +52,8 @@ namespace CharacterController
                         if (leftInput || rightInput)
                             _direction = leftInput ? -1 : 1;
 
-                        if (_playerMovement.TriggerCheck.Left && _direction == -1)
-                            return false;
-
-                        if (_playerMovement.TriggerCheck.Right && _direction == 1)
-                            return false;
+                        if (_playerMovement.TriggerCheck.Left && _direction == -1 || _playerMovement.TriggerCheck.Right && _direction == 1)
+                            _direction = -_direction;
 
                         _dashing = true;
                         _oldVelocity = _playerMovement.Rigidbody.velocity;
@@ -82,6 +80,7 @@ namespace CharacterController
 
         public override void HandleHorizontal(ref Vector2 velocity)
         {
+            _playerMovement.Flip(_direction);
             if (_dashingTimer <= 0)
             {
                 _dashing = false;
