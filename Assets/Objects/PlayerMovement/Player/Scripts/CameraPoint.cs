@@ -33,7 +33,7 @@ public class CameraPoint : MonoBehaviour
 	    {
 	        FollowTransform ft = mainCam.GetComponent<FollowTransform>();
 	        ft.Target = gameObject.transform;
-
+	        ft.transform.position = transform.position;
 	    }
         
 	}
