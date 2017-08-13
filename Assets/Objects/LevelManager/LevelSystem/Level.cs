@@ -229,10 +229,6 @@ public class Level
 
     public void Despawn()
     {
-        //Do despawn stuff...
-        foreach (Transform item in LevelManager.Instance.transform)
-        {
-            GameObject.Destroy(item.gameObject);
-        }
+        //Do despawn stuff...        
     }
 }

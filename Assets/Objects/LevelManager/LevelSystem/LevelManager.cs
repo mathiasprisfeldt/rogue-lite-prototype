@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 /// <summary>
@@ -40,6 +41,7 @@ public class LevelManager : Singleton<LevelManager>
         base.Awake();
         LoadLevels();
         LoadNextLevel();
+
     }
 
     /// <summary>
@@ -50,6 +52,13 @@ public class LevelManager : Singleton<LevelManager>
         //There is already a level loaded, and we are ingame
         if (CurrentLevel != null)
             CurrentLevel.Despawn();
+        SceneManager.LoadScene("LevelScene");
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        if (SceneManager.GetSceneByBuildIndex(level).name != "LevelScene")
+            return;
 
         if (_forcedLevels.Any())
         {
@@ -63,14 +72,16 @@ public class LevelManager : Singleton<LevelManager>
         else
             Debug.Log("There are no levels to loaded");
 
-        CurrentLevel.Spawn(transform);
+        GameObject go = new GameObject("LevelParent");
+        go.AddComponent<Platforms>();
+        CurrentLevel.Spawn(go.transform);
     }
 
     public void SpawnBackGround(Vector2 v)
     {
         Vector2 size = (v * 2);
 
-        var bg = Instantiate(BackGround, new Vector2(v.x - .5f, v.y + .5f) + _tileSpawnOffset, Quaternion.identity, transform);
+        var bg = Instantiate(BackGround, new Vector2(v.x - .5f, v.y + .5f) + _tileSpawnOffset, Quaternion.identity);
         bg.GetComponent<SpriteRenderer>().size = size;
     }
 
