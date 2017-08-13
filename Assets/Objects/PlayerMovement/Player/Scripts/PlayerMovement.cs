@@ -322,8 +322,7 @@ namespace CharacterController
                 horizontal = 0;
 
             velocity += new Vector2(_horizontalSpeed*horizontal, 0);
-
-
+            
             if (Dash && Dash.HorizontalActive)
             {
                 Dash.HandleHorizontal(ref velocity);

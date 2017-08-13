@@ -101,11 +101,7 @@ public class Level
                         Tile t = Layouts[i, j].Tiles[x, y];
                         if (t.Prefab != null)
                         {
-                            GameObject go = GameObject.Instantiate(
-                                t.Prefab,
-                                transform.position + tilePos,
-                                Quaternion.identity,
-                                parent.transform);
+                            GameObject go = LevelManager.Instance.SpawnTile(transform.position + tilePos, t.Prefab, parent: parent.transform);
 
                             t.GoInstance = go;
                             go.name = i.ToString() + j.ToString() + x.ToString() + y.ToString();
@@ -147,12 +143,10 @@ public class Level
                         if (bottom && right)
                             borderQueue.Add(new Vector2(tilePos.x + tileWidth, tilePos.y - tileHeight));
 
-
-                        
                         //Places borders
-                        foreach (var item in borderQueue)
+                        foreach (var pos in borderQueue)
                         {
-                            TileBehaviour tb = SpawnBlock(item, parent.transform).GetComponent<TileBehaviour>();
+                            TileBehaviour tb = LevelManager.Instance.SpawnTile(pos, parent: parent.transform).GetComponent<TileBehaviour>();
                             if (tb)
                             {
                                 //Name border
@@ -205,12 +199,7 @@ public class Level
             (Layouts.GetLength(1) / 2 *
             Layouts[0, 0].Tiles.GetLength(1)) * -1));
     }
-
-    private GameObject SpawnBlock(Vector2 v, Transform t)
-    {
-        return GameObject.Instantiate(LevelManager.Instance.BorderTile, v, Quaternion.identity, t);
-    }
-
+    
     /// <summary>
     /// Spawn only one layout
     /// </summary>
@@ -228,11 +217,12 @@ public class Level
             for (int j = 0; j < layout.Tiles.GetLength(1); j++)
             {
                 Tile t = layout.Tiles[i, j];
+
                 if (t.Prefab != null)
-                    GameObject.Instantiate(t.Prefab,
-                        transform.position + new Vector3(i * tileWidth, ((j * tileHeight) * -1)),
-                        Quaternion.identity,
-                        transform);
+                    LevelManager.Instance.SpawnTile(
+                        transform.position + new Vector3(i * tileWidth, ((j * tileHeight) * -1)), 
+                        t.Prefab,
+                        parent: transform);
             }
         }
     }

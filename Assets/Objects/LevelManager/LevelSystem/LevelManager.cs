@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 /// <summary>
 /// Manages and loads levels
@@ -11,6 +12,9 @@ using UnityEngine;
 [RequireComponent(typeof(LevelDataManager))]
 public class LevelManager : Singleton<LevelManager>
 {
+    [SerializeField]
+    private Vector2 _tileSpawnOffset = Vector2.one/2;
+
     [SerializeField]
     private GameObject _borderTile;
     public GameObject BorderTile { get { return _borderTile; } set { _borderTile = value; } }
@@ -34,7 +38,6 @@ public class LevelManager : Singleton<LevelManager>
     protected override void Awake()
     {
         base.Awake();
-
         LoadLevels();
         LoadNextLevel();
     }
@@ -72,8 +75,18 @@ public class LevelManager : Singleton<LevelManager>
     {
         Vector2 size = (v * 2);
 
-        var bg = Instantiate(BackGround, new Vector3(v.x - .5f, v.y + .5f), Quaternion.identity, transform);
+        var bg = Instantiate(BackGround, new Vector2(v.x - .5f, v.y + .5f) + _tileSpawnOffset, Quaternion.identity, transform);
         bg.GetComponent<SpriteRenderer>().size = size;
+    }
+
+    /// <summary>
+    /// Used for spawning a tile in a level.
+    /// It accounts for positional offset described in LevelManager.
+    /// </summary>
+    /// <returns>GameObject of the instantiated tile.</returns>
+    public GameObject SpawnTile(Vector2 pos, GameObject tileRecipe = null, Quaternion rot = default(Quaternion), Transform parent = null )
+    {
+        return Instantiate(tileRecipe ?? BorderTile, pos + _tileSpawnOffset, rot, parent);
     }
 
     /// <summary>
