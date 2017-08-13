@@ -43,24 +43,22 @@ namespace CharacterController
         private CollisionCheck _triggerCheck;
 
         [SerializeField]
-        protected CollisionCheck _collisionCheck;
+        private CollisionCheck _collisionCheck;
 
-        public CollisionCheck CollisionCheck
-        {
-            get { return _collisionCheck; }
-            set { _collisionCheck = value; }
-        }
+        [SerializeField]
+        private CollisionCheck _wallSlideCheck;
 
-        [SerializeField] private float _horizontalSpeed;
+        [SerializeField]
+        private float _horizontalSpeed;
 
-        [SerializeField] private Animator _animator;
+        [SerializeField]
+        private Animator _animator;
 
-        [SerializeField] private float _maxFallSpeed;
+        [SerializeField]
+        private float _maxFallSpeed;
 
         private Vector2 _velocity;
-        private CollisionSides _collisionSides;
-        private CollisionSides _triggerSides;
-        private CollisionSides _groundSides;
+
         private bool _shouldDash;
         private float _dashTimer;
         private Vector2 _savedVelocity;
@@ -68,8 +66,6 @@ namespace CharacterController
         private Ability _lastUsedVerticalAbility;
         private Ability _lastUsedHorizontalAbility;
         private bool _dashEnded;
-
-        public PlayerState PlayerState { get; set; }
 
         public WallJump WallJump
         {
@@ -87,18 +83,6 @@ namespace CharacterController
         {
             get { return _wallSlide; }
             set { _wallSlide = value; }
-        }
-
-        public CollisionSides Sides
-        {
-            get { return _collisionSides; }
-            set { _collisionSides = value; }
-        }
-
-        public CollisionSides TriggerSides
-        {
-            get { return _triggerSides; }
-            set { _triggerSides = value; }
         }
 
         public Vector2 Velocity
@@ -166,11 +150,17 @@ namespace CharacterController
             set { _modificationHandler = value; }
         }
 
-        public CollisionSides GroundSides
+        public CollisionCheck CollisionCheck
         {
-            get { return _groundSides; }
-            set { _groundSides = value; }
+            get { return _collisionCheck; }
+            set { _collisionCheck = value; }
         }
+
+        public CollisionCheck WallSlideCheck
+        {
+            get { return _wallSlideCheck; }
+        }
+
 
         // Update is called once per frame
         public override void Update()
@@ -178,9 +168,6 @@ namespace CharacterController
             base.Update();
 
             HandleState();
-            TriggerCheck.IsColliding(out _triggerSides);
-            CollisionCheck.IsColliding(out _collisionSides);
-            GroundCollisionCheck.IsColliding(out _groundSides);
             if (App.C.PlayerActions != null)
                 _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
         }
@@ -211,7 +198,7 @@ namespace CharacterController
 
         protected override void UpdateState()
         {
-            if (OnGround && (App.C.PlayerActions != null && App.C.PlayerActions.Horizontal.Value != 0))
+            if (OnGround && (App.C.PlayerActions != null && App.C.PlayerActions.Horizontal != 0))
             {
                 State = CharacterState.Moving;
             }
@@ -265,8 +252,8 @@ namespace CharacterController
         {
             LastUsedVerticalAbility = Ability.None;
             List<Collider2D> col = new List<Collider2D>();
-            if (Sides.BottomColliders != null)
-                col = Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
+            if (CollisionCheck.Sides.BottomColliders != null)
+                col = CollisionCheck.Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
             if (_shouldHang)
             {
                 LastUsedVerticalAbility = Ability.LedgeHanging;
@@ -312,26 +299,31 @@ namespace CharacterController
                 _dashEnded = true;
 
             LastUsedHorizontalAbility = Ability.None;
-            var horizontal = App.C.PlayerActions.Horizontal.RawValue;
+            var horizontal = App.C.PlayerActions.Horizontal;
             Flip(horizontal);
 
-            if (Sides.Left && horizontal < 0)
+            if (CollisionCheck.Sides.Left && horizontal < 0)
                 horizontal = 0;
 
-            if (Sides.Right && horizontal > 0)
+            if (CollisionCheck.Sides.Right && horizontal > 0)
                 horizontal = 0;
 
             velocity += new Vector2(_horizontalSpeed*horizontal, 0);
             
             if (Dash && Dash.HorizontalActive)
             {
-                Dash.HandleHorizontal(ref velocity);
                 LastUsedHorizontalAbility = Ability.Dash;
+                Dash.HandleHorizontal(ref velocity);           
             }
             else if (WallJump && WallJump.HorizontalActive && !(LedgeHanging && LedgeHanging.VerticalActive))
             {
-                WallJump.HandleHorizontal(ref velocity);
                 LastUsedHorizontalAbility = Ability.WallJump;
+                WallJump.HandleHorizontal(ref velocity);                
+            }
+            else if (WallSlide && WallSlide.HorizontalActive)
+            {
+                LastUsedHorizontalAbility = Ability.Wallslide;
+                WallSlide.HandleHorizontal(ref velocity);
             }
         }
 

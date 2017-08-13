@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using CharacterController;
 using UnityEngine;
 
@@ -33,7 +34,6 @@ public class CameraPoint : MonoBehaviour
 	    {
 	        FollowTransform ft = mainCam.GetComponent<FollowTransform>();
 	        ft.Target = gameObject.transform;
-	        ft.transform.position = transform.position;
 	    }
         
 	}
@@ -45,8 +45,10 @@ public class CameraPoint : MonoBehaviour
             return;
 	    var targetX = _target.transform.localScale.x > 0 ? _xPosition : -_xPosition;
 	    var targetY = 0f;
+	    var inRightState = _playerMovement.State == CharacterState.Idle || _playerMovement.State == CharacterState.Moving || _playerMovement.LastUsedVerticalAbility == Ability.LedgeHanging;
 
-	    if (_playerMovement.App.C.PlayerActions != null && (_playerMovement.App.C.PlayerActions.DeadZoneUp(_peekDeadZone) || _playerMovement.App.C.PlayerActions.DeadZoneDown(_peekDeadZone)))
+	    if (_playerMovement.App.C.PlayerActions != null && inRightState
+            && (_playerMovement.App.C.PlayerActions.DeadZoneUp(_peekDeadZone) || _playerMovement.App.C.PlayerActions.DeadZoneDown(_peekDeadZone)))
 	    {
 	        if (_peekTImer > 0)
 	            _peekTImer -= Time.fixedDeltaTime;
@@ -62,6 +64,5 @@ public class CameraPoint : MonoBehaviour
 
         if (transform.localPosition != new Vector3(targetX,targetY,transform.localPosition.z))
             transform.localPosition = new Vector3(targetX, targetY, transform.localPosition.z);
-	        
 	}
 }

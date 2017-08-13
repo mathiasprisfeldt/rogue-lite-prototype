@@ -31,12 +31,12 @@ namespace CharacterController
             get
             {
                 var input = _playerMovement.App.C.PlayerActions != null && _playerMovement.App.C.PlayerActions.Jump.WasPressed;
-                var collision = (_playerMovement.TriggerSides.Left || _playerMovement.TriggerSides.Right) && !_playerMovement.GroundCollisionCheck.Bottom;
+                var collision = (_playerMovement.TriggerCheck.Sides.Left || _playerMovement.TriggerCheck.Sides.Right) && !_playerMovement.GroundCollisionCheck.Bottom;
                 if (input && collision && _verticalTimer <= 0 && _horizontalTimer <= 0)
                 {
                     _horizontalTimer = _horizontalDuration;
                     _verticalTimer = _verticalDuration;
-                    Direction = _playerMovement.TriggerSides.Left ? 1 : -1;
+                    Direction = _playerMovement.TriggerCheck.Sides.Left ? 1 : -1;
                 }
                                     
                 return _verticalTimer > 0;
@@ -64,13 +64,13 @@ namespace CharacterController
         public void FixedUpdate()
         {
             //If horizontal is active and a collision is detected in the current direction, then cancel horizontal
-            if (_horizontalTimer > 0 && (_playerMovement.TriggerSides.Left && Direction < 0 || _playerMovement.TriggerSides.Right && Direction > 0))
+            if (_horizontalTimer > 0 && (_playerMovement.TriggerCheck.Sides.Left && Direction < 0 || _playerMovement.TriggerCheck.Sides.Right && Direction > 0))
                 _horizontalTimer = 0;
             if(_horizontalTimer > 0)
                 _horizontalTimer -= Time.fixedDeltaTime;
 
             //If vertical is active and a collision is detected in the current direction, then cancel vertical
-            if (_verticalTimer > 0 && (_playerMovement.TriggerSides.Left && Direction < 0 || _playerMovement.TriggerSides.Right && Direction > 0))
+            if (_verticalTimer > 0 && (_playerMovement.TriggerCheck.Sides.Left && Direction < 0 || _playerMovement.TriggerCheck.Sides.Right && Direction > 0))
                 _verticalTimer = 0;
             if (_verticalTimer > 0)
                 _verticalTimer -= Time.fixedDeltaTime;
