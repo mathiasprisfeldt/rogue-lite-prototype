@@ -69,7 +69,7 @@ public class Jump : MovementAbility {
             force = _playerMovement.Rigidbody.CalculateVerticalSpeed(_initialJumpForce / _initialJumpDuration);
         }
 
-        velocity = new Vector2(0, force);
+        velocity = new Vector2(velocity.x, force);
 
         if (_playerMovement.GroundSides.BottomColliders != null && _playerMovement.GroundSides.BottomColliders.Count > 0 
             && _playerMovement.App.C.PlayerActions.Down)

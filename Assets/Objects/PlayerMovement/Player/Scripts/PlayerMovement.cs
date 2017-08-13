@@ -183,20 +183,15 @@ namespace CharacterController
             GroundCollisionCheck.IsColliding(out _groundSides);
             if (App.C.PlayerActions != null)
                 _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
+            Debug.Log(_lastUsedVerticalAbility);
         }
 
         void FixedUpdate()
         {
             _velocity = new Vector2(0, 0);
 
-            if (App.C.PlayerActions != null && (App.C.PlayerActions.Left || App.C.PlayerActions.Right))
-            {
-                float dir = App.C.PlayerActions.Left ? -1 : 1;
-                Flip(dir);
-            }
-
-            HandleVerticalMovement(ref _velocity);
             HandleHorizontalMovement(ref _velocity);
+            HandleVerticalMovement(ref _velocity);           
 
             SetVelocity(new Vector2(_velocity.x*Time.fixedDeltaTime, _rigidbody.velocity.y));
             if (Velocity.y != 0)
@@ -217,8 +212,7 @@ namespace CharacterController
 
         protected override void UpdateState()
         {
-            if (OnGround && (App.C.PlayerActions != null &&
-                 (App.C.PlayerActions.Left || App.C.PlayerActions.Right)))
+            if (OnGround && (App.C.PlayerActions != null && App.C.PlayerActions.Horizontal.Value != 0))
             {
                 State = CharacterState.Moving;
             }
@@ -284,13 +278,13 @@ namespace CharacterController
                 LastUsedVerticalAbility = Ability.Dash;
                 Dash.HandleVertical(ref velocity);
             }
-            else if (WallJump && WallJump.VerticalActive && /*!App.C.PlayerActions.Down &&*/
+            else if (WallJump && WallJump.VerticalActive &&
                      !(LedgeHanging && LedgeHanging.VerticalActive))
             {
                 LastUsedVerticalAbility = Ability.WallJump;
                 WallJump.HandleVertical(ref velocity);
             }
-            else if (DoubleJump && DoubleJump.VerticalActive /*&& !App.C.PlayerActions.Down*/)
+            else if (DoubleJump && DoubleJump.VerticalActive)
             {
                 LastUsedVerticalAbility = Ability.DoubleJump;
                 DoubleJump.HandleVertical(ref velocity);
@@ -320,6 +314,8 @@ namespace CharacterController
 
             LastUsedHorizontalAbility = Ability.None;
             var horizontal = App.C.PlayerActions.Horizontal.RawValue;
+            Flip(horizontal);
+
             if (Sides.Left && horizontal < 0)
                 horizontal = 0;
 

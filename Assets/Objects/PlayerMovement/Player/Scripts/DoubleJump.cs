@@ -25,7 +25,7 @@ namespace CharacterController
             get
             {
                 if (_playerMovement.App.C.PlayerActions.Jump.WasPressed && _playerMovement.State == CharacterState.InAir
-                    && _jumpTimer <= 0 && !_hasJumped && !(_playerMovement.TriggerCheck.Left || _playerMovement.TriggerCheck.Right))
+                    && _jumpTimer <= 0 && !_hasJumped)
                 {
                     _jumpTimer = _jumpDuration;
                     _hasJumped = true;

@@ -43,27 +43,36 @@ namespace RogueLiteInput
 
         public bool Up
         {
-            get
-            {
-                return Vertical.Value > _deadZone;
-            }
+            get { return DeadZoneUp(_deadZone); }
+        }
+        public bool DeadZoneUp(float deadZone)
+        {
+            return Vertical.Value > deadZone;
         }
         public bool Down
         {
-            get
-            {
-                return Vertical.Value < -_deadZone;
-            }
+            get { return DeadZoneDown(_deadZone); }
+        }
+        public bool DeadZoneDown(float deadZone)
+        {
+            return Vertical.Value < -deadZone;
         }
         public bool Right
         {
-            get { return Horizontal.Value > _deadZone; }
+            get { return DeadZoneRight(_deadZone); }
+        }
+        public bool DeadZoneRight(float deadZone)
+        {
+            return Horizontal.Value > _deadZone; 
         }
         public bool Left
         {
-            get { return Horizontal.Value < -_deadZone; }
+            get { return DeadZoneLeft(_deadZone); }
         }
-
+        public bool DeadZoneLeft(float deadZone)
+        {
+            return Horizontal.Value < -deadZone;
+        }
         public InputActions()
         {
       

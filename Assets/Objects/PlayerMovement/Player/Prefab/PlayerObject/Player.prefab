@@ -2568,6 +2568,7 @@ MonoBehaviour:
   _target: {fileID: 4206036655935330}
   _peekAmount: 2
   _durationUntilPeek: 0.5
+  _peekDeadZone: 0.7
 --- !u!114 &114244779261525874
 MonoBehaviour:
   m_ObjectHideFlags: 1

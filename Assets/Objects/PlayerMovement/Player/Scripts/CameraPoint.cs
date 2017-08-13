@@ -18,6 +18,9 @@ public class CameraPoint : MonoBehaviour
     [SerializeField]
     private float _durationUntilPeek;
 
+    [SerializeField]
+    private float _peekDeadZone;
+
     private float _xPosition;
     private float _peekTImer;
 
@@ -43,13 +46,13 @@ public class CameraPoint : MonoBehaviour
 	    var targetX = _target.transform.localScale.x > 0 ? _xPosition : -_xPosition;
 	    var targetY = 0f;
 
-	    if (_playerMovement.App.C.PlayerActions != null && (_playerMovement.App.C.PlayerActions.Up || _playerMovement.App.C.PlayerActions.Down))
+	    if (_playerMovement.App.C.PlayerActions != null && (_playerMovement.App.C.PlayerActions.DeadZoneUp(_peekDeadZone) || _playerMovement.App.C.PlayerActions.DeadZoneDown(_peekDeadZone)))
 	    {
 	        if (_peekTImer > 0)
 	            _peekTImer -= Time.fixedDeltaTime;
 	        else
 	        {
-	            var dir = _playerMovement.App.C.PlayerActions.Up ? 1 :-1;
+	            var dir = _playerMovement.App.C.PlayerActions.DeadZoneUp(_peekDeadZone) ? 1 :-1;
                 targetY = dir * _peekAmount;
             }
 	        
