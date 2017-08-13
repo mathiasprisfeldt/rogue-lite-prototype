@@ -13,7 +13,7 @@ using Object = UnityEngine.Object;
 public class LevelManager : Singleton<LevelManager>
 {
     [SerializeField]
-    private Vector2 _tileSpawnOffset = Vector2.one/2;
+    private Vector2 _tileSpawnOffset = Vector2.one / 2;
 
     [SerializeField]
     private GameObject _borderTile;
@@ -49,24 +49,19 @@ public class LevelManager : Singleton<LevelManager>
     {
         //There is already a level loaded, and we are ingame
         if (CurrentLevel != null)
-        {
+            CurrentLevel.Despawn();
 
+        if (_forcedLevels.Any())
+        {
+            CurrentLevel = _forcedLevels.FirstOrDefault();
+            _forcedLevels.Remove(CurrentLevel);
+        }
+        else if (_randomLevels.Any())
+        {
+            CurrentLevel = _randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)];
         }
         else
-        {
-            if (_forcedLevels.Any())
-            {
-                CurrentLevel = _forcedLevels.FirstOrDefault();
-            }
-            else if (_randomLevels.Any())
-            {
-                CurrentLevel = _randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)];
-            }
-            else
-            {
-                Debug.Log("There are no levels to loaded");
-            }
-        }
+            Debug.Log("There are no levels to loaded");
 
         CurrentLevel.Spawn(transform);
     }
@@ -84,7 +79,7 @@ public class LevelManager : Singleton<LevelManager>
     /// It accounts for positional offset described in LevelManager.
     /// </summary>
     /// <returns>GameObject of the instantiated tile.</returns>
-    public GameObject SpawnTile(Vector2 pos, GameObject tileRecipe = null, Quaternion rot = default(Quaternion), Transform parent = null )
+    public GameObject SpawnTile(Vector2 pos, GameObject tileRecipe = null, Quaternion rot = default(Quaternion), Transform parent = null)
     {
         return Instantiate(tileRecipe ?? BorderTile, pos + _tileSpawnOffset, rot, parent);
     }
