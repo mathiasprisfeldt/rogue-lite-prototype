@@ -34,7 +34,6 @@ public class CameraPoint : MonoBehaviour
 	    {
 	        FollowTransform ft = mainCam.GetComponent<FollowTransform>();
 	        ft.Target = gameObject.transform;
-	        ft.transform.position = transform.position;
 	    }
         
 	}
@@ -46,7 +45,7 @@ public class CameraPoint : MonoBehaviour
             return;
 	    var targetX = _target.transform.localScale.x > 0 ? _xPosition : -_xPosition;
 	    var targetY = 0f;
-	    var inRightState = _playerMovement.State == CharacterState.Idle || _playerMovement.LastUsedVerticalAbility == Ability.LedgeHanging;
+	    var inRightState = _playerMovement.State == CharacterState.Idle || _playerMovement.State == CharacterState.Moving || _playerMovement.LastUsedVerticalAbility == Ability.LedgeHanging;
 
 	    if (_playerMovement.App.C.PlayerActions != null && inRightState
             && (_playerMovement.App.C.PlayerActions.DeadZoneUp(_peekDeadZone) || _playerMovement.App.C.PlayerActions.DeadZoneDown(_peekDeadZone)))
