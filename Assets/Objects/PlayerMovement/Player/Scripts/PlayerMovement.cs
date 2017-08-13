@@ -183,7 +183,6 @@ namespace CharacterController
             GroundCollisionCheck.IsColliding(out _groundSides);
             if (App.C.PlayerActions != null)
                 _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
-            Debug.Log(_lastUsedVerticalAbility);
         }
 
         void FixedUpdate()
