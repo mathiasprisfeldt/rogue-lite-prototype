@@ -107,10 +107,5 @@ namespace Health
             _didCollideLastFrame = isColliding;
             _savedYVelocity = Mathf.Abs(_characterController.Rigidbody.velocity.y);
         }
-
-        void OnDrawGizmos()
-        {
-            Gizmos.DrawSphere(new Vector3(_characterController.Rigidbody.position.x, _lastYPosition), 0.1f );
-        }
     }
 }
