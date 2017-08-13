@@ -54,7 +54,7 @@ public class Jump : MovementAbility {
                 if (!(pa != null && pa.Jump.IsPressed && _jumpTimer > 0))
                     _jumpTimer = 0;
 
-            if ((_playerMovement.GroundSides.BottomColliders != null && _playerMovement.GroundSides.BottomColliders.Count > 0 && pa != null && pa.Down && pa.Jump.WasPressed))
+            if ((_playerMovement.GroundCollisionCheck.Sides.BottomColliders != null && _playerMovement.GroundCollisionCheck.Sides.BottomColliders.Count > 0 && pa != null && pa.Down && pa.Jump.WasPressed))
                 return true;
 
             return _jumpTimer > 0 || _initialJumpTimer > 0;
@@ -71,11 +71,11 @@ public class Jump : MovementAbility {
 
         velocity = new Vector2(velocity.x, force);
 
-        if (_playerMovement.GroundSides.BottomColliders != null && _playerMovement.GroundSides.BottomColliders.Count > 0 
+        if (_playerMovement.GroundCollisionCheck.Sides.BottomColliders != null && _playerMovement.GroundCollisionCheck.Sides.BottomColliders.Count > 0 
             && _playerMovement.App.C.PlayerActions.Down)
         {
             
-            foreach (var c in _playerMovement.GroundSides.BottomColliders)
+            foreach (var c in _playerMovement.GroundCollisionCheck.Sides.BottomColliders)
             {
                 if (c.gameObject.tag == "OneWayCollider")
                 {

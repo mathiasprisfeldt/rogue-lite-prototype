@@ -25,53 +25,81 @@ namespace RogueLiteInput
     /// </summary>
     public class InputActions : PlayerActionSet
     {
-        private float _deadZone = .4f;
+        private float _horizontalDeadZone = .4f;
+        private float _verticalDeadZone = .3f;
 
         protected ActionsSetType _activeActionSetType;
 
         //PlayerActions
         public PlayerAction LeftInput { get; set; }
         public PlayerAction RightInput { get; set; }
-        public PlayerAction Jump { get; set; }
         public PlayerAction DownInput { get; set; }
-        public PlayerAction Dash { get; set; }
         public PlayerAction UpInput { get; set; }
+        public PlayerAction Jump { get; set; }        
+        public PlayerAction Dash { get; set; }        
         public PlayerAction Attack { get; set; }
 
-        public PlayerOneAxisAction Horizontal { get; set; }
-        public PlayerOneAxisAction Vertical { get; set; }
+        public PlayerOneAxisAction RawHorizontal { get; set; }
+        public PlayerOneAxisAction RawVertical { get; set; }
+
+        public float Horizontal
+        {
+            get
+            {
+                return DeadZoneHorizontal(_horizontalDeadZone);
+            }                          
+        }
+
+        public float DeadZoneHorizontal(float deadZone)
+        {
+            if (Mathf.Abs(RawHorizontal.RawValue) > deadZone)
+                return RawHorizontal.RawValue;
+            return 0f;
+        }
+
+        public float Vertical
+        {
+            get{ return DeadZoneVertical(_verticalDeadZone); }
+        }
+
+        public float DeadZoneVertical(float deadZone)
+        {
+            if (Mathf.Abs(RawVertical.RawValue) > deadZone)
+                return RawVertical.RawValue;
+            return 0f;
+        }
 
         public bool Up
         {
-            get { return DeadZoneUp(_deadZone); }
+            get { return DeadZoneUp(_verticalDeadZone); }
         }
         public bool DeadZoneUp(float deadZone)
         {
-            return Vertical.Value > deadZone;
+            return RawVertical.Value > deadZone;
         }
         public bool Down
         {
-            get { return DeadZoneDown(_deadZone); }
+            get { return DeadZoneDown(_verticalDeadZone); }
         }
         public bool DeadZoneDown(float deadZone)
         {
-            return Vertical.Value < -deadZone;
+            return RawVertical.Value < -deadZone;
         }
         public bool Right
         {
-            get { return DeadZoneRight(_deadZone); }
+            get { return DeadZoneRight(_horizontalDeadZone); }
         }
         public bool DeadZoneRight(float deadZone)
         {
-            return Horizontal.Value > _deadZone; 
+            return RawHorizontal.Value > deadZone; 
         }
         public bool Left
         {
-            get { return DeadZoneLeft(_deadZone); }
+            get { return DeadZoneLeft(_horizontalDeadZone); }
         }
         public bool DeadZoneLeft(float deadZone)
         {
-            return Horizontal.Value < -deadZone;
+            return RawHorizontal.Value < -deadZone;
         }
         public InputActions()
         {
@@ -84,8 +112,8 @@ namespace RogueLiteInput
             UpInput = CreatePlayerAction("Up");
             Attack = CreatePlayerAction("Attack");
 
-            Horizontal = CreateOneAxisPlayerAction(LeftInput, RightInput);
-            Vertical = CreateOneAxisPlayerAction(DownInput, UpInput);
+            RawHorizontal = CreateOneAxisPlayerAction(LeftInput, RightInput);
+            RawVertical = CreateOneAxisPlayerAction(DownInput, UpInput);
 
             //Keyboard inputs
             //Left keyboard
