@@ -156,7 +156,7 @@ public class Level
                                 //Add tile to the tiles list
                                 tileList.Add(tb);
                             }
-                                
+
                         }
 
                         borderQueue.Clear();
@@ -199,7 +199,7 @@ public class Level
             (Layouts.GetLength(1) / 2 *
             Layouts[0, 0].Tiles.GetLength(1)) * -1));
     }
-    
+
     /// <summary>
     /// Spawn only one layout
     /// </summary>
@@ -220,10 +220,15 @@ public class Level
 
                 if (t.Prefab != null)
                     LevelManager.Instance.SpawnTile(
-                        transform.position + new Vector3(i * tileWidth, ((j * tileHeight) * -1)), 
+                        transform.position + new Vector3(i * tileWidth, ((j * tileHeight) * -1)),
                         t.Prefab,
                         parent: transform);
             }
         }
+    }
+
+    public void Despawn()
+    {
+        //Do despawn stuff...        
     }
 }
