@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEditorInternal;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CharacterController
 {
@@ -49,11 +47,12 @@ namespace CharacterController
                         var leftInput = _playerMovement.App.C.PlayerActions.Left;
                         var rightInput = _playerMovement.App.C.PlayerActions.Right;
 
-                        if (leftInput || rightInput)
+                        if (!leftInput && _playerMovement.TriggerCheck.Left && _direction == -1 && !_playerMovement.App.C.PlayerActions.Left
+                            || !rightInput && _playerMovement.TriggerCheck.Left && _direction == -1 && !_playerMovement.App.C.PlayerActions.Left)
                             _direction = leftInput ? -1 : 1;
 
-                        if (_playerMovement.TriggerCheck.Left && _direction == -1 || _playerMovement.TriggerCheck.Right && _direction == 1)
-                            _direction = -_direction;
+                        if (_direction > 0 && _playerMovement.TriggerCheck.Right || _direction < 0 && _playerMovement.TriggerCheck.Left)
+                            return false;
 
                         _dashing = true;
                         _oldVelocity = _playerMovement.Rigidbody.velocity;
@@ -80,6 +79,14 @@ namespace CharacterController
 
         public override void HandleHorizontal(ref Vector2 velocity)
         {
+            if (_dashing && _direction > 0 && _playerMovement.WallSlideCheck.Right
+                || _dashing && _direction < 0 && _playerMovement.WallSlideCheck.Left)
+            {
+                _dashingTimer = 0;
+                _dashing = false;
+
+            }
+
             _playerMovement.Flip(_direction);
             if (_dashingTimer <= 0)
             {
@@ -94,7 +101,7 @@ namespace CharacterController
 
         public override void HandleVertical(ref Vector2 velocity)
         {
-                velocity = new Vector2(velocity.x, _playerMovement.Rigidbody.CounterGravity(0));          
+            velocity = new Vector2(velocity.x, _playerMovement.Rigidbody.CounterGravity(0));
         }
     }
 }
