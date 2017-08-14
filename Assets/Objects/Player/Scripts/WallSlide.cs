@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CharacterController
 {
-    [RequireComponent(typeof (PlayerActions)), ExecuteInEditMode]
+    [RequireComponent(typeof (ActionController)), ExecuteInEditMode]
     public class WallSlide : MovementAbility
     {
         [SerializeField]
@@ -20,13 +20,13 @@ namespace CharacterController
         {
             get
             {
-                var wallJumpActive = !(_playerActions.WallJump && _playerActions.WallJump.HorizontalActive);
-                var falling = _playerActions.Rigidbody.velocity.y < -1 || _falling;
-                var rest = (_playerActions.WallSlideCheck.Left || _playerActions.WallSlideCheck.Right);
+                var wallJumpActive = !(_actionController.WallJump && _actionController.WallJump.HorizontalActive);
+                var falling = _actionController.Rigidbody.velocity.y < -1 || _falling;
+                var rest = (_actionController.WallSlideCheck.Left || _actionController.WallSlideCheck.Right);
 
                 if(wallJumpActive && falling && rest)
                 {
-                    dir = _playerActions.TriggerCheck.Sides.Left ? 1 : -1;
+                    dir = _actionController.TriggerCheck.Sides.Left ? 1 : -1;
                     if (_slideTimer > 0)
                     {
                         _slideTimer -= Time.fixedDeltaTime;
@@ -46,28 +46,28 @@ namespace CharacterController
             get
             {
                 return VerticalActive &&
-                       !(_playerActions.WallSlideCheck.Left && _playerActions.App.C.PlayerActions.Right ||
-                       _playerActions.WallSlideCheck.Right && _playerActions.App.C.PlayerActions.Left);
+                       !(_actionController.WallSlideCheck.Left && _actionController.App.C.PlayerActions.Right ||
+                       _actionController.WallSlideCheck.Right && _actionController.App.C.PlayerActions.Left);
             }
         }
 
         public override void Awake()
         {
             base.Awake();
-            _playerActions.WallSlide = this;
+            _actionController.WallSlide = this;
         }
 
         public void Update()
         {
-            if (_falling && _playerActions.OnGround)
+            if (_falling && _actionController.OnGround)
                 _falling = false;
         }
 
         public override void HandleVertical(ref Vector2 velocity)
         {
             _falling = true;
-            velocity += new Vector2(0, _playerActions.Rigidbody.CounterGravity(_wallSlideForce));
-            _playerActions.Flip(dir);
+            velocity += new Vector2(0, _actionController.Rigidbody.CounterGravity(_wallSlideForce));
+            _actionController.Flip(dir);
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)
@@ -77,7 +77,7 @@ namespace CharacterController
 
         public void OnDisable()
         {
-            _playerActions.WallSlide = null;
+            _actionController.WallSlide = null;
         }
     }
 }

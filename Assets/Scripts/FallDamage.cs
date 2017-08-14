@@ -17,7 +17,7 @@ namespace Health
     [DisallowMultipleComponent]
     public class FallDamage : MonoBehaviour
     {
-        private PlayerActions _playerActions;
+        private ActionController _actionController;
         private float _savedFlyingDistance; //Distance between last position and current to check for excetion.
         private bool _didCollideLastFrame; //Did we collide with the floor last frame?
         private float _lastYPosition;
@@ -51,7 +51,7 @@ namespace Health
         void Start()
         {
             _lastYPosition = _characterController.Rigidbody.position.y;
-            _playerActions = _characterController as PlayerActions;
+            _actionController = _characterController as ActionController;
         }
 
         void Update()
@@ -87,7 +87,7 @@ namespace Health
             }
 
             //If controller is wall sliding save position when sliding.s
-            bool isWallSliding = _playerActions && (_playerActions.WallSlide && _playerActions.WallSlide.VerticalActive);
+            bool isWallSliding = _actionController && (_actionController.WallSlide && _actionController.WallSlide.VerticalActive);
 
             if (isColliding || isWallSliding)
                 _lastYPosition = _characterController.Rigidbody.position.y;
