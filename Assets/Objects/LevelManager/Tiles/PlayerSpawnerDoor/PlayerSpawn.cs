@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Assets.Objects.PlayerMovement.Player.Prefab.Player;
+using Managers;
 using UnityEngine;
 
 public class PlayerSpawn : MonoBehaviour
@@ -13,6 +13,6 @@ public class PlayerSpawn : MonoBehaviour
     private void Start()
     {
         if(_spawnPlayer)
-            Instantiate(_playerPrefab, transform.position, Quaternion.identity);
+            GameManager.Instance.Player = Instantiate(_playerPrefab, transform.position, Quaternion.identity).GetComponent<PlayerApplication>();
     }
 }
