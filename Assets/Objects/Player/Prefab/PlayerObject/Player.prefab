@@ -2639,7 +2639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2194cc40f81e6940b5b43756ecf3282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerActions: {fileID: 114173897078414380}
+  _actionController: {fileID: 114173897078414380}
   _target: {fileID: 4206036655935330}
   _peekAmount: 2
   _durationUntilPeek: 1

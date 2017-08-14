@@ -13,7 +13,7 @@ namespace CharacterController
     }
 
 
-    public class PlayerActions : CharacterController
+    public class ActionController : CharacterController
     {
 
         [Header("Component References"), SerializeField] private PlayerApplication _app;

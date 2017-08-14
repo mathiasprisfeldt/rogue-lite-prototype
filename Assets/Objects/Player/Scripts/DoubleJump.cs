@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace CharacterController
 {
-    [RequireComponent(typeof (PlayerActions)), ExecuteInEditMode]
+    [RequireComponent(typeof (ActionController)), ExecuteInEditMode]
     public class DoubleJump : MovementAbility
     {
         [SerializeField]
@@ -24,12 +24,12 @@ namespace CharacterController
         {
             get
             {
-                if (_playerActions.App.C.PlayerActions.Jump.WasPressed && _playerActions.State == CharacterState.InAir
+                if (_actionController.App.C.PlayerActions.Jump.WasPressed && _actionController.State == CharacterState.InAir
                     && _jumpTimer <= 0 && !_hasJumped)
                 {
                     _jumpTimer = _jumpDuration;
                     _hasJumped = true;
-                    _playerActions.Animator.SetTrigger("DoubleJump");
+                    _actionController.Animator.SetTrigger("DoubleJump");
                 }
                     
                 return _jumpTimer > 0;
@@ -39,12 +39,12 @@ namespace CharacterController
         public override void Awake()
         {
             base.Awake();
-            _playerActions.DoubleJump = this;
+            _actionController.DoubleJump = this;
         }
 
         public override void HandleVertical(ref Vector2 velocity)
         {
-            velocity = new Vector2(velocity.x, _playerActions.Rigidbody.CalculateVerticalSpeed(_jumpForce / _jumpDuration));
+            velocity = new Vector2(velocity.x, _actionController.Rigidbody.CalculateVerticalSpeed(_jumpForce / _jumpDuration));
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)
@@ -56,13 +56,13 @@ namespace CharacterController
         {
             if(_jumpTimer > 0)
                 _jumpTimer -= Time.fixedDeltaTime;
-            if (_playerActions.OnGround )
+            if (_actionController.OnGround )
                 _hasJumped = false;
         }
 
         public void OnDisable()
         {
-            _playerActions.DoubleJump = null;
+            _actionController.DoubleJump = null;
         }
 
     }

@@ -46,6 +46,9 @@ namespace AcrylecSkeleton.MVC
         where CType : Controller
         where S : struct
     {
+        [SerializeField, Tooltip("If changed, StateChanged will not be invoked!")]
+        private S _currentState;
+
         /// <summary>
         /// Event invoked when changing state.
         /// <para>1 Arg: Old State</para>
@@ -85,6 +88,7 @@ namespace AcrylecSkeleton.MVC
         [SerializeField]
         private CType _controller;
 
+
         public CType C
         {
             get { return _controller ?? (_controller = GetComponentInChildren<CType>()); }
@@ -93,7 +97,12 @@ namespace AcrylecSkeleton.MVC
         //
         #endregion
 
-        public S CurrentState { get; set; }
+        public S CurrentState
+        {
+            get { return _currentState; }
+            set { ChangeState(value); }
+        }
+
         public S LastState { get; set; }
 
         protected virtual void Awake()
@@ -109,7 +118,7 @@ namespace AcrylecSkeleton.MVC
         public virtual void ChangeState(S newState)
         {
             LastState = CurrentState;
-            CurrentState = newState; //Set current state to the new state
+            _currentState = newState; //Set current state to the new state
 
             var handler = StateChanged;
             if (handler != null) handler(LastState, CurrentState); //Check if StateChanged has any listeners, then invoke with prev and current state.
