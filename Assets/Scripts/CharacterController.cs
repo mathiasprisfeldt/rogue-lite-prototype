@@ -175,8 +175,6 @@ namespace CharacterController
                 BumpingDirection = 1;
             else
                 BumpingDirection = 0;
-
-            Debug.Log(leftBump);
         }
     }
 }
