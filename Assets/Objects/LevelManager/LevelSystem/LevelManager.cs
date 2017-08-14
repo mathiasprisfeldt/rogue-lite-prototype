@@ -38,10 +38,11 @@ public class LevelManager : Singleton<LevelManager>
 
     protected override void Awake()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         base.Awake();
         LoadLevels();
         LoadNextLevel();
-
     }
 
     /// <summary>
@@ -52,12 +53,13 @@ public class LevelManager : Singleton<LevelManager>
         //There is already a level loaded, and we are ingame
         if (CurrentLevel != null)
             CurrentLevel.Despawn();
+
         SceneManager.LoadScene("LevelScene");
     }
 
-    private void OnLevelWasLoaded(int level)
+    private void OnSceneLoaded(Scene level, LoadSceneMode sceneMode)
     {
-        if (SceneManager.GetSceneByBuildIndex(level).name != "LevelScene")
+        if (level.name != "LevelScene")
             return;
 
         if (_forcedLevels.Any())
