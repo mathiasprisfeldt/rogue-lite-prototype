@@ -88,7 +88,7 @@ namespace CharacterController
 
             Collider2D col = GetComponent<Collider2D>() ?? gameObject.AddComponent<BoxCollider2D>();
 
-            GroundCollisionCheck.Colliders.Add(col);
+            GroundCollisionCheck.CollidersToCheck.Add(col);
             GroundCollisionCheck.CollisionLayers = ~0;
             
             if (!_model)

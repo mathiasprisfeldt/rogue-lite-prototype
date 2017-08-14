@@ -6,8 +6,8 @@ namespace CharacterController
     /// Purpose:
     /// Creator:
     /// </summary>
-    [RequireComponent(typeof(ActionController)), ExecuteInEditMode]
-    public class WallJump : MovementAbility
+    [RequireComponent(typeof(ActionController))]
+    public class WallJump : global::Ability
     {
         [SerializeField]
         private float _verticalForce;
@@ -35,12 +35,12 @@ namespace CharacterController
             get
             {
                 var input = _actionController.App.C.PlayerActions != null && _actionController.App.C.PlayerActions.Jump.WasPressed;
-                var collision = (_actionController.TriggerCheck.Sides.Left || _actionController.TriggerCheck.Sides.Right) && !_actionController.GroundCollisionCheck.Bottom;
+                var collision = (_actionController.WallSlideCheck.Sides.Left || _actionController.WallSlideCheck.Sides.Right) && !_actionController.GroundCollisionCheck.Bottom;
                 if (input && collision && _verticalTimer <= 0 && _horizontalTimer <= 0)
                 {
                     _horizontalTimer = _horizontalDuration;
                     _verticalTimer = _verticalDuration;
-                    Direction = _actionController.TriggerCheck.Sides.Left ? 1 : -1;
+                    Direction = _actionController.WallSlideCheck.Sides.Left ? 1 : -1;
                     _directionSwitched = false;
                 }
                                     
@@ -49,12 +49,6 @@ namespace CharacterController
         }
 
         public override bool HorizontalActive { get { return _horizontalTimer > 0; } }
-
-        public override void Awake()
-        {
-            base.Awake();
-            _actionController.WallJump = this;
-        }
 
         public override void HandleVertical(ref Vector2 velocity)
         {           
@@ -87,22 +81,17 @@ namespace CharacterController
         public void FixedUpdate()
         {
             //If horizontal is active and a collision is detected in the current direction, then cancel horizontal
-            if (_horizontalTimer > 0 && (_actionController.TriggerCheck.Sides.Left && Direction < 0 || _actionController.TriggerCheck.Sides.Right && Direction > 0))
+            if (_horizontalTimer > 0 && (_actionController.WallSlideCheck.Sides.Left && Direction < 0 || _actionController.WallSlideCheck.Sides.Right && Direction > 0))
                 _horizontalTimer = 0;
 
             if(_horizontalTimer > 0)
                 _horizontalTimer -= Time.fixedDeltaTime;
 
             //If vertical is active and a collision is detected in the current direction, then cancel vertical
-            if (_verticalTimer > 0 && (_actionController.TriggerCheck.Sides.Left && Direction < 0 || _actionController.TriggerCheck.Sides.Right && Direction > 0))
+            if (_verticalTimer > 0 && (_actionController.WallSlideCheck.Sides.Left && Direction < 0 || _actionController.WallSlideCheck.Sides.Right && Direction > 0))
                 _verticalTimer = 0;
             if (_verticalTimer > 0)
                 _verticalTimer -= Time.fixedDeltaTime;
-        }
-
-        public void OnDisable()
-        {
-            _actionController.WallJump = null;
         }
     }
 }

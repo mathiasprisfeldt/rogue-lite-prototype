@@ -7,7 +7,7 @@ namespace CharacterController
     /// Creator:
     /// </summary>
     [RequireComponent(typeof(ActionController))]
-    public class Dash : MovementAbility
+    public class Dash : global::Ability
     {
         [SerializeField]
         private float _dashCooldown;
@@ -27,12 +27,6 @@ namespace CharacterController
         private Vector2 _oldVelocity;
         private float _direction;
 
-        [ExecuteInEditMode]
-        public override void Awake()
-        {
-            base.Awake();
-            _actionController.Dash = this;
-        }
 
         public override bool HorizontalActive
         {

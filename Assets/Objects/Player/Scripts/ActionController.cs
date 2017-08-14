@@ -4,12 +4,13 @@ using System.Linq;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using UnityEngine;
 using AcrylecSkeleton.ModificationSystem;
+using Combat;
 
 namespace CharacterController
 {
     public enum Ability
     {
-        None, DoubleJump, WallJump, Wallslide, LedgeHanging, Dash, Jump
+        None, DoubleJump, WallJump, Wallslide, LedgeHanging, Dash, Jump, Melee
     }
 
 
@@ -35,6 +36,9 @@ namespace CharacterController
 
         [SerializeField]
         private Jump _jump;
+
+        [SerializeField]
+        private Melee _melee;
 
         [SerializeField]
         private ModificationHandler _modificationHandler;
@@ -170,6 +174,17 @@ namespace CharacterController
             HandleState();
             if (App.C.PlayerActions != null)
                 _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
+            if (!_shouldHang)
+            {
+                var temp = transform.root.gameObject.name;
+                _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
+            }
+            if (_shouldHang)
+            {
+                var temp = transform.root.gameObject.name;
+                _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
+            }
+
         }
 
         void FixedUpdate()
@@ -217,8 +232,9 @@ namespace CharacterController
 
         private void HandleState()
         {
-
-            if (LastUsedHorizontalAbility == Ability.Dash)
+            if(LastUsedVerticalAbility == Ability.Melee)
+                Animator.SetInteger("State", 6);
+            else if (LastUsedHorizontalAbility == Ability.Dash)
                 Animator.SetInteger("State", 5);
             else if (LastUsedVerticalAbility == Ability.LedgeHanging)
                 Animator.SetInteger("State", 3);
@@ -254,10 +270,16 @@ namespace CharacterController
             List<Collider2D> col = new List<Collider2D>();
             if (CollisionCheck.Sides.BottomColliders != null)
                 col = CollisionCheck.Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
+
             if (_shouldHang)
             {
                 LastUsedVerticalAbility = Ability.LedgeHanging;
                 LedgeHanging.HandleVertical(ref velocity);
+            }
+            else if (_melee && _melee.VerticalActive)
+            {
+                LastUsedVerticalAbility = Ability.Melee;
+                _melee.HandleVertical(ref velocity);
             }
             else if (Dash && Dash.VerticalActive)
             {

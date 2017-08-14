@@ -5,7 +5,7 @@ using InControl;
 using RogueLiteInput;
 using UnityEngine;
 
-public class Jump : MovementAbility {
+public class Jump : Ability {
 
     [SerializeField]
     private float _jumpForce;
@@ -21,14 +21,6 @@ public class Jump : MovementAbility {
 
     private float _jumpTimer;
     private float _initialJumpTimer;
-
-
-    [ExecuteInEditMode]
-    public override void Awake()
-    {
-        base.Awake();
-        _actionController.Jump = this;
-    }
 
     // Update is called once per frame
     void Update ()

@@ -46,7 +46,7 @@ namespace Health
         private CharacterController.CharacterController _characterController;
 
         [SerializeField]
-        private Health _healthComp;
+        private HealthController _healthControllerComp;
 
         void Start()
         {
@@ -83,7 +83,7 @@ namespace Health
                         break;
                 }
 
-                _healthComp.Damage(Mathf.Clamp(dmgAmount, 0, _maxDmg));
+                _healthControllerComp.Damage(Mathf.Clamp(dmgAmount, 0, _maxDmg));
             }
 
             //If controller is wall sliding save position when sliding.s
