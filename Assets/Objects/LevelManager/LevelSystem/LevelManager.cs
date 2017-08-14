@@ -42,7 +42,27 @@ public class LevelManager : Singleton<LevelManager>
 
         base.Awake();
         LoadLevels();
-        LoadNextLevel();
+
+        if (SceneManager.GetActiveScene().name != "LevelScene")
+        {
+            if (_forcedLevels.Any())
+            {
+                CurrentLevel = _forcedLevels.FirstOrDefault();
+                _forcedLevels.Remove(CurrentLevel);
+            }
+            else if (_randomLevels.Any())
+            {
+                CurrentLevel = _randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)];
+            }
+            else
+                Debug.Log("There are no levels to loaded");
+
+            GameObject go = new GameObject("LevelParent");
+            go.AddComponent<Platforms>();
+            CurrentLevel.Spawn(go.transform);
+        }
+        else
+            LoadNextLevel();
     }
 
     /// <summary>
