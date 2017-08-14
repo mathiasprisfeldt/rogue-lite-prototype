@@ -1,6 +1,7 @@
 ﻿using System;
-using CharacterController;
+using Controllers;
 using UnityEngine;
+using Action = CharacterController.Action;
 
 namespace Health
 {
@@ -17,7 +18,7 @@ namespace Health
     [DisallowMultipleComponent]
     public class FallDamage : MonoBehaviour
     {
-        private ActionController _actionController;
+        private Action _action;
         private float _savedFlyingDistance; //Distance between last position and current to check for excetion.
         private bool _didCollideLastFrame; //Did we collide with the floor last frame?
         private float _lastYPosition;
@@ -43,20 +44,20 @@ namespace Health
         private float _maxDmg = Single.PositiveInfinity; //Max amount of fall damage it can take.
 
         [Header("References: REQUIRED"), SerializeField]
-        private CharacterController.CharacterController _characterController;
+        private Character _character;
 
         [SerializeField]
         private HealthController _healthControllerComp;
 
         void Start()
         {
-            _lastYPosition = _characterController.Rigidbody.position.y;
-            _actionController = _characterController as ActionController;
+            _lastYPosition = _character.Rigidbody.position.y;
+            _action = _character as Action;
         }
 
         void Update()
         {
-            bool isColliding = _characterController.OnGround;
+            bool isColliding = _character.OnGround;
 
             if (!_didCollideLastFrame && isColliding)
             {
@@ -65,7 +66,7 @@ namespace Health
                 switch (_damageType)
                 {
                     case FallDamageType.LastPosition:
-                        float yDist = Math.Abs(_lastYPosition - _characterController.Rigidbody.position.y);
+                        float yDist = Math.Abs(_lastYPosition - _character.Rigidbody.position.y);
 
                         if (yDist >= _distanceBeforeDmg)
                         {
@@ -87,25 +88,25 @@ namespace Health
             }
 
             //If controller is wall sliding save position when sliding.s
-            bool isWallSliding = _actionController && (_actionController.WallSlide && _actionController.WallSlide.VerticalActive);
+            bool isWallSliding = _action && (_action.WallSlide && _action.WallSlide.VerticalActive);
 
             if (isColliding || isWallSliding)
-                _lastYPosition = _characterController.Rigidbody.position.y;
+                _lastYPosition = _character.Rigidbody.position.y;
             else
             {
                 //If the distance between current position and old position is increased, update last position.
-                float currDist = Math.Abs(_lastYPosition - _characterController.Rigidbody.position.y);
+                float currDist = Math.Abs(_lastYPosition - _character.Rigidbody.position.y);
 
                 if (_savedFlyingDistance > currDist)
                 {
-                    _lastYPosition = _characterController.Rigidbody.position.y;
+                    _lastYPosition = _character.Rigidbody.position.y;
                 }
 
                 _savedFlyingDistance = currDist;
             }
                 
             _didCollideLastFrame = isColliding;
-            _savedYVelocity = Mathf.Abs(_characterController.Rigidbody.velocity.y);
+            _savedYVelocity = Mathf.Abs(_character.Rigidbody.velocity.y);
         }
     }
 }

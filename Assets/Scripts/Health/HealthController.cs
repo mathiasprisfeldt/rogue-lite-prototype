@@ -202,7 +202,6 @@ namespace Health
 
                 while (timer > 0 && IsInvurnable && !IsDead)
                 {
-                    Debug.Log(timer);
                     yield return new WaitForEndOfFrame();
                     timer -= Time.unscaledDeltaTime / duration;
                 }

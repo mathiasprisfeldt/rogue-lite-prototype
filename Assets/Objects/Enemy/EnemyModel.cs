@@ -1,5 +1,6 @@
 using AcrylecSkeleton.MVC;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
+using Controllers;
 using UnityEngine;
 
 namespace Assets.Objects.Enemy
@@ -11,11 +12,12 @@ namespace Assets.Objects.Enemy
 	/// </summary>
 	public class EnemyModel : Model<EnemyApplication>
 	{
-        [Header("References:"), SerializeField]
-	    private CharacterController.CharacterController _characterController;
+        [Header("References:")]
+	    [SerializeField]
+	    private Character _character;
 
         [Space]
-        [Header("Settings:")]
+        [Header("Enemy Settings:")]
         [SerializeField]
 	    private float _viewRadius;
 
@@ -23,22 +25,22 @@ namespace Assets.Objects.Enemy
         [SerializeField]
 	    private PlayerApplication _target;
 
-	    public CharacterController.CharacterController CharacterController
-	    {
-	        get { return _characterController; }
-	        set { _characterController = value; }
-	    }
-
 	    public float ViewRadius
 	    {
 	        get { return _viewRadius; }
 	        set { _viewRadius = value; }
 	    }
-
+        
 	    public PlayerApplication Target
 	    {
 	        get { return _target; }
 	        set { _target = value; }
+	    }
+
+	    public Character Character
+	    {
+	        get { return _character; }
+	        set { _character = value; }
 	    }
 	}
 }

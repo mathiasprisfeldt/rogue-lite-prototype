@@ -1,8 +1,4 @@
-using System;
 using AcrylecSkeleton.MVC;
-using BindingsExample;
-using InControl;
-using UnityEngine;
 using RogueLiteInput;
 
 namespace Assets.Objects.PlayerMovement.Player.Prefab.Player

@@ -30,7 +30,7 @@ namespace Combat
         {
             get
             {
-                if (_actionController.App.C.PlayerActions.Attack.WasPressed && !_active && _cooldownTimer <= 0)
+                if (_action.App.C.PlayerActions.Attack.WasPressed && !_active && _cooldownTimer <= 0)
                     _active = true;
                 return _active;
             }

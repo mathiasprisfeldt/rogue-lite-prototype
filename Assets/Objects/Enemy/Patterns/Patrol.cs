@@ -21,15 +21,15 @@ namespace Assets.Objects.Enemy
 
         void Update()
         {
-            int bumpingDirection = _enemyApplication.M.CharacterController.BumpingDirection;
+            int bumpingDirection = _enemyApplication.M.Character.BumpingDirection;
 
             //If we're bumping into something, change direction.
             if (bumpingDirection != 0)
-                _patrolDirection.x = -_enemyApplication.M.CharacterController.BumpingDirection;
+                _patrolDirection.x = -_enemyApplication.M.Character.BumpingDirection;
 
             //If we're patrolling, move the enemy.
             if (_enemyApplication.CurrentState == EnemyState.Patrol)
-                _enemyApplication.M.CharacterController.SetVelocity(_patrolDirection);
+                _enemyApplication.M.Character.SetVelocity(_patrolDirection);
         }
     }
 }

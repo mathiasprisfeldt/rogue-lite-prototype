@@ -1,6 +1,4 @@
 using AcrylecSkeleton.MVC;
-using BindingsExample;
-using UnityEngine;
 
 namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 {
