@@ -27,7 +27,7 @@ public class Jump : MovementAbility {
     public override void Awake()
     {
         base.Awake();
-        _playerMovement.Jump = this;
+        _playerActions.Jump = this;
     }
 
     // Update is called once per frame
@@ -43,8 +43,8 @@ public class Jump : MovementAbility {
     {
         get
         {
-            InputActions pa = _playerMovement.App.C.PlayerActions;
-            if (pa != null && pa.Jump.WasPressed && _playerMovement.OnGround && _jumpTimer <= 0)
+            InputActions pa = _playerActions.App.C.PlayerActions;
+            if (pa != null && pa.Jump.WasPressed && _playerActions.OnGround && _jumpTimer <= 0)
             {
                 _jumpTimer = _jumpDuration;
                 _initialJumpTimer = _initialJumpDuration;
@@ -54,7 +54,7 @@ public class Jump : MovementAbility {
                 if (!(pa != null && pa.Jump.IsPressed && _jumpTimer > 0))
                     _jumpTimer = 0;
 
-            if ((_playerMovement.GroundCollisionCheck.Sides.BottomColliders != null && _playerMovement.GroundCollisionCheck.Sides.BottomColliders.Count > 0 && pa != null && pa.Down && pa.Jump.WasPressed))
+            if ((_playerActions.GroundCollisionCheck.Sides.BottomColliders != null && _playerActions.GroundCollisionCheck.Sides.BottomColliders.Count > 0 && pa != null && pa.Down && pa.Jump.WasPressed))
                 return true;
 
             return _jumpTimer > 0 || _initialJumpTimer > 0;
@@ -63,24 +63,24 @@ public class Jump : MovementAbility {
 
     public override void HandleVertical(ref Vector2 velocity)
     {
-        var force = _playerMovement.Rigidbody.CalculateVerticalSpeed(_jumpForce / _jumpDuration);
+        var force = _playerActions.Rigidbody.CalculateVerticalSpeed(_jumpForce / _jumpDuration);
         if (_initialJumpTimer > 0)
         {
-            force = _playerMovement.Rigidbody.CalculateVerticalSpeed(_initialJumpForce / _initialJumpDuration);
+            force = _playerActions.Rigidbody.CalculateVerticalSpeed(_initialJumpForce / _initialJumpDuration);
         }
 
         velocity = new Vector2(velocity.x, force);
 
-        if (_playerMovement.GroundCollisionCheck.Sides.BottomColliders != null && _playerMovement.GroundCollisionCheck.Sides.BottomColliders.Count > 0 
-            && _playerMovement.App.C.PlayerActions.Down)
+        if (_playerActions.GroundCollisionCheck.Sides.BottomColliders != null && _playerActions.GroundCollisionCheck.Sides.BottomColliders.Count > 0 
+            && _playerActions.App.C.PlayerActions.Down)
         {
             
-            foreach (var c in _playerMovement.GroundCollisionCheck.Sides.BottomColliders)
+            foreach (var c in _playerActions.GroundCollisionCheck.Sides.BottomColliders)
             {
                 if (c.gameObject.tag == "OneWayCollider")
                 {
                     velocity = new Vector2(velocity.x, 0);
-                    _playerMovement.ModificationHandler.AddModification(new TemporaryLayerChange(0.4f, "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
+                    _playerActions.ModificationHandler.AddModification(new TemporaryLayerChange(0.4f, "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
                 }
                 
             }

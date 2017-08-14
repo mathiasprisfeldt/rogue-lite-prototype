@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using CharacterController;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerMovement))]
+[RequireComponent(typeof(PlayerActions))]
 public abstract class MovementAbility : MonoBehaviour
 {
-    protected PlayerMovement _playerMovement;
+    protected PlayerActions _playerActions;
 
     public virtual bool VerticalActive { get; set; }
     public virtual bool HorizontalActive { get; set; }
 
     public virtual void Awake()
     {
-        _playerMovement = GetComponent<PlayerMovement>();
+        _playerActions = GetComponent<PlayerActions>();
     }
 
     public abstract void HandleVertical(ref Vector2 velocity);

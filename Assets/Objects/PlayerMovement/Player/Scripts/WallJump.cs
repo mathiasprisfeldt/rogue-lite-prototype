@@ -6,7 +6,7 @@ namespace CharacterController
     /// Purpose:
     /// Creator:
     /// </summary>
-    [RequireComponent(typeof(PlayerMovement)), ExecuteInEditMode]
+    [RequireComponent(typeof(PlayerActions)), ExecuteInEditMode]
     public class WallJump : MovementAbility
     {
         [SerializeField]
@@ -34,13 +34,13 @@ namespace CharacterController
         {
             get
             {
-                var input = _playerMovement.App.C.PlayerActions != null && _playerMovement.App.C.PlayerActions.Jump.WasPressed;
-                var collision = (_playerMovement.TriggerCheck.Sides.Left || _playerMovement.TriggerCheck.Sides.Right) && !_playerMovement.GroundCollisionCheck.Bottom;
+                var input = _playerActions.App.C.PlayerActions != null && _playerActions.App.C.PlayerActions.Jump.WasPressed;
+                var collision = (_playerActions.TriggerCheck.Sides.Left || _playerActions.TriggerCheck.Sides.Right) && !_playerActions.GroundCollisionCheck.Bottom;
                 if (input && collision && _verticalTimer <= 0 && _horizontalTimer <= 0)
                 {
                     _horizontalTimer = _horizontalDuration;
                     _verticalTimer = _verticalDuration;
-                    Direction = _playerMovement.TriggerCheck.Sides.Left ? 1 : -1;
+                    Direction = _playerActions.TriggerCheck.Sides.Left ? 1 : -1;
                     _directionSwitched = false;
                 }
                                     
@@ -53,20 +53,20 @@ namespace CharacterController
         public override void Awake()
         {
             base.Awake();
-            _playerMovement.WallJump = this;
+            _playerActions.WallJump = this;
         }
 
         public override void HandleVertical(ref Vector2 velocity)
         {           
-            velocity = new Vector2(velocity.x, _playerMovement.Rigidbody.CalculateVerticalSpeed(_verticalForce / _verticalDuration));
+            velocity = new Vector2(velocity.x, _playerActions.Rigidbody.CalculateVerticalSpeed(_verticalForce / _verticalDuration));
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)
         {
             if (_horizontalTimer/_horizontalDuration <= _whenToSwicthDirection && !_directionSwitched)
             {
-                if (Direction > 0 && _playerMovement.App.C.PlayerActions.Right
-                    || Direction < 0 && _playerMovement.App.C.PlayerActions.Left)
+                if (Direction > 0 && _playerActions.App.C.PlayerActions.Right
+                    || Direction < 0 && _playerActions.App.C.PlayerActions.Left)
                 {
                     Direction = -Direction;
                     _directionSwitched = true;
@@ -75,8 +75,8 @@ namespace CharacterController
                     _horizontalTimer = 0;
 
             }
-            if (_directionSwitched && Direction > 0 && _playerMovement.App.C.PlayerActions.Left ||
-                _directionSwitched && Direction < 0 && _playerMovement.App.C.PlayerActions.Right)
+            if (_directionSwitched && Direction > 0 && _playerActions.App.C.PlayerActions.Left ||
+                _directionSwitched && Direction < 0 && _playerActions.App.C.PlayerActions.Right)
             {
                 _horizontalTimer = 0;
                 return;
@@ -87,14 +87,14 @@ namespace CharacterController
         public void FixedUpdate()
         {
             //If horizontal is active and a collision is detected in the current direction, then cancel horizontal
-            if (_horizontalTimer > 0 && (_playerMovement.TriggerCheck.Sides.Left && Direction < 0 || _playerMovement.TriggerCheck.Sides.Right && Direction > 0))
+            if (_horizontalTimer > 0 && (_playerActions.TriggerCheck.Sides.Left && Direction < 0 || _playerActions.TriggerCheck.Sides.Right && Direction > 0))
                 _horizontalTimer = 0;
 
             if(_horizontalTimer > 0)
                 _horizontalTimer -= Time.fixedDeltaTime;
 
             //If vertical is active and a collision is detected in the current direction, then cancel vertical
-            if (_verticalTimer > 0 && (_playerMovement.TriggerCheck.Sides.Left && Direction < 0 || _playerMovement.TriggerCheck.Sides.Right && Direction > 0))
+            if (_verticalTimer > 0 && (_playerActions.TriggerCheck.Sides.Left && Direction < 0 || _playerActions.TriggerCheck.Sides.Right && Direction > 0))
                 _verticalTimer = 0;
             if (_verticalTimer > 0)
                 _verticalTimer -= Time.fixedDeltaTime;
@@ -102,7 +102,7 @@ namespace CharacterController
 
         public void OnDisable()
         {
-            _playerMovement.WallJump = null;
+            _playerActions.WallJump = null;
         }
     }
 }

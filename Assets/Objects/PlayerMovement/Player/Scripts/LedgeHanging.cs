@@ -9,7 +9,7 @@ namespace CharacterController
     /// Purpose:
     /// Creator:
     /// </summary>
-    [RequireComponent(typeof(PlayerMovement)), ExecuteInEditMode]
+    [RequireComponent(typeof(PlayerActions)), ExecuteInEditMode]
     public class LedgeHanging : MovementAbility
     {
         [SerializeField]
@@ -38,20 +38,20 @@ namespace CharacterController
         {
             get
             {
-                var left = _playerMovement.TriggerCheck.Sides.Left;
-                var right = _playerMovement.TriggerCheck.Sides.Right;
-                var horizontalMovement = _playerMovement.App.C.PlayerActions.Right && left ||
-                                         _playerMovement.App.C.PlayerActions.Left && right;
+                var left = _playerActions.TriggerCheck.Sides.Left;
+                var right = _playerActions.TriggerCheck.Sides.Right;
+                var horizontalMovement = _playerActions.App.C.PlayerActions.Right && left ||
+                                         _playerActions.App.C.PlayerActions.Left && right;
                 if (_downTimer > 0 || _upTimer > 0)
                     return true;
-                if ((right || left) && !(_playerMovement.WallJump && _playerMovement.WallJump.HorizontalActive) && _hangCooldownTimer <= 0)
+                if ((right || left) && !(_playerActions.WallJump && _playerActions.WallJump.HorizontalActive) && _hangCooldownTimer <= 0)
                 {
-                    List<Collider2D> colliders = right ? _playerMovement.TriggerCheck.Sides.RightColliders : _playerMovement.TriggerCheck.Sides.LeftColliders;
+                    List<Collider2D> colliders = right ? _playerActions.TriggerCheck.Sides.RightColliders : _playerActions.TriggerCheck.Sides.LeftColliders;
                     Collider2D col = colliders[0];
                     var distance = float.MaxValue;
                     foreach (var c in colliders)
                     {
-                        var tempDistance = Mathf.Abs(_playerMovement.TriggerCheck.Colliders[0].bounds.center.y   - c.bounds.center.y);
+                        var tempDistance = Mathf.Abs(_playerActions.TriggerCheck.Colliders[0].bounds.center.y   - c.bounds.center.y);
                         if (tempDistance < distance)
                         {
                             distance = tempDistance;
@@ -62,8 +62,8 @@ namespace CharacterController
 
                     float hangPosX = right ? col.bounds.min.x : col.bounds.max.x;
                     var hangPosition = new Vector2(hangPosX, col.bounds.max.y - _hangDistance);
-                    var thisColX = right ? _playerMovement.TriggerCheck.Colliders[0].bounds.max.x : _playerMovement.TriggerCheck.Colliders[0].bounds.min.x;
-                    Vector2 temp = new Vector2(thisColX, _playerMovement.CollisionCheck.Colliders[0].bounds.center.y);
+                    var thisColX = right ? _playerActions.TriggerCheck.Colliders[0].bounds.max.x : _playerActions.TriggerCheck.Colliders[0].bounds.min.x;
+                    Vector2 temp = new Vector2(thisColX, _playerActions.CollisionCheck.Colliders[0].bounds.center.y);
                     if (Mathf.Abs(temp.y - hangPosition.y) <= _sensitivity)
                     {
                         TileBehaviour tile = col.gameObject.GetComponent<TileBehaviour>();
@@ -74,13 +74,13 @@ namespace CharacterController
                         if (platform && !platform.Istop)
                             return false;
 
-                        if (_playerMovement.App.C.PlayerActions.Down &&
-                            _playerMovement.App.C.PlayerActions.Jump.IsPressed)
+                        if (_playerActions.App.C.PlayerActions.Down &&
+                            _playerActions.App.C.PlayerActions.Jump.IsPressed)
                         {
                             _downTimer = _pushDownDuration;
                             return true;
                         }
-                        else if (_playerMovement.App.C.PlayerActions.Jump.WasPressed)
+                        else if (_playerActions.App.C.PlayerActions.Jump.WasPressed)
                         {
                             _upTimer = _pushUpDuration;
                             return true;
@@ -89,10 +89,10 @@ namespace CharacterController
                         if (horizontalMovement)
                             return false;
 
-                        var extend = right ? -_playerMovement.CollisionCheck.Colliders[0].bounds.extents.x : _playerMovement.CollisionCheck.Colliders[0].bounds.extents.x;
-                        _playerMovement.Rigidbody.position = Vector2.Lerp(_playerMovement.Rigidbody.position, new Vector2(hangPosition.x + extend, hangPosition.y), .6f);
+                        var extend = right ? -_playerActions.CollisionCheck.Colliders[0].bounds.extents.x : _playerActions.CollisionCheck.Colliders[0].bounds.extents.x;
+                        _playerActions.Rigidbody.position = Vector2.Lerp(_playerActions.Rigidbody.position, new Vector2(hangPosition.x + extend, hangPosition.y), .6f);
                         var dir = left ? -1 : 1;
-                        _playerMovement.Flip(dir);
+                        _playerActions.Flip(dir);
                         return true;
                     }
                 }
@@ -103,12 +103,12 @@ namespace CharacterController
         public override void Awake()
         {
             base.Awake();
-            _playerMovement.LedgeHanging = this;
+            _playerActions.LedgeHanging = this;
         }
 
         public void OnDisable()
         {
-            _playerMovement.LedgeHanging = null;
+            _playerActions.LedgeHanging = null;
         }
 
         public void FixedUpdate()
@@ -133,7 +133,7 @@ namespace CharacterController
         public override void HandleVertical(ref Vector2 velocity)
         {
             if(_upTimer > 0 || _downTimer > 0)
-                _playerMovement.LastUsedVerticalAbility = Ability.None;
+                _playerActions.LastUsedVerticalAbility = Ability.None;
 
             var temp = 0f;
             if (_upTimer > 0)
@@ -142,7 +142,7 @@ namespace CharacterController
                 temp -= _pushDownForce / _pushDownDuration;
 
 
-            velocity = new Vector2(velocity.x, _playerMovement.Rigidbody.CounterGravity(temp));
+            velocity = new Vector2(velocity.x, _playerActions.Rigidbody.CounterGravity(temp));
         }
     }
 }
