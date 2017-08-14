@@ -2639,7 +2639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2194cc40f81e6940b5b43756ecf3282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerMovement: {fileID: 114173897078414380}
+  _playerActions: {fileID: 114173897078414380}
   _target: {fileID: 4206036655935330}
   _peekAmount: 2
   _durationUntilPeek: 1
@@ -2875,7 +2875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wallSlideForce: -150
-  _timeUntilSlide: 0.5
+  _timeUntilSlide: 0
 --- !u!114 &114335719507235422
 MonoBehaviour:
   m_ObjectHideFlags: 1
