@@ -8,8 +8,8 @@ using UnityEngine;
 
 namespace CharacterController
 {
-    [RequireComponent(typeof (ActionController)), ExecuteInEditMode]
-    public class DoubleJump : MovementAbility
+    [RequireComponent(typeof (ActionController))]
+    public class DoubleJump : global::Ability
     {
         [SerializeField]
         private float _jumpForce;
@@ -36,12 +36,6 @@ namespace CharacterController
             }
         }
 
-        public override void Awake()
-        {
-            base.Awake();
-            _actionController.DoubleJump = this;
-        }
-
         public override void HandleVertical(ref Vector2 velocity)
         {
             velocity = new Vector2(velocity.x, _actionController.Rigidbody.CalculateVerticalSpeed(_jumpForce / _jumpDuration));
@@ -58,11 +52,6 @@ namespace CharacterController
                 _jumpTimer -= Time.fixedDeltaTime;
             if (_actionController.OnGround )
                 _hasJumped = false;
-        }
-
-        public void OnDisable()
-        {
-            _actionController.DoubleJump = null;
         }
 
     }

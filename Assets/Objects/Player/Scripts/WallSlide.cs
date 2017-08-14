@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace CharacterController
 {
-    [RequireComponent(typeof (ActionController)), ExecuteInEditMode]
-    public class WallSlide : MovementAbility
+    [RequireComponent(typeof (ActionController))]
+    public class WallSlide : global::Ability
     {
         [SerializeField]
         private float _wallSlideForce;
@@ -51,12 +51,6 @@ namespace CharacterController
             }
         }
 
-        public override void Awake()
-        {
-            base.Awake();
-            _actionController.WallSlide = this;
-        }
-
         public void Update()
         {
             if (_falling && _actionController.OnGround)
@@ -73,11 +67,6 @@ namespace CharacterController
         public override void HandleHorizontal(ref Vector2 velocity)
         {
             velocity = new Vector2(0,velocity.y);
-        }
-
-        public void OnDisable()
-        {
-            _actionController.WallSlide = null;
         }
     }
 }

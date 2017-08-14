@@ -14,7 +14,7 @@ public class CollisionCheck : MonoBehaviour
     private List<Collider2D> _collisionColliders = new List<Collider2D>();
 
     [SerializeField]
-    private List<Collider2D> _colliders = new List<Collider2D>();
+    private List<Collider2D> _collidersToCheck = new List<Collider2D>();
 
     [SerializeField]
     private LayerMask _collisionLayers;
@@ -22,10 +22,10 @@ public class CollisionCheck : MonoBehaviour
     [SerializeField]
     private float _tolerance;
 
-    public List<Collider2D> Colliders
+    public List<Collider2D> CollidersToCheck
     {
-        get { return _colliders; }
-        set { _colliders = value; }
+        get { return _collidersToCheck; }
+        set { _collidersToCheck = value; }
     }
 
     public LayerMask CollisionLayers
@@ -129,8 +129,8 @@ public class CollisionCheck : MonoBehaviour
             sides = Sides;
             return sides.Top || sides.Bottom || sides.Right || sides.Left;
         }
-        sides.Colliders = Colliders.ToList();
-        foreach (var c in Colliders)
+        sides.Colliders = CollidersToCheck.ToList();
+        foreach (var c in CollidersToCheck)
         {
             Collider2D[] t = new Collider2D[10];
             if (c == null)
