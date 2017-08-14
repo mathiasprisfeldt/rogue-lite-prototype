@@ -9,9 +9,6 @@ namespace CharacterController
     [RequireComponent(typeof(PlayerMovement)), ExecuteInEditMode]
     public class WallJump : MovementAbility
     {
-        private float _horizontalTimer;
-        private float _verticalTimer;
-
         [SerializeField]
         private float _verticalForce;
 
@@ -23,6 +20,13 @@ namespace CharacterController
 
         [SerializeField]
         private float _verticalDuration;
+
+        [SerializeField,Range(0,1)]
+        private float _whenToSwicthDirection;
+
+        private float _horizontalTimer;
+        private float _verticalTimer;
+        private bool _directionSwitched;
 
         public float Direction { get; private set; }
 
@@ -37,6 +41,7 @@ namespace CharacterController
                     _horizontalTimer = _horizontalDuration;
                     _verticalTimer = _verticalDuration;
                     Direction = _playerMovement.TriggerCheck.Sides.Left ? 1 : -1;
+                    _directionSwitched = false;
                 }
                                     
                 return _verticalTimer > 0;
@@ -58,6 +63,24 @@ namespace CharacterController
 
         public override void HandleHorizontal(ref Vector2 velocity)
         {
+            if (_horizontalTimer/_horizontalDuration <= _whenToSwicthDirection && !_directionSwitched)
+            {
+                if (Direction > 0 && _playerMovement.App.C.PlayerActions.Right
+                    || Direction < 0 && _playerMovement.App.C.PlayerActions.Left)
+                {
+                    Direction = -Direction;
+                    _directionSwitched = true;
+                }
+                else
+                    _horizontalTimer = 0;
+
+            }
+            if (_directionSwitched && Direction > 0 && _playerMovement.App.C.PlayerActions.Left ||
+                _directionSwitched && Direction < 0 && _playerMovement.App.C.PlayerActions.Right)
+            {
+                _horizontalTimer = 0;
+                return;
+            } 
             velocity = new Vector2((_horizontalForce / _horizontalDuration) * Direction,velocity.y);
         }
 
@@ -66,6 +89,7 @@ namespace CharacterController
             //If horizontal is active and a collision is detected in the current direction, then cancel horizontal
             if (_horizontalTimer > 0 && (_playerMovement.TriggerCheck.Sides.Left && Direction < 0 || _playerMovement.TriggerCheck.Sides.Right && Direction > 0))
                 _horizontalTimer = 0;
+
             if(_horizontalTimer > 0)
                 _horizontalTimer -= Time.fixedDeltaTime;
 
