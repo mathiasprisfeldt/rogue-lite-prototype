@@ -9,7 +9,7 @@ namespace CharacterController
     /// Purpose:
     /// Creator:
     /// </summary>
-    [RequireComponent(typeof(Action))]
+    [RequireComponent(typeof(ActionsController))]
     public class LedgeHanging : global::Ability
     {
         [SerializeField]
@@ -33,27 +33,29 @@ namespace CharacterController
         private float _hangCooldownTimer;
         private float _downTimer;
         private float _upTimer;
+        private bool _startGrab;
 
         public override bool VerticalActive
         {
             get
             {
-                if (_action == null)
+                if (_actionsController == null)
                     return false;
-                var left = _action.TriggerCheck.Sides.Left;
-                var right = _action.TriggerCheck.Sides.Right;
-                var horizontalMovement = _action.App.C.PlayerActions.Right && left ||
-                                         _action.App.C.PlayerActions.Left && right;
+                var left = _actionsController.TriggerCheck.Sides.Left;
+                var right = _actionsController.TriggerCheck.Sides.Right;
+                var horizontalMovement = _actionsController.App.C.PlayerActions.Right && left ||
+                                         _actionsController.App.C.PlayerActions.Left && right;
                 if (_downTimer > 0 || _upTimer > 0)
                     return true;
-                if ((right || left) && !(_action.WallJump && _action.WallJump.HorizontalActive) && _hangCooldownTimer <= 0)
+                if ((right || left) && !(_actionsController.WallJump && _actionsController.WallJump.HorizontalActive) && _hangCooldownTimer <= 0 
+                    && _actionsController.LastUsedCombatAbility == CombatAbility.None && !_actionsController.OnGround)
                 {
-                    List<Collider2D> colliders = right ? _action.TriggerCheck.Sides.RightColliders : _action.TriggerCheck.Sides.LeftColliders;
+                    List<Collider2D> colliders = right ? _actionsController.TriggerCheck.Sides.RightColliders : _actionsController.TriggerCheck.Sides.LeftColliders;
                     Collider2D col = colliders[0];
                     var distance = float.MaxValue;
                     foreach (var c in colliders)
                     {
-                        var tempDistance = Mathf.Abs(_action.TriggerCheck.CollidersToCheck[0].bounds.center.y   - c.bounds.center.y);
+                        var tempDistance = Mathf.Abs(_actionsController.TriggerCheck.CollidersToCheck[0].bounds.center.y   - c.bounds.center.y);
                         if (tempDistance < distance)
                         {
                             distance = tempDistance;
@@ -64,8 +66,8 @@ namespace CharacterController
 
                     float hangPosX = right ? col.bounds.min.x : col.bounds.max.x;
                     var hangPosition = new Vector2(hangPosX, col.bounds.max.y - _hangDistance);
-                    var thisColX = right ? _action.TriggerCheck.CollidersToCheck[0].bounds.max.x : _action.TriggerCheck.CollidersToCheck[0].bounds.min.x;
-                    Vector2 temp = new Vector2(thisColX, _action.CollisionCheck.CollidersToCheck[0].bounds.center.y);
+                    var thisColX = right ? _actionsController.TriggerCheck.CollidersToCheck[0].bounds.max.x : _actionsController.TriggerCheck.CollidersToCheck[0].bounds.min.x;
+                    Vector2 temp = new Vector2(thisColX, _actionsController.CollisionCheck.CollidersToCheck[0].bounds.center.y);
                     if (Mathf.Abs(temp.y - hangPosition.y) <= _sensitivity)
                     {
                         TileBehaviour tile = col.gameObject.GetComponent<TileBehaviour>();
@@ -76,25 +78,31 @@ namespace CharacterController
                         if (platform && !platform.Istop)
                             return false;
 
-                        if (_action.App.C.PlayerActions.Down &&
-                            _action.App.C.PlayerActions.Jump.IsPressed)
+                        if (_actionsController.App.C.PlayerActions.Down &&
+                            _actionsController.App.C.PlayerActions.Jump.IsPressed)
                         {
                             _downTimer = _pushDownDuration;
                             return true;
                         }
-                        else if (_action.App.C.PlayerActions.Jump.WasPressed)
+                        else if (_actionsController.App.C.PlayerActions.Jump.IsPressed)
                         {
                             _upTimer = _pushUpDuration;
                             return true;
                         }
-
+                        
                         if (horizontalMovement)
                             return false;
 
-                        var extend = right ? -_action.CollisionCheck.CollidersToCheck[0].bounds.extents.x : _action.CollisionCheck.CollidersToCheck[0].bounds.extents.x;
-                        _action.Rigidbody.position = Vector2.Lerp(_action.Rigidbody.position, new Vector2(hangPosition.x + extend, hangPosition.y), .6f);
+                        var extend = right ? -_actionsController.CollisionCheck.CollidersToCheck[0].bounds.extents.x : _actionsController.CollisionCheck.CollidersToCheck[0].bounds.extents.x;
+                        _actionsController.Rigidbody.position = Vector2.Lerp(_actionsController.Rigidbody.position, new Vector2(hangPosition.x + extend, hangPosition.y), .6f);
                         var dir = left ? -1 : 1;
-                        _action.Flip(dir);
+                        _actionsController.Flip(dir);
+
+                        if (!_startGrab)
+                        {
+                            _startGrab = true;
+                            _actionsController.StartGrab = true;
+                        }
                         return true;
                     }
                 }
@@ -116,15 +124,22 @@ namespace CharacterController
                 _downTimer -= Time.fixedDeltaTime;  
 
             if (_upTimer > 0 || _downTimer > 0)
-                _action.LastUsedVerticalAbility = Ability.None;
+                _actionsController.LastUsedVerticalAbility = Ability.None;
 
             var temp = 0f;
             if (_upTimer > 0)
                 temp += _pushUpForce / _pushUpDuration;
             if (_downTimer > 0)
                 temp -= _pushDownForce / _pushDownDuration;
-                velocity = new Vector2(velocity.x, _action.Rigidbody.CounterGravity(temp));
+                velocity = new Vector2(velocity.x, _actionsController.Rigidbody.CounterGravity(temp));
             
         }
+        public void Update()
+        {
+            if (_startGrab && !VerticalActive)
+                _startGrab = false;
+        }
     }
+
+
 }

@@ -35,18 +35,22 @@ public class Jump : Ability {
     {
         get
         {
-            InputActions pa = _action.App.C.PlayerActions;
-            if (pa != null && pa.Jump.WasPressed && _action.OnGround && _jumpTimer <= 0)
+            InputActions pa = _actionsController.App.C.PlayerActions;
+            if (pa != null && pa.Jump.WasPressed && _actionsController.OnGround && _jumpTimer <= 0)
             {
                 _jumpTimer = _jumpDuration;
                 _initialJumpTimer = _initialJumpDuration;
+                _actionsController.StartJump = true;
             }
 
             if(_initialJumpTimer <= 0)
                 if (!(pa != null && pa.Jump.IsPressed && _jumpTimer > 0))
+                {
                     _jumpTimer = 0;
+                }
+                    
 
-            if ((_action.GroundCollisionCheck.Sides.BottomColliders != null && _action.GroundCollisionCheck.Sides.BottomColliders.Count > 0 && pa != null && pa.Down && pa.Jump.WasPressed))
+            if ((_actionsController.GroundCollisionCheck.Sides.BottomColliders != null && _actionsController.GroundCollisionCheck.Sides.BottomColliders.Count > 0 && pa != null && pa.Down && pa.Jump.WasPressed))
                 return true;
 
             return _jumpTimer > 0 || _initialJumpTimer > 0;
@@ -55,24 +59,24 @@ public class Jump : Ability {
 
     public override void HandleVertical(ref Vector2 velocity)
     {
-        var force = _action.Rigidbody.CalculateVerticalSpeed(_jumpForce / _jumpDuration);
+        var force = _actionsController.Rigidbody.CalculateVerticalSpeed(_jumpForce / _jumpDuration);
         if (_initialJumpTimer > 0)
         {
-            force = _action.Rigidbody.CalculateVerticalSpeed(_initialJumpForce / _initialJumpDuration);
+            force = _actionsController.Rigidbody.CalculateVerticalSpeed(_initialJumpForce / _initialJumpDuration);
         }
 
         velocity = new Vector2(velocity.x, force);
 
-        if (_action.GroundCollisionCheck.Sides.BottomColliders != null && _action.GroundCollisionCheck.Sides.BottomColliders.Count > 0 
-            && _action.App.C.PlayerActions.Down)
+        if (_actionsController.GroundCollisionCheck.Sides.BottomColliders != null && _actionsController.GroundCollisionCheck.Sides.BottomColliders.Count > 0 
+            && _actionsController.App.C.PlayerActions.Down)
         {
             
-            foreach (var c in _action.GroundCollisionCheck.Sides.BottomColliders)
+            foreach (var c in _actionsController.GroundCollisionCheck.Sides.BottomColliders)
             {
                 if (c.gameObject.tag == "OneWayCollider")
                 {
                     velocity = new Vector2(velocity.x, 0);
-                    _action.ModificationHandler.AddModification(new TemporaryLayerChange(0.4f, "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
+                    _actionsController.ModificationHandler.AddModification(new TemporaryLayerChange(0.4f, "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
                 }
                 
             }

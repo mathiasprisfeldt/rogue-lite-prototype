@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4926601098408364}
   - component: {fileID: 114195463805386292}
   - component: {fileID: 114584274024809242}
-  - component: {fileID: 114136590621436836}
+  - component: {fileID: 114615579130362908}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -42,34 +42,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114136590621436836
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1758378222328516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7b5e8de77c5b4597ae7fbfb49a95e22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  logDebugInfo: 0
-  invertYAxis: 0
-  useFixedUpdate: 1
-  dontDestroyOnLoad: 0
-  suspendInBackground: 0
-  enableICade: 0
-  enableXInput: 0
-  xInputOverrideUpdateRate: 0
-  xInputUpdateRate: 0
-  xInputOverrideBufferSize: 0
-  xInputBufferSize: 0
-  enableNativeInput: 0
-  nativeInputEnableXInput: 1
-  nativeInputPreventSleep: 0
-  nativeInputOverrideUpdateRate: 0
-  nativeInputUpdateRate: 0
-  customProfiles: []
 --- !u!114 &114195463805386292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -103,3 +75,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DontDestroyOnLoadConfig: 1
+--- !u!114 &114615579130362908
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1758378222328516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7b5e8de77c5b4597ae7fbfb49a95e22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logDebugInfo: 0
+  invertYAxis: 0
+  useFixedUpdate: 0
+  dontDestroyOnLoad: 0
+  suspendInBackground: 0
+  enableICade: 0
+  enableXInput: 0
+  xInputOverrideUpdateRate: 0
+  xInputUpdateRate: 0
+  xInputOverrideBufferSize: 0
+  xInputBufferSize: 0
+  enableNativeInput: 0
+  nativeInputEnableXInput: 1
+  nativeInputPreventSleep: 0
+  nativeInputOverrideUpdateRate: 0
+  nativeInputUpdateRate: 0
+  customProfiles: []

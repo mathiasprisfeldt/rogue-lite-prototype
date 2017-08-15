@@ -12,9 +12,9 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 	public class PlayerModel : Model<PlayerApplication>
 	{
         [SerializeField]
-	    private Action _actionController;
+	    private ActionsController _actionController;
 
-	    public Action ActionController
+	    public ActionsController ActionController
 	    {
 	        get { return _actionController; }
 	        set { _actionController = value; }

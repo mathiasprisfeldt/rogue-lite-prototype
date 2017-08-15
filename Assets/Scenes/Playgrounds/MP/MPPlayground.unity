@@ -449,11 +449,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4273749052745280, guid: 4052246ce7645ba4cafddf1a4ca138eb,
     type: 2}
   m_PrefabInternal: {fileID: 603073101}
---- !u!1 &356826647 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1960660052491594, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-    type: 2}
-  m_PrefabInternal: {fileID: 1026702892}
 --- !u!4 &409988203 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4273749052745280, guid: 4052246ce7645ba4cafddf1a4ca138eb,
@@ -1186,12 +1181,6 @@ MonoBehaviour:
     m_Bits: 512
   _tolerance: 0.05
   _character: {fileID: 1451009090}
---- !u!114 &989499960 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114173897078414380, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-    type: 2}
-  m_PrefabInternal: {fileID: 1026702892}
-  m_Script: {fileID: 11500000, guid: 07d5b112624c5a5428e83c8f5daa39d5, type: 3}
 --- !u!1001 &1026702892
 Prefab:
   m_ObjectHideFlags: 0
@@ -1231,46 +1220,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114173897078414380, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-        type: 2}
-      propertyPath: _doFlipWithRotation
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114173897078414380, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-        type: 2}
-      propertyPath: _model
-      value: 
-      objectReference: {fileID: 356826647}
-    - target: {fileID: 114173897078414380, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-        type: 2}
-      propertyPath: _flipWithVelocity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 212394541290335668, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-        type: 2}
-      propertyPath: m_FlipY
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114883473055053996, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-        type: 2}
-      propertyPath: _spriteRenderer
-      value: 
-      objectReference: {fileID: 1711025773}
-    - target: {fileID: 114795084795958450, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-        type: 2}
-      propertyPath: _blacklist.m_Bits
-      value: 16896
-      objectReference: {fileID: 0}
-    - target: {fileID: 114795084795958450, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-        type: 2}
-      propertyPath: _whitelist.m_Bits
-      value: 16384
-      objectReference: {fileID: 0}
-    - target: {fileID: 114583258450556078, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-        type: 2}
-      propertyPath: _actionController
-      value: 
-      objectReference: {fileID: 989499960}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
   m_IsPrefabParent: 0
@@ -1420,7 +1369,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   logDebugInfo: 0
   invertYAxis: 0
-  useFixedUpdate: 1
+  useFixedUpdate: 0
   dontDestroyOnLoad: 0
   suspendInBackground: 0
   enableICade: 0
@@ -1676,6 +1625,7 @@ MonoBehaviour:
   _groundCollisionCheck: {fileID: 135384916}
   _physicialCollisionCheck: {fileID: 933743588}
   _hitbox: {fileID: 1949890479}
+  _knockbackHandler: {fileID: 0}
   _damage: 10
   _flipWithVelocity: 1
   _doFlipWithRotation: 0
@@ -1979,11 +1929,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _application: {fileID: 1327780435}
---- !u!212 &1711025773 stripped
-SpriteRenderer:
-  m_PrefabParentObject: {fileID: 212493662664211078, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-    type: 2}
-  m_PrefabInternal: {fileID: 1026702892}
 --- !u!4 &1776770419 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4273749052745280, guid: 4052246ce7645ba4cafddf1a4ca138eb,

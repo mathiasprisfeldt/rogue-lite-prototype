@@ -1,11 +1,11 @@
-﻿using Controllers;
+﻿using CharacterController;
+using Controllers;
 using UnityEngine;
-using Action = CharacterController.Action;
 
 public class CameraPoint : MonoBehaviour
 {
     [SerializeField]
-    private Action _action;
+    private ActionsController _actionsController;
 
     [SerializeField]
     private Transform _target;
@@ -42,16 +42,16 @@ public class CameraPoint : MonoBehaviour
             return;
 	    var targetX = _target.transform.localScale.x > 0 ? _xPosition : -_xPosition;
 	    var targetY = 0f;
-	    var inRightState = _action.State == CharacterState.Idle || _action.State == CharacterState.Moving || _action.LastUsedVerticalAbility == CharacterController.Ability.LedgeHanging;
+	    var inRightState = _actionsController.State == CharacterState.Idle || _actionsController.State == CharacterState.Moving || _actionsController.LastUsedVerticalAbility == CharacterController.Ability.LedgeHanging;
 
-	    if (_action.App.C.PlayerActions != null && inRightState
-            && (_action.App.C.PlayerActions.DeadZoneUp(_peekDeadZone) || _action.App.C.PlayerActions.DeadZoneDown(_peekDeadZone)))
+	    if (_actionsController.App.C.PlayerActions != null && inRightState
+            && (_actionsController.App.C.PlayerActions.DeadZoneUp(_peekDeadZone) || _actionsController.App.C.PlayerActions.DeadZoneDown(_peekDeadZone)))
 	    {
 	        if (_peekTImer > 0)
 	            _peekTImer -= Time.fixedDeltaTime;
 	        else
 	        {
-	            var dir = _action.App.C.PlayerActions.DeadZoneUp(_peekDeadZone) ? 1 :-1;
+	            var dir = _actionsController.App.C.PlayerActions.DeadZoneUp(_peekDeadZone) ? 1 :-1;
                 targetY = dir * _peekAmount;
             }
 	        

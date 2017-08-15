@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CharacterController
 {
-    [RequireComponent(typeof (Action))]
+    [RequireComponent(typeof (ActionsController))]
     public class WallSlide : global::Ability
     {
         [SerializeField]
@@ -20,13 +20,13 @@ namespace CharacterController
         {
             get
             {
-                var wallJumpActive = !(_action.WallJump && _action.WallJump.HorizontalActive);
-                var falling = _action.Rigidbody.velocity.y < -1 || _falling;
-                var rest = (_action.WallSlideCheck.Left || _action.WallSlideCheck.Right);
+                var wallJumpActive = !(_actionsController.WallJump && _actionsController.WallJump.HorizontalActive);
+                var falling = _actionsController.Rigidbody.velocity.y < -1 || _falling;
+                var rest = (_actionsController.WallSlideCheck.Left || _actionsController.WallSlideCheck.Right);
 
-                if(wallJumpActive && falling && rest)
+                if(wallJumpActive && falling && rest && _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {
-                    dir = _action.TriggerCheck.Sides.Left ? 1 : -1;
+                    dir = _actionsController.TriggerCheck.Sides.Left ? 1 : -1;
                     if (_slideTimer > 0)
                     {
                         _slideTimer -= Time.fixedDeltaTime;
@@ -46,22 +46,24 @@ namespace CharacterController
             get
             {
                 return VerticalActive &&
-                       !(_action.WallSlideCheck.Left && _action.App.C.PlayerActions.Right ||
-                       _action.WallSlideCheck.Right && _action.App.C.PlayerActions.Left);
+                       !(_actionsController.WallSlideCheck.Left && _actionsController.App.C.PlayerActions.Right ||
+                       _actionsController.WallSlideCheck.Right && _actionsController.App.C.PlayerActions.Left);
             }
         }
 
         public void Update()
         {
-            if (_falling && _action.OnGround)
+            if (_falling && _actionsController.OnGround)
                 _falling = false;
         }
 
         public override void HandleVertical(ref Vector2 velocity)
         {
             _falling = true;
-            velocity += new Vector2(0, _action.Rigidbody.CounterGravity(_wallSlideForce));
-            _action.Flip(dir);
+            velocity += new Vector2(0, _actionsController.Rigidbody.CounterGravity(_wallSlideForce));
+
+            if (_actionsController.LastUsedCombatAbility == CombatAbility.None)
+                _actionsController.Flip(dir);
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)

@@ -6,15 +6,15 @@ using UnityEngine;
 public abstract class Ability : MonoBehaviour
 {
     [SerializeField]
-    protected Action _action;
+    protected ActionsController _actionsController;
 
     public virtual bool VerticalActive { get; set; }
     public virtual bool HorizontalActive { get; set; }
 
     public virtual void Awake()
     {
-        if(_action == null)
-            _action = GetComponent<Action>();
+        if(_actionsController == null)
+            _actionsController = GetComponent<ActionsController>();
     }
 
     public abstract void HandleVertical(ref Vector2 velocity);
