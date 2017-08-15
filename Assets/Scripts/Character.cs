@@ -9,6 +9,12 @@ namespace Controllers
         None, Idle, Moving, InAir
     }
 
+    public enum LookDirection
+    {
+        Right,
+        Left
+    }
+
     /// <summary>
     /// Purpose: Base class for all characters, enemies, player etc.
     /// Creator: MB
@@ -45,6 +51,8 @@ namespace Controllers
         private bool _doFlipWithRotation = true;
 
         public CharacterState State { get; set; }
+
+        public LookDirection LookDirection { get; set; }
 
         /// <summary>
         /// Changes to which direction the controller bumped into an obstacle.
@@ -100,7 +108,7 @@ namespace Controllers
             UpdateState();
 
             if (_flipWithVelocity && _rigidbody)
-                Flip(_rigidbody.velocity.x);
+                Flip(Mathf.Round(_rigidbody.velocity.x));
 
             CheckSideBumping();
         }
@@ -123,10 +131,18 @@ namespace Controllers
 
         public void Flip(float dir)
         {
-            if (dir > 0)
-                _model.transform.localScale = new Vector3(1, transform.localScale.y);
-            if (dir < 0)
-                _model.transform.localScale = new Vector3(-1, transform.localScale.y);
+            if (dir == 0)
+                return;
+
+            if (_doFlipWithRotation)
+            {
+                float rot = dir < 0 ? 180 : 0;
+                _model.transform.rotation = Quaternion.Euler(0, rot, 0);
+            }
+            else
+                _model.transform.localScale = new Vector2(dir < 0 ? -1 : 1, transform.localScale.y);
+
+            LookDirection = dir < 0 ? LookDirection.Left : LookDirection.Right;
         }
 
         public virtual void AddVelocity(Vector2 velocity)
@@ -184,7 +200,7 @@ namespace Controllers
 
             if (!leftHit || leftBump)
                 BumpingDirection = -1;
-            else if (!rightHit)
+            else if (!rightHit || rightBump)
                 BumpingDirection = 1;
             else
                 BumpingDirection = 0;

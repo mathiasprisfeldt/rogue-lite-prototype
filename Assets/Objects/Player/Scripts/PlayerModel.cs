@@ -1,4 +1,6 @@
 using AcrylecSkeleton.MVC;
+using CharacterController;
+using UnityEngine;
 
 namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 {
@@ -9,5 +11,13 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 	/// </summary>
 	public class PlayerModel : Model<PlayerApplication>
 	{
+        [SerializeField]
+	    private Action _actionController;
+
+	    public Action ActionController
+	    {
+	        get { return _actionController; }
+	        set { _actionController = value; }
+	    }
 	}
 }

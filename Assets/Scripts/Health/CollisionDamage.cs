@@ -15,7 +15,7 @@ namespace Health
         private HealthController _healthController;
 
         [SerializeField]
-        private LayerMask _blacklist;
+        private LayerMask _whitelist;
 
         void Awake()
         {
@@ -29,7 +29,7 @@ namespace Health
 
             foreach (Collider2D sidesTargetCollider in _healthController.Character.Hitbox.Sides.TargetColliders)
             {
-                if (!_blacklist.Contains(sidesTargetCollider.gameObject.layer))
+                if (_whitelist.Contains(sidesTargetCollider.gameObject.layer))
                 {
                     _healthController.Character.HealthController.Damage(sidesTargetCollider.gameObject.GetComponent<CollisionCheck>().Character.Damage);
                 }

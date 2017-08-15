@@ -21,7 +21,13 @@ namespace Assets.Enemy
         [SerializeField]
 	    private float _viewRadius;
 
-        [Space]
+	    [SerializeField]
+	    private float _attackCooldown;
+
+	    [SerializeField, Tooltip("How long it takes to do an action.")]
+	    private float _indicatorDuration;
+
+	    [Space]
         [SerializeField]
 	    private PlayerApplication _target;
 
@@ -41,6 +47,18 @@ namespace Assets.Enemy
 	    {
 	        get { return _character; }
 	        set { _character = value; }
+	    }
+
+	    public float AttackCooldown
+	    {
+	        get { return _attackCooldown; }
+	        set { _attackCooldown = value; }
+	    }
+
+	    public float IndicatorDuration
+	    {
+	        get { return _indicatorDuration; }
+	        set { _indicatorDuration = value; }
 	    }
 	}
 }
