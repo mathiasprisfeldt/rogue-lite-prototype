@@ -21,7 +21,8 @@ namespace CharacterController
 
     public class ActionsController : Character
     {
-        [Header("Component References"), SerializeField] private PlayerApplication _app;
+        [Header("Component References"), SerializeField]
+        private PlayerApplication _app;
 
         [SerializeField]
         private WallJump _wallJump;
@@ -211,6 +212,9 @@ namespace CharacterController
             HandleVerticalMovement(ref _velocity);  
             HandleAnimationParameters();
 
+            if (KnockbackHandler != null)
+                KnockbackHandler.ApplyKnockback(ref _velocity, Time.fixedDeltaTime);
+
             SetVelocity(new Vector2(_velocity.x*Time.fixedDeltaTime, _rigidbody.velocity.y));
             if (Velocity.y != 0)
                 SetVelocity(new Vector2(_rigidbody.velocity.x, _velocity.y*Time.fixedDeltaTime));
@@ -218,13 +222,18 @@ namespace CharacterController
             if (_dashTimer > 0)
                 _dashTimer -= Time.fixedDeltaTime;
 
+            HandleMaxSpeed();
+        }
+
+        private void HandleMaxSpeed()
+        {
             var predictGravity = Rigidbody.velocity.y + Physics2D.gravity.y*Rigidbody.gravityScale;
             if (predictGravity <= -_maxFallSpeed)
             {
                 Rigidbody.velocity -= new Vector2(0,
                     Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed))*Time.fixedDeltaTime);
-            }
 
+            }
         }
 
 

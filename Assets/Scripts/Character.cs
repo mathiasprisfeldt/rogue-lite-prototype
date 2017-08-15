@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Health;
 using UnityEngine;
+using Knockbacks;
 
 namespace Controllers
 {
@@ -34,14 +35,15 @@ namespace Controllers
         [SerializeField]
         private CollisionCheck _hitbox;
 
+        [SerializeField]
+        public KnockbackHandler _knockbackHandler;
+
         [Header("Settings:")]
         [SerializeField]
         private float _damage;
 
         [SerializeField]
         private bool _flipWithVelocity;
-
-        
 
         public CharacterState State { get; set; }
 
@@ -92,6 +94,12 @@ namespace Controllers
         {
             get { return _damage; }
             set { _damage = value; }
+        }
+
+        public KnockbackHandler KnockbackHandler
+        {
+            get { return _knockbackHandler; }
+            set { _knockbackHandler = value; }
         }
 
         public virtual void Update()

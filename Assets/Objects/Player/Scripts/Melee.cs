@@ -51,9 +51,13 @@ namespace Combat
                     if (!_objectsTouched.Contains(c.gameObject))
                     {
                         _objectsTouched.Add(c.gameObject);
-                        HealthController hc = c.gameObject.GetComponent<HealthController>();
-                        if (hc != null)
-                            hc.Damage(_damage);
+                        CollisionCheck cc = c.gameObject.GetComponent<CollisionCheck>();
+                        if (cc != null)
+                            if (cc.Character.HealthController != null)
+                            {
+                                cc.Character.HealthController.Damage(_damage);
+                            }
+                                
                     }
                 }
             }

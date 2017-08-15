@@ -314,6 +314,7 @@ GameObject:
   - component: {fileID: 114323172994149904}
   - component: {fileID: 114303647452529036}
   - component: {fileID: 114090219148833560}
+  - component: {fileID: 114236378889174594}
   m_Layer: 8
   m_Name: Controller
   m_TagString: Player
@@ -2635,6 +2636,7 @@ MonoBehaviour:
   _groundCollisionCheck: {fileID: 114211182565548322}
   _physicialCollisionCheck: {fileID: 114051498006790084}
   _hitbox: {fileID: 114191105220437104}
+  _knockbackHandler: {fileID: 114236378889174594}
   _damage: 0
   _flipWithVelocity: 0
   _app: {fileID: 114008459180862610}
@@ -2790,6 +2792,17 @@ MonoBehaviour:
   _peekAmount: 2
   _durationUntilPeek: 1
   _peekDeadZone: 0.7
+--- !u!114 &114236378889174594
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1228637346484900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cbd00e50cc37944ba0ec9840c4d6c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114244779261525874
 MonoBehaviour:
   m_ObjectHideFlags: 1
