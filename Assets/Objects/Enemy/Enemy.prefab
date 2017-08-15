@@ -399,6 +399,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   _tolerance: 0
+  _character: {fileID: 114175325490778496}
 --- !u!114 &114262109355054536
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -416,6 +417,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _tolerance: 0.05
+  _character: {fileID: 114175325490778496}
 --- !u!114 &114429104793938880
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -433,6 +435,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16384
   _tolerance: 0
+  _character: {fileID: 114175325490778496}
 --- !u!114 &114500660037952146
 MonoBehaviour:
   m_ObjectHideFlags: 1

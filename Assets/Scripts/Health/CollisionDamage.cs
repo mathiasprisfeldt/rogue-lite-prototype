@@ -25,28 +25,9 @@ namespace Health
             {
                 if (!_blacklist.Contains(sidesTargetCollider.gameObject.layer))
                 {
-
-                    _character.HealthController.Damage(GetComponentUp<Character>(sidesTargetCollider.gameObject).Damage);
+                    _character.HealthController.Damage(sidesTargetCollider.gameObject.GetComponent<CollisionCheck>().Character.Damage);
                 }
             }
-        }
-
-        public T GetComponentUp<T>(GameObject go) where T : MonoBehaviour
-        {
-            Transform parent = go.transform;
-            T foundComp = null;
-
-            while (parent)
-            {
-                foundComp = parent.GetComponentInChildren<T>();
-
-                if (!foundComp)
-                    parent = parent.parent;
-                else
-                    break;
-            }
-
-            return foundComp;
         }
     }
 }

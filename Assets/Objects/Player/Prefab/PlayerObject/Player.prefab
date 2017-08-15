@@ -396,7 +396,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4572083337588172}
   m_Layer: 8
-  m_Name: CollisionCheck
+  m_Name: Colliders
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2464,6 +2464,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _tolerance: 0.05
+  _character: {fileID: 114173897078414380}
 --- !u!114 &114051637523421582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2616,6 +2617,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _tolerance: 0
+  _character: {fileID: 114173897078414380}
 --- !u!114 &114173897078414380
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2678,6 +2680,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16384
   _tolerance: 0
+  _character: {fileID: 114173897078414380}
 --- !u!114 &114193564679291332
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2742,6 +2745,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _tolerance: 0
+  _character: {fileID: 114173897078414380}
 --- !u!114 &114211478326760400
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2901,6 +2905,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _tolerance: 0
+  _character: {fileID: 114173897078414380}
 --- !u!114 &114301765601842646
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2962,6 +2967,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   _tolerance: 0
+  _character: {fileID: 114173897078414380}
 --- !u!114 &114316814662755160
 MonoBehaviour:
   m_ObjectHideFlags: 1

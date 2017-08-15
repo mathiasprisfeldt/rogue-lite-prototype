@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Controllers;
 using UnityEngine;
 
 public class CollisionCheck : MonoBehaviour
@@ -22,6 +23,9 @@ public class CollisionCheck : MonoBehaviour
     [SerializeField]
     private float _tolerance;
 
+    [SerializeField]
+    private Character _character;
+
     public List<Collider2D> CollidersToCheck
     {
         get { return _collidersToCheck; }
@@ -32,6 +36,12 @@ public class CollisionCheck : MonoBehaviour
     {
         get { return _collisionLayers; }
         set { _collisionLayers = value; }
+    }
+
+    public Character Character
+    {
+        get { return _character; }
+        set { _character = value; }
     }
 
     public bool Top
@@ -95,29 +105,35 @@ public class CollisionCheck : MonoBehaviour
     {
         return IsColliding(CollisionLayers);
     }
+
     public bool IsColliding(out List<Collider2D> colliders)
     {
         return IsColliding(CollisionLayers, out colliders);
     }
+
     public bool IsColliding(out CollisionSides sides)
     {
         var temp = new List<Collider2D>();
         return IsColliding(CollisionLayers, out temp, out sides);
     }
+
     public bool IsColliding(out List<Collider2D> colliders, out CollisionSides sides)
     {
         return IsColliding(CollisionLayers, out colliders, out sides);
     }
+
     public bool IsColliding(LayerMask layer)
     {
         var temp = new List<Collider2D>();
         return IsColliding(layer, out temp);
     }
+
     public bool IsColliding(LayerMask layer, out List<Collider2D> colliders)
     {
         var temp = new CollisionSides(false, false, false, false);
         return IsColliding(layer, out colliders, out temp);
     }
+
     public bool IsColliding(LayerMask layer, out List<Collider2D> colliders, out CollisionSides sides)
     {
         sides = new CollisionSides(false, false, false, false);
