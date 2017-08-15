@@ -1,6 +1,6 @@
 using AcrylecSkeleton.MVC;
 
-namespace Assets.Objects.Enemy
+namespace Assets.Enemy
 {
 	/// <summary>
 	/// Base state enum for Enemy MVC object.

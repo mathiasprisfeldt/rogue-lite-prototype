@@ -3,7 +3,7 @@ using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using Controllers;
 using UnityEngine;
 
-namespace Assets.Objects.Enemy
+namespace Assets.Enemy
 {
 	/// <summary>
 	/// Model class for Enemy MVC object.

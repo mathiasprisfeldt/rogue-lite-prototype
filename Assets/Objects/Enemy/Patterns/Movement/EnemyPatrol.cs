@@ -1,13 +1,13 @@
 ﻿using CharacterController;
 using UnityEngine;
 
-namespace Assets.Objects.Enemy
+namespace Assets.Enemy
 {
     /// <summary>
     /// Purpose: Patrol pattern for all enemies patrolling an area
     /// Creator: MP
     /// </summary>
-    public class Patrol : EnemyPattern
+    public class EnemyPatrol : EnemyPattern
     {
         private Vector2 _patrolDirection = Vector2.right;
 

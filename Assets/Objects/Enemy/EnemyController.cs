@@ -2,7 +2,7 @@ using AcrylecSkeleton.MVC;
 using Managers;
 using UnityEngine;
 
-namespace Assets.Objects.Enemy
+namespace Assets.Enemy
 {
 	/// <summary>
 	/// Controller class for Enemy MVC object.

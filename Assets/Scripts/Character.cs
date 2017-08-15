@@ -41,7 +41,8 @@ namespace Controllers
         [SerializeField]
         private bool _flipWithVelocity;
 
-        
+        [SerializeField, Tooltip("If on it will flip with rotation instead of scaling.")]
+        private bool _doFlipWithRotation = true;
 
         public CharacterState State { get; set; }
 

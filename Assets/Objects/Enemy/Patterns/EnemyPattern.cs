@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Objects.Enemy
+namespace Assets.Enemy
 {
     /// <summary>
     /// Purpose: Used as super class for all enemy patterns
