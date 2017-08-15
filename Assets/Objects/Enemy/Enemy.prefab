@@ -356,7 +356,8 @@ MonoBehaviour:
   _physicialCollisionCheck: {fileID: 114262109355054536}
   _hitbox: {fileID: 114429104793938880}
   _damage: 10
-  _flipWithVelocity: 1
+  _flipWithVelocity: 0
+  _doFlipWithRotation: 1
 --- !u!114 &114186237611772284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -383,6 +384,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  _character: {fileID: 0}
 --- !u!114 &114200774417001942
 MonoBehaviour:
   m_ObjectHideFlags: 1

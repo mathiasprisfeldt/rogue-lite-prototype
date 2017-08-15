@@ -291,6 +291,7 @@ GameObject:
   - component: {fileID: 4564106514078000}
   - component: {fileID: 114883473055053996}
   - component: {fileID: 114795084795958450}
+  - component: {fileID: 114234976037294512}
   m_Layer: 8
   m_Name: Health
   m_TagString: Player
@@ -1497,7 +1498,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1182516208491314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -2.96, y: 0.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4087813221417808}
@@ -2637,6 +2638,7 @@ MonoBehaviour:
   _hitbox: {fileID: 114191105220437104}
   _damage: 0
   _flipWithVelocity: 0
+  _doFlipWithRotation: 1
   _app: {fileID: 114008459180862610}
   _wallJump: {fileID: 114227199752316536}
   _doubleJump: {fileID: 114518903041524674}
@@ -2790,6 +2792,24 @@ MonoBehaviour:
   _peekAmount: 2
   _durationUntilPeek: 1
   _peekDeadZone: 0.7
+--- !u!114 &114234976037294512
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1219576123015342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a45ad3003841ef4ab395dccb38f3f29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _drawGizmos: 1
+  _damageType: 0
+  _distanceBeforeDmg: 2
+  _isDistanceBeforeDmgInclusive: 0
+  _fallSegments: 1
+  _dmgPerFallUnit: 15
+  _maxDmg: Infinity
 --- !u!114 &114244779261525874
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3534,7 +3554,6 @@ MonoBehaviour:
   _blacklist:
     serializedVersion: 2
     m_Bits: 512
-  _character: {fileID: 114173897078414380}
 --- !u!114 &114804394918372902
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3638,6 +3657,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  _character: {fileID: 114173897078414380}
 --- !u!114 &114889574662704972
 MonoBehaviour:
   m_ObjectHideFlags: 1

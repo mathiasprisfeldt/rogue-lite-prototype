@@ -8,24 +8,30 @@ namespace Health
     /// Purpose: Handles damage when colliding with something.
     /// Creator: MP
     /// </summary>
-    public class CollisionDamage : MonoBehaviour 
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(HealthController))]
+    public class CollisionDamage : MonoBehaviour
     {
+        private HealthController _healthController;
+
         [SerializeField]
         private LayerMask _blacklist;
 
-        [SerializeField]
-        private Character _character;
+        void Awake()
+        {
+            _healthController = GetComponent<HealthController>();
+        }
 
         void Update()
         {
-            if (_character.HealthController.IsInvurnable)
+            if (_healthController.Character.HealthController.IsInvurnable)
                 return;
 
-            foreach (Collider2D sidesTargetCollider in _character.Hitbox.Sides.TargetColliders)
+            foreach (Collider2D sidesTargetCollider in _healthController.Character.Hitbox.Sides.TargetColliders)
             {
                 if (!_blacklist.Contains(sidesTargetCollider.gameObject.layer))
                 {
-                    _character.HealthController.Damage(sidesTargetCollider.gameObject.GetComponent<CollisionCheck>().Character.Damage);
+                    _healthController.Character.HealthController.Damage(sidesTargetCollider.gameObject.GetComponent<CollisionCheck>().Character.Damage);
                 }
             }
         }

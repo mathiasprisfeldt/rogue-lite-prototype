@@ -16,15 +16,20 @@ namespace Health
     /// Creator: Mathias Prisfeldt
     /// </summary>
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(HealthController))]
     public class FallDamage : MonoBehaviour
     {
+        private HealthController _healthController;
         private Action _action;
         private float _savedFlyingDistance; //Distance between last position and current to check for excetion.
         private bool _didCollideLastFrame; //Did we collide with the floor last frame?
-        private float _lastYPosition;
+        private Vector2 _lastPosition;
         private float _savedYVelocity;
 
         [Header("Settings:")]
+        [SerializeField]
+        private bool _drawGizmos;
+
         [SerializeField]
         private FallDamageType _damageType;
 
@@ -43,21 +48,20 @@ namespace Health
         [SerializeField]
         private float _maxDmg = Single.PositiveInfinity; //Max amount of fall damage it can take.
 
-        [Header("References: REQUIRED"), SerializeField]
-        private Character _character;
-
-        [SerializeField]
-        private HealthController _healthControllerComp;
+        void Awake()
+        {
+            _healthController = GetComponent<HealthController>();
+        }
 
         void Start()
         {
-            _lastYPosition = _character.Rigidbody.position.y;
-            _action = _character as Action;
+            _lastPosition = _healthController.Character.Rigidbody.position;
+            _action = _healthController.Character as Action;
         }
 
         void Update()
         {
-            bool isColliding = _character.OnGround;
+            bool isColliding = _healthController.Character.OnGround;
 
             if (!_didCollideLastFrame && isColliding)
             {
@@ -66,7 +70,10 @@ namespace Health
                 switch (_damageType)
                 {
                     case FallDamageType.LastPosition:
-                        float yDist = Math.Abs(_lastYPosition - _character.Rigidbody.position.y);
+                        if (_healthController.Character.Rigidbody.position.y > _lastPosition.y)
+                            break;
+
+                        float yDist = Math.Abs(_lastPosition.y - _healthController.Character.Rigidbody.position.y);
 
                         if (yDist >= _distanceBeforeDmg)
                         {
@@ -84,29 +91,35 @@ namespace Health
                         break;
                 }
 
-                _healthControllerComp.Damage(Mathf.Clamp(dmgAmount, 0, _maxDmg));
+                _healthController.Damage(Mathf.Clamp(dmgAmount, 0, _maxDmg));
             }
 
             //If controller is wall sliding save position when sliding.s
             bool isWallSliding = _action && (_action.WallSlide && _action.WallSlide.VerticalActive);
 
             if (isColliding || isWallSliding)
-                _lastYPosition = _character.Rigidbody.position.y;
+                _lastPosition = _healthController.Character.Rigidbody.position;
             else
             {
                 //If the distance between current position and old position is increased, update last position.
-                float currDist = Math.Abs(_lastYPosition - _character.Rigidbody.position.y);
+                float currDist = Math.Abs(_lastPosition.y - _healthController.Character.Rigidbody.position.y);
 
                 if (_savedFlyingDistance > currDist)
                 {
-                    _lastYPosition = _character.Rigidbody.position.y;
+                    _lastPosition = _healthController.Character.Rigidbody.position;
                 }
 
                 _savedFlyingDistance = currDist;
             }
                 
             _didCollideLastFrame = isColliding;
-            _savedYVelocity = Mathf.Abs(_character.Rigidbody.velocity.y);
+            _savedYVelocity = Mathf.Abs(_healthController.Character.Rigidbody.velocity.y);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            if (_drawGizmos)
+                Gizmos.DrawSphere(_lastPosition, 0.5f);
         }
     }
 }

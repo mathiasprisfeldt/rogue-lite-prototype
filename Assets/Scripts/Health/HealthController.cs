@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using AcrylecSkeleton.Utilities;
+using Controllers;
 using Managers;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,6 +19,7 @@ namespace Health
     /// Creator: Mathias Prisfeldt
     /// </summary>
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(HealthController))]
     public class HealthController : MonoBehaviour
     {
         private bool _isLateChecking; //Are we checking in end of frame if we're dead?
@@ -56,6 +58,10 @@ namespace Health
 
         [SerializeField]
         private UnityEvent _deadEvent;
+
+        [Header("References:"), Space]
+        [SerializeField]
+        private Character _character;
 
         #endregion
 
@@ -107,6 +113,12 @@ namespace Health
             }
         }
 
+        public Character Character
+        {
+            get { return _character; }
+            set { _character = value; }
+        }
+
         /// <summary>
         /// Deals amount of damage to object, if it exceeds 0 its dead.
         /// NOTE: If container its calculated in container sizes.
@@ -116,6 +128,9 @@ namespace Health
         /// <param name="dmg">Amount of damage to deal.</param>
         public void Damage(float dmg, bool giveInvurnability = false)
         {
+            if (dmg <= 0)
+                return;
+
             var amountToDmg = dmg;
 
             switch (_healthType)
