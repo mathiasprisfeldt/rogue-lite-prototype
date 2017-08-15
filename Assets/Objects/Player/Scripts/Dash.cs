@@ -6,7 +6,7 @@ namespace CharacterController
     /// Purpose:
     /// Creator:
     /// </summary>
-    [RequireComponent(typeof(Action))]
+    [RequireComponent(typeof(ActionsController))]
     public class Dash : global::Ability
     {
         [SerializeField]
@@ -32,24 +32,25 @@ namespace CharacterController
         {
             get
             {
-                var input = _action.App.C.PlayerActions != null && _action.App.C.PlayerActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
-                if ((input || _dashing) && _cooldownTimer <= 0)
+                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
+                if ((input || _dashing) && _cooldownTimer <= 0 && !_actionsController.Combat)
                 {
                     if (input)
                     {
-                        _direction = _action.Model.transform.localScale.x > 0 ? 1 : -1;
-                        var leftInput = _action.App.C.PlayerActions.Left;
-                        var rightInput = _action.App.C.PlayerActions.Right;
+                        _actionsController.StartDash = true;
+                        _direction = _actionsController.Model.transform.localScale.x > 0 ? 1 : -1;
+                        var leftInput = _actionsController.App.C.PlayerActions.Left;
+                        var rightInput = _actionsController.App.C.PlayerActions.Right;
 
-                        if (!leftInput && _action.TriggerCheck.Left && _direction == -1 && !_action.App.C.PlayerActions.Left
-                            || !rightInput && _action.TriggerCheck.Left && _direction == -1 && !_action.App.C.PlayerActions.Left)
+                        if (!leftInput && _actionsController.TriggerCheck.Left && _direction == -1 && !_actionsController.App.C.PlayerActions.Left
+                            || !rightInput && _actionsController.TriggerCheck.Left && _direction == -1 && !_actionsController.App.C.PlayerActions.Left)
                             _direction = leftInput ? -1 : 1;
 
-                        if (_direction > 0 && _action.TriggerCheck.Right || _direction < 0 && _action.TriggerCheck.Left)
+                        if (_direction > 0 && _actionsController.TriggerCheck.Right || _direction < 0 && _actionsController.TriggerCheck.Left)
                             return false;
 
                         _dashing = true;
-                        _oldVelocity = _action.Rigidbody.velocity;
+                        _oldVelocity = _actionsController.Rigidbody.velocity;
                         _dashingTimer = _dashDuration;
                     }
                     return true;
@@ -73,15 +74,14 @@ namespace CharacterController
 
         public override void HandleHorizontal(ref Vector2 velocity)
         {
-            if (_dashing && _direction > 0 && _action.WallSlideCheck.Right
-                || _dashing && _direction < 0 && _action.WallSlideCheck.Left)
+            if (_dashing && _direction > 0 && _actionsController.WallSlideCheck.Right
+                || _dashing && _direction < 0 && _actionsController.WallSlideCheck.Left)
             {
                 _dashingTimer = 0;
                 _dashing = false;
-
             }
 
-            _action.Flip(_direction);
+            _actionsController.Flip(_direction);
             if (_dashingTimer <= 0)
             {
                 _dashing = false;
@@ -95,7 +95,7 @@ namespace CharacterController
 
         public override void HandleVertical(ref Vector2 velocity)
         {
-            velocity = new Vector2(velocity.x, _action.Rigidbody.CounterGravity(0));
+            velocity = new Vector2(velocity.x, _actionsController.Rigidbody.CounterGravity(0));
         }
     }
 }

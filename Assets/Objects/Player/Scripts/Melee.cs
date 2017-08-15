@@ -10,7 +10,7 @@ namespace Combat
     /// Purpose:
     /// Creator:
     /// </summary>
-    public class Melee : Ability
+    public class Melee : MonoBehaviour
     {
         [SerializeField]
         private CollisionCheck _collisionCheck;
@@ -18,19 +18,23 @@ namespace Combat
         [SerializeField]
         private float _damage;
 
-        [SerializeField,Range(0.01f,float.MaxValue)]
+        [SerializeField,Range(0f,float.MaxValue)]
         private float _hitCooldown;
+
+        [SerializeField]
+        private ActionsController _actionsController;
 
         private List<GameObject> _objectsTouched = new List<GameObject>();
 
         private float _cooldownTimer;
         private bool _active;
 
-        public override bool VerticalActive
+        public bool Active
         {
             get
             {
-                if (_action.App.C.PlayerActions.Attack.WasPressed && !_active && _cooldownTimer <= 0)
+                if (_actionsController.App.C.PlayerActions.Attack.WasPressed && !_active && _cooldownTimer <= 0 && 
+                    _actionsController.LastUsedVerticalAbility != CharacterController.Ability.LedgeHanging)
                     _active = true;
                 return _active;
             }
@@ -47,10 +51,6 @@ namespace Combat
                     if (!_objectsTouched.Contains(c.gameObject))
                     {
                         _objectsTouched.Add(c.gameObject);
-                        if (c.gameObject.name == "New Sprite")
-                        {
-                            
-                        }
                         HealthController hc = c.gameObject.GetComponent<HealthController>();
                         if (hc != null)
                             hc.Damage(_damage);
@@ -64,16 +64,7 @@ namespace Combat
             _cooldownTimer = _hitCooldown;
             _objectsTouched.Clear();
             _active = false;
-        }
-
-        public override void HandleVertical(ref Vector2 velocity)
-        {
-            velocity = new Vector2(velocity.x,0);
-        }
-
-        public override void HandleHorizontal(ref Vector2 velocity)
-        {
-            
+            _actionsController.Combat = false;
         }
     }
 }

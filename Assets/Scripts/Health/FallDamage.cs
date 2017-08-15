@@ -1,7 +1,7 @@
 ﻿using System;
+using CharacterController;
 using Controllers;
 using UnityEngine;
-using Action = CharacterController.Action;
 
 namespace Health
 {
@@ -18,7 +18,7 @@ namespace Health
     [DisallowMultipleComponent]
     public class FallDamage : MonoBehaviour
     {
-        private Action _action;
+        private ActionsController _actionsController;
         private float _savedFlyingDistance; //Distance between last position and current to check for excetion.
         private bool _didCollideLastFrame; //Did we collide with the floor last frame?
         private float _lastYPosition;
@@ -52,7 +52,7 @@ namespace Health
         void Start()
         {
             _lastYPosition = _character.Rigidbody.position.y;
-            _action = _character as Action;
+            _actionsController = _character as ActionsController;
         }
 
         void Update()
@@ -88,7 +88,7 @@ namespace Health
             }
 
             //If controller is wall sliding save position when sliding.s
-            bool isWallSliding = _action && (_action.WallSlide && _action.WallSlide.VerticalActive);
+            bool isWallSliding = _actionsController && (_actionsController.WallSlide && _actionsController.WallSlide.VerticalActive);
 
             if (isColliding || isWallSliding)
                 _lastYPosition = _character.Rigidbody.position.y;
