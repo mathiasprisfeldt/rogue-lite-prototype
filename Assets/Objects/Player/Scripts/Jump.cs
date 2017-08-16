@@ -36,7 +36,7 @@ public class Jump : Ability {
         get
         {
             InputActions pa = _actionsController.App.C.PlayerActions;
-            if (pa != null && pa.Jump.WasPressed && _actionsController.OnGround && _jumpTimer <= 0)
+            if (pa != null && pa.ProxyInputActions.Jump.WasPressed && _actionsController.OnGround && _jumpTimer <= 0)
             {
                 _jumpTimer = _jumpDuration;
                 _initialJumpTimer = _initialJumpDuration;
@@ -50,7 +50,8 @@ public class Jump : Ability {
                 }
                     
 
-            if ((_actionsController.GroundCollisionCheck.Sides.BottomColliders != null && _actionsController.GroundCollisionCheck.Sides.BottomColliders.Count > 0 && pa != null && pa.Down && pa.Jump.WasPressed))
+            if ((_actionsController.GroundCollisionCheck.Sides.BottomColliders != null 
+                && _actionsController.GroundCollisionCheck.Sides.BottomColliders.Count > 0 && pa != null && pa.Down && pa.ProxyInputActions.Jump.WasPressed))
                 return true;
 
             return _jumpTimer > 0 || _initialJumpTimer > 0;

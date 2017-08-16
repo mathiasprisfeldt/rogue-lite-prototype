@@ -189,18 +189,7 @@ namespace CharacterController
             base.Update();
 
             if (App.C.PlayerActions != null)
-                _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
-            if (!_shouldHang)
-            {
-                var temp = transform.root.gameObject.name;
-                _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
-            }
-            if (_shouldHang)
-            {
-                var temp = transform.root.gameObject.name;
-                _shouldHang = LedgeHanging && LedgeHanging.VerticalActive;
-            }
-
+                App.C.PlayerActions.UpdateProxy();
         }
 
         void FixedUpdate()
@@ -223,6 +212,8 @@ namespace CharacterController
                 _dashTimer -= Time.fixedDeltaTime;
 
             HandleMaxSpeed();
+            if (App.C.PlayerActions != null)
+                App.C.PlayerActions.ResetProxy();
         }
 
         private void HandleMaxSpeed()
@@ -365,7 +356,7 @@ namespace CharacterController
             if (CollisionCheck.Sides.BottomColliders != null)
                 col = CollisionCheck.Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
 
-            if (_shouldHang)
+            if (LedgeHanging && LedgeHanging.VerticalActive)
             {
                 LastUsedVerticalAbility = Ability.LedgeHanging;
                 LedgeHanging.HandleVertical(ref velocity);

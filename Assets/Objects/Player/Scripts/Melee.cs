@@ -33,7 +33,7 @@ namespace Combat
         {
             get
             {
-                if (_actionsController.App.C.PlayerActions.Attack.WasPressed && !_active && _cooldownTimer <= 0 && 
+                if (_actionsController.App.C.PlayerActions.ProxyInputActions.Attack.WasPressed && !_active && _cooldownTimer <= 0 && 
                     _actionsController.LastUsedVerticalAbility != CharacterController.Ability.LedgeHanging)
                     _active = true;
                 return _active;

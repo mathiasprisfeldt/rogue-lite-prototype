@@ -41,34 +41,32 @@ namespace RogueLiteInput
 
         public PlayerOneAxisAction RawHorizontal { get; set; }
         public PlayerOneAxisAction RawVertical { get; set; }
+        public ProxyInputActions ProxyInputActions { get; set; }
 
         public float Horizontal
         {
             get
             {
+                
                 return DeadZoneHorizontal(_horizontalDeadZone);
             }                          
         }
-
         public float DeadZoneHorizontal(float deadZone)
         {
             if (Mathf.Abs(RawHorizontal.RawValue) > deadZone)
                 return RawHorizontal.RawValue;
             return 0f;
         }
-
         public float Vertical
         {
             get{ return DeadZoneVertical(_verticalDeadZone); }
         }
-
         public float DeadZoneVertical(float deadZone)
         {
             if (Mathf.Abs(RawVertical.RawValue) > deadZone)
                 return RawVertical.RawValue;
             return 0f;
         }
-
         public bool Up
         {
             get { return DeadZoneUp(_verticalDeadZone); }
@@ -114,6 +112,7 @@ namespace RogueLiteInput
 
             RawHorizontal = CreateOneAxisPlayerAction(LeftInput, RightInput);
             RawVertical = CreateOneAxisPlayerAction(DownInput, UpInput);
+            ProxyInputActions = new ProxyInputActions();
 
             //Keyboard inputs
             //Left keyboard
@@ -176,5 +175,73 @@ namespace RogueLiteInput
 
         }
 
+        public void UpdateProxy()
+        {
+            ProxyInputActions.UpdateData(this);
+        }
+
+        public void ResetProxy()
+        {
+            ProxyInputActions.Reset();
+        }
+        
+    }
+
+    public class ProxyPlayerAction
+    {
+        private bool _wasreset;
+
+        public bool WasPressed { get; set; }
+        public bool WasReleased { get; set; }
+        public bool IsPressed { get; set; }
+        public bool WasRepeated { get; set; }
+
+        public void UpdateData(PlayerAction action)
+        {
+            WasPressed = WasPressed || action.WasPressed;
+            WasReleased = WasReleased || action.WasReleased;
+            IsPressed = action.IsPressed;
+            WasRepeated = WasRepeated || action.WasRepeated;
+            _wasreset = false;
+        }
+
+        public void Reset()
+        {
+            if(_wasreset)
+                return;
+            WasRepeated = false;
+            WasPressed = false;
+            WasReleased = false;
+            IsPressed = false;
+            _wasreset = true;
+        }
+    }
+
+    public class ProxyInputActions
+    {
+        public ProxyPlayerAction Jump { get; set; }
+        public ProxyPlayerAction Dash { get; set; }
+        public ProxyPlayerAction Attack { get; set; }
+
+        public ProxyInputActions()
+        {
+            Jump = new ProxyPlayerAction();
+            Dash = new ProxyPlayerAction();
+            Attack = new ProxyPlayerAction();
+        }
+
+        public void UpdateData(InputActions actions)
+        {
+            Jump.UpdateData(actions.Jump);
+            Dash.UpdateData(actions.Dash);
+            Attack.UpdateData(actions.Attack);
+        }
+
+        public void Reset()
+        {
+            Jump.Reset();
+            Dash.Reset();
+            Attack.Reset();
+        }
     }
 }
