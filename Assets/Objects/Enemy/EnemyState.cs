@@ -1,7 +1,7 @@
-﻿using Assets.Enemy;
+﻿using System.Reflection.Emit;
 using UnityEngine;
 
-namespace Assets.Enemy
+namespace Enemy
 {
     /// <summary>
     /// Purpose: Base class for all enemy states.
@@ -38,6 +38,22 @@ namespace Assets.Enemy
             get { return _isActive; }
             set { _isActive = value; }
         }
+
+        /// <summary>
+        /// Called when a state gets active.
+        /// </summary>
+        /// <returns></returns>
+        public virtual void StateStart() { }
+
+        /// <summary>
+        /// Called when a state ends.
+        /// </summary>
+        public virtual void StateEnd() { }
+
+        /// <summary>
+        /// Update loop for logic when state is active.
+        /// </summary>
+        public virtual void StateUpdate() { }
 
         /// <summary>
         /// Method used to check if the state should take over.

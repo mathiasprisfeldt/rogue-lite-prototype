@@ -1,6 +1,6 @@
 using AcrylecSkeleton.MVC;
 
-namespace Assets.Enemy
+namespace Enemy
 {
 	/// <summary>
 	/// View class for Enemy MVC object.

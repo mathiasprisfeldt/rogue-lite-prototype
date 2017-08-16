@@ -3,7 +3,7 @@ using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using Controllers;
 using UnityEngine;
 
-namespace Assets.Enemy
+namespace Enemy
 {
 	/// <summary>
 	/// Model class for Enemy MVC object.
@@ -26,6 +26,9 @@ namespace Assets.Enemy
 
 	    [SerializeField, Tooltip("How long it takes to do an action.")]
 	    private float _indicatorDuration;
+
+        [SerializeField, Tooltip("Can the enemy target player if behind him?")]
+	    private bool _targetBehind;
 
 	    [Space]
         [SerializeField]
@@ -59,6 +62,12 @@ namespace Assets.Enemy
 	    {
 	        get { return _indicatorDuration; }
 	        set { _indicatorDuration = value; }
+	    }
+
+	    public bool TargetBehind
+	    {
+	        get { return _targetBehind; }
+	        set { _targetBehind = value; }
 	    }
 	}
 }

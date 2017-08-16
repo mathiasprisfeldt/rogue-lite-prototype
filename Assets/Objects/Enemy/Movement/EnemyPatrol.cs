@@ -2,7 +2,7 @@
 using CharacterController;
 using UnityEngine;
 
-namespace Assets.Enemy
+namespace Enemy
 {
     /// <summary>
     /// Purpose: Patrol pattern for all enemies patrolling an area
@@ -12,19 +12,27 @@ namespace Assets.Enemy
     {
         private Vector2 _patrolDirection = Vector2.right;
 
-        void FixedUpdate()
+        public override void StateStart()
         {
-            if (!IsActive)
-                return;
+            base.StateStart();
 
+            _patrolDirection = new Vector2(App.M.Character.LookDirection, 0);
+        }
+
+        public override void StateUpdate()
+        {
             int bumpingDirection = App.M.Character.BumpingDirection;
 
             //If we're bumping into something, change direction.
             if (bumpingDirection != 0)
                 _patrolDirection.x = -App.M.Character.BumpingDirection;
+        }
 
+        void FixedUpdate()
+        {
             //If we're patrolling, move the enemy.
-            App.M.Character.SetVelocity(_patrolDirection);
+            if (IsActive)
+                App.M.Character.SetVelocity(_patrolDirection);
         }
 
         public override bool CheckPrerequisite()

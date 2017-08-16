@@ -935,6 +935,7 @@ GameObject:
   - component: {fileID: 832349524}
   - component: {fileID: 832349525}
   - component: {fileID: 832349526}
+  - component: {fileID: 832349527}
   m_Layer: 12
   m_Name: AI
   m_TagString: Untagged
@@ -986,6 +987,20 @@ MonoBehaviour:
   _drawGizmos: 1
   _attackBoxSize: {x: 1, y: 1}
   _attackBoxOffset: {x: 1, y: 0}
+--- !u!114 &832349527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 832349523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcb3c90b430f8bd478b66fc0bd62b625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isActive: 0
+  _isIsolated: 1
+  _app: {fileID: 1327780435}
 --- !u!61 &837409031 stripped
 BoxCollider2D:
   m_PrefabParentObject: {fileID: 61862504811616390, guid: 4052246ce7645ba4cafddf1a4ca138eb,
@@ -1556,6 +1571,7 @@ MonoBehaviour:
   _viewRadius: 2
   _attackCooldown: 1
   _indicatorDuration: 1
+  _targetBehind: 1
   _target: {fileID: 0}
 --- !u!114 &1327780435
 MonoBehaviour:

@@ -1,11 +1,10 @@
 ﻿using System.Linq;
 using AcrylecSkeleton.Extensions;
-using Assets.Enemy;
 using Controllers;
 using Managers;
 using UnityEngine;
 
-namespace EnemyAttack
+namespace Enemy
 {
     /// <summary>
     /// Purpose: Base class for all combat behaviours.
@@ -34,7 +33,7 @@ namespace EnemyAttack
             bool isLeft = false;
 
             if (App && App.M.Character)
-                isLeft = App.M.Character.LookDirection == LookDirection.Left;
+                isLeft = App.M.Character.LookDirection == -1;
 
             Vector2 relPos = isLeft ? -_attackBoxOffset : _attackBoxOffset;
             return relPos + transform.position.ToVector2();
@@ -58,10 +57,10 @@ namespace EnemyAttack
                     _canAttack = true;
                 }
             }
+        }
 
-            if (!IsActive)
-                return;
-
+        public override void StateUpdate()
+        {
             //Attack when player gets close.
             if (_canAttack)
             {
@@ -70,13 +69,13 @@ namespace EnemyAttack
                 if (_indicatorTimer <= 0)
                 {
                     _indicatorTimer = App.M.IndicatorDuration;
-                    Attack();           
+                    Attack();
                 }
             }
 
             //HACKED: Should properly change when AI becomes more dynamic
-            if (!App.M.Target && !_canAttack)
-                App.C.ChangeState<EnemyPatrol>();
+            if (!App.M.Target && !_canAttack && IsIsolated)
+                App.C.ResetToLast();
         }
 
         /// <summary>
@@ -84,9 +83,7 @@ namespace EnemyAttack
         /// </summary>
         public virtual void Attack()
         {
-            Collider2D[] hits = Physics2D.OverlapBoxAll(GetHitbox(), _attackBoxSize, 0, LayerMask.GetMask("Player"));
-
-            if (hits.Any())
+            if (CheckHitbox())
                 GameManager.Instance.Player.M.ActionController.HealthController.Damage(App.M.Character.Damage);
 
             _canAttack = false;
@@ -105,13 +102,16 @@ namespace EnemyAttack
 
         public override bool CheckPrerequisite()
         {
-            if (!IsActive)
-            {
-                Collider2D[] hits = Physics2D.OverlapBoxAll(GetHitbox(), _attackBoxSize, 0, LayerMask.GetMask("Player"));
-                return hits.Any();
-            }
+            return !IsActive && CheckHitbox();
+        }
 
-            return false;
+        /// <summary>
+        /// Is the player hitting our hitbox?
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckHitbox()
+        {
+            return Physics2D.OverlapBoxAll(GetHitbox(), _attackBoxSize, 0, LayerMask.GetMask("Hitbox")).Any(d => d.tag == "Player");
         }
     }
 }

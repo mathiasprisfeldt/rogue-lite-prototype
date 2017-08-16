@@ -10,12 +10,6 @@ namespace Controllers
         None, Idle, Moving, InAir
     }
 
-    public enum LookDirection
-    {
-        Right,
-        Left
-    }
-
     /// <summary>
     /// Purpose: Base class for all characters, enemies, player etc.
     /// Creator: MB
@@ -56,7 +50,13 @@ namespace Controllers
 
         public CharacterState State { get; set; }
 
-        public LookDirection LookDirection { get; set; }
+        /// <summary>
+        /// A normalized value direction value.
+        /// -1 = left
+        /// 0 = none
+        /// 1 = right
+        /// </summary>
+        public int LookDirection { get; set; }
 
         /// <summary>
         /// Changes to which direction the controller bumped into an obstacle.
@@ -113,6 +113,11 @@ namespace Controllers
             set { _knockbackHandler = value; }
         }
 
+        void Awake()
+        {
+            LookDirection = -1;
+        }
+
         public virtual void Update()
         {
             UpdateState();
@@ -152,7 +157,7 @@ namespace Controllers
             else
                 _model.transform.localScale = new Vector2(dir < 0 ? -1 : 1, transform.localScale.y);
 
-            LookDirection = dir < 0 ? LookDirection.Left : LookDirection.Right;
+            LookDirection = Mathf.RoundToInt(dir);
         }
 
         public virtual void AddVelocity(Vector2 velocity)

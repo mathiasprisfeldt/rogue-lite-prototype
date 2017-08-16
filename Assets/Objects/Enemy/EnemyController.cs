@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using AcrylecSkeleton.MVC;
-using AcrylecSkeleton.StateKit;
 using Managers;
 using UnityEngine;
 
-namespace Assets.Enemy
+namespace Enemy
 {
 	/// <summary>
 	/// Controller class for Enemy MVC object.
@@ -35,30 +34,54 @@ namespace Assets.Enemy
 	            state.IsActive = false;
 	        }
 
-            //Setting initial state to active.
+	        if (!States.Any())
+	        {
+	            Debug.LogWarning("EnemyController has no AI states.", transform);
+                return;
+	        }
+
+	        //Setting initial state to active.
+            //If initial state isn't found yet, try to find one.
+	        if (!_initialState)
+	            _initialState = States.FirstOrDefault();
+
             ChangeState(!_initialState ? States.FirstOrDefault() : _initialState);
 	    }
 
 	    void Update()
 	    {
+	        Vector2 plyDist = App.transform.position - GameManager.Instance.Player.transform.position;
 	        //Checking if player is in sight
 	        if (GameManager.Instance.Player &&
-	            Vector2.Distance(GameManager.Instance.Player.transform.position, App.transform.position) <=
+	            plyDist.magnitude <=
 	            App.M.ViewRadius)
 	        {
-	            App.M.Target = GameManager.Instance.Player;
+	            bool canTarget = true;
+
+	            //Check if the player is behind the player and if can be target if behind.
+	            if (!App.M.TargetBehind)
+	            {
+	                float lookDir = App.M.Character.LookDirection;
+
+	                if (lookDir == -1)
+	                    canTarget = plyDist.x > App.M.Character.LookDirection;
+	                else if (lookDir == 1)
+	                    canTarget = plyDist.x < App.M.Character.LookDirection;
+	            }
+
+	            App.M.Target = canTarget ? GameManager.Instance.Player : null;
 	        }
 	        else
 	            App.M.Target = null;
-            
-            //Check the states prerequisites & parallel updates.
+
+	        //Check the states prerequisites & parallel updates.
 	        foreach (EnemyState enemyState in States)
 	        {
 	            if (enemyState.CheckPrerequisite())
-	            {
 	                ChangeState(enemyState, enemyState.IsIsolated);
-	                break;
-	            }
+
+                if (enemyState.IsActive)
+                    enemyState.StateUpdate();
 	        }
 	    }
 
@@ -90,14 +113,36 @@ namespace Assets.Enemy
 	        }
 
 	        //Current is now last
-	        LastState = CurrentState;
+	        if (CurrentState)
+	        {
+	            LastState = CurrentState;
+	            LastState.StateEnd();
+	        }
 
 	        //Disable all other state components if isolated.
             if (isolate)
 	            States.Where(state => state != desiredState).ToList().ForEach(state => state.IsActive = false);
 
 	        desiredState.IsActive = true;
+
 	        CurrentState = desiredState;
+            CurrentState.StateStart();
         }
+
+        /// <summary>
+        /// Changes the state back to the initial one.
+        /// </summary>
+	    public void ResetToInitial()
+	    {
+	        ChangeState(_initialState);
+	    }
+
+        /// <summary>
+        /// Changes state to the last one.
+        /// </summary>
+	    public void ResetToLast()
+	    {
+	        ChangeState(LastState);
+	    }
 	}
 }
