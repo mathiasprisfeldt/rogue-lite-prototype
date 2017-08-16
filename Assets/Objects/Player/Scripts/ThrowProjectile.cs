@@ -30,7 +30,7 @@ namespace Special
             get
             {
                 if (_actionsController.App.C.PlayerActions.ProxyInputActions.Special.WasPressed
-                    && _cooldownTimer <= 0)
+                    && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {
                     _projectileSpawned = false;
                     _active = true;
@@ -44,7 +44,7 @@ namespace Special
 
         public void Throw()
         {
-            GameObject go = Instantiate(_projectilePrefab, transform.position, Quaternion.identity);
+            GameObject go = Instantiate(_projectilePrefab, _actionsController.ThrowPoint.position, Quaternion.identity);
             Rigidbody2D rig = go.GetComponent<Rigidbody2D>();
             if (rig != null)
                 rig.AddForce(new Vector2(_actionsController.LastHorizontalDirection, 0) * _throwForce, ForceMode2D.Impulse);

@@ -7,7 +7,7 @@ namespace CharacterController
     /// Creator:
     /// </summary>
     [RequireComponent(typeof(ActionsController))]
-    public class WallJump : global::Ability
+    public class WallJump : global::MovementAbility
     {
         [SerializeField]
         private float _verticalForce;
@@ -21,7 +21,7 @@ namespace CharacterController
         [SerializeField]
         private float _verticalDuration;
 
-        [SerializeField,Range(0,1)]
+        [SerializeField, Range(0, 1)]
         private float _whenToSwicthDirection;
 
         private float _horizontalTimer;
@@ -34,6 +34,9 @@ namespace CharacterController
         {
             get
             {
+                if (!base.VerticalActive)
+                    return false;
+
                 var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed;
                 var collision = (_actionsController.WallSlideCheck.Sides.Left || _actionsController.WallSlideCheck.Sides.Right) && !_actionsController.GroundCollisionCheck.Bottom;
                 if (input && collision && _verticalTimer <= 0 && _horizontalTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None)
@@ -44,21 +47,29 @@ namespace CharacterController
                     _directionSwitched = false;
                     _actionsController.StartJump = true;
                 }
-                                    
+
                 return _verticalTimer > 0;
             }
         }
 
-        public override bool HorizontalActive { get { return _horizontalTimer > 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None; } }
+        public override bool HorizontalActive
+        {
+            get
+            {
+                if (!base.HorizontalActive)
+                    return false;
+                return _horizontalTimer > 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None;
+            }
+        }
 
         public override void HandleVertical(ref Vector2 velocity)
-        {           
+        {
             velocity = new Vector2(velocity.x, _actionsController.Rigidbody.CalculateVerticalSpeed(_verticalForce / _verticalDuration));
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)
         {
-            if (_horizontalTimer/_horizontalDuration <= _whenToSwicthDirection && !_directionSwitched)
+            if (_horizontalTimer / _horizontalDuration <= _whenToSwicthDirection && !_directionSwitched)
             {
                 if (Direction > 0 && _actionsController.App.C.PlayerActions.Right
                     || Direction < 0 && _actionsController.App.C.PlayerActions.Left)
@@ -75,8 +86,8 @@ namespace CharacterController
             {
                 _horizontalTimer = 0;
                 return;
-            } 
-            velocity = new Vector2((_horizontalForce / _horizontalDuration) * Direction,velocity.y);
+            }
+            velocity = new Vector2((_horizontalForce / _horizontalDuration) * Direction, velocity.y);
         }
 
         public void FixedUpdate()
@@ -85,7 +96,7 @@ namespace CharacterController
             if (_horizontalTimer > 0 && (_actionsController.WallSlideCheck.Sides.Left && Direction < 0 || _actionsController.WallSlideCheck.Sides.Right && Direction > 0))
                 _horizontalTimer = 0;
 
-            if(_horizontalTimer > 0)
+            if (_horizontalTimer > 0)
                 _horizontalTimer -= Time.fixedDeltaTime;
 
             //If vertical is active and a collision is detected in the current direction, then cancel vertical

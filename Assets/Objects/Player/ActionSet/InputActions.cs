@@ -171,15 +171,15 @@ namespace RogueLiteInput
             Jump.AddDefaultBinding(Key.None);
 
             //Dash
-            Dash.AddDefaultBinding(InputControlType.RightBumper);
-            Dash.AddDefaultBinding(InputControlType.RightTrigger);
+            Dash.AddDefaultBinding(InputControlType.Action2);
+            Dash.AddDefaultBinding(InputControlType.None);
 
             //Attack
-            Attack.AddDefaultBinding(InputControlType.Action4);
+            Attack.AddDefaultBinding(InputControlType.Action3);
             Attack.AddDefaultBinding(Key.None);
 
             //Special
-            Special.AddDefaultBinding(InputControlType.Action2);
+            Special.AddDefaultBinding(InputControlType.Action4);
             Attack.AddDefaultBinding(Key.None);
 
         }

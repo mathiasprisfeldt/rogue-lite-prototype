@@ -10,7 +10,7 @@ namespace CharacterController
     /// Creator:
     /// </summary>
     [RequireComponent(typeof(ActionsController))]
-    public class LedgeHanging : global::Ability
+    public class LedgeHanging : global::MovementAbility
     {
         [SerializeField]
         private float _hangDistance;
@@ -41,6 +41,10 @@ namespace CharacterController
             {
                 if (_actionsController == null)
                     return false;
+
+                if (!base.VerticalActive)
+                    return false;
+
                 var left = _actionsController.TriggerCheck.Sides.Left;
                 var right = _actionsController.TriggerCheck.Sides.Right;
                 var horizontalMovement = _actionsController.App.C.PlayerActions.Right && left ||

@@ -5,7 +5,7 @@ using InControl;
 using RogueLiteInput;
 using UnityEngine;
 
-public class Jump : Ability {
+public class Jump : MovementAbility {
 
     [SerializeField]
     private float _jumpForce;
@@ -29,7 +29,7 @@ public class Jump : Ability {
     // Update is called once per frame
     void Update ()
     {
-        if (_actionsController.OnGround)
+        if (_actionsController.OnGround && _jumpTimer <= 0)
             _gracePeriodTimer = _gracePeriod;
         else if (_gracePeriodTimer > 0)
             _gracePeriodTimer -= Time.deltaTime;
@@ -46,11 +46,14 @@ public class Jump : Ability {
         get
         {
             InputActions pa = _actionsController.App.C.PlayerActions;
+            if (!base.VerticalActive)
+                return false;
             if (pa != null && pa.ProxyInputActions.Jump.WasPressed && _gracePeriodTimer > 0 && _jumpTimer <= 0)
             {
                 _jumpTimer = _jumpDuration;
                 _initialJumpTimer = _initialJumpDuration;
                 _actionsController.StartJump = true;
+                _gracePeriodTimer = 0;
             }
 
             if(_initialJumpTimer <= 0)

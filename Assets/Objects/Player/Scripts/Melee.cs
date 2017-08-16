@@ -34,8 +34,8 @@ namespace Combat
             get
             {
                 if (_actionsController.App.C.PlayerActions.ProxyInputActions.Attack.WasPressed && !_active &&
-                    _cooldownTimer <= 0 &&
-                    _actionsController.LastUsedVerticalAbility != CharacterController.Ability.LedgeHanging)
+                    _cooldownTimer <= 0 && _actionsController.LastUsedVerticalAbility != Ability.LedgeHanging
+                    && _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {
                     _active = true;
                     _actionsController.StartMelee = true;

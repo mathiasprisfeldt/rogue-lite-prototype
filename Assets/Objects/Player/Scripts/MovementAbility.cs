@@ -3,13 +3,29 @@ using System.Collections.Generic;
 using CharacterController;
 using UnityEngine;
 
-public abstract class Ability : MonoBehaviour
+public abstract class MovementAbility : MonoBehaviour
 {
     [SerializeField]
     protected ActionsController _actionsController;
 
-    public virtual bool VerticalActive { get; set; }
-    public virtual bool HorizontalActive { get; set; }
+    [SerializeField]
+    protected bool _active = true;
+
+    public virtual bool VerticalActive
+    {
+        get { return _active; } 
+    }
+
+    public virtual bool HorizontalActive
+    {
+        get { return _active; }
+    }
+
+    protected bool Active
+    {
+        get { return _active; }
+        set { _active = value; }
+    }
 
     public virtual void Awake()
     {
