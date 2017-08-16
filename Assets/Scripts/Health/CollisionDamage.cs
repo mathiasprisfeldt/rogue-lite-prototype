@@ -31,7 +31,9 @@ namespace Health
             {
                 if (_whitelist.Contains(sidesTargetCollider.gameObject.layer))
                 {
-                    _healthController.Character.HealthController.Damage(sidesTargetCollider.gameObject.GetComponent<CollisionCheck>().Character.Damage);
+                    _healthController.Character.HealthController.Damage(
+                        sidesTargetCollider.gameObject.GetComponent<CollisionCheck>().Character.Damage,
+                        from: sidesTargetCollider.transform);
                 }
             }
         }

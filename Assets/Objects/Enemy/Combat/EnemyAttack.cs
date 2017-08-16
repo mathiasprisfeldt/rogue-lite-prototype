@@ -85,7 +85,7 @@ namespace Enemy
         public virtual void Attack()
         {
             if (CheckHitbox())
-                GameManager.Instance.Player.M.ActionController.HealthController.Damage(App.M.Character.Damage);
+                GameManager.Instance.Player.M.ActionController.HealthController.Damage(App.M.Character.Damage, from: App.M.Character.Rigidbody.transform);
 
             _canAttack = false;
         }

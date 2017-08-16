@@ -60,7 +60,7 @@ namespace Combat
                         if (cc != null)
                             if (cc.Character.HealthController != null)
                             {
-                                cc.Character.HealthController.Damage(_damage);
+                                cc.Character.HealthController.Damage(_damage, from: _actionsController.Rigidbody.transform);
                             }
                                 
                     }

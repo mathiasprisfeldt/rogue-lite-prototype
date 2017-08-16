@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.Utilities;
 using Controllers;
 using Managers;
@@ -129,7 +130,7 @@ namespace Health
         /// It always rounds to halfs or wholes.
         /// </summary>
         /// <param name="dmg">Amount of damage to deal.</param>
-        public void Damage(float dmg, bool giveInvurnability = false)
+        public void Damage(float dmg, bool giveInvurnability = false, Transform from = null)
         {
             if (dmg <= 0)
                 return;
@@ -143,6 +144,10 @@ namespace Health
                     amountToDmg = dmg * GSManager.Instance.HealthContainerSize;
                     break;
             }
+
+            //Apply knockback
+            if (from)
+                _character.KnockbackHandler.AddForce(from.position.ToVector2().DirectionTo(_character.Rigidbody.position) * 10, .1f);
 
             HealthAmount -= amountToDmg;
 
