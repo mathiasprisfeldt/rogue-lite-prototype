@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.MVC;
 using Managers;
 using UnityEngine;
@@ -57,8 +58,11 @@ namespace Enemy
 
 	    void Update()
 	    {
+	        Vector2 ownPos = App.M.Character.Rigidbody.position;
+	        Vector2 plyPos = GameManager.Instance.Player.transform.position.ToVector2();
+
             //Calculate if the enemy can turn around.
-	        if (IsTurning)
+            if (IsTurning)
 	        {
 	            _turnTimer -= Time.deltaTime;
 
@@ -69,7 +73,7 @@ namespace Enemy
 	            }
             }
 
-	        Vector2 plyDist = App.transform.position - GameManager.Instance.Player.transform.position;
+	        Vector2 plyDist = ownPos - plyPos;
 	        //Checking if player is in sight
 	        if (GameManager.Instance.Player &&
 	            plyDist.magnitude <=
@@ -90,7 +94,16 @@ namespace Enemy
 	            if (isTargetBehind && !App.M.TargetBehind)
 	                canTarget = false;
 
-                //If target is behind the enemy and is targeted and we're arent turning, turn around.
+                //Check if we can see the player
+	            if (canTarget && 
+                    Physics2D.RaycastAll(ownPos, ownPos.DirectionTo(plyPos), 10, LayerMask.GetMask("Platform")).Any())
+	            {
+                    //We cant see the player, lose interest.
+	                canTarget = false;
+	                App.M.Target = null;
+	            }
+
+	            //If target is behind the enemy and is targeted and we're arent turning, turn around.
 	            if (!IsTurning && isTargetBehind && canTarget)
 	                Turn(-1 * lookDir);
 
