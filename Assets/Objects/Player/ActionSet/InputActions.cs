@@ -38,6 +38,7 @@ namespace RogueLiteInput
         public PlayerAction Jump { get; set; }        
         public PlayerAction Dash { get; set; }        
         public PlayerAction Attack { get; set; }
+        public PlayerAction Special { get; set; }
 
         public PlayerOneAxisAction RawHorizontal { get; set; }
         public PlayerOneAxisAction RawVertical { get; set; }
@@ -109,6 +110,7 @@ namespace RogueLiteInput
             Dash = CreatePlayerAction("Dash");
             UpInput = CreatePlayerAction("Up");
             Attack = CreatePlayerAction("Attack");
+            Special = CreatePlayerAction("Special");
 
             RawHorizontal = CreateOneAxisPlayerAction(LeftInput, RightInput);
             RawVertical = CreateOneAxisPlayerAction(DownInput, UpInput);
@@ -143,6 +145,9 @@ namespace RogueLiteInput
             Attack.AddDefaultBinding(Key.J);
             Attack.AddDefaultBinding(Key.None);
 
+            //Special
+            Special.AddDefaultBinding(Key.K);
+            Attack.AddDefaultBinding(Key.None);
 
             //Gamepad inputs
             //Left
@@ -170,7 +175,11 @@ namespace RogueLiteInput
             Dash.AddDefaultBinding(InputControlType.RightTrigger);
 
             //Attack
-            Attack.AddDefaultBinding(InputControlType.Action2);
+            Attack.AddDefaultBinding(InputControlType.Action4);
+            Attack.AddDefaultBinding(Key.None);
+
+            //Special
+            Special.AddDefaultBinding(InputControlType.Action2);
             Attack.AddDefaultBinding(Key.None);
 
         }
@@ -222,12 +231,14 @@ namespace RogueLiteInput
         public ProxyPlayerAction Jump { get; set; }
         public ProxyPlayerAction Dash { get; set; }
         public ProxyPlayerAction Attack { get; set; }
+        public ProxyPlayerAction Special { get; set; }
 
         public ProxyInputActions()
         {
             Jump = new ProxyPlayerAction();
             Dash = new ProxyPlayerAction();
             Attack = new ProxyPlayerAction();
+            Special = new ProxyPlayerAction();
         }
 
         public void UpdateData(InputActions actions)
@@ -235,6 +246,7 @@ namespace RogueLiteInput
             Jump.UpdateData(actions.Jump);
             Dash.UpdateData(actions.Dash);
             Attack.UpdateData(actions.Attack);
+            Special.UpdateData(actions.Special);
         }
 
         public void Reset()
@@ -242,6 +254,7 @@ namespace RogueLiteInput
             Jump.Reset();
             Dash.Reset();
             Attack.Reset();
+            Special.Reset();
         }
     }
 }

@@ -155,14 +155,9 @@ namespace Controllers
             LookDirection = dir < 0 ? LookDirection.Left : LookDirection.Right;
         }
 
-        public virtual void AddVelocity(Vector2 velocity)
-        {
-            _rigidbody.velocity += velocity;
-        }
-
         public virtual void SetVelocity(Vector2 velocity)
         {
-            _rigidbody.velocity = velocity;
+            _rigidbody.velocity = velocity + KnockbackHandler.ApplyKnockback();
         }
 
         /// <summary>

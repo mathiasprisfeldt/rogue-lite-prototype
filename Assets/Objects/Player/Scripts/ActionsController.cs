@@ -6,6 +6,7 @@ using UnityEngine;
 using AcrylecSkeleton.ModificationSystem;
 using Combat;
 using Controllers;
+using Special;
 
 namespace CharacterController
 {
@@ -16,7 +17,7 @@ namespace CharacterController
 
     public enum CombatAbility
     {
-        None, Melee
+        None, Melee, Throw
     }
 
     public class ActionsController : Character
@@ -44,6 +45,9 @@ namespace CharacterController
 
         [SerializeField]
         private Melee _melee;
+
+        [SerializeField]
+        private ThrowProjectile _throwProjectile;
 
         [SerializeField]
         private ModificationHandler _modificationHandler;
@@ -76,6 +80,7 @@ namespace CharacterController
         private Ability _lastUsedHorizontalAbility;
         private CombatAbility _lastUsedCombatAbility;
         private bool _dashEnded;
+
 
         public WallJump WallJump
         {
@@ -182,6 +187,10 @@ namespace CharacterController
         public bool StartDash { get; set; }
         public bool StartGrab { get; set; }
         public bool StartCombat { get; set; }
+        public bool StartThrow { get; set; }
+        public bool StartMelee{ get; set; }
+
+        public float LastHorizontalDirection { get; set; }
 
         // Update is called once per frame
         public override void Update()
@@ -192,6 +201,11 @@ namespace CharacterController
                 App.C.PlayerActions.UpdateProxy();
         }
 
+        public void Awake()
+        {
+            LastHorizontalDirection = 1;
+        }
+
         void FixedUpdate()
         {
             _velocity = new Vector2(0, 0);
@@ -200,10 +214,7 @@ namespace CharacterController
             HandleHorizontalMovement(ref _velocity);
             HandleVerticalMovement(ref _velocity);  
             HandleAnimationParameters();
-
-            if (KnockbackHandler != null)
-                KnockbackHandler.ApplyKnockback(ref _velocity, Time.fixedDeltaTime);
-
+            
             SetVelocity(new Vector2(_velocity.x*Time.fixedDeltaTime, _rigidbody.velocity.y));
             if (Velocity.y != 0)
                 SetVelocity(new Vector2(_rigidbody.velocity.x, _velocity.y*Time.fixedDeltaTime));
@@ -264,9 +275,20 @@ namespace CharacterController
             }
              
 
-            //Dash
-            if (LastUsedCombatAbility == CombatAbility.Melee)
+            //Melee
+            if (StartMelee)
+            {
                 Animator.SetTrigger("Melee");
+                StartMelee = false;
+            }
+                
+
+            //Throw
+            if (StartThrow)
+            {
+                Animator.SetTrigger("Throw");
+                StartThrow = false;
+            }
 
             //Start Jump
             if (StartJump)
@@ -289,43 +311,15 @@ namespace CharacterController
                 Animator.SetTrigger("Combat");
             }
 
-            //Old
-            //if(LastUsedCombatAbility == CombatAbility.Melee)
-            //    Animator.SetInteger("State", 6);
-            //else if (LastUsedHorizontalAbility == Ability.Dash)
-            //    Animator.SetInteger("State", 5);
-            //else if (LastUsedVerticalAbility == Ability.LedgeHanging)
-            //    Animator.SetInteger("State", 3);
-            //else if (LastUsedVerticalAbility == Ability.Wallslide)
-            //    Animator.SetInteger("State", 4);
-            //else
-            //{
-            //    switch (State)
-            //    {
-            //        case CharacterState.Idle:
-            //            Animator.SetInteger("State", 0);
-            //            break;
-            //        case CharacterState.Moving:
-            //            Animator.SetInteger("State", 1);
-            //            break;
-            //        case CharacterState.InAir:
-            //            Animator.SetInteger("State", 2);
-
-            //            break;
-            //        case CharacterState.None:
-            //            break;
-            //        default:
-            //            throw new ArgumentOutOfRangeException();
-            //    }
-            //}
-
-
         }
 
         private void HandleCombat()
         {
-            
-            if (_melee && _melee.Active)
+            if (_throwProjectile && _throwProjectile.Active)
+            {
+                BeginCombat(CombatAbility.Throw);
+            }
+            else if (_melee && _melee.Active)
             {
                 BeginCombat(CombatAbility.Melee);
             }
@@ -343,10 +337,11 @@ namespace CharacterController
             if (LastUsedCombatAbility != combatAbility)
             {
                 StartCombat = true;
+                LastUsedCombatAbility = combatAbility;
             }
                 
             Combat = true;
-            LastUsedCombatAbility = combatAbility;
+            
         }
 
         private void HandleVerticalMovement(ref Vector2 velocity)
@@ -402,6 +397,10 @@ namespace CharacterController
 
             LastUsedHorizontalAbility = Ability.None;
             var horizontal = App.C.PlayerActions.Horizontal;
+            if (horizontal > 0)
+                LastHorizontalDirection = 1;
+            else if (horizontal < 0)
+                LastHorizontalDirection = -1;
             Flip(horizontal);
 
             if (CollisionCheck.Sides.Left && horizontal < 0)
