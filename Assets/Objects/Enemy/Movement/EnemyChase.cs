@@ -14,7 +14,7 @@ namespace Enemy
             {
                 Vector2 dir = App.M.Target.M.ActionController.Rigidbody.position - App.M.Character.Rigidbody.position;
                 dir.Normalize();
-                App.M.Character.SetVelocity(new Vector2(Mathf.Round(dir.x), 0));
+                App.C.SetVelocity(new Vector2(Mathf.Round(dir.x), 0));
             }
         }
 

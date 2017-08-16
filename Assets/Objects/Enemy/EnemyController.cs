@@ -13,9 +13,13 @@ namespace Enemy
 	/// </summary>
 	public class EnemyController : Controller<EnemyApplication>
 	{
+	    private float _whereToTurnTo;
+	    private float _turnTimer;
+
 	    private EnemyState _initialState;
 
-	    public List<EnemyState> States { get; set; }
+	    public bool IsTurning { get; private set; }
+        public List<EnemyState> States { get; set; }
 	    public EnemyState LastState { get; set; }
 	    public EnemyState CurrentState { get; set; }
 
@@ -26,6 +30,9 @@ namespace Enemy
 	        //Setup all states.
 	        foreach (EnemyState state in GetComponentsInChildren<EnemyState>())
 	        {
+                if (!state.enabled)
+                    continue;
+
 	            States.Add(state);
 
 	            if (!_initialState && state.IsActive)
@@ -50,6 +57,18 @@ namespace Enemy
 
 	    void Update()
 	    {
+            //Calculate if the enemy can turn around.
+	        if (IsTurning)
+	        {
+	            _turnTimer -= Time.deltaTime;
+
+	            if (_turnTimer <= 0)
+	            {
+	                App.M.Character.Flip(_whereToTurnTo);
+	                IsTurning = false;
+	            }
+            }
+
 	        Vector2 plyDist = App.transform.position - GameManager.Instance.Player.transform.position;
 	        //Checking if player is in sight
 	        if (GameManager.Instance.Player &&
@@ -59,17 +78,23 @@ namespace Enemy
 	            bool canTarget = true;
 
 	            //Check if the player is behind the player and if can be target if behind.
-	            if (!App.M.TargetBehind)
-	            {
-	                float lookDir = App.M.Character.LookDirection;
+	            bool isTargetBehind = false;
+	            int lookDir = App.M.Character.LookDirection;
 
-	                if (lookDir == -1)
-	                    canTarget = plyDist.x > App.M.Character.LookDirection;
-	                else if (lookDir == 1)
-	                    canTarget = plyDist.x < App.M.Character.LookDirection;
-	            }
+	            if (lookDir == -1)
+	                isTargetBehind = plyDist.x < lookDir;
+	            else if (lookDir == 1)
+	                isTargetBehind = plyDist.x > lookDir;
+                
+                //If the target is behind and we still can target it, do so.
+	            if (isTargetBehind && !App.M.TargetBehind)
+	                canTarget = false;
 
-	            App.M.Target = canTarget ? GameManager.Instance.Player : null;
+                //If target is behind the enemy and is targeted and we're arent turning, turn around.
+	            if (!IsTurning && isTargetBehind && canTarget)
+	                Turn(-1 * lookDir);
+
+	            App.M.Target = canTarget ? GameManager.Instance.Player : App.M.Target;
 	        }
 	        else
 	            App.M.Target = null;
@@ -128,6 +153,40 @@ namespace Enemy
 	        CurrentState = desiredState;
             CurrentState.StateStart();
         }
+
+        /// <summary>
+        /// Method used to turn the enemy around.
+        /// </summary>
+	    public void Turn(int dir)
+        {
+            if (IsTurning || dir == App.M.Character.LookDirection)
+                return;
+
+            //Turn around instantly if turn speed is 0.
+            if (App.M.TurnSpeed == 0)
+            {
+                App.M.Character.Flip(dir);
+                return;
+            }
+
+            App.M.Character.SetVelocity(Vector2.zero);
+            IsTurning = true;
+            _turnTimer = App.M.TurnSpeed;
+            _whereToTurnTo = dir;
+        }
+
+        /// <summary>
+        /// Sets velocity on character, but turns if needed.
+        /// </summary>
+        /// <param name="vel"></param>
+	    public void SetVelocity(Vector2 vel)
+	    {
+	        if (!IsTurning)
+	        {
+	            App.M.Character.SetVelocity(vel);
+	            Turn(Mathf.RoundToInt(vel.x));
+	        }
+	    }
 
         /// <summary>
         /// Changes the state back to the initial one.

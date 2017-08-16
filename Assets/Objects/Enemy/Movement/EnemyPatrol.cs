@@ -26,13 +26,15 @@ namespace Enemy
             //If we're bumping into something, change direction.
             if (bumpingDirection != 0)
                 _patrolDirection.x = -App.M.Character.BumpingDirection;
+            else
+                _patrolDirection.x = App.M.Character.LookDirection;
         }
 
         void FixedUpdate()
         {
             //If we're patrolling, move the enemy.
             if (IsActive)
-                App.M.Character.SetVelocity(_patrolDirection);
+                App.C.SetVelocity(_patrolDirection);
         }
 
         public override bool CheckPrerequisite()

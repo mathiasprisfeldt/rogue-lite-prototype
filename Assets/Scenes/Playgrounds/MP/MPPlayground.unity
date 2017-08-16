@@ -1235,6 +1235,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 61118465888524682, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114309314290104366, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _collisionLayers.m_Bits
+      value: 16384
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
   m_IsPrefabParent: 0
@@ -1568,10 +1578,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _application: {fileID: 1327780435}
   _character: {fileID: 1451009090}
-  _viewRadius: 2
+  _viewRadius: 4
   _attackCooldown: 1
   _indicatorDuration: 1
-  _targetBehind: 1
+  _targetBehind: 0
+  _turnSpeed: 1
   _target: {fileID: 0}
 --- !u!114 &1327780435
 MonoBehaviour:
@@ -1596,7 +1607,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1327780432}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.381, y: -0.24, z: 0}
+  m_LocalPosition: {x: -3.94, y: -0.24, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1707780818}
@@ -1616,6 +1627,7 @@ GameObject:
   - component: {fileID: 1451009092}
   - component: {fileID: 1451009090}
   - component: {fileID: 1451009091}
+  - component: {fileID: 1451009094}
   m_Layer: 12
   m_Name: Controller
   m_TagString: Enemy
@@ -1641,9 +1653,10 @@ MonoBehaviour:
   _groundCollisionCheck: {fileID: 135384916}
   _physicialCollisionCheck: {fileID: 933743588}
   _hitbox: {fileID: 1949890479}
-  _knockbackHandler: {fileID: 0}
+  _knockbackHandler: {fileID: 1451009094}
+  _startDirection: 1
   _damage: 10
-  _flipWithVelocity: 1
+  _flipWithVelocity: 0
   _doFlipWithRotation: 0
 --- !u!114 &1451009091
 MonoBehaviour:
@@ -1702,6 +1715,17 @@ Transform:
   m_Father: {fileID: 1327780436}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1451009094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1451009089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cbd00e50cc37944ba0ec9840c4d6c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1482883130
 Prefab:
   m_ObjectHideFlags: 0

@@ -42,6 +42,7 @@ namespace Enemy
         void Start()
         {
             _indicatorTimer = App.M.IndicatorDuration;
+            _cooldownTimer = App.M.AttackCooldown;
         }
 
         void Update()
@@ -74,7 +75,7 @@ namespace Enemy
             }
 
             //HACKED: Should properly change when AI becomes more dynamic
-            if (!App.M.Target && !_canAttack && IsIsolated)
+            if (!CheckHitbox() && !_canAttack && IsIsolated)
                 App.C.ResetToLast();
         }
 
@@ -108,7 +109,7 @@ namespace Enemy
         /// <summary>
         /// Is the player hitting our hitbox?
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if it hit something good.</returns>
         public bool CheckHitbox()
         {
             return Physics2D.OverlapBoxAll(GetHitbox(), _attackBoxSize, 0, LayerMask.GetMask("Hitbox")).Any(d => d.tag == "Player");

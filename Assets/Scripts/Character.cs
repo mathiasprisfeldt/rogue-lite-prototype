@@ -39,6 +39,9 @@ namespace Controllers
         public KnockbackHandler _knockbackHandler;
 
         [Header("Settings:")]
+        [SerializeField, Tooltip("Which way are it facing at start?")]
+        private int _startDirection = -1;
+
         [SerializeField]
         private float _damage;
 
@@ -115,7 +118,7 @@ namespace Controllers
 
         void Awake()
         {
-            LookDirection = -1;
+            Flip(_startDirection);
         }
 
         public virtual void Update()
@@ -144,9 +147,14 @@ namespace Controllers
             }
         }
 
+        public void Flip(Vector2 dir)
+        {
+            Flip(Mathf.RoundToInt(dir.normalized.x));
+        }
+
         public void Flip(float dir)
         {
-            if (dir == 0)
+            if (dir == 0 || dir == LookDirection)
                 return;
 
             if (_doFlipWithRotation)
