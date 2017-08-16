@@ -168,14 +168,9 @@ namespace Controllers
             LookDirection = Mathf.RoundToInt(dir);
         }
 
-        public virtual void AddVelocity(Vector2 velocity)
-        {
-            _rigidbody.velocity += velocity;
-        }
-
         public virtual void SetVelocity(Vector2 velocity)
         {
-            _rigidbody.velocity = velocity;
+            _rigidbody.velocity = velocity + KnockbackHandler.ApplyKnockback();
         }
 
         /// <summary>

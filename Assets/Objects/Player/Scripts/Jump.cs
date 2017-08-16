@@ -19,12 +19,22 @@ public class Jump : Ability {
     [SerializeField]
     private float _jumpDuration;
 
+    [SerializeField]
+    private float _gracePeriod;
+
     private float _jumpTimer;
     private float _initialJumpTimer;
+    private float _gracePeriodTimer;
 
     // Update is called once per frame
     void Update ()
     {
+        if (_actionsController.OnGround)
+            _gracePeriodTimer = _gracePeriod;
+        else if (_gracePeriodTimer > 0)
+            _gracePeriodTimer -= Time.deltaTime;
+
+
         if (_jumpTimer > 0 && _initialJumpTimer <= 0)
             _jumpTimer -= Time.deltaTime;
         if (_initialJumpTimer > 0)
@@ -36,7 +46,7 @@ public class Jump : Ability {
         get
         {
             InputActions pa = _actionsController.App.C.PlayerActions;
-            if (pa != null && pa.Jump.WasPressed && _actionsController.OnGround && _jumpTimer <= 0)
+            if (pa != null && pa.ProxyInputActions.Jump.WasPressed && _gracePeriodTimer > 0 && _jumpTimer <= 0)
             {
                 _jumpTimer = _jumpDuration;
                 _initialJumpTimer = _initialJumpDuration;
@@ -50,7 +60,8 @@ public class Jump : Ability {
                 }
                     
 
-            if ((_actionsController.GroundCollisionCheck.Sides.BottomColliders != null && _actionsController.GroundCollisionCheck.Sides.BottomColliders.Count > 0 && pa != null && pa.Down && pa.Jump.WasPressed))
+            if ((_actionsController.GroundCollisionCheck.Sides.BottomColliders != null 
+                && _actionsController.GroundCollisionCheck.Sides.BottomColliders.Count > 0 && pa != null && pa.Down && pa.ProxyInputActions.Jump.WasPressed))
                 return true;
 
             return _jumpTimer > 0 || _initialJumpTimer > 0;

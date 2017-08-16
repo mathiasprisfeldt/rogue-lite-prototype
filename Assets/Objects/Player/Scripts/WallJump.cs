@@ -34,7 +34,7 @@ namespace CharacterController
         {
             get
             {
-                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.Jump.WasPressed;
+                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed;
                 var collision = (_actionsController.WallSlideCheck.Sides.Left || _actionsController.WallSlideCheck.Sides.Right) && !_actionsController.GroundCollisionCheck.Bottom;
                 if (input && collision && _verticalTimer <= 0 && _horizontalTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {

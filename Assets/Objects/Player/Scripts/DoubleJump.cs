@@ -25,7 +25,7 @@ namespace CharacterController
         {
             get
             {
-                if (_actionsController.App.C.PlayerActions.Jump.WasPressed && _actionsController.State == CharacterState.InAir
+                if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed && _actionsController.State == CharacterState.InAir
                     && _jumpTimer <= 0 && !_hasJumped)
                 {
                     _jumpTimer = _jumpDuration;

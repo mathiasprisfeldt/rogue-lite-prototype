@@ -38,37 +38,36 @@ namespace RogueLiteInput
         public PlayerAction Jump { get; set; }        
         public PlayerAction Dash { get; set; }        
         public PlayerAction Attack { get; set; }
+        public PlayerAction Special { get; set; }
 
         public PlayerOneAxisAction RawHorizontal { get; set; }
         public PlayerOneAxisAction RawVertical { get; set; }
+        public ProxyInputActions ProxyInputActions { get; set; }
 
         public float Horizontal
         {
             get
             {
+                
                 return DeadZoneHorizontal(_horizontalDeadZone);
             }                          
         }
-
         public float DeadZoneHorizontal(float deadZone)
         {
             if (Mathf.Abs(RawHorizontal.RawValue) > deadZone)
                 return RawHorizontal.RawValue;
             return 0f;
         }
-
         public float Vertical
         {
             get{ return DeadZoneVertical(_verticalDeadZone); }
         }
-
         public float DeadZoneVertical(float deadZone)
         {
             if (Mathf.Abs(RawVertical.RawValue) > deadZone)
                 return RawVertical.RawValue;
             return 0f;
         }
-
         public bool Up
         {
             get { return DeadZoneUp(_verticalDeadZone); }
@@ -111,9 +110,11 @@ namespace RogueLiteInput
             Dash = CreatePlayerAction("Dash");
             UpInput = CreatePlayerAction("Up");
             Attack = CreatePlayerAction("Attack");
+            Special = CreatePlayerAction("Special");
 
             RawHorizontal = CreateOneAxisPlayerAction(LeftInput, RightInput);
             RawVertical = CreateOneAxisPlayerAction(DownInput, UpInput);
+            ProxyInputActions = new ProxyInputActions();
 
             //Keyboard inputs
             //Left keyboard
@@ -144,6 +145,9 @@ namespace RogueLiteInput
             Attack.AddDefaultBinding(Key.J);
             Attack.AddDefaultBinding(Key.None);
 
+            //Special
+            Special.AddDefaultBinding(Key.K);
+            Attack.AddDefaultBinding(Key.None);
 
             //Gamepad inputs
             //Left
@@ -171,10 +175,86 @@ namespace RogueLiteInput
             Dash.AddDefaultBinding(InputControlType.RightTrigger);
 
             //Attack
-            Attack.AddDefaultBinding(InputControlType.Action2);
+            Attack.AddDefaultBinding(InputControlType.Action4);
+            Attack.AddDefaultBinding(Key.None);
+
+            //Special
+            Special.AddDefaultBinding(InputControlType.Action2);
             Attack.AddDefaultBinding(Key.None);
 
         }
 
+        public void UpdateProxy()
+        {
+            ProxyInputActions.UpdateData(this);
+        }
+
+        public void ResetProxy()
+        {
+            ProxyInputActions.Reset();
+        }
+        
+    }
+
+    public class ProxyPlayerAction
+    {
+        private bool _wasreset;
+
+        public bool WasPressed { get; set; }
+        public bool WasReleased { get; set; }
+        public bool IsPressed { get; set; }
+        public bool WasRepeated { get; set; }
+
+        public void UpdateData(PlayerAction action)
+        {
+            WasPressed = WasPressed || action.WasPressed;
+            WasReleased = WasReleased || action.WasReleased;
+            IsPressed = action.IsPressed;
+            WasRepeated = WasRepeated || action.WasRepeated;
+            _wasreset = false;
+        }
+
+        public void Reset()
+        {
+            if(_wasreset)
+                return;
+            WasRepeated = false;
+            WasPressed = false;
+            WasReleased = false;
+            IsPressed = false;
+            _wasreset = true;
+        }
+    }
+
+    public class ProxyInputActions
+    {
+        public ProxyPlayerAction Jump { get; set; }
+        public ProxyPlayerAction Dash { get; set; }
+        public ProxyPlayerAction Attack { get; set; }
+        public ProxyPlayerAction Special { get; set; }
+
+        public ProxyInputActions()
+        {
+            Jump = new ProxyPlayerAction();
+            Dash = new ProxyPlayerAction();
+            Attack = new ProxyPlayerAction();
+            Special = new ProxyPlayerAction();
+        }
+
+        public void UpdateData(InputActions actions)
+        {
+            Jump.UpdateData(actions.Jump);
+            Dash.UpdateData(actions.Dash);
+            Attack.UpdateData(actions.Attack);
+            Special.UpdateData(actions.Special);
+        }
+
+        public void Reset()
+        {
+            Jump.Reset();
+            Dash.Reset();
+            Attack.Reset();
+            Special.Reset();
+        }
     }
 }
