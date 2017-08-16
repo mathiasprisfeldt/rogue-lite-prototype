@@ -7,7 +7,7 @@ namespace CharacterController
     /// Creator:
     /// </summary>
     [RequireComponent(typeof(ActionsController))]
-    public class Dash : global::Ability
+    public class Dash : global::MovementAbility
     {
         [SerializeField]
         private float _dashCooldown;
@@ -33,6 +33,10 @@ namespace CharacterController
             get
             {
                 var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
+
+                if (!base.HorizontalActive)
+                    return false;
+
                 if ((input || _dashing) && _cooldownTimer <= 0 && !_actionsController.Combat)
                 {
                     if (input)

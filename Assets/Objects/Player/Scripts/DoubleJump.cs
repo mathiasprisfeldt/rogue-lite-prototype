@@ -10,7 +10,7 @@ using UnityEngine;
 namespace CharacterController
 {
     [RequireComponent(typeof (ActionsController))]
-    public class DoubleJump : global::Ability
+    public class DoubleJump : global::MovementAbility
     {
         [SerializeField]
         private float _jumpForce;
@@ -25,6 +25,9 @@ namespace CharacterController
         {
             get
             {
+                if (!base.VerticalActive)
+                    return false;
+
                 if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed && _actionsController.State == CharacterState.InAir
                     && _jumpTimer <= 0 && !_hasJumped)
                 {

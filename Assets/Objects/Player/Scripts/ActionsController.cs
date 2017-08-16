@@ -70,6 +70,9 @@ namespace CharacterController
         [SerializeField]
         private float _maxFallSpeed;
 
+        [SerializeField]
+        private Transform _throwPoint;
+
         private Vector2 _velocity;
 
         private bool _shouldDash;
@@ -182,6 +185,12 @@ namespace CharacterController
             get { return _wallSlideCheck; }
         }
 
+        public Transform ThrowPoint
+        {
+            get { return _throwPoint; }
+            set { _throwPoint = value; }
+        }
+
         public bool Combat { get; set; }
         public bool StartJump { get; set; }
         public bool StartDash { get; set; }
@@ -191,6 +200,7 @@ namespace CharacterController
         public bool StartMelee{ get; set; }
 
         public float LastHorizontalDirection { get; set; }
+
 
         // Update is called once per frame
         public override void Update()
@@ -338,10 +348,11 @@ namespace CharacterController
             {
                 StartCombat = true;
                 LastUsedCombatAbility = combatAbility;
-            }
                 
+            }
+
             Combat = true;
-            
+
         }
 
         private void HandleVerticalMovement(ref Vector2 velocity)
