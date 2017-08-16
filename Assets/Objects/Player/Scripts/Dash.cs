@@ -32,7 +32,7 @@ namespace CharacterController
         {
             get
             {
-                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
+                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
                 if ((input || _dashing) && _cooldownTimer <= 0 && !_actionsController.Combat)
                 {
                     if (input)

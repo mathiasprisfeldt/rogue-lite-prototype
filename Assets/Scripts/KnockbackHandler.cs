@@ -18,13 +18,18 @@ namespace Knockbacks
 
         private List<KnockBack> _knocksBacks = new List<KnockBack>();
 
-        public Vector2 ApplyKnockback(ref Vector2 velocity, float deltatime)
+        public Vector2 ApplyKnockback()
+        {
+            Vector2 temp = new Vector2();
+            return ApplyKnockback(ref temp);
+        }
+
+        public Vector2 ApplyKnockback(ref Vector2 velocity)
         {
             for (int i = _knocksBacks.Count - 1; i >= 0; i--)
             {
                 if (_knocksBacks[i].Time > 0)
                 {
-                    _knocksBacks[i].Time -= deltatime;
                     velocity += _knocksBacks[i].Velocity;
                 }
                 else
@@ -32,6 +37,19 @@ namespace Knockbacks
             }
             Velocity = velocity;
             return velocity;
+        }
+
+        public void Update()
+        {
+            for (int i = _knocksBacks.Count - 1; i >= 0; i--)
+            {
+                if (_knocksBacks[i].Time > 0)
+                {
+                    _knocksBacks[i].Time -= Time.deltaTime;
+                }
+                else
+                    _knocksBacks.RemoveAt(i);
+            }            
         }
 
         public void AddForce(Vector2 force, float duration)
