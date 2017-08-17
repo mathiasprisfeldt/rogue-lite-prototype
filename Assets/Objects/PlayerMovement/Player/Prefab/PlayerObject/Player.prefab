@@ -2623,10 +2623,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d0805789dcb47c428df87c77b9f9a00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _verticalForce: 400
-  _horizontalForce: 25
-  _horizontalDuration: 0.15
-  _verticalDuration: 0.15
+  _verticalForce: 600
+  _horizontalForce: 80
+  _horizontalDuration: 0.3
+  _verticalDuration: 0.3
+  _whenToSwicthDirection: 0.5
 --- !u!114 &114229662466771864
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2847,8 +2848,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hangDistance: 0.55
   _sensitivity: 0.2
-  _pushUpForce: 100
-  _pushUpDuration: 0.3
+  _pushUpForce: 55
+  _pushUpDuration: 0.2
   _pushDownForce: 40
   _pushDownDuration: 0.2
 --- !u!114 &114327364014281900
@@ -2874,7 +2875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wallSlideForce: -150
-  _timeUntilSlide: 0
+  _timeUntilSlide: 0.5
 --- !u!114 &114335719507235422
 MonoBehaviour:
   m_ObjectHideFlags: 1
