@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - OneWayCollider
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -18,10 +19,9 @@ TagManager:
   - Platform
   - NonPlayerCollision
   - BorderTile
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - NoCollide
+  - Hitbox
   - 
   - 
   - 

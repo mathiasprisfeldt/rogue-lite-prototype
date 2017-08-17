@@ -169,6 +169,7 @@ public class TileBehaviour : MonoBehaviour
         }
 
         var parent = Instantiate(_parent, Vector2.zero, Quaternion.identity, transform.root);
+
         GameObject superParent = GameObject.FindObjectOfType<Platforms>().gameObject;
 
         if (!superParent)

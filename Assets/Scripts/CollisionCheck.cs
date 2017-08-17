@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Controllers;
 using UnityEngine;
 
 public class CollisionCheck : MonoBehaviour
@@ -14,7 +15,7 @@ public class CollisionCheck : MonoBehaviour
     private List<Collider2D> _collisionColliders = new List<Collider2D>();
 
     [SerializeField]
-    private List<Collider2D> _colliders = new List<Collider2D>();
+    private List<Collider2D> _collidersToCheck = new List<Collider2D>();
 
     [SerializeField]
     private LayerMask _collisionLayers;
@@ -22,16 +23,25 @@ public class CollisionCheck : MonoBehaviour
     [SerializeField]
     private float _tolerance;
 
-    public List<Collider2D> Colliders
+    [SerializeField]
+    private Character _character;
+
+    public List<Collider2D> CollidersToCheck
     {
-        get { return _colliders; }
-        set { _colliders = value; }
+        get { return _collidersToCheck; }
+        set { _collidersToCheck = value; }
     }
 
     public LayerMask CollisionLayers
     {
         get { return _collisionLayers; }
         set { _collisionLayers = value; }
+    }
+
+    public Character Character
+    {
+        get { return _character; }
+        set { _character = value; }
     }
 
     public bool Top
@@ -95,29 +105,35 @@ public class CollisionCheck : MonoBehaviour
     {
         return IsColliding(CollisionLayers);
     }
+
     public bool IsColliding(out List<Collider2D> colliders)
     {
         return IsColliding(CollisionLayers, out colliders);
     }
+
     public bool IsColliding(out CollisionSides sides)
     {
         var temp = new List<Collider2D>();
         return IsColliding(CollisionLayers, out temp, out sides);
     }
+
     public bool IsColliding(out List<Collider2D> colliders, out CollisionSides sides)
     {
         return IsColliding(CollisionLayers, out colliders, out sides);
     }
+
     public bool IsColliding(LayerMask layer)
     {
         var temp = new List<Collider2D>();
         return IsColliding(layer, out temp);
     }
+
     public bool IsColliding(LayerMask layer, out List<Collider2D> colliders)
     {
         var temp = new CollisionSides(false, false, false, false);
         return IsColliding(layer, out colliders, out temp);
     }
+
     public bool IsColliding(LayerMask layer, out List<Collider2D> colliders, out CollisionSides sides)
     {
         sides = new CollisionSides(false, false, false, false);
@@ -129,8 +145,8 @@ public class CollisionCheck : MonoBehaviour
             sides = Sides;
             return sides.Top || sides.Bottom || sides.Right || sides.Left;
         }
-        sides.Colliders = Colliders.ToList();
-        foreach (var c in Colliders)
+        sides.Colliders = CollidersToCheck.ToList();
+        foreach (var c in CollidersToCheck)
         {
             Collider2D[] t = new Collider2D[10];
             if (c == null)

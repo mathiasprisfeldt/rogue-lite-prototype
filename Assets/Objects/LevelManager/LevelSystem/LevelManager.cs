@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -38,10 +39,31 @@ public class LevelManager : Singleton<LevelManager>
 
     protected override void Awake()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         base.Awake();
         LoadLevels();
-        LoadNextLevel();
 
+        if (SceneManager.GetActiveScene().name != "LevelScene")
+        {
+            if (_forcedLevels.Any())
+            {
+                CurrentLevel = _forcedLevels.FirstOrDefault();
+                _forcedLevels.Remove(CurrentLevel);
+            }
+            else if (_randomLevels.Any())
+            {
+                CurrentLevel = _randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)];
+            }
+            else
+                Debug.Log("There are no levels to loaded");
+
+            GameObject go = new GameObject("LevelParent");
+            go.AddComponent<Platforms>();
+            CurrentLevel.Spawn(go.transform);
+        }
+        else
+            LoadNextLevel();
     }
 
     /// <summary>
@@ -52,12 +74,13 @@ public class LevelManager : Singleton<LevelManager>
         //There is already a level loaded, and we are ingame
         if (CurrentLevel != null)
             CurrentLevel.Despawn();
+
         SceneManager.LoadScene("LevelScene");
     }
 
-    private void OnLevelWasLoaded(int level)
+    private void OnSceneLoaded(Scene level, LoadSceneMode sceneMode)
     {
-        if (SceneManager.GetSceneByBuildIndex(level).name != "LevelScene")
+        if (level.name != "LevelScene")
             return;
 
         if (_forcedLevels.Any())
