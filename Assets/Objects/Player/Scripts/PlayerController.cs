@@ -1,4 +1,5 @@
 using AcrylecSkeleton.MVC;
+using Health;
 using RogueLiteInput;
 
 namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
@@ -11,11 +12,12 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
     public class PlayerController : Controller<PlayerApplication>
     {
         public InputActions PlayerActions { get; set; }
+        public HealthController Health { get; set; }
 
         public void Awake()
         {
+            Health = GetComponentInChildren<HealthController>();
             PlayerActions = new InputActions();
         }
-
     }
 }
