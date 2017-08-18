@@ -63,12 +63,12 @@ public class LevelDataManager : Singleton<LevelDataManager>
                             if (grid[i, j] >= 0)
                             {
                                 if (Tiles.Keys.Contains(grid[i, j]))
-                                    tiles[i, j] = new Tile(Tiles[grid[i, j]]);
+                                    tiles[i, j] = new Tile(Tiles[grid[i, j]], grid[i, j]);
                                 else
-                                    tiles[i, j] = new Tile(Tiles[0]);
+                                    tiles[i, j] = new Tile(Tiles[0], 0);
                             }
                             else
-                                tiles[i, j] = new Tile(null);
+                                tiles[i, j] = new Tile(null, -1);
                         }
                     }
 

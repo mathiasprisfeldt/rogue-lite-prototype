@@ -3,6 +3,22 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
+public struct TilePos
+{
+    public int LX { get; set; }
+    public int LY { get; set; }
+    public int TX { get; set; }
+    public int TY { get; set; }
+
+    public TilePos(int lX, int lY, int tX, int tY)
+    {
+        LX = lX;
+        LY = lY;
+        TX = tX;
+        TY = tY;
+    }
+}
+
 public class TileBehaviour : MonoBehaviour
 {
     [SerializeField]
@@ -29,37 +45,39 @@ public class TileBehaviour : MonoBehaviour
     public bool LeftCollision { get; set; }
     public bool RightCollision { get; set; }
 
+    public TilePos TilePos { get; set; }
+
     [SerializeField]
     private LayerMask _colMask;
 
     public void SetupTile()
     {
-        var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
-        var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
-
-        //Up
-        if (Physics2D.RaycastAll(transform.position, Vector2.up, halfHeight, _colMask).Length > 0)
-        {
-            TopCollision = true;
-        }
-        //Down
-        if (Physics2D.RaycastAll(transform.position, Vector2.down, halfHeight, _colMask).Length > 0)
-        {
-            BottomCollision = true;
-        }
-        //Left
-        if (Physics2D.RaycastAll(transform.position, Vector2.left, halfWidth, _colMask).Length > 0)
-        {
-            LeftCollision = true;
-        }
-        //Right
-        if (Physics2D.RaycastAll(transform.position, Vector2.right, halfWidth, _colMask).Length > 0)
-        {
-            RightCollision = true;
-        }
-
         if (_autoTexturize)
         {
+            var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
+            var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
+
+            //Up
+            if (LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.up).Type == 1)
+            {
+                TopCollision = true;
+            }
+            //Down
+            if (LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.down).Type == 1)
+            {
+                BottomCollision = true;
+            }
+            //Left
+            if (LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.left).Type == 1)
+            {
+                LeftCollision = true;
+            }
+            //Right
+            if (LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.right).Type == 1)
+            {
+                RightCollision = true;
+            }
+
             var spr = GetComponent<SpriteRenderer>();
             Sprite newSprite = null;
 
@@ -125,14 +143,13 @@ public class TileBehaviour : MonoBehaviour
         TileBehaviour tLeft = null;
         TileBehaviour tRight = null;
 
-        var left = Physics2D.Raycast(transform.position, Vector2.left, 1, _colMask);
-        var right = Physics2D.Raycast(transform.position, Vector2.right, 1, _colMask);
+        var left = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.left).GoInstance;
+        var right = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.right).GoInstance;
 
-        if (left.collider != null)
-            tLeft = left.collider.gameObject.GetComponent<TileBehaviour>();
-        if (right.collider != null)
-            tRight = right.collider.gameObject.GetComponent<TileBehaviour>();
-
+        if (left != null)
+            tLeft = left.GetComponent<TileBehaviour>();
+        if (right != null)
+            tRight = right.GetComponent<TileBehaviour>();
 
         if (tLeft && !tLeft.Touched)
         {
@@ -146,14 +163,12 @@ public class TileBehaviour : MonoBehaviour
             _queue.Enqueue(tRight);
         }
 
-
         while (_queue.Count > 0)
         {
             var temp = _queue.Dequeue();
             temp.Touched = true;
             temp.CheckHorizontalComposite(ref targets, nextShouldDown);
         }
-
     }
 
     public void StartVerticalComposite(ref int amountOfPlatforms)
@@ -205,19 +220,19 @@ public class TileBehaviour : MonoBehaviour
         TileBehaviour tUp = null;
         TileBehaviour tDown = null;
 
-        var left = Physics2D.Raycast(transform.position, Vector2.left, 1, _colMask);
-        var right = Physics2D.Raycast(transform.position, Vector2.right, 1, _colMask);
-        var up = Physics2D.Raycast(transform.position, Vector2.up, 1, _colMask);
-        var down = Physics2D.Raycast(transform.position, Vector2.down, 1, _colMask);
+        var left = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.left).GoInstance;
+        var right = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.right).GoInstance;
+        var up = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.up).GoInstance;
+        var down = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.down).GoInstance;
 
-        if (left.collider != null)
-            tLeft = left.collider.gameObject.GetComponent<TileBehaviour>();
-        if (right.collider != null)
-            tRight = right.collider.gameObject.GetComponent<TileBehaviour>();
-        if (up.collider != null)
-            tUp = up.collider.gameObject.GetComponent<TileBehaviour>();
-        if (down.collider != null)
-            tDown = down.collider.gameObject.GetComponent<TileBehaviour>();
+        if (left != null)
+            tLeft = left.GetComponent<TileBehaviour>();
+        if (right != null)
+            tRight = right.GetComponent<TileBehaviour>();
+        if (up != null)
+            tUp = up.GetComponent<TileBehaviour>();
+        if (down != null)
+            tDown = down.GetComponent<TileBehaviour>();
 
         if (!tUp && (tLeft || tRight))
             _isTop = true;
