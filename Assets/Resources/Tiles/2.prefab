@@ -78,9 +78,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6b61583bf6c454189f7aae6fb0f0e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 1182516208491314, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-    type: 2}
-  _spawnPlayer: 0
+  _prefab: {fileID: 1182516208491314, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
+  _spawn: 1
 --- !u!212 &212929351680791606
 SpriteRenderer:
   m_ObjectHideFlags: 1
