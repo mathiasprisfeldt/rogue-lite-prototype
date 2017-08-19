@@ -101,6 +101,12 @@ public class CollisionCheck : MonoBehaviour
 
     }
 
+    void Awake()
+    {
+        if (!CollidersToCheck.Any())
+            Debug.LogWarning("CollisionCheck doesn't have any colliders to check on!", transform);
+    }
+
     public bool IsColliding()
     {
         return IsColliding(CollisionLayers);
