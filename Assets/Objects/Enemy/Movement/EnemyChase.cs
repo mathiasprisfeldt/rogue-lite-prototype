@@ -10,7 +10,7 @@ namespace Enemy
     {
         void FixedUpdate()
         {
-            if (IsActive && App.M.Target)
+            if (IsActive && App.M.Target && App.M.Character.OnGround)
             {
                 Vector2 dir = App.M.Target.M.ActionController.Rigidbody.position - App.M.Character.Rigidbody.position;
                 dir.Normalize();

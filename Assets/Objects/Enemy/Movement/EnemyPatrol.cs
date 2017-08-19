@@ -33,7 +33,7 @@ namespace Enemy
         void FixedUpdate()
         {
             //If we're patrolling, move the enemy.
-            if (IsActive)
+            if (IsActive && App.M.Character.OnGround)
                 App.C.SetVelocity(_patrolDirection);
         }
 

@@ -140,7 +140,7 @@ namespace Enemy
 	        //If we cant find it, log warn.
 	        if (!desiredState)
 	        {
-	            Debug.LogWarning("EnemyController tried to find state of type " + desiredState.GetType() + " but couldn't. Ignoring request.", transform);
+	            Debug.LogWarning("EnemyController tried to find state of type " + desiredState + " but couldn't. Ignoring request.", transform);
 	            return;
 	        }
 
@@ -206,7 +206,8 @@ namespace Enemy
         /// </summary>
 	    public void ResetToInitial()
 	    {
-	        ChangeState(_initialState);
+            if (_initialState)
+	            ChangeState(_initialState);
 	    }
 
         /// <summary>
@@ -214,7 +215,8 @@ namespace Enemy
         /// </summary>
 	    public void ResetToLast()
 	    {
-	        ChangeState(LastState);
+            if (LastState)
+	            ChangeState(LastState);
 	    }
 	}
 }
