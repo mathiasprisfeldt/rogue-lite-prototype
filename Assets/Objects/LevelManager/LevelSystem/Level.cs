@@ -49,7 +49,6 @@ public class Level
         {
             for (int j = 0; j < l.GetLength(1); j++)
             {
-
                 var temp = LevelDataManager.Instance.Layouts.Where(x => x.ID == l[i, j]);
                 if (temp.Any())
                     Layouts[i, j] = temp.FirstOrDefault();
@@ -142,6 +141,7 @@ public class Level
 
         List<Vector2> borderQueue = new List<Vector2>();
         List<TileBehaviour> tileList = new List<TileBehaviour>();
+        List<TileBehaviour> borderTileList = new List<TileBehaviour>();
 
         //A number to name borders
         int numberOfBorders = 0;
@@ -187,37 +187,37 @@ public class Level
 
                         //Place border blocks
                         if (left)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y),
                                 new TilePos(i, j, x - 1, y), parent.transform));
 
                         if (top)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x, tilePos.y + tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x, tilePos.y + tileHeight),
                                 new TilePos(i, j, x, y - 1), parent.transform));
 
                         if (right)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y),
                                 new TilePos(i, j, x + 1, y), parent.transform));
 
                         if (bottom)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x, tilePos.y - tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x, tilePos.y - tileHeight),
                                 new TilePos(i, j, x, y + 1), parent.transform));
 
 
                         //check corners
                         if (top && left)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y + tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y + tileHeight),
                                 new TilePos(i, j, x - 1, y - 1), parent.transform));
 
                         if (top && right)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y + tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y + tileHeight),
                                 new TilePos(i, j, x + 1, y - 1), parent.transform));
 
                         if (bottom && left)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y - tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y - tileHeight),
                                 new TilePos(i, j, x - 1, y + 1), parent.transform));
 
                         if (bottom && right)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y - tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y - tileHeight),
                                 new TilePos(i, j, x + 1, y + 1), parent.transform));
                     }
                 }
@@ -228,10 +228,45 @@ public class Level
         {
             item.SetupTile();
         }
+        tileList.AddRange(borderTileList);
 
         MakeComposites(tileList);
     }
 
+    /// <summary>
+    /// Spawn only one layout
+    /// </summary>
+    /// <param name="transform">parent to spawn under</param>
+    /// <param name="layout">layout to spawn</param>
+    public void Spawn(Transform transform, Layout layout)
+    {
+        //Find the size of one tile, make better in future
+        var test = LevelDataManager.Instance.Tiles[0].transform;
+        var tileHeight = test.localScale.y;
+        var tileWidth = test.localScale.x;
+
+        for (int i = 0; i < layout.Tiles.GetLength(0); i++)
+        {
+            for (int j = 0; j < layout.Tiles.GetLength(1); j++)
+            {
+                Tile t = layout.Tiles[i, j];
+
+                if (t.Prefab != null)
+                    LevelManager.Instance.SpawnTile(
+                        transform.position + new Vector3(i * tileWidth, ((j * tileHeight) * -1)),
+                        t.Prefab,
+                        parent: transform);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Spawns a border tile
+    /// </summary>
+    /// <param name="pos">position of bordertile</param>
+    /// <param name="tPos">tilepos of the tile</param>
+    /// <param name="parent">Parent</param>
+    /// <returns></returns>
     private TileBehaviour SpawnBorder(Vector2 pos, TilePos tPos, Transform parent)
     {
         TileBehaviour tb = LevelManager.Instance.SpawnTile(pos, parent: parent).GetComponent<TileBehaviour>();
@@ -272,34 +307,10 @@ public class Level
     }
 
     /// <summary>
-    /// Spawn only one layout
+    /// Despawn
     /// </summary>
-    /// <param name="transform">parent to spawn under</param>
-    /// <param name="layout">layout to spawn</param>
-    public void Spawn(Transform transform, Layout layout)
-    {
-        //Find the size of one tile, make better in future
-        var test = LevelDataManager.Instance.Tiles[0].transform;
-        var tileHeight = test.localScale.y;
-        var tileWidth = test.localScale.x;
-
-        for (int i = 0; i < layout.Tiles.GetLength(0); i++)
-        {
-            for (int j = 0; j < layout.Tiles.GetLength(1); j++)
-            {
-                Tile t = layout.Tiles[i, j];
-
-                if (t.Prefab != null)
-                    LevelManager.Instance.SpawnTile(
-                        transform.position + new Vector3(i * tileWidth, ((j * tileHeight) * -1)),
-                        t.Prefab,
-                        parent: transform);
-            }
-        }
-    }
-
     public void Despawn()
     {
-        //Do despawn stuff...        
+        //Do despawn stuff...
     }
 }
