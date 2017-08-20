@@ -49,11 +49,9 @@ public class Level
         {
             for (int j = 0; j < l.GetLength(1); j++)
             {
-                var temp = LevelDataManager.Instance.Layouts.Where(x => x.ID == l[i, j]);
-                if (temp.Any())
-                    Layouts[i, j] = temp.FirstOrDefault();
-                else
-                    Layouts[i, j] = LevelDataManager.Instance.Layouts.Find(x => x.ID == 0);
+                var layoutCandidate = LevelDataManager.Instance.Layouts.FirstOrDefault(x => x.ID == l[i, j]);
+
+                Layouts[i, j] = new Layout(layoutCandidate.ID, layoutCandidate.Tiles.Clone() as Tile[,]);
             }
         }
 
@@ -165,12 +163,13 @@ public class Level
 
                         // Each tile
                         Tile t = Layouts[i, j].Tiles[x, y];
+                        
                         if (t.Prefab != null)
                         {
                             GameObject go = LevelManager.Instance.SpawnTile(transform.position + tilePos, t.Prefab, parent: parent.transform);
-
-                            t.GoInstance = go;
                             go.name = i.ToString() + j.ToString() + x.ToString() + y.ToString();
+
+                            Layouts[i, j].Tiles[x, y] = new Tile(t.Type, go);
 
                             TileBehaviour tb = go.GetComponent<TileBehaviour>();
                             if (tb)
