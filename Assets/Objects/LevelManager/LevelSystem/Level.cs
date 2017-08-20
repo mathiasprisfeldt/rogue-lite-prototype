@@ -83,6 +83,33 @@ public class Level
         bool right = t.TX > Layouts[t.LX, t.LY].Tiles.GetLength(0) - 1 && pos.LX == Layouts.GetLength(0) - 1;
         bool bottom = t.TY > Layouts[t.LX, t.LY].Tiles.GetLength(1) - 1 && pos.LY == Layouts.GetLength(1) - 1;
 
+
+
+        //Left
+        if (t.TX < 0 && t.LX > 0)
+        {
+            t.LX--;
+            t.TX = (Layouts[t.LX, t.LY].Tiles.GetLength(0)) + t.TX;
+        }
+        //Right
+        else if (t.TX > Layouts[t.LX, t.LY].Tiles.GetLength(0) - 1 && t.LX < Layouts.GetLength(0) - 1)
+        {
+            t.TX = t.TX - (Layouts[t.LX, t.LY].Tiles.GetLength(0));
+            t.LX++;
+        }
+        //Up
+        if (t.TY < 0 && t.LY > 0)
+        {
+            t.LY--;
+            t.TY = (Layouts[t.LX, t.LY].Tiles.GetLength(1)) + t.TY;
+        }
+        //Down
+        else if (t.TY > Layouts[t.LX, t.LY].Tiles.GetLength(1) - 1 && t.LY < Layouts.GetLength(1) - 1)
+        {
+            t.TY = t.TY - (Layouts[t.LX, t.LY].Tiles.GetLength(1));
+            t.LY++;
+        }
+
         //Border tile
         if (left || right || top || bottom)
         {
@@ -90,31 +117,6 @@ public class Level
                 return new Tile(1, BorderTiles[t].gameObject);
             else
                 return new Tile(null, -1);
-        }
-
-        //Left
-        if (t.TX < 0 && t.LX > 0)
-        {
-            t.LX--;
-            t.TX = (Layouts[t.LX, t.LY].Tiles.GetLength(0) - 1) + t.TX;
-        }
-        //Right
-        else if (t.TX > Layouts[t.LX, t.LY].Tiles.GetLength(0) - 1 && t.LX < Layouts.GetLength(0) - 1)
-        {
-            t.TX = t.TX - (Layouts[t.LX, t.LY].Tiles.GetLength(0) - 1);
-            t.LX++;
-        }
-        //Up
-        if (t.TY < 0 && t.LY > 0)
-        {
-            t.LY--;
-            t.TY = (Layouts[t.LX, t.LY].Tiles.GetLength(1) - 1) + t.TY;
-        }
-        //Down
-        else if (t.TY > Layouts[t.LX, t.LY].Tiles.GetLength(1) - 1 && t.LY < Layouts.GetLength(1) - 1)
-        {
-            t.TY = t.TY - (Layouts[t.LX, t.LY].Tiles.GetLength(1) - 1);
-            t.LY++;
         }
 
         return Layouts[t.LX, t.LY].Tiles[t.TX, t.TY];

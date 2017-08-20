@@ -234,10 +234,11 @@ public class TileBehaviour : MonoBehaviour
         if (down != null)
             tDown = down.GetComponent<TileBehaviour>();
 
-        if (!tUp && (tLeft || tRight))
-            _isTop = true;
+        _isTop = !tUp;
 
-        if (!_isTop || nextShouldDown)
+        var goDown = _isTop && (!tLeft && !tRight);
+
+        if ( goDown || !goDown && (!tLeft && !tRight) || nextShouldDown)
             nextShouldDown = true;
 
         if (nextShouldDown && tDown)
