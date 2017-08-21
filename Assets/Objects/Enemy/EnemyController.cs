@@ -51,9 +51,9 @@ namespace Enemy
 	        //Setting initial state to active.
             //If initial state isn't found yet, try to find one.
 	        if (!_initialState)
-	            _initialState = States.FirstOrDefault();
+	            _initialState = States.FirstOrDefault(state => state.CheckPrerequisite());
 
-            ChangeState(!_initialState ? States.FirstOrDefault() : _initialState);
+            ChangeState(_initialState, _initialState == null || _initialState.IsIsolated);
 	    }
 
 	    void Update()
@@ -95,8 +95,8 @@ namespace Enemy
 	                canTarget = false;
 
                 //Check if we can see the player
-	            if (canTarget && 
-                    Physics2D.RaycastAll(ownPos, ownPos.DirectionTo(plyPos), 10, LayerMask.GetMask("Platform")).Any())
+                if (canTarget && 
+                    Physics2D.RaycastAll(ownPos, ownPos.DirectionTo(plyPos), Mathf.Clamp(plyDist.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")).Any())
 	            {
                     //We cant see the player, lose interest.
 	                canTarget = false;
@@ -130,27 +130,15 @@ namespace Enemy
         /// <param name="isolate">Should it disable all other states.</param>
 	    public void ChangeState<T>(bool isolate = true)
 	    {
-	        //Find requested state
-	        EnemyState newState = States.FirstOrDefault(state => state is T);
-            ChangeState(newState, isolate);
+            ChangeState(States.FirstOrDefault(state => state is T), isolate);
 	    }
 
 	    public void ChangeState(EnemyState desiredState, bool isolate = true)
 	    {
-	        //If we cant find it, log warn.
-	        if (!desiredState)
-	        {
-	            Debug.LogWarning("EnemyController tried to find state of type " + desiredState + " but couldn't. Ignoring request.", transform);
-	            return;
-	        }
-
 	        if (CurrentState == desiredState)
-	        {
-	            Debug.LogWarning("EnemyController tried to change state to the same one. Ignoring request.", transform);
 	            return;
-	        }
-
-	        //Current is now last
+	        
+            //Current is now last
 	        if (CurrentState)
 	        {
 	            LastState = CurrentState;
@@ -161,11 +149,13 @@ namespace Enemy
             if (isolate)
 	            States.Where(state => state != desiredState).ToList().ForEach(state => state.IsActive = false);
 
-	        desiredState.IsActive = true;
-
-	        CurrentState = desiredState;
-            CurrentState.StateStart();
-        }
+	        if (desiredState)
+	        {
+	            desiredState.IsActive = true;
+	            CurrentState = desiredState;
+	            CurrentState.StateStart();
+	        }
+	    }
 
         /// <summary>
         /// Method used to turn the enemy around.
@@ -218,5 +208,14 @@ namespace Enemy
             if (LastState)
 	            ChangeState(LastState);
 	    }
-	}
+
+        /// <summary>
+        /// Used for checking if the current state matches T
+        /// </summary>
+        /// <typeparam name="T">Type of state</typeparam>
+	    public bool IsState<T>() where T : EnemyState
+	    {
+	        return CurrentState is T;
+	    }
+    }
 }

@@ -39,7 +39,7 @@ namespace Enemy
 
         public override bool CheckPrerequisite()
         {
-            return false;
+            return !App.C.CurrentState;
         }
     }
 }

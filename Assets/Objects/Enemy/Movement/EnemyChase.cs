@@ -20,7 +20,7 @@ namespace Enemy
 
         public override bool CheckPrerequisite()
         {
-            return App.M.Target && App.C.CurrentState is EnemyPatrol && !(App.C.CurrentState is EnemyAttack);
+            return App.M.Target && App.C.CurrentState is EnemyPatrol && !(App.C.CurrentState is EnemyAttack) || App.C.CurrentState == null;
         }
 
         public override void StateUpdate()
