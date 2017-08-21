@@ -182,7 +182,10 @@ namespace Controllers
             if (respectMovementSpeed)
                 velocity *= MovementSpeed;
 
-            _rigidbody.velocity = velocity + KnockbackHandler.ApplyKnockback();
+			Vector2 knockbackForce = Vector2.zero;
+            if (KnockbackHandler.Active)
+                velocity = Rigidbody.CounterGravity(_knockbackHandler.ApplyKnockback()) * Time.fixedDeltaTime;
+            _rigidbody.velocity = velocity + knockbackForce;
         }
 
         /// <summary>

@@ -184,9 +184,7 @@ namespace AcrylecSkeleton.Utilities
 
         private void Update()
         {
-#if UNITY_EDITOR
-            //ComputeResolution();
-#endif
+            ComputeResolution();
         }
 
         void OnDrawGizmos()

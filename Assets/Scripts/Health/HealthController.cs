@@ -51,6 +51,12 @@ namespace Health
         [SerializeField]
         private Vector2 _healthInterval = new Vector2(0, 100); //Health is clamped to these values.
 
+        [SerializeField]
+        private float _knockbackForce;
+
+        [SerializeField]
+        private float _knockbackDuration;
+
         [SerializeField, Tooltip("If its empty it uses GameObject.")]
         private GameObject _responsibleGameObject; //The gameobject responsible for health (The object that gets destroyed when dead)
 
@@ -130,11 +136,11 @@ namespace Health
         /// It always rounds to halfs or wholes.
         /// </summary>
         /// <param name="dmg">Amount of damage to deal.</param>
-        public void Damage(float dmg, bool giveInvurnability = false, Transform from = null)
+        public void Damage(float dmg, bool giveInvurnability = true, Transform from = null)
         {
             if (dmg <= 0 || IsDead)
                 return;
-
+            
             var amountToDmg = dmg;
 
             switch (_healthType)
@@ -146,8 +152,11 @@ namespace Health
             }
 
             //Apply knockback
-            if (from)
-                _character.KnockbackHandler.AddForce(from.position.ToVector2().DirectionTo(_character.Rigidbody.position) * 3, .1f);
+            if (from && !_isInvurnable)
+            {
+                _character.KnockbackHandler.AddForce(from.position.ToVector2().DirectionTo(_character.Rigidbody.position) * _knockbackForce, _knockbackDuration);
+            }
+                
 
             HealthAmount -= amountToDmg;
 
