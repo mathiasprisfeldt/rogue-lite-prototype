@@ -93,7 +93,7 @@ public class LevelManager : Singleton<LevelManager>
             CurrentLevel = _randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)];
         }
         else
-            Debug.Log("There are no levels to loaded");
+            Debug.Log("There are no levels to load");
 
         GameObject go = new GameObject("LevelParent");
         go.AddComponent<Platforms>();

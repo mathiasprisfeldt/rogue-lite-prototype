@@ -49,7 +49,8 @@ public class Level
         {
             for (int j = 0; j < l.GetLength(1); j++)
             {
-                var layoutCandidate = LevelDataManager.Instance.Layouts.FirstOrDefault(x => x.ID == l[i, j]);
+                var layoutCandidate = LevelDataManager.Instance.Layouts.FirstOrDefault(x => x.ID == l[i, j]) ?? 
+                    LevelDataManager.Instance.Layouts.FirstOrDefault();
 
                 Layouts[i, j] = new Layout(layoutCandidate.ID, layoutCandidate.Tiles.Clone() as Tile[,]);
             }
@@ -300,6 +301,7 @@ public class Level
             if (!tb.Touched)
                 tb.StartHorizontalComposite(ref amountOfPlatforms);
         }
+
         LevelManager.Instance.SpawnBackGround(new Vector2(
             (Layouts.GetLength(0) / 2 *
             Layouts[0, 0].Tiles.GetLength(0)),

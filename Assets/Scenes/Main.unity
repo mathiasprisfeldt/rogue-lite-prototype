@@ -524,7 +524,7 @@ Prefab:
     - target: {fileID: 224776339743573610, guid: a6a2a8592d9482a4e975a9382d8b9960,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 220.00002
+      value: 220
       objectReference: {fileID: 0}
     - target: {fileID: 224776339743573610, guid: a6a2a8592d9482a4e975a9382d8b9960,
         type: 2}
@@ -553,6 +553,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114195463805386292, guid: b3d93c340dc761f468f2dab771568bb4,
+        type: 2}
+      propertyPath: _randomLevelsText.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4926601098408364, guid: b3d93c340dc761f468f2dab771568bb4, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -585,6 +590,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114195463805386292, guid: b3d93c340dc761f468f2dab771568bb4,
+        type: 2}
+      propertyPath: _forcedLevelsText.Array.data[0]
+      value: 
+      objectReference: {fileID: 4900000, guid: 7bb9ad2daceb4dd4585a3536be0d7253, type: 3}
+    - target: {fileID: 114195463805386292, guid: b3d93c340dc761f468f2dab771568bb4,
+        type: 2}
+      propertyPath: _randomLevelsText.Array.data[0]
+      value: 
+      objectReference: {fileID: 4900000, guid: 7bb9ad2daceb4dd4585a3536be0d7253, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b3d93c340dc761f468f2dab771568bb4, type: 2}
   m_IsPrefabParent: 0
