@@ -7,7 +7,7 @@ namespace Special
     /// Purpose:
     /// Creator:
     /// </summary>
-    public class ThrowProjectile : MonoBehaviour
+    public class ThrowProjectile : Ability
     {
         [SerializeField]
         private GameObject _projectilePrefab;
@@ -21,24 +21,26 @@ namespace Special
         [SerializeField]
         private ActionsController _actionsController;
 
-        private bool _active;
+        private bool _throwActive;
         private float _cooldownTimer;
         private bool _projectileSpawned;
 
-        public bool Active
+        public override bool Active
         {
             get
             {
+                if (!base.Active)
+                    return base.Active;
                 if (_actionsController.App.C.PlayerActions.ProxyInputActions.Special.WasPressed
                     && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {
                     _projectileSpawned = false;
-                    _active = true;
+                    _throwActive = true;
                     _cooldownTimer = _cooldown;
                     _actionsController.StartThrow = true;
                 }
 
-                return _active;
+                return _throwActive;
             }
         }
 
@@ -59,7 +61,7 @@ namespace Special
 
         public void ResetThrow()
         {
-            _active = false;
+            _throwActive = false;
             _actionsController.Combat = false;
         }
     }

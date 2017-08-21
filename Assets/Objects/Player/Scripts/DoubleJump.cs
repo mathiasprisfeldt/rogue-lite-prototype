@@ -9,8 +9,7 @@ using UnityEngine;
 
 namespace CharacterController
 {
-    [RequireComponent(typeof (ActionsController))]
-    public class DoubleJump : global::MovementAbility
+    public class DoubleJump : MovementAbility
     {
         [SerializeField]
         private float _jumpForce;

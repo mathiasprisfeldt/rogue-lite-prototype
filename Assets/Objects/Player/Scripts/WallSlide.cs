@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace CharacterController
 {
-    [RequireComponent(typeof (ActionsController))]
-    public class WallSlide : global::MovementAbility
+    public class WallSlide : MovementAbility
     {
         [SerializeField]
         private float _wallSlideForce;
@@ -22,7 +21,7 @@ namespace CharacterController
             {
                 if (!base.VerticalActive)
                     return false;
-                var wallJumpActive = !(_actionsController.WallJump && _actionsController.WallJump.HorizontalActive);
+                var wallJumpActive = !(_actionsController.AbilityReferences.WallJump && _actionsController.AbilityReferences.WallJump.HorizontalActive);
                 var falling = _actionsController.Rigidbody.velocity.y < -1 || _falling;
                 var rest = (_actionsController.WallSlideCheck.Left || _actionsController.WallSlideCheck.Right);
 

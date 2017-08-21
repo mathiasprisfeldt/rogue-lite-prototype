@@ -34,7 +34,7 @@ namespace Combat
             get
             {
                 if (_actionsController.App.C.PlayerActions.ProxyInputActions.Attack.WasPressed && !_active &&
-                    _cooldownTimer <= 0 && _actionsController.LastUsedVerticalAbility != Ability.LedgeHanging
+                    _cooldownTimer <= 0 && _actionsController.LastUsedVerticalMoveAbility != MoveAbility.LedgeHanging
                     && _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {
                     _active = true;
