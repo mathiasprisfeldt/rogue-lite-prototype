@@ -11,11 +11,7 @@ namespace Enemy
         void FixedUpdate()
         {
             if (IsActive && App.M.Target && App.M.Character.OnGround)
-            {
-                Vector2 dir = App.M.Target.M.ActionController.Rigidbody.position - App.M.Character.Rigidbody.position;
-                dir.Normalize();
-                App.C.SetVelocity(new Vector2(Mathf.Round(dir.x), 0));
-            }
+                App.C.SetVelocity(new Vector2(Mathf.Round(App.C.ToPlayer.normalized.x), 0));
         }
 
         public override bool CheckPrerequisite()

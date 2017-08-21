@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Emit;
+using AcrylecSkeleton.Utilities;
 using UnityEngine;
 
 namespace Enemy
@@ -7,6 +8,7 @@ namespace Enemy
     /// Purpose: Base class for all enemy states.
     /// Creator: MP
     /// </summary>
+    [ExecuteInEditMode]
     public abstract class EnemyState : MonoBehaviour
     {
         [SerializeField]
@@ -37,6 +39,18 @@ namespace Enemy
         {
             get { return _isActive; }
             set { _isActive = value; }
+        }
+
+        protected virtual void Awake()
+        {
+            //Find application candidate, if it couldn't find one warn it to log.
+            if (!App)
+            {
+                App = gameObject.GetComponentUp<EnemyApplication>();
+
+                if (!App)
+                    Debug.LogError("EnemyState: You forgot to drag the application reference into the field!", transform);
+            }
         }
 
         /// <summary>

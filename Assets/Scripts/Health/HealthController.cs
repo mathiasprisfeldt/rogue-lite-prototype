@@ -132,7 +132,7 @@ namespace Health
         /// <param name="dmg">Amount of damage to deal.</param>
         public void Damage(float dmg, bool giveInvurnability = false, Transform from = null)
         {
-            if (dmg <= 0)
+            if (dmg <= 0 || IsDead)
                 return;
 
             var amountToDmg = dmg;
@@ -147,7 +147,7 @@ namespace Health
 
             //Apply knockback
             if (from)
-                _character.KnockbackHandler.AddForce(from.position.ToVector2().DirectionTo(_character.Rigidbody.position) * 10, .1f);
+                _character.KnockbackHandler.AddForce(from.position.ToVector2().DirectionTo(_character.Rigidbody.position) * 3, .1f);
 
             HealthAmount -= amountToDmg;
 

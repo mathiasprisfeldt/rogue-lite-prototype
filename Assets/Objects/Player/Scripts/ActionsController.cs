@@ -62,9 +62,6 @@ namespace CharacterController
         private CollisionCheck _wallSlideCheck;
 
         [SerializeField]
-        private float _horizontalSpeed;
-
-        [SerializeField]
         private Animator _animator;
 
         [SerializeField]
@@ -420,7 +417,7 @@ namespace CharacterController
             if (CollisionCheck.Sides.Right && horizontal > 0)
                 horizontal = 0;
 
-            velocity += new Vector2(_horizontalSpeed*horizontal, 0);
+            velocity += new Vector2(MovementSpeed*horizontal, 0);
             
             if (Dash && Dash.HorizontalActive)
             {

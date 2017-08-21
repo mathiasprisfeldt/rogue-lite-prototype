@@ -19,7 +19,9 @@ namespace Enemy
 
 	    private EnemyState _initialState;
 
+	    public Vector2 ToPlayer { get; private set; }
 	    public bool IsTurning { get; private set; }
+
         public List<EnemyState> States { get; set; }
 	    public EnemyState LastState { get; set; }
 	    public EnemyState CurrentState { get; set; }
@@ -73,10 +75,10 @@ namespace Enemy
 	            }
             }
 
-	        Vector2 plyDist = ownPos - plyPos;
+	        ToPlayer = plyPos - ownPos;
 	        //Checking if player is in sight
 	        if (GameManager.Instance.Player &&
-	            plyDist.magnitude <=
+	            ToPlayer.magnitude <=
 	            App.M.ViewRadius)
 	        {
 	            bool canTarget = true;
@@ -86,9 +88,9 @@ namespace Enemy
 	            int lookDir = App.M.Character.LookDirection;
 
 	            if (lookDir == -1)
-	                isTargetBehind = plyDist.x < lookDir;
+	                isTargetBehind = ToPlayer.x > lookDir;
 	            else if (lookDir == 1)
-	                isTargetBehind = plyDist.x > lookDir;
+	                isTargetBehind = ToPlayer.x < lookDir;
                 
                 //If the target is behind and we still can target it, do so.
 	            if (isTargetBehind && !App.M.TargetBehind)
@@ -96,7 +98,7 @@ namespace Enemy
 
                 //Check if we can see the player
                 if (canTarget && 
-                    Physics2D.RaycastAll(ownPos, ownPos.DirectionTo(plyPos), Mathf.Clamp(plyDist.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")).Any())
+                    Physics2D.RaycastAll(ownPos, ownPos.DirectionTo(plyPos), Mathf.Clamp(ToPlayer.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")).Any())
 	            {
                     //We cant see the player, lose interest.
 	                canTarget = false;
@@ -115,7 +117,7 @@ namespace Enemy
 	        //Check the states prerequisites & parallel updates.
 	        foreach (EnemyState enemyState in States)
 	        {
-	            if (enemyState.CheckPrerequisite())
+	            if (enemyState != CurrentState && enemyState.CheckPrerequisite())
 	                ChangeState(enemyState, enemyState.IsIsolated);
 
                 if (enemyState.IsActive)
@@ -182,12 +184,17 @@ namespace Enemy
         /// Sets velocity on character, but turns if needed.
         /// </summary>
         /// <param name="vel"></param>
-	    public void SetVelocity(Vector2 vel)
+	    public void SetVelocity(Vector2 vel, bool overrideYVel = false)
 	    {
 	        if (!IsTurning)
 	        {
-	            App.M.Character.SetVelocity(vel);
-	            Turn(Mathf.RoundToInt(vel.x));
+                if (!overrideYVel)
+                    vel = new Vector2(vel.x, App.M.Character.Rigidbody.velocity.y);
+
+	            App.M.Character.SetVelocity(vel, true);
+
+                if (!App.M.CanBackPaddle)
+	                Turn(Mathf.RoundToInt(vel.x));
 	        }
 	    }
 

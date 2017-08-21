@@ -46,6 +46,9 @@ namespace Controllers
         private float _damage;
 
         [SerializeField]
+        private float _movementSpeed;
+
+        [SerializeField]
         private bool _flipWithVelocity;
 
         [SerializeField, Tooltip("If on it will flip with rotation instead of scaling.")]
@@ -110,6 +113,12 @@ namespace Controllers
             set { _damage = value; }
         }
 
+        public float MovementSpeed
+        {
+            get { return _movementSpeed; }
+            set { _movementSpeed = value; }
+        }
+
         public KnockbackHandler KnockbackHandler
         {
             get { return _knockbackHandler; }
@@ -168,8 +177,11 @@ namespace Controllers
             LookDirection = Mathf.RoundToInt(dir);
         }
 
-        public virtual void SetVelocity(Vector2 velocity)
+        public virtual void SetVelocity(Vector2 velocity, bool respectMovementSpeed = false)
         {
+            if (respectMovementSpeed)
+                velocity *= MovementSpeed;
+
             _rigidbody.velocity = velocity + KnockbackHandler.ApplyKnockback();
         }
 
