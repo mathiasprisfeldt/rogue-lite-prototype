@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset name="ProjectRogueLike" tilewidth="357" tileheight="464" tilecount="6" columns="0">
+<tileset name="ProjectRogueLike" tilewidth="357" tileheight="464" tilecount="7" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="100" height="100" source="../Sprites/Kaj.jpg"/>
@@ -18,5 +18,8 @@
  </tile>
  <tile id="5">
   <image width="256" height="256" source="../Sprites/Tiles/Spike.png"/>
+ </tile>
+ <tile id="6">
+  <image width="256" height="256" source="../Sprites/Tiles/Tile (13).png"/>
  </tile>
 </tileset>
