@@ -13,4 +13,11 @@ public static class RigidbodyExtension
     {
         return -Physics2D.gravity.y*rig.gravityScale + amount;
     }
+
+    public static Vector2 CounterGravity(this Rigidbody2D rig, Vector2 velocity)
+    {
+        var x = velocity.x;
+        var y = CounterGravity(rig,velocity.y);
+        return new Vector2(x,y);
+    }
 }

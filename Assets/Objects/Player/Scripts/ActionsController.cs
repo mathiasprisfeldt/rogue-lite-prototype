@@ -224,10 +224,14 @@ namespace CharacterController
             HandleHorizontalMovement(ref _velocity);
             HandleVerticalMovement(ref _velocity);  
             HandleAnimationParameters();
-            
-            SetVelocity(new Vector2(_velocity.x*Time.fixedDeltaTime, _rigidbody.velocity.y));
-            if (Velocity.y != 0)
-                SetVelocity(new Vector2(_rigidbody.velocity.x, _velocity.y*Time.fixedDeltaTime));
+
+            float y = 0;
+            float x = 0;
+
+            x = _velocity.x*Time.fixedDeltaTime;
+            y = Velocity.y != 0 || _knockbackHandler.Active ? _velocity.y*Time.fixedDeltaTime : Rigidbody.velocity.y;
+
+            SetVelocity(new Vector2(x,y ));                
 
             if (_dashTimer > 0)
                 _dashTimer -= Time.fixedDeltaTime;
@@ -242,8 +246,7 @@ namespace CharacterController
             var predictGravity = Rigidbody.velocity.y + Physics2D.gravity.y*Rigidbody.gravityScale;
             if (predictGravity <= -_maxFallSpeed)
             {
-                Rigidbody.velocity -= new Vector2(0,
-                    Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed))*Time.fixedDeltaTime);
+                Rigidbody.velocity -= new Vector2(0,Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed))*Time.fixedDeltaTime);
 
             }
         }
