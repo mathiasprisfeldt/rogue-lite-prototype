@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using AcrylecSkeleton.Utilities;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using Health;
 using Managers;
@@ -18,6 +19,12 @@ public class HealthContainers : MonoBehaviour
 
     [SerializeField]
     private TextMeshProUGUI _overflowText;
+
+    [SerializeField]
+    private Sprite _half;
+
+    [SerializeField]
+    private Sprite _full;
 
     private int _oldHealth;
     private PlayerApplication _playerApplication;
@@ -53,10 +60,25 @@ public class HealthContainers : MonoBehaviour
 
     private void UpdateHealthbar()
     {
+        var temp = MathUtils.RoundToNearest(_healthController.HealthAmount, 2);
         for (int i = 0; i < _healthContainers.Count; i++)
         {
-            _healthContainers[i].enabled = _healthController.HealthAmount >= i + 1;
+            if (Mathf.Floor(temp) >= i + 1)
+            {
+                _healthContainers[i].enabled = true;
+                _healthContainers[i].sprite = _full;
+            }
+            else if (temp == i + .5f)
+            {
+                _healthContainers[i].enabled = true;
+                _healthContainers[i].sprite = _half;
+            }
+            else
+            {
+                _healthContainers[i].enabled = false;
+            }
+            
         }
-        _overflowText.text = _healthController.HealthAmount > _healthContainers.Count ? (_healthController.HealthAmount - _healthContainers.Count) + "x" : "";
+        _overflowText.text = _healthController.HealthAmount > _healthContainers.Count ? (Mathf.Floor(_healthController.HealthAmount - _healthContainers.Count)) + "x" : "";
     }
 }

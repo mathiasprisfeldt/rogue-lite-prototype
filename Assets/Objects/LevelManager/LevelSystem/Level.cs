@@ -49,12 +49,9 @@ public class Level
         {
             for (int j = 0; j < l.GetLength(1); j++)
             {
+                var layoutCandidate = LevelDataManager.Instance.Layouts.FirstOrDefault(x => x.ID == l[i, j]);
 
-                var temp = LevelDataManager.Instance.Layouts.Where(x => x.ID == l[i, j]);
-                if (temp.Any())
-                    Layouts[i, j] = temp.FirstOrDefault();
-                else
-                    Layouts[i, j] = LevelDataManager.Instance.Layouts.Find(x => x.ID == 0);
+                Layouts[i, j] = new Layout(layoutCandidate.ID, layoutCandidate.Tiles.Clone() as Tile[,]);
             }
         }
 
@@ -86,6 +83,33 @@ public class Level
         bool right = t.TX > Layouts[t.LX, t.LY].Tiles.GetLength(0) - 1 && pos.LX == Layouts.GetLength(0) - 1;
         bool bottom = t.TY > Layouts[t.LX, t.LY].Tiles.GetLength(1) - 1 && pos.LY == Layouts.GetLength(1) - 1;
 
+
+
+        //Left
+        if (t.TX < 0 && t.LX > 0)
+        {
+            t.LX--;
+            t.TX = (Layouts[t.LX, t.LY].Tiles.GetLength(0)) + t.TX;
+        }
+        //Right
+        else if (t.TX > Layouts[t.LX, t.LY].Tiles.GetLength(0) - 1 && t.LX < Layouts.GetLength(0) - 1)
+        {
+            t.TX = t.TX - (Layouts[t.LX, t.LY].Tiles.GetLength(0));
+            t.LX++;
+        }
+        //Up
+        if (t.TY < 0 && t.LY > 0)
+        {
+            t.LY--;
+            t.TY = (Layouts[t.LX, t.LY].Tiles.GetLength(1)) + t.TY;
+        }
+        //Down
+        else if (t.TY > Layouts[t.LX, t.LY].Tiles.GetLength(1) - 1 && t.LY < Layouts.GetLength(1) - 1)
+        {
+            t.TY = t.TY - (Layouts[t.LX, t.LY].Tiles.GetLength(1));
+            t.LY++;
+        }
+
         //Border tile
         if (left || right || top || bottom)
         {
@@ -93,31 +117,6 @@ public class Level
                 return new Tile(1, BorderTiles[t].gameObject);
             else
                 return new Tile(null, -1);
-        }
-
-        //Left
-        if (t.TX < 0 && t.LX > 0)
-        {
-            t.LX--;
-            t.TX = (Layouts[t.LX, t.LY].Tiles.GetLength(0) - 1) + t.TX;
-        }
-        //Right
-        else if (t.TX > Layouts[t.LX, t.LY].Tiles.GetLength(0) - 1 && t.LX < Layouts.GetLength(0) - 1)
-        {
-            t.TX = t.TX - (Layouts[t.LX, t.LY].Tiles.GetLength(0) - 1);
-            t.LX++;
-        }
-        //Up
-        if (t.TY < 0 && t.LY > 0)
-        {
-            t.LY--;
-            t.TY = (Layouts[t.LX, t.LY].Tiles.GetLength(1) - 1) + t.TY;
-        }
-        //Down
-        else if (t.TY > Layouts[t.LX, t.LY].Tiles.GetLength(1) - 1 && t.LY < Layouts.GetLength(1) - 1)
-        {
-            t.TY = t.TY - (Layouts[t.LX, t.LY].Tiles.GetLength(1) - 1);
-            t.LY++;
         }
 
         return Layouts[t.LX, t.LY].Tiles[t.TX, t.TY];
@@ -142,6 +141,7 @@ public class Level
 
         List<Vector2> borderQueue = new List<Vector2>();
         List<TileBehaviour> tileList = new List<TileBehaviour>();
+        List<TileBehaviour> borderTileList = new List<TileBehaviour>();
 
         //A number to name borders
         int numberOfBorders = 0;
@@ -165,12 +165,13 @@ public class Level
 
                         // Each tile
                         Tile t = Layouts[i, j].Tiles[x, y];
+                        
                         if (t.Prefab != null)
                         {
                             GameObject go = LevelManager.Instance.SpawnTile(transform.position + tilePos, t.Prefab, parent: parent.transform);
-
-                            t.GoInstance = go;
                             go.name = i.ToString() + j.ToString() + x.ToString() + y.ToString();
+
+                            Layouts[i, j].Tiles[x, y] = new Tile(t.Type, go);
 
                             TileBehaviour tb = go.GetComponent<TileBehaviour>();
                             if (tb)
@@ -187,37 +188,37 @@ public class Level
 
                         //Place border blocks
                         if (left)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y),
                                 new TilePos(i, j, x - 1, y), parent.transform));
 
                         if (top)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x, tilePos.y + tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x, tilePos.y + tileHeight),
                                 new TilePos(i, j, x, y - 1), parent.transform));
 
                         if (right)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y),
                                 new TilePos(i, j, x + 1, y), parent.transform));
 
                         if (bottom)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x, tilePos.y - tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x, tilePos.y - tileHeight),
                                 new TilePos(i, j, x, y + 1), parent.transform));
 
 
                         //check corners
                         if (top && left)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y + tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y + tileHeight),
                                 new TilePos(i, j, x - 1, y - 1), parent.transform));
 
                         if (top && right)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y + tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y + tileHeight),
                                 new TilePos(i, j, x + 1, y - 1), parent.transform));
 
                         if (bottom && left)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y - tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x - tileWidth, tilePos.y - tileHeight),
                                 new TilePos(i, j, x - 1, y + 1), parent.transform));
 
                         if (bottom && right)
-                            tileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y - tileHeight),
+                            borderTileList.Add(SpawnBorder(new Vector2(tilePos.x + tileWidth, tilePos.y - tileHeight),
                                 new TilePos(i, j, x + 1, y + 1), parent.transform));
                     }
                 }
@@ -228,10 +229,45 @@ public class Level
         {
             item.SetupTile();
         }
+        tileList.AddRange(borderTileList);
 
         MakeComposites(tileList);
     }
 
+    /// <summary>
+    /// Spawn only one layout
+    /// </summary>
+    /// <param name="transform">parent to spawn under</param>
+    /// <param name="layout">layout to spawn</param>
+    public void Spawn(Transform transform, Layout layout)
+    {
+        //Find the size of one tile, make better in future
+        var test = LevelDataManager.Instance.Tiles[0].transform;
+        var tileHeight = test.localScale.y;
+        var tileWidth = test.localScale.x;
+
+        for (int i = 0; i < layout.Tiles.GetLength(0); i++)
+        {
+            for (int j = 0; j < layout.Tiles.GetLength(1); j++)
+            {
+                Tile t = layout.Tiles[i, j];
+
+                if (t.Prefab != null)
+                    LevelManager.Instance.SpawnTile(
+                        transform.position + new Vector3(i * tileWidth, ((j * tileHeight) * -1)),
+                        t.Prefab,
+                        parent: transform);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Spawns a border tile
+    /// </summary>
+    /// <param name="pos">position of bordertile</param>
+    /// <param name="tPos">tilepos of the tile</param>
+    /// <param name="parent">Parent</param>
+    /// <returns></returns>
     private TileBehaviour SpawnBorder(Vector2 pos, TilePos tPos, Transform parent)
     {
         TileBehaviour tb = LevelManager.Instance.SpawnTile(pos, parent: parent).GetComponent<TileBehaviour>();
@@ -272,34 +308,10 @@ public class Level
     }
 
     /// <summary>
-    /// Spawn only one layout
+    /// Despawn
     /// </summary>
-    /// <param name="transform">parent to spawn under</param>
-    /// <param name="layout">layout to spawn</param>
-    public void Spawn(Transform transform, Layout layout)
-    {
-        //Find the size of one tile, make better in future
-        var test = LevelDataManager.Instance.Tiles[0].transform;
-        var tileHeight = test.localScale.y;
-        var tileWidth = test.localScale.x;
-
-        for (int i = 0; i < layout.Tiles.GetLength(0); i++)
-        {
-            for (int j = 0; j < layout.Tiles.GetLength(1); j++)
-            {
-                Tile t = layout.Tiles[i, j];
-
-                if (t.Prefab != null)
-                    LevelManager.Instance.SpawnTile(
-                        transform.position + new Vector3(i * tileWidth, ((j * tileHeight) * -1)),
-                        t.Prefab,
-                        parent: transform);
-            }
-        }
-    }
-
     public void Despawn()
     {
-        //Do despawn stuff...        
+        //Do despawn stuff...
     }
 }
