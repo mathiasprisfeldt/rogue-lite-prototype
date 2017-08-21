@@ -315,6 +315,8 @@ GameObject:
   - component: {fileID: 114303647452529036}
   - component: {fileID: 114090219148833560}
   - component: {fileID: 114236378889174594}
+  - component: {fileID: 114321217263922428}
+  - component: {fileID: 114839822949810884}
   m_Layer: 8
   m_Name: Controller
   m_TagString: Player
@@ -1514,7 +1516,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1182516208491314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.255, y: 1.951, z: 0}
+  m_LocalPosition: {x: 1.255, y: -4.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4087813221417808}
@@ -2571,8 +2573,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3657b11f72e786e47a4163f7d0535724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionsController: {fileID: 114173897078414380}
   _active: 1
+  _actionsController: {fileID: 114173897078414380}
   _jumpForce: 250
   _initialJumpForce: 50
   _initialJumpDuration: 0.05
@@ -2674,14 +2676,7 @@ MonoBehaviour:
   _flipWithVelocity: 0
   _doFlipWithRotation: 0
   _app: {fileID: 114008459180862610}
-  _wallJump: {fileID: 114227199752316536}
-  _doubleJump: {fileID: 114518903041524674}
-  _wallSlide: {fileID: 114334842691314668}
-  _ledgeHanging: {fileID: 114323172994149904}
-  _dash: {fileID: 114303647452529036}
-  _jump: {fileID: 114090219148833560}
-  _melee: {fileID: 114696191872934630}
-  _throwProjectile: {fileID: 114826802134503442}
+  _abilityReferences: {fileID: 114321217263922428}
   _modificationHandler: {fileID: 114659536614634588}
   _triggerCheck: {fileID: 114286498854671988}
   _collisionCheck: {fileID: 114051498006790084}
@@ -2806,8 +2801,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d0805789dcb47c428df87c77b9f9a00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionsController: {fileID: 114173897078414380}
   _active: 1
+  _actionsController: {fileID: 114173897078414380}
   _verticalForce: 600
   _horizontalForce: 80
   _horizontalDuration: 0.3
@@ -2978,8 +2973,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14221ea3946aac64692acd4ab4e69f36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionsController: {fileID: 114173897078414380}
   _active: 1
+  _actionsController: {fileID: 114173897078414380}
   _dashCooldown: 0.2
   _dashDuration: 0.4
   _dashForce: 650
@@ -3041,6 +3036,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a179c16de604057bc1902978187da5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114321217263922428
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1228637346484900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3d529360fc1eb64f960a7c2e6f303f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DoubleJump: {fileID: 114518903041524674}
+  WallSlide: {fileID: 114334842691314668}
+  WallJump: {fileID: 114227199752316536}
+  Dash: {fileID: 114303647452529036}
+  LedgeHanging: {fileID: 114323172994149904}
+  Throw: {fileID: 114826802134503442}
+  Melee: {fileID: 114696191872934630}
+  Jump: {fileID: 114090219148833560}
 --- !u!114 &114321624102803054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3063,8 +3077,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 133c6ce56c6470f45860708597722689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionsController: {fileID: 114173897078414380}
   _active: 1
+  _actionsController: {fileID: 114173897078414380}
   _hangDistance: 0.55
   _sensitivity: 0.2
   _pushUpForce: 70
@@ -3093,8 +3107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ee2d05cf979c5419963999f5e35967, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionsController: {fileID: 114173897078414380}
   _active: 1
+  _actionsController: {fileID: 114173897078414380}
   _wallSlideForce: -150
   _timeUntilSlide: 0
 --- !u!114 &114335719507235422
@@ -3241,8 +3255,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 150a19149c9f1b349a6b199dc2222b37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionsController: {fileID: 114173897078414380}
   _active: 1
+  _actionsController: {fileID: 114173897078414380}
   _jumpForce: 200
   _jumpDuration: 0.05
 --- !u!114 &114519754364544034
@@ -3626,11 +3640,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f2fd8f12669b841b06b79053192c56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _active: 0
   _projectilePrefab: {fileID: 1903117757689776, guid: 6b59b00b4e11d904e944fa50eb3066e3,
     type: 2}
   _throwForce: 0.002
   _cooldown: 1
   _actionsController: {fileID: 114173897078414380}
+--- !u!114 &114839822949810884
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1228637346484900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eb39ff6ef3519547a8fe69fe0ed97ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _abilityReferences: {fileID: 114321217263922428}
+  _doubleJump: 1
+  _wallSlide: 1
+  _wallJump: 1
+  _dash: 1
+  _ledgeHanging: 1
+  _throw: 1
 --- !u!114 &114850136985437648
 MonoBehaviour:
   m_ObjectHideFlags: 1

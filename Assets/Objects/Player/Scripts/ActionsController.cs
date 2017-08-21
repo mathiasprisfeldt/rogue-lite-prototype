@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abilitys;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using UnityEngine;
 using AcrylecSkeleton.ModificationSystem;
@@ -10,7 +11,7 @@ using Special;
 
 namespace CharacterController
 {
-    public enum Ability
+    public enum MoveAbility
     {
         None, DoubleJump, WallJump, Wallslide, LedgeHanging, Dash, Jump
     }
@@ -26,28 +27,7 @@ namespace CharacterController
         private PlayerApplication _app;
 
         [SerializeField]
-        private WallJump _wallJump;
-
-        [SerializeField]
-        private DoubleJump _doubleJump;
-
-        [SerializeField]
-        private WallSlide _wallSlide;
-
-        [SerializeField]
-        private LedgeHanging _ledgeHanging;
-
-        [SerializeField]
-        private Dash _dash;
-
-        [SerializeField]
-        private Jump _jump;
-
-        [SerializeField]
-        private Melee _melee;
-
-        [SerializeField]
-        private ThrowProjectile _throwProjectile;
+        private AbilityReferences _abilityReferences;
 
         [SerializeField]
         private ModificationHandler _modificationHandler;
@@ -79,40 +59,16 @@ namespace CharacterController
         private float _dashTimer;
         private Vector2 _savedVelocity;
         private bool _shouldHang;
-        private Ability _lastUsedVerticalAbility;
-        private Ability _lastUsedHorizontalAbility;
+        private MoveAbility _lastUsedVerticalMoveAbility;
+        private MoveAbility _lastUsedHorizontalMoveAbility;
         private CombatAbility _lastUsedCombatAbility;
         private bool _dashEnded;
 
-
-        public WallJump WallJump
-        {
-            get { return _wallJump; }
-            set { _wallJump = value; }
-        }
-
-        public DoubleJump DoubleJump
-        {
-            get { return _doubleJump; }
-            set { _doubleJump = value; }
-        }
-
-        public WallSlide WallSlide
-        {
-            get { return _wallSlide; }
-            set { _wallSlide = value; }
-        }
 
         public Vector2 Velocity
         {
             get { return _velocity; }
             set { _velocity = value; }
-        }
-
-        public LedgeHanging LedgeHanging
-        {
-            get { return _ledgeHanging; }
-            set { _ledgeHanging = value; }
         }
 
         public CollisionCheck TriggerCheck
@@ -127,12 +83,6 @@ namespace CharacterController
             set { _app = value; }
         }
 
-        public Dash Dash
-        {
-            get { return _dash; }
-            set { _dash = value; }
-        }
-
         public GameObject Model
         {
             get { return _model; }
@@ -144,28 +94,22 @@ namespace CharacterController
             set { _animator = value; }
         }
 
-        public Ability LastUsedHorizontalAbility
+        public MoveAbility LastUsedHorizontalMoveAbility
         {
-            get { return _lastUsedHorizontalAbility; }
-            set { _lastUsedHorizontalAbility = value; }
+            get { return _lastUsedHorizontalMoveAbility; }
+            set { _lastUsedHorizontalMoveAbility = value; }
         }
 
-        public Ability LastUsedVerticalAbility
+        public MoveAbility LastUsedVerticalMoveAbility
         {
-            get { return _lastUsedVerticalAbility; }
-            set { _lastUsedVerticalAbility = value; }
+            get { return _lastUsedVerticalMoveAbility; }
+            set { _lastUsedVerticalMoveAbility = value; }
         }
 
         public CombatAbility LastUsedCombatAbility
         {
             get { return _lastUsedCombatAbility; }
             set { _lastUsedCombatAbility = value; }
-        }
-
-        public Jump Jump
-        {
-            get { return _jump; }
-            set { _jump = value; }
         }
 
         public ModificationHandler ModificationHandler
@@ -200,6 +144,12 @@ namespace CharacterController
         public bool StartMelee{ get; set; }
 
         public float LastHorizontalDirection { get; set; }
+
+        public AbilityReferences AbilityReferences
+        {
+            get { return _abilityReferences; }
+            set { _abilityReferences = value; }
+        }
 
 
         // Update is called once per frame
@@ -275,13 +225,13 @@ namespace CharacterController
             Animator.SetBool("InCombat", Combat);
 
             //LedgeGrabbed
-            Animator.SetBool("LedgeGrabbed", LastUsedVerticalAbility == Ability.LedgeHanging);
+            Animator.SetBool("LedgeGrabbed", LastUsedVerticalMoveAbility == MoveAbility.LedgeHanging);
 
             //Onwall
-            Animator.SetBool("OnWall", LastUsedVerticalAbility == Ability.Wallslide);
+            Animator.SetBool("OnWall", LastUsedVerticalMoveAbility == MoveAbility.Wallslide);
 
             //Dash
-            if (LastUsedHorizontalAbility == Ability.Dash && StartDash && !Combat)
+            if (LastUsedHorizontalMoveAbility == MoveAbility.Dash && StartDash && !Combat)
             {
                 StartDash = false;
                 Animator.SetTrigger("Dash");
@@ -328,11 +278,11 @@ namespace CharacterController
 
         private void HandleCombat()
         {
-            if (_throwProjectile && _throwProjectile.Active)
+            if (_abilityReferences.Throw && _abilityReferences.Throw.Active)
             {
                 BeginCombat(CombatAbility.Throw);
             }
-            else if (_melee && _melee.Active)
+            else if (_abilityReferences.Melee && _abilityReferences.Melee.Active)
             {
                 BeginCombat(CombatAbility.Melee);
             }
@@ -360,41 +310,41 @@ namespace CharacterController
 
         private void HandleVerticalMovement(ref Vector2 velocity)
         {
-            LastUsedVerticalAbility = Ability.None;
+            LastUsedVerticalMoveAbility = MoveAbility.None;
             List<Collider2D> col = new List<Collider2D>();
             if (CollisionCheck.Sides.BottomColliders != null)
                 col = CollisionCheck.Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
 
-            if (LedgeHanging && LedgeHanging.VerticalActive)
+            if (_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive)
             {
-                LastUsedVerticalAbility = Ability.LedgeHanging;
-                LedgeHanging.HandleVertical(ref velocity);
+                LastUsedVerticalMoveAbility = MoveAbility.LedgeHanging;
+                _abilityReferences.LedgeHanging.HandleVertical(ref velocity);
             }
-            else if (Dash && Dash.VerticalActive)
+            else if (_abilityReferences.Dash && _abilityReferences.Dash.VerticalActive)
             {
-                LastUsedVerticalAbility = Ability.Dash;
-                Dash.HandleVertical(ref velocity);
+                LastUsedVerticalMoveAbility = MoveAbility.Dash;
+                _abilityReferences.Dash.HandleVertical(ref velocity);
             }
-            else if (WallJump && WallJump.VerticalActive &&
-                     !(LedgeHanging && LedgeHanging.VerticalActive))
+            else if (_abilityReferences.WallJump && _abilityReferences.WallJump.VerticalActive &&
+                     !(_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive))
             {
-                LastUsedVerticalAbility = Ability.WallJump;
-                WallJump.HandleVertical(ref velocity);
+                LastUsedVerticalMoveAbility = MoveAbility.WallJump;
+                _abilityReferences.WallJump.HandleVertical(ref velocity);
             }
-            else if (DoubleJump && DoubleJump.VerticalActive)
+            else if (_abilityReferences.DoubleJump && _abilityReferences.DoubleJump.VerticalActive)
             {
-                LastUsedVerticalAbility = Ability.DoubleJump;
-                DoubleJump.HandleVertical(ref velocity);
+                LastUsedVerticalMoveAbility = MoveAbility.DoubleJump;
+                _abilityReferences.DoubleJump.HandleVertical(ref velocity);
             }
-            else if (Jump && Jump.VerticalActive)
+            else if (_abilityReferences.Jump && _abilityReferences.Jump.VerticalActive)
             {
-                Jump.HandleVertical(ref velocity);
-                LastUsedVerticalAbility = Ability.Jump;
+                _abilityReferences.Jump.HandleVertical(ref velocity);
+                LastUsedVerticalMoveAbility = MoveAbility.Jump;
             }
-            else if (_wallSlide && _wallSlide.VerticalActive)
+            else if (_abilityReferences.WallSlide && _abilityReferences.WallSlide.VerticalActive)
             {
-                LastUsedVerticalAbility = Ability.Wallslide;
-                WallSlide.HandleVertical(ref velocity);
+                LastUsedVerticalMoveAbility = MoveAbility.Wallslide;
+                _abilityReferences.WallSlide.HandleVertical(ref velocity);
             }
             else
                 velocity = new Vector2(velocity.x, 0);
@@ -406,10 +356,10 @@ namespace CharacterController
 
         private void HandleHorizontalMovement(ref Vector2 velocity)
         {
-            if (!_dashEnded && !(Dash && Dash.HorizontalActive))
+            if (!_dashEnded && !(_abilityReferences.Dash && _abilityReferences.Dash.HorizontalActive))
                 _dashEnded = true;
 
-            LastUsedHorizontalAbility = Ability.None;
+            LastUsedHorizontalMoveAbility = MoveAbility.None;
             var horizontal = App.C.PlayerActions.Horizontal;
             if (horizontal > 0)
                 LastHorizontalDirection = 1;
@@ -425,20 +375,21 @@ namespace CharacterController
 
             velocity += new Vector2(_horizontalSpeed*horizontal, 0);
             
-            if (Dash && Dash.HorizontalActive)
+            if (_abilityReferences.Dash && _abilityReferences.Dash.HorizontalActive)
             {
-                LastUsedHorizontalAbility = Ability.Dash;
-                Dash.HandleHorizontal(ref velocity);           
+                LastUsedHorizontalMoveAbility = MoveAbility.Dash;
+                _abilityReferences.Dash.HandleHorizontal(ref velocity);           
             }
-            else if (WallJump && WallJump.HorizontalActive && !(LedgeHanging && LedgeHanging.VerticalActive))
+            else if (_abilityReferences.WallJump && _abilityReferences.WallJump.HorizontalActive 
+                && !(_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive))
             {
-                LastUsedHorizontalAbility = Ability.WallJump;
-                WallJump.HandleHorizontal(ref velocity);                
+                LastUsedHorizontalMoveAbility = MoveAbility.WallJump;
+                _abilityReferences.WallJump.HandleHorizontal(ref velocity);                
             }
-            else if (WallSlide && WallSlide.HorizontalActive)
+            else if (_abilityReferences.WallSlide && _abilityReferences.WallSlide.HorizontalActive)
             {
-                LastUsedHorizontalAbility = Ability.Wallslide;
-                WallSlide.HandleHorizontal(ref velocity);
+                LastUsedHorizontalMoveAbility = MoveAbility.Wallslide;
+                _abilityReferences.WallSlide.HandleHorizontal(ref velocity);
             }
         }
 

@@ -42,7 +42,7 @@ public class CameraPoint : MonoBehaviour
             return;
 	    var targetX = _target.transform.localScale.x > 0 ? _xPosition : -_xPosition;
 	    var targetY = 0f;
-	    var inRightState = _actionsController.State == CharacterState.Idle || _actionsController.State == CharacterState.Moving || _actionsController.LastUsedVerticalAbility == CharacterController.Ability.LedgeHanging;
+	    var inRightState = _actionsController.State == CharacterState.Idle || _actionsController.State == CharacterState.Moving || _actionsController.LastUsedVerticalMoveAbility == CharacterController.MoveAbility.LedgeHanging;
 
 	    if (_actionsController.App.C.PlayerActions != null && inRightState
             && (_actionsController.App.C.PlayerActions.DeadZoneUp(_peekDeadZone) || _actionsController.App.C.PlayerActions.DeadZoneDown(_peekDeadZone)))

@@ -6,8 +6,7 @@ namespace CharacterController
     /// Purpose:
     /// Creator:
     /// </summary>
-    [RequireComponent(typeof(ActionsController))]
-    public class Dash : global::MovementAbility
+    public class Dash : MovementAbility
     {
         [SerializeField]
         private float _dashCooldown;

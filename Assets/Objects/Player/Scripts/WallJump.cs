@@ -6,8 +6,7 @@ namespace CharacterController
     /// Purpose:
     /// Creator:
     /// </summary>
-    [RequireComponent(typeof(ActionsController))]
-    public class WallJump : global::MovementAbility
+    public class WallJump : MovementAbility
     {
         [SerializeField]
         private float _verticalForce;

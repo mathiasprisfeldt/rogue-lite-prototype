@@ -19,5 +19,11 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
             Health = GetComponentInChildren<HealthController>();
             PlayerActions = new InputActions();
         }
+
+        public void Update()
+        {
+            if(PlayerActions == null)
+                PlayerActions = new InputActions();
+        }
     }
 }

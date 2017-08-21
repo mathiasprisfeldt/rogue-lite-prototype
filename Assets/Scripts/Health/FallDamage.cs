@@ -94,7 +94,8 @@ namespace Health
             }
 
             //If controller is wall sliding save position when sliding.s
-            bool isWallSliding = _actionsController && (_actionsController.WallSlide && _actionsController.WallSlide.VerticalActive);
+            bool isWallSliding = _actionsController && (_actionsController.AbilityReferences.WallSlide 
+                && _actionsController.AbilityReferences.WallSlide.VerticalActive);
 
             if (isColliding || isWallSliding)
                 _lastPosition = _healthController.Character.Rigidbody.position;

@@ -10,7 +10,7 @@ public struct TilePos
     public int TX { get; set; }
     public int TY { get; set; }
 
-    public TilePos(int lX, int lY, int tX, int tY)
+    public TilePos(int lX, int lY, int tX, int tY) : this()
     {
         LX = lX;
         LY = lY;
@@ -126,7 +126,7 @@ public class TileBehaviour : MonoBehaviour
         foreach (var target in targets)
         {
             if (target == gameObject)
-                pb.Istop = _isTop;
+                pb.Istop = true;
             pb.Tiles.Add(this);
             target.transform.SetParent(parent.transform, true);
         }

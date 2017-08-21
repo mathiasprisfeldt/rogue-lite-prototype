@@ -9,8 +9,7 @@ namespace CharacterController
     /// Purpose:
     /// Creator:
     /// </summary>
-    [RequireComponent(typeof(ActionsController))]
-    public class LedgeHanging : global::MovementAbility
+    public class LedgeHanging : MovementAbility
     {
         [SerializeField]
         private float _hangDistance;
@@ -47,11 +46,11 @@ namespace CharacterController
 
                 var left = _actionsController.TriggerCheck.Sides.Left;
                 var right = _actionsController.TriggerCheck.Sides.Right;
-                var horizontalMovement = _actionsController.App.C.PlayerActions.Right && left ||
-                                         _actionsController.App.C.PlayerActions.Left && right;
+                var horizontalMovement = _actionsController.App.C.PlayerActions != null && (_actionsController.App.C.PlayerActions.Right && left ||
+                                         _actionsController.App.C.PlayerActions.Left && right);
                 if (_downTimer > 0 || _upTimer > 0)
                     return true;
-                if ((right || left) && !(_actionsController.WallJump && _actionsController.WallJump.HorizontalActive) && _hangCooldownTimer <= 0 
+                if ((right || left) && !(_actionsController.AbilityReferences.WallJump && _actionsController.AbilityReferences.WallJump.HorizontalActive) && _hangCooldownTimer <= 0 
                     && _actionsController.LastUsedCombatAbility == CombatAbility.None && !_actionsController.OnGround)
                 {
                     List<Collider2D> colliders = right ? _actionsController.TriggerCheck.Sides.RightColliders : _actionsController.TriggerCheck.Sides.LeftColliders;
@@ -128,7 +127,7 @@ namespace CharacterController
                 _downTimer -= Time.fixedDeltaTime;  
 
             if (_upTimer > 0 || _downTimer > 0)
-                _actionsController.LastUsedVerticalAbility = Ability.None;
+                _actionsController.LastUsedVerticalMoveAbility = MoveAbility.None;
 
             var temp = 0f;
             if (_upTimer > 0)
