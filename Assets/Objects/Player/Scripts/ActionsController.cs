@@ -431,7 +431,7 @@ namespace CharacterController
             if (_targetLayer == -1)
             {
                 Debug.LogWarning(targetLayer + " layer dose not exist!");
-                RemoveModificaiton();
+                ModificationHandler.RemoveModification(this);
             }
             else
             {
@@ -449,13 +449,12 @@ namespace CharacterController
         public override void RemoveModificaiton()
         {
             _targetCollider.gameObject.layer = _oldLayer;
-            base.RemoveModificaiton();
         }
 
         public override void UpdateModificaiton()
         {
             if(!_collisonCheck.Sides.TargetColliders.Contains(_targetCollider))
-                RemoveModificaiton();
+                ModificationHandler.RemoveModification(this);
         }
 
         public override void FixedUpdateModificaiton()

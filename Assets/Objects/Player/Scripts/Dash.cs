@@ -45,11 +45,7 @@ namespace CharacterController
                         var leftInput = _actionsController.App.C.PlayerActions.Left;
                         var rightInput = _actionsController.App.C.PlayerActions.Right;
 
-                        if (!leftInput && _actionsController.TriggerCheck.Left && _direction == -1 && !_actionsController.App.C.PlayerActions.Left
-                            || !rightInput && _actionsController.TriggerCheck.Left && _direction == -1 && !_actionsController.App.C.PlayerActions.Left)
-                            _direction = leftInput ? -1 : 1;
-
-                        if (_direction > 0 && _actionsController.TriggerCheck.Right || _direction < 0 && _actionsController.TriggerCheck.Left)
+                        if (_direction > 0 && _actionsController.WallSlideCheck.Right || _direction < 0 && _actionsController.WallSlideCheck.Left)
                             return false;
 
                         _dashing = true;

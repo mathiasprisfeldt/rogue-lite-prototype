@@ -10,6 +10,8 @@ public class PlatformBehavior : MonoBehaviour
 {
     public List<TileBehaviour> Tiles { get; set; }
     public bool Istop { get; set; }
+    public bool Left { get; set; }
+    public bool Right { get; set; }
 
     public void Awake()
     {

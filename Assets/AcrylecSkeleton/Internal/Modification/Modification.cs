@@ -71,10 +71,7 @@
         /// <summary>
         /// Call this when the modification should be removed
         /// </summary>
-        public virtual void RemoveModificaiton()
-        {
-            ModificationHandler.RemoveModification(this);
-        }
+        public abstract void RemoveModificaiton();
 
         /// <summary>
         /// Call this in a update loop.

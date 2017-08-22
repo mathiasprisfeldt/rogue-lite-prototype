@@ -78,7 +78,7 @@ namespace CharacterController
                             return false;
 
                         PlatformBehavior platform = col.gameObject.GetComponent<PlatformBehavior>();
-                        if (platform && !platform.Istop)
+                        if (platform && (!platform.Istop || left && platform.Right || right && platform.Left))
                             return false;
 
                         if (_actionsController.App.C.PlayerActions.Down &&

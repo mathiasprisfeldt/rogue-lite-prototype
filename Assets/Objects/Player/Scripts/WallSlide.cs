@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CharacterController
@@ -21,11 +22,35 @@ namespace CharacterController
             {
                 if (!base.VerticalActive)
                     return false;
+
                 var wallJumpActive = !(_actionsController.AbilityReferences.WallJump && _actionsController.AbilityReferences.WallJump.HorizontalActive);
                 var falling = _actionsController.Rigidbody.velocity.y < -1 || _falling;
                 var rest = (_actionsController.WallSlideCheck.Left || _actionsController.WallSlideCheck.Right);
 
-                if(wallJumpActive && falling && rest && _actionsController.LastUsedCombatAbility == CombatAbility.None)
+                List<Collider2D> colliders = _actionsController.WallSlideCheck.Right ? 
+                    _actionsController.WallSlideCheck.Sides.RightColliders : _actionsController.WallSlideCheck.Sides.LeftColliders;
+                Collider2D col = colliders.Count > 0 ? colliders[0] : null;
+
+                if (col != null)
+                {
+                    var distance = float.MaxValue;
+                    foreach (var c in colliders)
+                    {
+                        var tempDistance = Mathf.Abs(_actionsController.TriggerCheck.CollidersToCheck[0].bounds.center.y - c.bounds.center.y);
+                        if (tempDistance < distance)
+                        {
+                            distance = tempDistance;
+                            col = c;
+                        }
+
+                    }
+
+                    PlatformBehavior platform = col.gameObject.GetComponent<PlatformBehavior>();
+                    if (!(platform && (!platform.Left || !platform.Right)))
+                        return false;
+                }
+
+                if (wallJumpActive && falling && rest && _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {
                     dir = _actionsController.TriggerCheck.Sides.Left ? 1 : -1;
                     if (_slideTimer > 0)
