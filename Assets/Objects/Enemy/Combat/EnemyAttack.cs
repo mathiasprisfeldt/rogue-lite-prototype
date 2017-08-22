@@ -14,7 +14,7 @@ namespace Enemy
     public class EnemyAttack : EnemyState
     {
         [SerializeField]
-        private bool _drawGizmos;
+        protected bool _drawGizmos;
 
         [SerializeField]
         private Vector2 _attackBoxSize = Vector2.one;
@@ -85,13 +85,10 @@ namespace Enemy
         /// </summary>
         public virtual void Attack()
         {
-            if (CheckHitbox())
-                GameManager.Instance.Player.M.ActionController.HealthController.Damage(App.M.Character.Damage, from: App.M.Character.Rigidbody.transform);
-
             _canAttack = false;
         }
 
-        private void OnDrawGizmosSelected()
+        protected virtual void OnDrawGizmosSelected()
         {
             if (!_drawGizmos)
                 return;
@@ -104,7 +101,7 @@ namespace Enemy
 
         public override bool CheckPrerequisite()
         {
-            return !IsActive && CheckHitbox() && App.M.Target;
+            return !IsActive && CheckHitbox() && App.M.Target && !App.C.IsState<EnemyAvoid>();
         }
 
         /// <summary>

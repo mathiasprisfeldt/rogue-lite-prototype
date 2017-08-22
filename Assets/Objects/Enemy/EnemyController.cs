@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.MVC;
+using Archon.SwissArmyLib.Automata;
 using Managers;
 using UnityEngine;
 
@@ -25,6 +26,13 @@ namespace Enemy
         public List<EnemyState> States { get; set; }
 	    public EnemyState LastState { get; set; }
 	    public EnemyState CurrentState { get; set; }
+
+	    public FiniteStateMachine<EnemyController> StateMachine { get; set; }
+
+	    void Awake()
+	    {
+	        StateMachine = new FiniteStateMachine<EnemyController>(this);
+	    }
 
 	    void Start()
 	    {
@@ -50,16 +58,13 @@ namespace Enemy
                 return;
 	        }
 
-	        //Setting initial state to active.
-            //If initial state isn't found yet, try to find one.
-	        if (!_initialState)
-	            _initialState = States.FirstOrDefault(state => state.CheckPrerequisite());
-
             ChangeState(_initialState, _initialState == null || _initialState.IsIsolated);
 	    }
 
 	    void Update()
 	    {
+            StateMachine.Update(Time.deltaTime);
+
 	        Vector2 ownPos = App.M.Character.Rigidbody.position;
 	        Vector2 plyPos = GameManager.Instance.Player.transform.position.ToVector2();
 
@@ -157,6 +162,10 @@ namespace Enemy
 	            CurrentState = desiredState;
 	            CurrentState.StateStart();
 	        }
+	        else
+	        {
+	            CurrentState = null;
+	        }
 	    }
 
         /// <summary>
@@ -184,7 +193,7 @@ namespace Enemy
         /// Sets velocity on character, but turns if needed.
         /// </summary>
         /// <param name="vel"></param>
-	    public void SetVelocity(Vector2 vel, bool overrideYVel = false)
+	    public void SetVelocity(Vector2 vel, bool overrideYVel = false, bool forceTurn = false)
 	    {
 	        if (!IsTurning)
 	        {
@@ -193,7 +202,7 @@ namespace Enemy
 
 	            App.M.Character.SetVelocity(vel, true);
 
-                if (!App.M.CanBackPaddle)
+                if (!App.M.CanBackPaddle || forceTurn)
 	                Turn(Mathf.RoundToInt(vel.x));
 	        }
 	    }

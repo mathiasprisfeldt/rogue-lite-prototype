@@ -34,7 +34,7 @@ namespace Enemy
         {
             //If we're patrolling, move the enemy.
             if (IsActive && App.M.Character.OnGround)
-                App.C.SetVelocity(_patrolDirection);
+                App.C.SetVelocity(_patrolDirection, forceTurn: true);
         }
 
         public override bool CheckPrerequisite()

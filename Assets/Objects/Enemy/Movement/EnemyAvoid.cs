@@ -16,8 +16,10 @@ namespace Enemy
         {
             base.StateUpdate();
 
-            if (CheckPrerequisite())
+            if (CheckPrerequisite() && App.M.Character.BumpingDirection == 0)
                 App.C.SetVelocity(new Vector2(-Mathf.Round(App.C.ToPlayer.normalized.x), 0));
+            else
+                App.C.ChangeState(null);
         }
 
         public override bool CheckPrerequisite()

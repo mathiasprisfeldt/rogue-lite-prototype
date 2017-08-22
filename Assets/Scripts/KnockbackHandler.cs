@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Controllers;
 using UnityEngine;
 
 namespace Knockbacks
@@ -7,8 +8,11 @@ namespace Knockbacks
     /// Purpose:
     /// Creator:
     /// </summary>
+    [RequireComponent(typeof(Character))]
     public class KnockbackHandler : MonoBehaviour
     {
+        private Character _character;
+
         public Vector2 Velocity { get; private set; }
 
         public bool Active
@@ -17,6 +21,33 @@ namespace Knockbacks
         }
 
         private List<KnockBack> _knocksBacks = new List<KnockBack>();
+
+        void Awake()
+        {
+            _character = GetComponent<Character>();
+        }
+
+        public void Update()
+        {
+            for (int i = _knocksBacks.Count - 1; i >= 0; i--)
+            {
+                if (_knocksBacks[i].Time > 0)
+                {
+                    _knocksBacks[i].Time -= Time.deltaTime;
+                }
+                else
+                    _knocksBacks.RemoveAt(i);
+            }            
+        }
+
+        void FixedUpdate()
+        {
+            if (!Active)
+                return;
+
+            Vector2 knockbackForce = Vector2.zero;
+            _character.Rigidbody.velocity = _character.Rigidbody.CounterGravity(ApplyKnockback()) * Time.fixedDeltaTime + knockbackForce;
+        }
 
         public Vector2 ApplyKnockback()
         {
@@ -37,19 +68,6 @@ namespace Knockbacks
             }
             Velocity = velocity;
             return velocity;
-        }
-
-        public void Update()
-        {
-            for (int i = _knocksBacks.Count - 1; i >= 0; i--)
-            {
-                if (_knocksBacks[i].Time > 0)
-                {
-                    _knocksBacks[i].Time -= Time.deltaTime;
-                }
-                else
-                    _knocksBacks.RemoveAt(i);
-            }            
         }
 
         public void AddForce(Vector2 force, float duration)
