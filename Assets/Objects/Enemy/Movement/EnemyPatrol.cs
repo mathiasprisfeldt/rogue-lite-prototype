@@ -33,13 +33,13 @@ namespace Enemy
         void FixedUpdate()
         {
             //If we're patrolling, move the enemy.
-            if (IsActive)
-                App.C.SetVelocity(_patrolDirection);
+            if (IsActive && App.M.Character.OnGround)
+                App.C.SetVelocity(_patrolDirection, forceTurn: true);
         }
 
         public override bool CheckPrerequisite()
         {
-            return false;
+            return !App.C.CurrentState;
         }
     }
 }

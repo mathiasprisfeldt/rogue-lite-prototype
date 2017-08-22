@@ -52,10 +52,10 @@ namespace Health
         private Vector2 _healthInterval = new Vector2(0, 100); //Health is clamped to these values.
 
         [SerializeField]
-        private float _knockbackForce;
+        private float _knockbackForce = 300;
 
         [SerializeField]
-        private float _knockbackDuration;
+        private float _knockbackDuration = 0.2f;
 
         [SerializeField, Tooltip("If its empty it uses GameObject.")]
         private GameObject _responsibleGameObject; //The gameobject responsible for health (The object that gets destroyed when dead)
