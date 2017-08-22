@@ -10,17 +10,13 @@ namespace Enemy
     {
         void FixedUpdate()
         {
-            if (IsActive && App.M.Target)
-            {
-                Vector2 dir = App.M.Target.M.ActionController.Rigidbody.position - App.M.Character.Rigidbody.position;
-                dir.Normalize();
-                App.C.SetVelocity(new Vector2(Mathf.Round(dir.x), 0));
-            }
+            if (IsActive && App.M.Target && App.M.Character.OnGround)
+                App.C.SetVelocity(new Vector2(Mathf.Round(App.C.ToPlayer.normalized.x), 0));
         }
 
         public override bool CheckPrerequisite()
         {
-            return App.M.Target && App.C.CurrentState is EnemyPatrol && !(App.C.CurrentState is EnemyAttack);
+            return App.M.Target && App.C.CurrentState is EnemyPatrol && !(App.C.CurrentState is EnemyAttack) || App.C.CurrentState == null;
         }
 
         public override void StateUpdate()

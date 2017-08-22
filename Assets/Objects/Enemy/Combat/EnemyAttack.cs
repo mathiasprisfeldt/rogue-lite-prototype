@@ -3,6 +3,7 @@ using AcrylecSkeleton.Extensions;
 using Controllers;
 using Managers;
 using UnityEngine;
+// ReSharper disable FieldCanBeMadeReadOnly.Local
 
 namespace Enemy
 {
@@ -13,13 +14,13 @@ namespace Enemy
     public class EnemyAttack : EnemyState
     {
         [SerializeField]
-        private bool _drawGizmos;
+        protected bool _drawGizmos;
 
         [SerializeField]
-        private Vector2 _attackBoxSize;
+        private Vector2 _attackBoxSize = Vector2.one;
 
         [SerializeField]
-        private Vector2 _attackBoxOffset;
+        private Vector2 _attackBoxOffset = Vector2.right;
 
         private float _indicatorTimer;
         private float _cooldownTimer;
@@ -74,7 +75,7 @@ namespace Enemy
                 }
             }
 
-            //HACKED: Should properly change when AI becomes more dynamic
+            //TODO: HACKED: Should properly change when AI becomes more dynamic
             if (!CheckHitbox() && !_canAttack && IsIsolated)
                 App.C.ResetToLast();
         }
@@ -84,13 +85,10 @@ namespace Enemy
         /// </summary>
         public virtual void Attack()
         {
-            if (CheckHitbox())
-                GameManager.Instance.Player.M.ActionController.HealthController.Damage(App.M.Character.Damage, from: App.M.Character.Rigidbody.transform);
-
             _canAttack = false;
         }
 
-        private void OnDrawGizmosSelected()
+        protected virtual void OnDrawGizmosSelected()
         {
             if (!_drawGizmos)
                 return;
@@ -103,7 +101,7 @@ namespace Enemy
 
         public override bool CheckPrerequisite()
         {
-            return !IsActive && CheckHitbox();
+            return !IsActive && CheckHitbox() && App.M.Target && !App.C.IsState<EnemyAvoid>();
         }
 
         /// <summary>
@@ -112,6 +110,7 @@ namespace Enemy
         /// <returns>True if it hit something good.</returns>
         public bool CheckHitbox()
         {
+            //TODO: Properly needs optimizing
             return Physics2D.OverlapBoxAll(GetHitbox(), _attackBoxSize, 0, LayerMask.GetMask("Hitbox")).Any(d => d.tag == "Player");
         }
     }

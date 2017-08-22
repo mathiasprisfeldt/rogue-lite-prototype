@@ -33,7 +33,10 @@ namespace Enemy
 	    [SerializeField, Tooltip("Amount of time it takes the enemy to turn around.")]
 	    private float _turnSpeed;
 
-	    [Space]
+        [SerializeField]
+	    private bool _canBackPaddle;
+
+        [Space]
         [SerializeField]
 	    private PlayerApplication _target;
 
@@ -77,6 +80,12 @@ namespace Enemy
 	    {
 	        get { return _turnSpeed; }
 	        set { _turnSpeed = value; }
+	    }
+
+	    public bool CanBackPaddle
+	    {
+	        get { return _canBackPaddle; }
+	        set { _canBackPaddle = value; }
 	    }
 	}
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.MVC;
+using Archon.SwissArmyLib.Automata;
 using Managers;
 using UnityEngine;
 
@@ -19,10 +20,19 @@ namespace Enemy
 
 	    private EnemyState _initialState;
 
+	    public Vector2 ToPlayer { get; private set; }
 	    public bool IsTurning { get; private set; }
+
         public List<EnemyState> States { get; set; }
 	    public EnemyState LastState { get; set; }
 	    public EnemyState CurrentState { get; set; }
+
+	    public FiniteStateMachine<EnemyController> StateMachine { get; set; }
+
+	    void Awake()
+	    {
+	        StateMachine = new FiniteStateMachine<EnemyController>(this);
+	    }
 
 	    void Start()
 	    {
@@ -48,16 +58,13 @@ namespace Enemy
                 return;
 	        }
 
-	        //Setting initial state to active.
-            //If initial state isn't found yet, try to find one.
-	        if (!_initialState)
-	            _initialState = States.FirstOrDefault();
-
-            ChangeState(!_initialState ? States.FirstOrDefault() : _initialState);
+            ChangeState(_initialState, _initialState == null || _initialState.IsIsolated);
 	    }
 
 	    void Update()
 	    {
+            StateMachine.Update(Time.deltaTime);
+
 	        Vector2 ownPos = App.M.Character.Rigidbody.position;
 	        Vector2 plyPos = GameManager.Instance.Player.transform.position.ToVector2();
 
@@ -73,10 +80,10 @@ namespace Enemy
 	            }
             }
 
-	        Vector2 plyDist = ownPos - plyPos;
+	        ToPlayer = plyPos - ownPos;
 	        //Checking if player is in sight
 	        if (GameManager.Instance.Player &&
-	            plyDist.magnitude <=
+	            ToPlayer.magnitude <=
 	            App.M.ViewRadius)
 	        {
 	            bool canTarget = true;
@@ -86,17 +93,17 @@ namespace Enemy
 	            int lookDir = App.M.Character.LookDirection;
 
 	            if (lookDir == -1)
-	                isTargetBehind = plyDist.x < lookDir;
+	                isTargetBehind = ToPlayer.x > lookDir;
 	            else if (lookDir == 1)
-	                isTargetBehind = plyDist.x > lookDir;
+	                isTargetBehind = ToPlayer.x < lookDir;
                 
                 //If the target is behind and we still can target it, do so.
 	            if (isTargetBehind && !App.M.TargetBehind)
 	                canTarget = false;
 
                 //Check if we can see the player
-	            if (canTarget && 
-                    Physics2D.RaycastAll(ownPos, ownPos.DirectionTo(plyPos), 10, LayerMask.GetMask("Platform")).Any())
+                if (canTarget && 
+                    Physics2D.RaycastAll(ownPos, ownPos.DirectionTo(plyPos), Mathf.Clamp(ToPlayer.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")).Any())
 	            {
                     //We cant see the player, lose interest.
 	                canTarget = false;
@@ -115,7 +122,7 @@ namespace Enemy
 	        //Check the states prerequisites & parallel updates.
 	        foreach (EnemyState enemyState in States)
 	        {
-	            if (enemyState.CheckPrerequisite())
+	            if (enemyState != CurrentState && enemyState.CheckPrerequisite())
 	                ChangeState(enemyState, enemyState.IsIsolated);
 
                 if (enemyState.IsActive)
@@ -130,27 +137,15 @@ namespace Enemy
         /// <param name="isolate">Should it disable all other states.</param>
 	    public void ChangeState<T>(bool isolate = true)
 	    {
-	        //Find requested state
-	        EnemyState newState = States.FirstOrDefault(state => state is T);
-            ChangeState(newState, isolate);
+            ChangeState(States.FirstOrDefault(state => state is T), isolate);
 	    }
 
 	    public void ChangeState(EnemyState desiredState, bool isolate = true)
 	    {
-	        //If we cant find it, log warn.
-	        if (!desiredState)
-	        {
-	            Debug.LogWarning("EnemyController tried to find state of type " + desiredState.GetType() + " but couldn't. Ignoring request.", transform);
-	            return;
-	        }
-
 	        if (CurrentState == desiredState)
-	        {
-	            Debug.LogWarning("EnemyController tried to change state to the same one. Ignoring request.", transform);
 	            return;
-	        }
-
-	        //Current is now last
+	        
+            //Current is now last
 	        if (CurrentState)
 	        {
 	            LastState = CurrentState;
@@ -161,11 +156,17 @@ namespace Enemy
             if (isolate)
 	            States.Where(state => state != desiredState).ToList().ForEach(state => state.IsActive = false);
 
-	        desiredState.IsActive = true;
-
-	        CurrentState = desiredState;
-            CurrentState.StateStart();
-        }
+	        if (desiredState)
+	        {
+	            desiredState.IsActive = true;
+	            CurrentState = desiredState;
+	            CurrentState.StateStart();
+	        }
+	        else
+	        {
+	            CurrentState = null;
+	        }
+	    }
 
         /// <summary>
         /// Method used to turn the enemy around.
@@ -192,12 +193,17 @@ namespace Enemy
         /// Sets velocity on character, but turns if needed.
         /// </summary>
         /// <param name="vel"></param>
-	    public void SetVelocity(Vector2 vel)
+	    public void SetVelocity(Vector2 vel, bool overrideYVel = false, bool forceTurn = false)
 	    {
 	        if (!IsTurning)
 	        {
-	            App.M.Character.SetVelocity(vel);
-	            Turn(Mathf.RoundToInt(vel.x));
+                if (!overrideYVel)
+                    vel = new Vector2(vel.x, App.M.Character.Rigidbody.velocity.y);
+
+	            App.M.Character.SetVelocity(vel, true);
+
+                if (!App.M.CanBackPaddle || forceTurn)
+	                Turn(Mathf.RoundToInt(vel.x));
 	        }
 	    }
 
@@ -206,7 +212,8 @@ namespace Enemy
         /// </summary>
 	    public void ResetToInitial()
 	    {
-	        ChangeState(_initialState);
+            if (_initialState)
+	            ChangeState(_initialState);
 	    }
 
         /// <summary>
@@ -214,7 +221,17 @@ namespace Enemy
         /// </summary>
 	    public void ResetToLast()
 	    {
-	        ChangeState(LastState);
+            if (LastState)
+	            ChangeState(LastState);
 	    }
-	}
+
+        /// <summary>
+        /// Used for checking if the current state matches T
+        /// </summary>
+        /// <typeparam name="T">Type of state</typeparam>
+	    public bool IsState<T>() where T : EnemyState
+	    {
+	        return CurrentState is T;
+	    }
+    }
 }
