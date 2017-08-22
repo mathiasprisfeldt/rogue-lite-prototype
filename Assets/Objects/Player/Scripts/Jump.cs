@@ -81,20 +81,7 @@ public class Jump : MovementAbility {
 
         velocity = new Vector2(velocity.x, force);
 
-        if (_actionsController.GroundCollisionCheck.Sides.BottomColliders != null && _actionsController.GroundCollisionCheck.Sides.BottomColliders.Count > 0 
-            && _actionsController.App.C.PlayerActions.Down)
-        {
-            
-            foreach (var c in _actionsController.GroundCollisionCheck.Sides.BottomColliders)
-            {
-                if (c.gameObject.tag == "OneWayCollider")
-                {
-                    velocity = new Vector2(velocity.x, 0);
-                    _actionsController.ModificationHandler.AddModification(new TemporaryLayerChange(0.4f, "ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c.gameObject));
-                }
-                
-            }
-        }
+        
 
     }
 
@@ -104,45 +91,5 @@ public class Jump : MovementAbility {
     }
 }
 
-public class TemporaryLayerChange : Modification
-{
-    private LayerMask _targetLayer;
-    private LayerMask _oldLayer;
-    private GameObject _targetObject;
 
-    public TemporaryLayerChange(float time, string name, string targetLayer, GameObject targetObject) : base(time, name)
-    {
-        _targetLayer = LayerMask.NameToLayer(targetLayer);
-        if (_targetLayer == -1)
-        {
-            Debug.LogWarning(targetLayer + " layer dose not exist!");
-            RemoveModificaiton();
-        }
-
-        else
-        {
-            _oldLayer = targetObject.layer;
-            targetObject.layer = _targetLayer;
-            _targetObject = targetObject;
-        }
-    }
-
-    public override void ApplyModificaiton()
-    {
-    }
-
-    public override void RemoveModificaiton()
-    {
-        if (_targetObject)
-            _targetObject.layer = _oldLayer;
-    }
-
-    public override void UpdateModificaiton()
-    {
-    }
-
-    public override void FixedUpdateModificaiton()
-    {
-    }
-}
 

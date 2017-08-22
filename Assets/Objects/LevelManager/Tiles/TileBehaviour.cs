@@ -30,6 +30,8 @@ public class TileBehaviour : MonoBehaviour
 
     public bool Touched { get; set; }
     [SerializeField]
+    private string _targetTag;
+    [SerializeField]
     private bool _autoTexturize;
     [SerializeField]
     private Sprite _leftTexture;
@@ -47,6 +49,12 @@ public class TileBehaviour : MonoBehaviour
 
     public TilePos TilePos { get; set; }
 
+    public string TargetTag
+    {
+        get { return _targetTag; }
+        set { _targetTag = value; }
+    }
+
     [SerializeField]
     private LayerMask _colMask;
 
@@ -57,29 +65,36 @@ public class TileBehaviour : MonoBehaviour
             var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
             var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
 
+            var up = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.up);
+            var down = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.down);
+            var left = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.left);
+            var right = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.right);
+
             //Up
-            if (LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.up).Type == 1)
+            if (up.Type == 1 || up.Type == 6)
             {
                 TopCollision = true;
             }
             //Down
-            if (LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.down).Type == 1)
+            if (down.Type == 1 || down.Type == 6)
             {
                 BottomCollision = true;
             }
             //Left
-            if (LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.left).Type == 1)
+            if (left.Type == 1 || left.Type == 6)
             {
                 LeftCollision = true;
             }
             //Right
-            if (LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.right).Type == 1)
+            if (right.Type == 1 || right.Type == 6)
             {
                 RightCollision = true;
             }
 
             var spr = GetComponent<SpriteRenderer>();
             Sprite newSprite = null;
+
+
 
             if (LeftCollision && !RightCollision)
                 newSprite = _rightTexture;
@@ -151,13 +166,13 @@ public class TileBehaviour : MonoBehaviour
         if (right != null)
             tRight = right.GetComponent<TileBehaviour>();
 
-        if (tLeft && !tLeft.Touched)
+        if (tLeft && !tLeft.Touched && (tLeft.TargetTag == TargetTag))
         {
             tLeft.Touched = true;
             _queue.Enqueue(tLeft);
         }
 
-        if (tRight && !tRight.Touched)
+        if (tRight && !tRight.Touched && (tRight.TargetTag == TargetTag))
         {
             tRight.Touched = true;
             _queue.Enqueue(tRight);
@@ -241,7 +256,7 @@ public class TileBehaviour : MonoBehaviour
         if ( goDown || !goDown && (!tLeft && !tRight) || nextShouldDown)
             nextShouldDown = true;
 
-        if (nextShouldDown && tDown)
+        if (nextShouldDown && tDown && (tDown.TargetTag == TargetTag))
         {
             Touched = true;
             tDown.Touched = true;

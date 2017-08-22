@@ -21,10 +21,10 @@ GameObject:
   - component: {fileID: 4977535063075046}
   - component: {fileID: 212929351680791606}
   - component: {fileID: 61032843265317288}
-  - component: {fileID: 114556781639305018}
-  m_Layer: 12
+  - component: {fileID: 114016620851141042}
+  m_Layer: 9
   m_Name: 6
-  m_TagString: Untagged
+  m_TagString: OneWayCollider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1462123427220180}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 12.21, y: -13.38, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -51,10 +51,10 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.25}
+  m_UsedByComposite: 1
+  m_Offset: {x: 0, y: 0.25}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -67,7 +67,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &114556781639305018
+--- !u!114 &114016620851141042
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -75,11 +75,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1462123427220180}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3320898ec3bf3d74ca9380b13996ef72, type: 3}
+  m_Script: {fileID: 11500000, guid: beb2f70a66efdef4ea4c526ff4a7d6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
-  _DamageOverTime: 0
+  _parent: {fileID: 1335697151304256, guid: b9e4caa103a896843990c9d2ceaeaab2, type: 2}
+  _targetTag: OneWayCollider
+  _autoTexturize: 1
+  _leftTexture: {fileID: 21300000, guid: 5c3583552f01f0442ade07d437d190fe, type: 3}
+  _middleTexture: {fileID: 21300000, guid: 9a13d9d266e7004469acadec7a25bfca, type: 3}
+  _rightTexture: {fileID: 21300000, guid: 9a13d9d266e7004469acadec7a25bfca, type: 3}
+  _centerTexture: {fileID: 21300000, guid: 86685cf9ec571524492f009efd7f0910, type: 3}
+  _colMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!212 &212929351680791606
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -42,6 +42,9 @@ namespace CharacterController
         private CollisionCheck _wallSlideCheck;
 
         [SerializeField]
+        private CollisionCheck _onewayCheck;
+
+        [SerializeField]
         private float _horizontalSpeed;
 
         [SerializeField]
@@ -169,7 +172,7 @@ namespace CharacterController
         void FixedUpdate()
         {
             _velocity = new Vector2(0, 0);
-
+                       
             HandleCombat();
             HandleHorizontalMovement(ref _velocity);
             HandleVerticalMovement(ref _velocity);  
@@ -189,6 +192,25 @@ namespace CharacterController
             HandleMaxSpeed();
             if (App.C.PlayerActions != null)
                 App.C.PlayerActions.ResetProxy();
+        }
+
+        private bool HandleOnewayColliders()
+        {
+            var collisionHappened = false;
+            if (GroundCollisionCheck.Sides.BottomColliders != null && GroundCollisionCheck.Sides.BottomColliders.Count > 0
+            && App.C.PlayerActions.Down && App.C.PlayerActions.ProxyInputActions.Jump.WasPressed)
+            {
+                foreach (var c in GroundCollisionCheck.Sides.BottomColliders)
+                {
+                    if (c.gameObject.tag == "OneWayCollider")
+                    {
+                        ModificationHandler.AddModification(new TemporaryLayerChange("ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c,_onewayCheck));
+                        collisionHappened = true;
+                    }
+
+                }
+            }
+            return collisionHappened;
         }
 
         private void HandleMaxSpeed()
@@ -315,7 +337,11 @@ namespace CharacterController
             if (CollisionCheck.Sides.BottomColliders != null)
                 col = CollisionCheck.Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
 
-            if (_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive)
+            if (HandleOnewayColliders())
+            {
+                
+            }
+            else if (_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive)
             {
                 LastUsedVerticalMoveAbility = MoveAbility.LedgeHanging;
                 _abilityReferences.LedgeHanging.HandleVertical(ref velocity);
@@ -393,5 +419,50 @@ namespace CharacterController
             }
         }
 
+    }
+
+    public class TemporaryLayerChange : Modification
+    {
+        private LayerMask _targetLayer;
+        private LayerMask _oldLayer;
+        private Collider2D _targetCollider;
+        private CollisionCheck _collisonCheck;
+
+        public TemporaryLayerChange(string name, string targetLayer, Collider2D targetCollider, CollisionCheck collisionCheck) : base(name)
+        {
+            _targetLayer = LayerMask.NameToLayer(targetLayer);
+            if (_targetLayer == -1)
+            {
+                Debug.LogWarning(targetLayer + " layer dose not exist!");
+                RemoveModificaiton();
+            }
+            else
+            {
+                _collisonCheck = collisionCheck;
+                _oldLayer = targetCollider.gameObject.layer;
+                targetCollider.gameObject.layer = _targetLayer;
+                _targetCollider = targetCollider;
+            }
+        }
+
+        public override void ApplyModificaiton()
+        {
+        }
+
+        public override void RemoveModificaiton()
+        {
+            _targetCollider.gameObject.layer = _oldLayer;
+            base.RemoveModificaiton();
+        }
+
+        public override void UpdateModificaiton()
+        {
+            if(!_collisonCheck.Sides.TargetColliders.Contains(_targetCollider))
+                RemoveModificaiton();
+        }
+
+        public override void FixedUpdateModificaiton()
+        {
+        }
     }
 }
