@@ -3,6 +3,7 @@ using Archon.SwissArmyLib.Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Video;
 
 namespace Projectiles
 {
@@ -20,9 +21,11 @@ namespace Projectiles
         [SerializeField, Tooltip("Amount of time in seconds it takes before it kills itself.")]
         private float _timeToLive = 15;
 
-        [SerializeField, Tooltip("Should force be set constantly, or with AddForce.")] private bool _useConstantForce;
+        [SerializeField, Tooltip("Should force be set constantly, or with AddForce.")]
+        private bool _useConstantForce;
 
-        [SerializeField, Tooltip("Amount of force to add.")] private Vector2 _forceVelocity;
+        [SerializeField, Tooltip("Amount of force to add.")]
+        private float _force;
 
         [SerializeField]
         private LayerMask _layersToHit;
@@ -38,6 +41,8 @@ namespace Projectiles
 
         public Rigidbody2D RigidBody { get; set; }
 
+        public Vector2 Direction { get; set; }
+
         public void Awake()
         {
             RigidBody = GetComponent<Rigidbody2D>();
@@ -46,16 +51,16 @@ namespace Projectiles
             TellMeWhen.Seconds(_timeToLive, this);
         }
 
-        void Start()
+        public void Shoot()
         {
             if (!_useConstantForce)
-            RigidBody.AddForce(_forceVelocity, ForceMode2D.Impulse);
+                RigidBody.AddForce(Direction * _force, ForceMode2D.Impulse);
         }
 
         public void Update()
         {
-            if (_forceVelocity != Vector2.zero)
-                RigidBody.velocity = _forceVelocity;
+            if (Direction * _force != Vector2.zero)
+                RigidBody.velocity = Direction * _force;
 
             if(RigidBody.velocity.x > 0 && transform.localScale.x < 0)
                 transform.localScale = new Vector3(1, transform.localScale.y);
@@ -67,7 +72,7 @@ namespace Projectiles
         void FixedUpdate()
         {
             if (_useConstantForce)
-                RigidBody.velocity = _forceVelocity;
+                RigidBody.velocity = Direction * _force;
         }
 
         public void OnTriggerEnter2D(Collider2D collision)

@@ -15,56 +15,42 @@ namespace Enemy
 	/// </summary>
 	public class EnemyController : Controller<EnemyApplication>
 	{
+	    private List<EnemyState> _states;
 	    private float _whereToTurnTo;
 	    private float _turnTimer;
-
-	    private EnemyState _initialState;
 
 	    public Vector2 ToPlayer { get; private set; }
 	    public bool IsTurning { get; private set; }
 
-        public List<EnemyState> States { get; set; }
-	    public EnemyState LastState { get; set; }
-	    public EnemyState CurrentState { get; set; }
-
-	    public FiniteStateMachine<EnemyController> StateMachine { get; set; }
+	    public FiniteStateMachine<EnemyApplication> StateMachine { get; set; }
 
 	    void Awake()
 	    {
-	        StateMachine = new FiniteStateMachine<EnemyController>(this);
-	    }
+	        StateMachine = new FiniteStateMachine<EnemyApplication>(App);
+            _states = new List<EnemyState>();
+            
+	        EnemyIdle idleState = gameObject.AddComponent<EnemyIdle>();
+            StateMachine.RegisterState(idleState);
 
-	    void Start()
-	    {
-            States = new List<EnemyState>();
-
-	        //Setup all states.
-	        foreach (EnemyState state in GetComponentsInChildren<EnemyState>())
+	        EnemyState[] states = GetComponentsInChildren<EnemyState>();
+            //Setup all states.
+            foreach (EnemyState state in states)
 	        {
                 if (!state.enabled)
                     continue;
 
-	            States.Add(state);
+	            state.Machine = StateMachine;
+	            state.Context = App;
+                StateMachine.RegisterState(state); 
 
-	            if (!_initialState && state.IsActive)
-	                _initialState = state;
+                _states.Add(state);
+            }
 
-	            state.IsActive = false;
-	        }
-
-	        if (!States.Any())
-	        {
-	            Debug.LogWarning("EnemyController has no AI states.", transform);
-                return;
-	        }
-
-            ChangeState(_initialState, _initialState == null || _initialState.IsIsolated);
+	        StateMachine.ChangeState(states.FirstOrDefault() ?? idleState);
 	    }
 
 	    void Update()
 	    {
-            StateMachine.Update(Time.deltaTime);
-
 	        Vector2 ownPos = App.M.Character.Rigidbody.position;
 	        Vector2 plyPos = GameManager.Instance.Player.transform.position.ToVector2();
 
@@ -118,61 +104,26 @@ namespace Enemy
 	        }
 	        else
 	            App.M.Target = null;
+            
+            foreach (EnemyState enemyState in _states)
+            {
+                if (StateMachine.CurrentState != enemyState && enemyState.ShouldChange())
+                    StateMachine.ChangeState(enemyState);
+            }
 
-	        //Check the states prerequisites & parallel updates.
-	        foreach (EnemyState enemyState in States)
-	        {
-	            if (enemyState != CurrentState && enemyState.CheckPrerequisite())
-	                ChangeState(enemyState, enemyState.IsIsolated);
-
-                if (enemyState.IsActive)
-                    enemyState.StateUpdate();
-	        }
-	    }
-
-        /// <summary>
-        /// Changes the current enemy state to desired one.
-        /// </summary>
-        /// <typeparam name="T">The state to change to.</typeparam>
-        /// <param name="isolate">Should it disable all other states.</param>
-	    public void ChangeState<T>(bool isolate = true)
-	    {
-            ChangeState(States.FirstOrDefault(state => state is T), isolate);
-	    }
-
-	    public void ChangeState(EnemyState desiredState, bool isolate = true)
-	    {
-	        if (CurrentState == desiredState)
-	            return;
-	        
-            //Current is now last
-	        if (CurrentState)
-	        {
-	            LastState = CurrentState;
-	            LastState.StateEnd();
-	        }
-
-	        //Disable all other state components if isolated.
-            if (isolate)
-	            States.Where(state => state != desiredState).ToList().ForEach(state => state.IsActive = false);
-
-	        if (desiredState)
-	        {
-	            desiredState.IsActive = true;
-	            CurrentState = desiredState;
-	            CurrentState.StateStart();
-	        }
-	        else
-	        {
-	            CurrentState = null;
-	        }
-	    }
+	        StateMachine.Update(Time.deltaTime);
+            Debug.Log(StateMachine.CurrentState);
+        }
 
         /// <summary>
         /// Method used to turn the enemy around.
+        /// If 0, it turns around.
         /// </summary>
-	    public void Turn(int dir)
+	    public void Turn(int dir = 0)
         {
+            if (dir == 0)
+                dir = -1 * App.M.Character.LookDirection;
+
             if (IsTurning || dir == App.M.Character.LookDirection)
                 return;
 
@@ -202,36 +153,15 @@ namespace Enemy
 
 	            App.M.Character.SetVelocity(vel, true);
 
-                if (!App.M.CanBackPaddle || forceTurn)
-	                Turn(Mathf.RoundToInt(vel.x));
+	            int xVel = Mathf.RoundToInt(vel.x);
+                if (!App.M.CanBackPaddle || forceTurn && xVel != 0)
+	                Turn(xVel);
 	        }
 	    }
 
-        /// <summary>
-        /// Changes the state back to the initial one.
-        /// </summary>
-	    public void ResetToInitial()
+	    public bool IsState<T>()
 	    {
-            if (_initialState)
-	            ChangeState(_initialState);
+	        return StateMachine.CurrentState is T;
 	    }
-
-        /// <summary>
-        /// Changes state to the last one.
-        /// </summary>
-	    public void ResetToLast()
-	    {
-            if (LastState)
-	            ChangeState(LastState);
-	    }
-
-        /// <summary>
-        /// Used for checking if the current state matches T
-        /// </summary>
-        /// <typeparam name="T">Type of state</typeparam>
-	    public bool IsState<T>() where T : EnemyState
-	    {
-	        return CurrentState is T;
-	    }
-    }
+	}
 }

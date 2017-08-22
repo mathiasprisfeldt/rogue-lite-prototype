@@ -555,7 +555,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4457165934826208, guid: 49776134693635848b63b0dabe2ed033, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -9.22
+      value: -9.89
       objectReference: {fileID: 0}
     - target: {fileID: 4457165934826208, guid: 49776134693635848b63b0dabe2ed033, type: 2}
       propertyPath: m_LocalPosition.y
@@ -596,6 +596,16 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1440919203486006, guid: 49776134693635848b63b0dabe2ed033, type: 2}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114175325490778496, guid: 49776134693635848b63b0dabe2ed033,
+        type: 2}
+      propertyPath: _movementSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114005180844099154, guid: 49776134693635848b63b0dabe2ed033,
+        type: 2}
+      propertyPath: _canBackPaddle
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1296,9 +1306,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7b890f4fafdd4142bb00285fb4c034e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 0
-  _isIsolated: 1
-  _app: {fileID: 1327780435}
   _drawGizmos: 1
   _attackBoxSize: {x: 10, y: 1}
   _attackBoxOffset: {x: 5.5, y: 0}
@@ -1313,13 +1320,46 @@ MonoBehaviour:
   m_GameObject: {fileID: 832349523}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcb3c90b430f8bd478b66fc0bd62b625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &832349527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 832349523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86ed3c021bf55834abe8869c1c660cce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &832349528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 832349523}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f0d2adddc455124799444b14f60f4e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _drawGizmos: 1
+  _attackBoxSize: {x: 1, y: 1}
+  _attackBoxOffset: {x: 1, y: 0}
+--- !u!114 &832349529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 832349523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31f3228ffd2d95f42baead428b518b41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 0
-  _isIsolated: 1
-  _app: {fileID: 1327780435}
-  avoidDistance: 4
+  avoidDistance: 5
 --- !u!61 &837409031 stripped
 BoxCollider2D:
   m_PrefabParentObject: {fileID: 61862504811616390, guid: 4052246ce7645ba4cafddf1a4ca138eb,
@@ -1559,7 +1599,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4172535266255454, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -0.11
+      value: -5.9
       objectReference: {fileID: 0}
     - target: {fileID: 4172535266255454, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1888,12 +1928,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4052246ce7645ba4cafddf1a4ca138eb, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &1327780435 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114934706097754740, guid: 49776134693635848b63b0dabe2ed033,
-    type: 2}
-  m_PrefabInternal: {fileID: 442522453}
-  m_Script: {fileID: 11500000, guid: cbee21839de46d74ea81cf04ce47eba6, type: 3}
 --- !u!1001 &1374783688
 Prefab:
   m_ObjectHideFlags: 0

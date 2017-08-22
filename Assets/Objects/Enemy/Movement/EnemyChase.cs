@@ -10,19 +10,24 @@ namespace Enemy
     {
         void FixedUpdate()
         {
-            if (IsActive && App.M.Target && App.M.Character.OnGround)
-                App.C.SetVelocity(new Vector2(Mathf.Round(App.C.ToPlayer.normalized.x), 0));
+            if (IsActive && Context.M.Target && Context.M.Character.OnGround)
+                Context.C.SetVelocity(new Vector2(Mathf.Round(Context.C.ToPlayer.normalized.x), 0), forceTurn: true);
         }
 
-        public override bool CheckPrerequisite()
+        public override void Reason()
         {
-            return App.M.Target && App.C.CurrentState is EnemyPatrol && !(App.C.CurrentState is EnemyAttack) || App.C.CurrentState == null;
+            base.Reason();
+
+            if (!Context.M.Target)
+                ChangeState<EnemyIdle>();
         }
 
-        public override void StateUpdate()
+        public override bool ShouldChange()
         {
-            if (!App.M.Target)
-                App.C.ResetToInitial();
+            if (Context.M.Target && !IsState<EnemyAttack>())
+                return true;
+
+            return false;
         }
     }
 }

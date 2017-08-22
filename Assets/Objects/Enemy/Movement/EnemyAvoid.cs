@@ -12,19 +12,35 @@ namespace Enemy
         [SerializeField]
         private float avoidDistance = 2;
 
-        public override void StateUpdate()
+        void Start()
         {
-            base.StateUpdate();
-
-            if (CheckPrerequisite() && App.M.Character.BumpingDirection == 0)
-                App.C.SetVelocity(new Vector2(-Mathf.Round(App.C.ToPlayer.normalized.x), 0));
-            else
-                App.C.ChangeState(null);
+            //Only here so you can disable this component in inspector.
         }
 
-        public override bool CheckPrerequisite()
+        public override void Think(float deltaTime)
         {
-            return App.C.ToPlayer.magnitude < avoidDistance;
+            Context.C.SetVelocity(new Vector2(-Mathf.Round(Context.C.ToPlayer.normalized.x), 0));
+        }
+
+        public override bool ShouldChange()
+        {
+            if (Context.M.Character.BumpingDirection == 0 && Context.C.ToPlayer.magnitude < avoidDistance)
+                return true;
+
+            return false;
+        }
+
+        public override void Reason()
+        {
+            if (!ShouldChange())
+            {
+                if (Machine.PreviousState is EnemyPatrol && Context.M.CanBackPaddle)
+                    Context.C.Turn();
+
+                ChangeState<EnemyIdle>();
+            }
+
+            base.Reason();
         }
     }
 }

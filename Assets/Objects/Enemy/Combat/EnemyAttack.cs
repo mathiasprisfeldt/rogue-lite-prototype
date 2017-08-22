@@ -13,6 +13,8 @@ namespace Enemy
     /// </summary>
     public class EnemyAttack : EnemyState
     {
+        private Collider2D[] _hitboxResults = new Collider2D[10];
+
         [SerializeField]
         protected bool _drawGizmos;
 
@@ -33,8 +35,8 @@ namespace Enemy
         {
             bool isLeft = false;
 
-            if (App && App.M.Character)
-                isLeft = App.M.Character.LookDirection == -1;
+            if (Context && Context.M.Character)
+                isLeft = Context.M.Character.LookDirection == -1;
 
             Vector2 relPos = isLeft ? -_attackBoxOffset : _attackBoxOffset;
             return relPos + transform.position.ToVector2();
@@ -42,8 +44,8 @@ namespace Enemy
 
         void Start()
         {
-            _indicatorTimer = App.M.IndicatorDuration;
-            _cooldownTimer = App.M.AttackCooldown;
+            _indicatorTimer = Context.M.IndicatorDuration;
+            _cooldownTimer = Context.M.AttackCooldown;
         }
 
         void Update()
@@ -55,13 +57,13 @@ namespace Enemy
 
                 if (_cooldownTimer <= 0)
                 {
-                    _cooldownTimer = App.M.AttackCooldown;
+                    _cooldownTimer = Context.M.AttackCooldown;
                     _canAttack = true;
                 }
             }
         }
 
-        public override void StateUpdate()
+        public override void Think(float deltaTime)
         {
             //Attack when player gets close.
             if (_canAttack)
@@ -70,14 +72,35 @@ namespace Enemy
 
                 if (_indicatorTimer <= 0)
                 {
-                    _indicatorTimer = App.M.IndicatorDuration;
+                    _indicatorTimer = Context.M.IndicatorDuration;
                     Attack();
                 }
             }
+        }
 
-            //TODO: HACKED: Should properly change when AI becomes more dynamic
-            if (!CheckHitbox() && !_canAttack && IsIsolated)
-                App.C.ResetToLast();
+        public override void End()
+        {
+            base.End();
+
+
+            _indicatorTimer = Context.M.IndicatorDuration;
+            _cooldownTimer = Context.M.AttackCooldown;
+        }
+
+        public override void Reason()
+        {
+            if (!CheckHitbox() && !_canAttack)
+                ChangeState<EnemyIdle>();
+
+            base.Reason();
+        }
+
+        public override bool ShouldChange()
+        {
+            if (CheckHitbox() && Context.M.Target)
+                return true;
+
+            return false;
         }
 
         /// <summary>
@@ -93,15 +116,10 @@ namespace Enemy
             if (!_drawGizmos)
                 return;
 
-            if (_indicatorTimer != App.M.IndicatorDuration)
+            if (enabled && Context && _indicatorTimer != Context.M.IndicatorDuration)
                 Gizmos.DrawSphere(transform.position.ToVector2() + new Vector2(0, 1), .15f);
 
             Gizmos.DrawWireCube(GetHitbox(), _attackBoxSize);
-        }
-
-        public override bool CheckPrerequisite()
-        {
-            return !IsActive && CheckHitbox() && App.M.Target && !App.C.IsState<EnemyAvoid>();
         }
 
         /// <summary>
@@ -111,7 +129,15 @@ namespace Enemy
         public bool CheckHitbox()
         {
             //TODO: Properly needs optimizing
-            return Physics2D.OverlapBoxAll(GetHitbox(), _attackBoxSize, 0, LayerMask.GetMask("Hitbox")).Any(d => d.tag == "Player");
+            int hitCount = Physics2D.OverlapBoxNonAlloc(GetHitbox(), _attackBoxSize, 0, _hitboxResults, LayerMask.GetMask("Hitbox"));
+
+            for (int i = 0; i < hitCount; i++)
+            {
+                if (_hitboxResults[i].CompareTag("Player"))
+                    return true;
+            }
+
+            return false;
         }
     }
 }

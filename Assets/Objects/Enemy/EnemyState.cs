@@ -1,5 +1,6 @@
 ﻿using System.Reflection.Emit;
 using AcrylecSkeleton.Utilities;
+using Archon.SwissArmyLib.Automata;
 using UnityEngine;
 
 namespace Enemy
@@ -8,71 +9,52 @@ namespace Enemy
     /// Purpose: Base class for all enemy states.
     /// Creator: MP
     /// </summary>
-    [ExecuteInEditMode]
-    public abstract class EnemyState : MonoBehaviour
+    public abstract class EnemyState : MonoBehaviour, IFsmState<EnemyApplication>
     {
-        [SerializeField]
-        private bool _isActive;
-
-        [SerializeField]
-        private bool _isIsolated = true;
-
-        [SerializeField]
-        private EnemyApplication _app;
-
-        /// <summary>
-        /// Should the state run alone or parallel?
-        /// </summary>
-        public bool IsIsolated
-        {
-            get { return _isIsolated; }
-            set { _isIsolated = value; }
-        }
-
-        public EnemyApplication App
-        {
-            get { return _app; }
-            set { _app = value; }
-        }
+        public FiniteStateMachine<EnemyApplication> Machine { get; set; }
+        public EnemyApplication Context { get; set; }
 
         public bool IsActive
         {
-            get { return _isActive; }
-            set { _isActive = value; }
+            get { return Machine.CurrentState == this; }
         }
 
-        protected virtual void Awake()
+        public virtual void Begin()
         {
-            //Find application candidate, if it couldn't find one warn it to log.
-            if (!App)
-            {
-                App = gameObject.GetComponentUp<EnemyApplication>();
-
-                if (!App)
-                    Debug.LogError("EnemyState: You forgot to drag the application reference into the field!", transform);
-            }
         }
 
-        /// <summary>
-        /// Called when a state gets active.
-        /// </summary>
-        /// <returns></returns>
-        public virtual void StateStart() { }
+        public virtual void Reason()
+        {
+        }
+
+        public virtual void Think(float deltaTime)
+        {
+        }
+
+        public virtual void End()
+        {
+        }
+
+        public abstract bool ShouldChange();
 
         /// <summary>
-        /// Called when a state ends.
+        /// Used to change state only if the state is registered.
         /// </summary>
-        public virtual void StateEnd() { }
+        /// <typeparam name="T"></typeparam>
+        public bool ChangeState<T>() where T : EnemyState
+        {
+            if (Machine.IsStateRegistered<T>())
+            {
+                Machine.ChangeState<T>();
+                return true;
+            }
 
-        /// <summary>
-        /// Update loop for logic when state is active.
-        /// </summary>
-        public virtual void StateUpdate() { }
+            return false;
+        }
 
-        /// <summary>
-        /// Method used to check if the state should take over.
-        /// </summary>
-        /// <returns>If it should continue to check, in overrides this means it should take over.</returns>
-        public abstract bool CheckPrerequisite();
+        public bool IsState<T>()
+        {
+            return Machine.CurrentState is T;
+        }
     }
 }

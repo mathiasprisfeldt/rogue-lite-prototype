@@ -133,7 +133,7 @@ MonoBehaviour:
   _damage: 10
   _timeToLive: 5
   _useConstantForce: 0
-  _forceVelocity: {x: 5, y: 0}
+  _force: 5
   _layersToHit:
     serializedVersion: 2
     m_Bits: 16384
