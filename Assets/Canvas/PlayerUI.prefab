@@ -465,6 +465,8 @@ MonoBehaviour:
   - {fileID: 114236639660692870}
   _healthController: {fileID: 0}
   _overflowText: {fileID: 114622679129709370}
+  _half: {fileID: 21300000, guid: a82e3432b62e127498c545855aae41e0, type: 3}
+  _full: {fileID: 21300000, guid: 18f022de53638c14aaaf1871f57cbe5e, type: 3}
 --- !u!114 &114622679129709370
 MonoBehaviour:
   m_ObjectHideFlags: 1

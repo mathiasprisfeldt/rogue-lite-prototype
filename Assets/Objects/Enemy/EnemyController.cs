@@ -113,7 +113,6 @@ namespace Enemy
             }
 
 	        StateMachine.Update(Time.deltaTime);
-
             Debug.Log(StateMachine.CurrentState);
         }
 
@@ -156,7 +155,7 @@ namespace Enemy
 	            App.M.Character.SetVelocity(vel, true);
 
 	            int xVel = Mathf.RoundToInt(vel.x);
-                if (!App.M.CanBackPaddle || forceTurn && xVel != 0)
+                if ((!App.M.CanBackPaddle || forceTurn) && xVel != 0)
 	                Turn(xVel);
 	        }
 	    }

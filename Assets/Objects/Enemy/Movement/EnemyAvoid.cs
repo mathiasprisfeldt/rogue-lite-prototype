@@ -17,9 +17,10 @@ namespace Enemy
             //Only here so you can disable this component in inspector.
         }
 
-        public override void Think(float deltaTime)
+        void FixedUpdate()
         {
-            Context.C.SetVelocity(new Vector2(-Mathf.Round(Context.C.ToPlayer.normalized.x), 0));
+            if (IsActive)
+                Context.C.SetVelocity(-Mathf.Round(Context.C.ToPlayer.normalized.x) * Vector2.right * Time.fixedDeltaTime);
         }
 
         public override bool ShouldChange()
@@ -32,7 +33,7 @@ namespace Enemy
 
         public override void Reason()
         {
-            if (!ShouldChange())
+            if (Context.M.Character.BumpingDirection != 0 || Context.C.ToPlayer.magnitude > avoidDistance)
             {
                 if (Machine.PreviousState is EnemyPatrol && Context.M.CanBackPaddle)
                     Context.C.Turn();

@@ -352,6 +352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _application: {fileID: 114486502349469750}
   _character: {fileID: 114948007235721488}
+  _enemyAttackAnim: {fileID: 0}
   _viewRadius: 10
   _attackCooldown: 1
   _indicatorDuration: 1
@@ -555,6 +556,7 @@ MonoBehaviour:
   _physicialCollisionCheck: {fileID: 114120916525324648}
   _hitbox: {fileID: 114513903109215036}
   _knockbackHandler: {fileID: 114314925495774288}
+  _abilityHandler: {fileID: 0}
   _startDirection: 1
   _damage: 1
   _movementSpeed: 2

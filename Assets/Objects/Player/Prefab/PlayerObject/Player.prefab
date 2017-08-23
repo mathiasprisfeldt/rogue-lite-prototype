@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: 4639800462131724}
   - component: {fileID: 114309314290104366}
   - component: {fileID: 61118465888524682}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: MeleeCollider
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1533,7 +1533,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1182516208491314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.255, y: -4.12, z: 0}
+  m_LocalPosition: {x: 4.65, y: -4.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4087813221417808}
@@ -2735,6 +2735,7 @@ MonoBehaviour:
   _physicialCollisionCheck: {fileID: 114051498006790084}
   _hitbox: {fileID: 114191105220437104}
   _knockbackHandler: {fileID: 114236378889174594}
+  _abilityHandler: {fileID: 114839822949810884}
   _startDirection: -1
   _damage: 0
   _movementSpeed: 250
@@ -3250,6 +3251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _application: {fileID: 114008459180862610}
+  _character: {fileID: 114173897078414380}
 --- !u!114 &114411211694326838
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3797,7 +3799,7 @@ MonoBehaviour:
   _invurnabilityDuration: 1
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 100
+  _healthAmount: 3
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 300
   _knockbackDuration: 0.2

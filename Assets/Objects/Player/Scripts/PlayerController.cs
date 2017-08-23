@@ -1,6 +1,8 @@
 using AcrylecSkeleton.MVC;
+using Controllers;
 using Health;
 using RogueLiteInput;
+using UnityEngine;
 
 namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 {
@@ -11,8 +13,17 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
     /// </summary>
     public class PlayerController : Controller<PlayerApplication>
     {
+        [SerializeField]
+        private Character _character;
+
         public InputActions PlayerActions { get; set; }
         public HealthController Health { get; set; }
+
+        public Character Character
+        {
+            get { return _character; }
+            set { _character = value; }
+        }
 
         public void Awake()
         {

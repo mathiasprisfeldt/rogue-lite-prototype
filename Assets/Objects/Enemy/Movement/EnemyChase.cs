@@ -11,7 +11,7 @@ namespace Enemy
         void FixedUpdate()
         {
             if (IsActive && Context.M.Target && Context.M.Character.OnGround)
-                Context.C.SetVelocity(new Vector2(Mathf.Round(Context.C.ToPlayer.normalized.x), 0), forceTurn: true);
+                Context.C.SetVelocity(Mathf.Round(Context.C.ToPlayer.normalized.x) * Vector2.right * Time.fixedDeltaTime, forceTurn: true);
         }
 
         public override void Reason()

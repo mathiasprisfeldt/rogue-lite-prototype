@@ -25,12 +25,12 @@ namespace Special
         private float _cooldownTimer;
         private bool _projectileSpawned;
 
-        public override bool Active
+
+        public bool KnifeActive
         {
-            get
-            {
-                if (!base.Active)
-                    return base.Active;
+            get {
+                if (!Active)
+                    return Active;
                 if (_actionsController.App.C.PlayerActions.ProxyInputActions.Special.WasPressed
                     && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {

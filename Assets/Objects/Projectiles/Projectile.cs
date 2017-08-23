@@ -37,6 +37,9 @@ namespace Projectiles
         private List<string> _tagsToHit = new List<string>();
 
         [SerializeField]
+        private bool _animHandlesDestruction;
+
+        [SerializeField]
         private UnityEvent _onDestroy;
 
         public Rigidbody2D RigidBody { get; set; }
@@ -98,7 +101,18 @@ namespace Projectiles
         /// </summary>
         void Kill()
         {
+            RigidBody.simulated = false;
             _onDestroy.Invoke();
+
+            if (!_animHandlesDestruction)
+                Remove();
+        }
+
+        /// <summary>
+        /// Removes the gameobject
+        /// </summary>
+        public void Remove()
+        {
             Destroy(gameObject);
         }
 

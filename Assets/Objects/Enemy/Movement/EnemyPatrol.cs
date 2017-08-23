@@ -38,7 +38,7 @@ namespace Enemy
         {
             //If we're patrolling, move the enemy.
             if (IsActive && Context.M.Character.OnGround)
-                Context.C.SetVelocity(_patrolDirection, forceTurn: true);
+                Context.C.SetVelocity(_patrolDirection * Time.fixedDeltaTime, forceTurn: true);
         }
     }
 }

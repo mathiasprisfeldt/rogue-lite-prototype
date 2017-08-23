@@ -13,6 +13,10 @@ namespace Enemy
     /// </summary>
     public abstract class EnemyAttack : EnemyState
     {
+        private bool _isAttacking;
+        private float _indicatorTimer;
+        private float _cooldownTimer;
+        private bool _canAttack;
         private Collider2D[] _hitboxResults = new Collider2D[10];
 
         [SerializeField]
@@ -23,10 +27,6 @@ namespace Enemy
 
         [SerializeField]
         private Vector2 _attackBoxOffset = Vector2.right;
-
-        private float _indicatorTimer;
-        private float _cooldownTimer;
-        private bool _canAttack = true;
 
         public Vector2 Hitbox
         {
@@ -50,6 +50,9 @@ namespace Enemy
 
         void Update()
         {
+            if (_isAttacking)
+                return;
+
             //Make sure theres a cooldown on attack.
             if (!_canAttack)
             {
@@ -57,22 +60,28 @@ namespace Enemy
 
                 if (_cooldownTimer <= 0)
                 {
-                    _cooldownTimer = Context.M.AttackCooldown;
                     _canAttack = true;
                 }
             }
         }
 
+        public override void Begin()
+        {
+            Context.M.Character.StandStill();
+        }
+
         public override void Think(float deltaTime)
         {
+            if (_isAttacking)
+                return;
+
             //Attack when player gets close.
             if (_canAttack)
             {
-                _indicatorTimer -= Time.deltaTime;
+                _indicatorTimer -= deltaTime;
 
                 if (_indicatorTimer <= 0)
                 {
-                    _indicatorTimer = Context.M.IndicatorDuration;
                     PreAttack();
                 }
             }
@@ -82,8 +91,8 @@ namespace Enemy
         {
             base.End();
 
-            _indicatorTimer = Context.M.IndicatorDuration;
             _cooldownTimer = Context.M.AttackCooldown;
+            _indicatorTimer = Context.M.IndicatorDuration;
         }
 
         public override void Reason()
@@ -105,7 +114,13 @@ namespace Enemy
         /// <summary>
         /// Base attack method for any attack related logic.
         /// </summary>
-        public abstract void Attack();
+        public virtual void Attack()
+        {
+            _isAttacking = false;
+            _cooldownTimer = Context.M.AttackCooldown;
+            _indicatorTimer = Context.M.IndicatorDuration;
+            _canAttack = false;
+        }
 
         /// <summary>
         /// Gets called before attack logic happens.
@@ -113,13 +128,13 @@ namespace Enemy
         /// </summary>
         private void PreAttack()
         {
+            _isAttacking = true;
+
             //Play attack animation
             if (Context.M.Character.MainAnimator && Context.M.AttackAnim)
                 Context.M.Character.MainAnimator.SetTrigger("Attack");
             else
                 Attack();
-
-            _canAttack = false;
         }
 
         protected virtual void OnDrawGizmosSelected()

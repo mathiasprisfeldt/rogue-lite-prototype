@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Linq;
+using Abilitys;
 using Health;
 using UnityEngine;
 using Knockbacks;
@@ -47,6 +48,9 @@ namespace Controllers
 
         [SerializeField]
         public KnockbackHandler _knockbackHandler;
+
+        [SerializeField]
+        private AbilityHandler _abilityHandler;
 
         [Header("Settings:")]
         [SerializeField, Tooltip("Which way are it facing at start?")]
@@ -146,6 +150,12 @@ namespace Controllers
             set { _movementSpeed = value; }
         }
 
+        public AbilityHandler AbilityHandler
+        {
+            get { return _abilityHandler; }
+            set { _abilityHandler = value; }
+        }
+
         protected virtual void Awake()
         {
             Flip(_startDirection);
@@ -216,6 +226,14 @@ namespace Controllers
                 velocity.x *= MovementSpeed;
 
             _rigidbody.velocity = velocity;
+        }
+
+        /// <summary>
+        /// Forces the character to stand still.
+        /// </summary>
+        public void StandStill()
+        {
+            Rigidbody.velocity = Vector2.up * Rigidbody.velocity.y;
         }
 
         /// <summary>

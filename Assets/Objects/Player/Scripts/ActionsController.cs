@@ -298,7 +298,7 @@ namespace CharacterController
 
         private void HandleCombat()
         {
-            if (_abilityReferences.Throw && _abilityReferences.Throw.Active)
+            if (_abilityReferences.Throw && _abilityReferences.Throw.KnifeActive)
             {
                 BeginCombat(CombatAbility.Throw);
             }

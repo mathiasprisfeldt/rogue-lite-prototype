@@ -18,9 +18,14 @@ namespace Enemy
 
         public override void Attack()
         {
-            Projectile projectile = Instantiate(_projectile, transform.position.ToVector2() + _spawnPos, Quaternion.identity);
-            projectile.Direction = new Vector2(Context.M.Character.LookDirection, 0);
+            int dir = Context.M.Character.LookDirection;
+            Vector2 spawnPos = ((Vector2.right * _spawnPos.x) * dir) + _spawnPos.y * Vector2.up;
+
+            Projectile projectile = Instantiate(_projectile, transform.position.ToVector2() + spawnPos, Quaternion.identity);
+            projectile.Direction = new Vector2(dir, 0);
             projectile.Shoot();
+
+            base.Attack();
         }
 
         protected override void OnDrawGizmosSelected()

@@ -9,6 +9,12 @@ namespace Enemy
     [DisallowMultipleComponent]
     public class EnemyIdle : EnemyState
     {
+        public override void Begin()
+        {
+            Context.M.Character.StandStill();
+            base.Begin();
+        }
+
         public override bool ShouldChange()
         {
             return false;
