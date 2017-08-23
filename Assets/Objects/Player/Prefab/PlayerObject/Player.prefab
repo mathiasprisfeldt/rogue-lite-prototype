@@ -2621,10 +2621,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _actionsController: {fileID: 114173897078414380}
-  _jumpForce: 250
+  _jumpForce: 500
   _initialJumpForce: 50
   _initialJumpDuration: 0.05
-  _jumpDuration: 0.2
+  _jumpDuration: 0.15
   _gracePeriod: 0.5
 --- !u!114 &114105065633640464
 MonoBehaviour:
@@ -2737,6 +2737,7 @@ MonoBehaviour:
   _knockbackHandler: {fileID: 114236378889174594}
   _startDirection: -1
   _damage: 0
+  _movementSpeed: 250
   _flipWithVelocity: 0
   _doFlipWithRotation: 0
   _app: {fileID: 114008459180862610}
@@ -2746,7 +2747,6 @@ MonoBehaviour:
   _collisionCheck: {fileID: 114051498006790084}
   _wallSlideCheck: {fileID: 114169174117339438}
   _onewayCheck: {fileID: 114286498854671988}
-  _horizontalSpeed: 250
   _animator: {fileID: 95977964218066546}
   _maxFallSpeed: 40
   _throwPoint: {fileID: 4787569244547952}

@@ -137,11 +137,18 @@ public class TileBehaviour : MonoBehaviour
             superParent = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity);
             superParent.name = "Platforms";
         }
+        pb.Istop = true;
+        pb.Left = true;
+        pb.Right = true;
 
         foreach (var target in targets)
         {
-            if (target == gameObject)
-                pb.Istop = true;
+            TileBehaviour tb = target.GetComponent<TileBehaviour>();
+            if(tb && !tb.LeftCollision)
+                pb.Left = false;
+            if (tb && !tb.RightCollision)
+                pb.Right = false;
+
             pb.Tiles.Add(this);
             target.transform.SetParent(parent.transform, true);
         }
@@ -215,7 +222,10 @@ public class TileBehaviour : MonoBehaviour
         foreach (var target in targets)
         {
             if (target == gameObject)
+            {
                 pb.Istop = _isTop;
+            }
+                
             pb.Tiles.Add(this);
             target.transform.SetParent(parent.transform, true);
         }
