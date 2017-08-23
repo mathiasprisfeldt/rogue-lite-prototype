@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using EnemySpawn;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Class for containing a level
 /// </summary>
 public class Level
 {
+    private int[,] _originalLayout;
+
     /// <summary>
     /// The layouts in the level
     /// </summary>
@@ -43,20 +47,33 @@ public class Level
     /// <param name="id">id</param>
     public Level(int[,] l, int id)
     {
+        _originalLayout = l;
+        SpawnLayout(l);
+        ID = id;
+    }
+
+    //Todo Make a better solution
+    public void RespawnLayout()
+    {
+        SpawnLayout(_originalLayout);
+    }
+
+    //Todo Make a better solution
+    public void SpawnLayout(int[,]l)
+    {
         //Create new array and fill with layouts corresponding to the ids given
         Layouts = new Layout[l.GetLength(0), l.GetLength(1)];
+        _originalLayout = l;
         for (int i = 0; i < l.GetLength(0); i++)
         {
             for (int j = 0; j < l.GetLength(1); j++)
             {
-                var layoutCandidate = LevelDataManager.Instance.Layouts.FirstOrDefault(x => x.ID == l[i, j]) ?? 
+                var layoutCandidate = LevelDataManager.Instance.Layouts.FirstOrDefault(x => x.ID == l[i, j]) ??
                     LevelDataManager.Instance.Layouts.FirstOrDefault();
 
                 Layouts[i, j] = new Layout(layoutCandidate.ID, layoutCandidate.Tiles.Clone() as Tile[,]);
             }
         }
-
-        ID = id;
     }
 
     /// <summary>
@@ -143,6 +160,7 @@ public class Level
         List<Vector2> borderQueue = new List<Vector2>();
         List<TileBehaviour> tileList = new List<TileBehaviour>();
         List<TileBehaviour> borderTileList = new List<TileBehaviour>();
+        List<GameObject> nonTilebehavior = new List<GameObject>();
 
         //A number to name borders
         int numberOfBorders = 0;
@@ -166,7 +184,7 @@ public class Level
 
                         // Each tile
                         Tile t = Layouts[i, j].Tiles[x, y];
-                        
+
                         if (t.Prefab != null)
                         {
                             GameObject go = LevelManager.Instance.SpawnTile(transform.position + tilePos, t.Prefab, parent: parent.transform);
@@ -179,6 +197,10 @@ public class Level
                             {
                                 tileList.Add(tb);
                                 tb.TilePos = new TilePos(i, j, x, y);
+                            }
+                            else
+                            {
+                                nonTilebehavior.Add(go);
                             }
                         }
 
@@ -233,6 +255,7 @@ public class Level
         tileList.AddRange(borderTileList);
 
         MakeComposites(tileList);
+        SpawnEnemies(nonTilebehavior);
     }
 
     /// <summary>
@@ -281,6 +304,16 @@ public class Level
         return tb;
     }
 
+    private void SpawnEnemies(List<GameObject> list)
+    {
+        foreach (var go in list)
+        {
+            Spawner es = go.GetComponent<Spawner>();
+            if (es != null)
+                es.Spawn();
+        }
+    }
+
     private void MakeComposites(List<TileBehaviour> list)
     {
         Queue<TileBehaviour> horizontalQueue = new Queue<TileBehaviour>();
@@ -314,6 +347,6 @@ public class Level
     /// </summary>
     public void Despawn()
     {
-        //Do despawn stuff...
+
     }
 }

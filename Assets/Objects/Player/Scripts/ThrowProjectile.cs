@@ -31,7 +31,7 @@ namespace Special
             get {
                 if (!Active)
                     return Active;
-                if (_actionsController.App.C.PlayerActions.ProxyInputActions.Special.WasPressed
+                if (_actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Special.WasPressed
                     && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {
                     _projectileSpawned = false;

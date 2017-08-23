@@ -95,6 +95,7 @@ public class LevelManager : Singleton<LevelManager>
         else
             Debug.Log("There are no levels to load");
 
+        CurrentLevel.RespawnLayout();
         GameObject go = new GameObject("LevelParent");
         go.AddComponent<Platforms>();
         CurrentLevel.Spawn(go.transform);

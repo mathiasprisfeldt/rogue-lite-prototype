@@ -529,6 +529,22 @@ MonoBehaviour:
   _target: {fileID: 0}
   _smoothX: 0.25
   _smoothY: 0.05
+--- !u!1 &941242187 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1968028938947384, guid: a6a2a8592d9482a4e975a9382d8b9960,
+    type: 2}
+  m_PrefabInternal: {fileID: 489602591}
+--- !u!114 &941242192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 941242187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3f8f063b0bf34d418b79e927cefe9dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1862448415
 GameObject:
   m_ObjectHideFlags: 0
@@ -593,6 +609,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114195463805386292, guid: b3d93c340dc761f468f2dab771568bb4,
+        type: 2}
+      propertyPath: _randomLevelsText.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4926601098408364, guid: b3d93c340dc761f468f2dab771568bb4, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -628,6 +649,11 @@ Prefab:
     - target: {fileID: 114195463805386292, guid: b3d93c340dc761f468f2dab771568bb4,
         type: 2}
       propertyPath: _forcedLevelsText.Array.data[0]
+      value: 
+      objectReference: {fileID: 4900000, guid: 7bb9ad2daceb4dd4585a3536be0d7253, type: 3}
+    - target: {fileID: 114195463805386292, guid: b3d93c340dc761f468f2dab771568bb4,
+        type: 2}
+      propertyPath: _randomLevelsText.Array.data[0]
       value: 
       objectReference: {fileID: 4900000, guid: 7bb9ad2daceb4dd4585a3536be0d7253, type: 3}
     m_RemovedComponents: []

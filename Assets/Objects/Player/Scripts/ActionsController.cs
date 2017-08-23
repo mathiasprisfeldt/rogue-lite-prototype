@@ -384,10 +384,7 @@ namespace CharacterController
 
             LastUsedHorizontalMoveAbility = MoveAbility.None;
             var horizontal = App.C.PlayerActions.Horizontal;
-            if (horizontal > 0)
-                LastHorizontalDirection = 1;
-            else if (horizontal < 0)
-                LastHorizontalDirection = -1;
+            LastHorizontalDirection = _model.transform.localScale.x > 0 ? 1 : -1;
             Flip(horizontal);
 
             if (CollisionCheck.Sides.Left && horizontal < 0)
