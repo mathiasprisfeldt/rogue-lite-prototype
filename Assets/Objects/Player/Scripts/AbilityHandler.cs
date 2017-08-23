@@ -5,7 +5,7 @@ namespace Abilitys
 {
     public enum HandledAbility
     {
-        DoubleJump, WallSlide, WallJump, Dash, LedgeHanging, Throw
+        None, DoubleJump, WallSlide, WallJump, Dash, LedgeHanging, Throw
     }
 
     /// <summary>
@@ -34,6 +34,11 @@ namespace Abilitys
 
         [SerializeField]
         private bool _throw;
+
+        public void Awake()
+        {
+            UpdateAbilities();  
+        }
 
         public void Update()
         {
@@ -73,6 +78,26 @@ namespace Abilitys
                     _throw = unlock;
                     break;
             }
+        }
+
+        public Ability GetAbility(HandledAbility ab)
+        {
+            switch (ab)
+            {
+                case HandledAbility.DoubleJump:
+                    return _abilityReferences.DoubleJump;
+                case HandledAbility.WallSlide:
+                    return _abilityReferences.WallSlide;
+                case HandledAbility.WallJump:
+                    return _abilityReferences.WallJump;
+                case HandledAbility.Dash:
+                    return _abilityReferences.Dash;
+                case HandledAbility.LedgeHanging:
+                    return _abilityReferences.LedgeHanging;
+                case HandledAbility.Throw:
+                    return _abilityReferences.Throw;
+            }
+            return null;
         }
     }
 }

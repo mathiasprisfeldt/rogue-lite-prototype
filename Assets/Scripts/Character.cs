@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Abilitys;
 using Health;
 using UnityEngine;
 using Knockbacks;
@@ -37,6 +38,9 @@ namespace Controllers
 
         [SerializeField]
         public KnockbackHandler _knockbackHandler;
+
+        [SerializeField]
+        private AbilityHandler _abilityHandler;
 
         [Header("Settings:")]
         [SerializeField, Tooltip("Which way are it facing at start?")]
@@ -123,6 +127,12 @@ namespace Controllers
         {
             get { return _knockbackHandler; }
             set { _knockbackHandler = value; }
+        }
+
+        public AbilityHandler AbilityHandler
+        {
+            get { return _abilityHandler; }
+            set { _abilityHandler = value; }
         }
 
         void Awake()
