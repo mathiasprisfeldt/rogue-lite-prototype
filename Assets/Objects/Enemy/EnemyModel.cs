@@ -16,6 +16,9 @@ namespace Enemy
 	    [SerializeField]
 	    private Character _character;
 
+        [SerializeField]
+        private EnemyAttackAnim _enemyAttackAnim;
+
         [Space]
         [Header("Enemy Settings:")]
         [SerializeField]
@@ -58,7 +61,12 @@ namespace Enemy
 	        set { _character = value; }
 	    }
 
-	    public float AttackCooldown
+	    public EnemyAttackAnim AttackAnim
+	    {
+	        get { return _enemyAttackAnim; }
+	    }
+
+        public float AttackCooldown
 	    {
 	        get { return _attackCooldown; }
 	        set { _attackCooldown = value; }

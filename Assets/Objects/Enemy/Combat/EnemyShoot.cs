@@ -21,13 +21,11 @@ namespace Enemy
             Projectile projectile = Instantiate(_projectile, transform.position.ToVector2() + _spawnPos, Quaternion.identity);
             projectile.Direction = new Vector2(Context.M.Character.LookDirection, 0);
             projectile.Shoot();
-
-            base.Attack();
         }
 
         protected override void OnDrawGizmosSelected()
         {
-            if (!_drawGizmos)
+            if (!_drawGizmos || !enabled)
                 return;
 
             Gizmos.DrawSphere(_spawnPos + transform.position.ToVector2(), 0.15f);

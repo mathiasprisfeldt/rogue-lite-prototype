@@ -11,7 +11,7 @@ namespace Enemy
     /// Purpose: Base class for all combat behaviours.
     /// Creator: MP
     /// </summary>
-    public class EnemyAttack : EnemyState
+    public abstract class EnemyAttack : EnemyState
     {
         private Collider2D[] _hitboxResults = new Collider2D[10];
 
@@ -28,18 +28,18 @@ namespace Enemy
         private float _cooldownTimer;
         private bool _canAttack = true;
 
-        /// <summary>
-        /// Returns attack hitbox taking settings into account.
-        /// </summary>
-        public Vector2 GetHitbox()
+        public Vector2 Hitbox
         {
-            bool isLeft = false;
+            get
+            {
+                bool isLeft = false;
 
-            if (Context && Context.M.Character)
-                isLeft = Context.M.Character.LookDirection == -1;
+                if (Context && Context.M.Character)
+                    isLeft = Context.M.Character.LookDirection == -1;
 
-            Vector2 relPos = isLeft ? -_attackBoxOffset : _attackBoxOffset;
-            return relPos + transform.position.ToVector2();
+                Vector2 relPos = (isLeft ? -_attackBoxOffset.x : _attackBoxOffset.x) * Vector2.right;
+                return (Vector2.up * _attackBoxOffset.y) + relPos + transform.position.ToVector2();
+            }
         }
 
         void Start()
@@ -73,7 +73,7 @@ namespace Enemy
                 if (_indicatorTimer <= 0)
                 {
                     _indicatorTimer = Context.M.IndicatorDuration;
-                    Attack();
+                    PreAttack();
                 }
             }
         }
@@ -81,7 +81,6 @@ namespace Enemy
         public override void End()
         {
             base.End();
-
 
             _indicatorTimer = Context.M.IndicatorDuration;
             _cooldownTimer = Context.M.AttackCooldown;
@@ -106,20 +105,32 @@ namespace Enemy
         /// <summary>
         /// Base attack method for any attack related logic.
         /// </summary>
-        public virtual void Attack()
+        public abstract void Attack();
+
+        /// <summary>
+        /// Gets called before attack logic happens.
+        /// Usually handles which one calls the attack method.
+        /// </summary>
+        private void PreAttack()
         {
+            //Play attack animation
+            if (Context.M.Character.MainAnimator && Context.M.AttackAnim)
+                Context.M.Character.MainAnimator.SetTrigger("Attack");
+            else
+                Attack();
+
             _canAttack = false;
         }
 
         protected virtual void OnDrawGizmosSelected()
         {
-            if (!_drawGizmos)
+            if (!_drawGizmos || !enabled)
                 return;
 
             if (enabled && Context && _indicatorTimer != Context.M.IndicatorDuration)
                 Gizmos.DrawSphere(transform.position.ToVector2() + new Vector2(0, 1), .15f);
 
-            Gizmos.DrawWireCube(GetHitbox(), _attackBoxSize);
+            Gizmos.DrawWireCube(Hitbox, _attackBoxSize);
         }
 
         /// <summary>
@@ -129,7 +140,7 @@ namespace Enemy
         public bool CheckHitbox()
         {
             //TODO: Properly needs optimizing
-            int hitCount = Physics2D.OverlapBoxNonAlloc(GetHitbox(), _attackBoxSize, 0, _hitboxResults, LayerMask.GetMask("Hitbox"));
+            int hitCount = Physics2D.OverlapBoxNonAlloc(Hitbox, _attackBoxSize, 0, _hitboxResults, LayerMask.GetMask("Hitbox"));
 
             for (int i = 0; i < hitCount; i++)
             {

@@ -15,6 +15,7 @@ namespace Enemy
 	/// </summary>
 	public class EnemyController : Controller<EnemyApplication>
 	{
+        private readonly RaycastHit2D[] viewResults = new RaycastHit2D[1]; //Array used to store results from testing player view.
 	    private List<EnemyState> _states;
 	    private float _whereToTurnTo;
 	    private float _turnTimer;
@@ -51,7 +52,7 @@ namespace Enemy
 
 	    void Update()
 	    {
-	        Vector2 ownPos = App.M.Character.Rigidbody.position;
+	        Vector2 ownPos = App.M.Character.Origin;
 	        Vector2 plyPos = GameManager.Instance.Player.transform.position.ToVector2();
 
             //Calculate if the enemy can turn around.
@@ -89,7 +90,7 @@ namespace Enemy
 
                 //Check if we can see the player
                 if (canTarget && 
-                    Physics2D.RaycastAll(ownPos, ownPos.DirectionTo(plyPos), Mathf.Clamp(ToPlayer.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")).Any())
+                    Physics2D.RaycastNonAlloc(ownPos, ToPlayer.normalized, viewResults, Mathf.Clamp(ToPlayer.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")) > 0)
 	            {
                     //We cant see the player, lose interest.
 	                canTarget = false;
@@ -112,6 +113,7 @@ namespace Enemy
             }
 
 	        StateMachine.Update(Time.deltaTime);
+
             Debug.Log(StateMachine.CurrentState);
         }
 

@@ -23,6 +23,7 @@ namespace Health
     [RequireComponent(typeof(HealthController))]
     public class HealthController : MonoBehaviour
     {
+        private bool _isDead;
         private bool _isLateChecking; //Are we checking in end of frame if we're dead?
 
         #region Inspector Fields
@@ -75,7 +76,21 @@ namespace Health
 
         #endregion
 
-        public bool IsDead { get; set; }
+        public bool IsDead
+        {
+            get { return _isDead; }
+            set
+            {
+                //Updating character animator with dead data.
+                if (Character.MainAnimator && _isDead != value)
+                {
+                    Character.MainAnimator.SetBool("Dead", value);
+                    Character.MainAnimator.SetTrigger("Die");
+                }
+
+                _isDead = value; 
+            }
+        }
 
         public UnityEvent DeadEvent
         {
@@ -156,9 +171,21 @@ namespace Health
             {
                 _character.KnockbackHandler.AddForce(from.position.ToVector2().DirectionTo(_character.Rigidbody.position) * _knockbackForce, _knockbackDuration);
             }
-                
 
             HealthAmount -= amountToDmg;
+
+            //If we take damage show hit animation.
+            //But dont show if we're invurnable (Only if we take dmg while being it)
+            if (Character.MainAnimator)
+            {
+                if (_isInvurnable)
+                {
+                    if (_dmgWhileInvurnable)
+                        Character.MainAnimator.SetTrigger("Hit");
+                }
+                else
+                    Character.MainAnimator.SetTrigger("Hit");
+            }
 
             if (giveInvurnability || _invurnableOnDmg)
                 StartCoroutine(StartInvurnability(_invurnabilityDuration));
