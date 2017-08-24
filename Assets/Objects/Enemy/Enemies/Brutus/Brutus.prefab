@@ -406,7 +406,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f3228ffd2d95f42baead428b518b41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avoidDistance: 5
+  _waitForPlayer: 0
+  _avoidDistance: 2
 --- !u!114 &114314925495774288
 MonoBehaviour:
   m_ObjectHideFlags: 1

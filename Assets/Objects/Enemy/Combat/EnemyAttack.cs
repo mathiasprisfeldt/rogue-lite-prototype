@@ -87,25 +87,20 @@ namespace Enemy
             }
         }
 
-        public override void End()
-        {
-            base.End();
-
-            _cooldownTimer = Context.M.AttackCooldown;
-            _indicatorTimer = Context.M.IndicatorDuration;
-        }
-
         public override void Reason()
         {
-            if (!CheckHitbox() && !_canAttack)
+            if (!CheckHitbox() && !_canAttack && !_isAttacking)
                 ChangeState<EnemyIdle>();
 
             base.Reason();
         }
 
-        public override bool ShouldChange()
+        public override bool ShouldTakeover()
         {
-            if (CheckHitbox() && Context.M.Target)
+            if (_isAttacking)
+                return true;
+
+            if (CheckHitbox() && Context.M.Target && _canAttack)
                 return true;
 
             return false;
@@ -116,9 +111,9 @@ namespace Enemy
         /// </summary>
         public virtual void Attack()
         {
-            _isAttacking = false;
             _cooldownTimer = Context.M.AttackCooldown;
             _indicatorTimer = Context.M.IndicatorDuration;
+            _isAttacking = false;
             _canAttack = false;
         }
 

@@ -33,9 +33,10 @@ namespace Enemy
 	        EnemyIdle idleState = gameObject.AddComponent<EnemyIdle>();
             StateMachine.RegisterState(idleState);
 
-	        EnemyState[] states = GetComponentsInChildren<EnemyState>();
+	        _states = GetComponentsInChildren<EnemyState>().ToList();
+	        _states.Reverse();
             //Setup all states.
-            foreach (EnemyState state in states)
+            foreach (EnemyState state in _states)
 	        {
                 if (!state.enabled)
                     continue;
@@ -43,11 +44,9 @@ namespace Enemy
 	            state.Machine = StateMachine;
 	            state.Context = App;
                 StateMachine.RegisterState(state); 
-
-                _states.Add(state);
             }
 
-	        StateMachine.ChangeState(states.FirstOrDefault() ?? idleState);
+	        StateMachine.ChangeState(_states.FirstOrDefault() ?? idleState);
 	    }
 
 	    void Update()
@@ -108,7 +107,7 @@ namespace Enemy
             
             foreach (EnemyState enemyState in _states)
             {
-                if (StateMachine.CurrentState != enemyState && enemyState.ShouldChange())
+                if (StateMachine.CurrentState != enemyState && enemyState.ShouldTakeover())
                     StateMachine.ChangeState(enemyState);
             }
 
@@ -120,12 +119,12 @@ namespace Enemy
         /// Method used to turn the enemy around.
         /// If 0, it turns around.
         /// </summary>
-	    public void Turn(int dir = 0)
+	    public void Turn(int dir, bool flip = false)
         {
-            if (dir == 0)
+            if (dir == 0 && flip)
                 dir = -1 * App.M.Character.LookDirection;
 
-            if (IsTurning || dir == App.M.Character.LookDirection)
+            if (IsTurning || dir == App.M.Character.LookDirection || (dir == 0 && !flip))
                 return;
 
             //Turn around instantly if turn speed is 0.
@@ -142,20 +141,31 @@ namespace Enemy
         }
 
         /// <summary>
-        /// Sets velocity on character, but turns if needed.
+        /// Flips/Turns the enemy around.
         /// </summary>
-        /// <param name="vel"></param>
-	    public void SetVelocity(Vector2 vel, bool overrideYVel = false, bool forceTurn = false)
+	    public void Turn()
 	    {
+	        Turn(0, true);
+	    }
+
+	    /// <summary>
+	    /// Moves the enemy to a specific direction, but turns if needed.
+	    /// It calculates the velocity with movement speed and fixedDeltaTime.
+	    /// </summary>
+	    /// <param name="dir">Direction movement</param>
+	    /// <param name="overrideYVel">If false, it doesn't touch Y axis.</param>
+	    /// <param name="forceTurn">Should it force turning around?</param>
+	    public void Move(Vector2 dir, bool overrideYVel = false, bool forceTurn = false)
+        {
 	        if (!IsTurning)
 	        {
                 if (!overrideYVel)
-                    vel = new Vector2(vel.x, App.M.Character.Rigidbody.velocity.y);
+                    dir = new Vector2(dir.x, App.M.Character.Rigidbody.velocity.y);
 
-	            App.M.Character.SetVelocity(vel, true);
+	            App.M.Character.SetVelocity(dir * Time.fixedDeltaTime, true);
 
-	            int xVel = Mathf.RoundToInt(vel.x);
-                if ((!App.M.CanBackPaddle || forceTurn) && xVel != 0)
+	            int xVel = Mathf.RoundToInt(dir.x);
+                if (!App.M.CanBackPaddle || forceTurn)
 	                Turn(xVel);
 	        }
 	    }

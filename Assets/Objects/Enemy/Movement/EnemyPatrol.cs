@@ -26,9 +26,9 @@ namespace Enemy
                 _patrolDirection.x = Context.M.Character.LookDirection;
         }
 
-        public override bool ShouldChange()
+        public override bool ShouldTakeover()
         {
-            if (IsState<EnemyIdle>())
+            if (IsState<EnemyIdle>() && !Context.M.Target)
                 return true;
 
             return false;
@@ -38,7 +38,9 @@ namespace Enemy
         {
             //If we're patrolling, move the enemy.
             if (IsActive && Context.M.Character.OnGround)
-                Context.C.SetVelocity(_patrolDirection * Time.fixedDeltaTime, forceTurn: true);
+            {
+                Context.C.Move(_patrolDirection, forceTurn: true);
+            }
         }
     }
 }

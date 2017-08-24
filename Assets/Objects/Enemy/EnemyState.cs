@@ -35,7 +35,11 @@ namespace Enemy
         {
         }
 
-        public abstract bool ShouldChange();
+        /// <summary>
+        /// Should the StateMachine change to this state?
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool ShouldTakeover();
 
         /// <summary>
         /// Used to change state only if the state is registered.

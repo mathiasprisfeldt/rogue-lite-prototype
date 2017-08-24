@@ -3133,9 +3133,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1964226253}
-  - component: {fileID: 1964226256}
   - component: {fileID: 1964226258}
   - component: {fileID: 1964226254}
+  - component: {fileID: 1964226256}
   m_Layer: 12
   m_Name: AI
   m_TagString: Untagged
@@ -3168,7 +3168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f3228ffd2d95f42baead428b518b41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avoidDistance: 6
+  _waitForPlayer: 1
+  _avoidDistance: 6
 --- !u!114 &1964226256
 MonoBehaviour:
   m_ObjectHideFlags: 0

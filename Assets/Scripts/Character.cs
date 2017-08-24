@@ -196,11 +196,19 @@ namespace Controllers
             }
         }
 
+        /// <summary>
+        /// Flips the characters visual direction and look direction.
+        /// </summary>
+        /// <param name="dir"></param>
         public void Flip(Vector2 dir)
         {
             Flip(Mathf.RoundToInt(dir.normalized.x));
         }
 
+        /// <summary>
+        /// Flips the characters visual direction and look direction.
+        /// </summary>
+        /// <param name="dir"></param>
         public void Flip(float dir)
         {
             if (dir == 0 || dir == LookDirection)

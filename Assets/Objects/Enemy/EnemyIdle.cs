@@ -15,7 +15,7 @@ namespace Enemy
             base.Begin();
         }
 
-        public override bool ShouldChange()
+        public override bool ShouldTakeover()
         {
             return false;
         }
