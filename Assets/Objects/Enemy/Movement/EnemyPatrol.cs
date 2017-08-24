@@ -1,6 +1,4 @@
-﻿using AcrylecSkeleton.StateKit;
-using CharacterController;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Enemy
 {
@@ -12,34 +10,37 @@ namespace Enemy
     {
         private Vector2 _patrolDirection = Vector2.right;
 
-        public override void StateStart()
+        public override void Begin()
         {
-            base.StateStart();
-
-            _patrolDirection = new Vector2(App.M.Character.LookDirection, 0);
+            _patrolDirection = new Vector2(Context.M.Character.LookDirection, 0);
         }
 
-        public override void StateUpdate()
+        public override void Think(float deltaTime)
         {
-            int bumpingDirection = App.M.Character.BumpingDirection;
+            int bumpingDirection = Context.M.Character.BumpingDirection;
 
             //If we're bumping into something, change direction.
             if (bumpingDirection != 0)
-                _patrolDirection.x = -App.M.Character.BumpingDirection;
+                _patrolDirection.x = -Context.M.Character.BumpingDirection;
             else
-                _patrolDirection.x = App.M.Character.LookDirection;
+                _patrolDirection.x = Context.M.Character.LookDirection;
+        }
+
+        public override bool ShouldTakeover()
+        {
+            if (IsState<EnemyIdle>())
+                return true;
+
+            return false;
         }
 
         void FixedUpdate()
         {
             //If we're patrolling, move the enemy.
-            if (IsActive && App.M.Character.OnGround)
-                App.C.SetVelocity(_patrolDirection, forceTurn: true);
-        }
-
-        public override bool CheckPrerequisite()
-        {
-            return !App.C.CurrentState;
+            if (IsActive && Context.M.Character.OnGround)
+            {
+                Context.C.Move(_patrolDirection, forceTurn: true);
+            }
         }
     }
 }

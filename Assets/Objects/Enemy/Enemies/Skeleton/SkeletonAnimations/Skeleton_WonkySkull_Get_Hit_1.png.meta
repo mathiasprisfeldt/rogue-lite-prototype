@@ -1,9 +1,24 @@
 fileFormatVersion: 2
 guid: 67f71bec27701ce489675c28aa531604
-timeCreated: 1503412199
+timeCreated: 1503577847
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: Skeleton_WonkySkull_Get_Hit_1_0
+    21300002: Skeleton_WonkySkull_Get_Hit_1_1
+    21300004: Skeleton_WonkySkull_Get_Hit_1_2
+    21300006: Skeleton_WonkySkull_Get_Hit_1_3
+    21300008: Skeleton_WonkySkull_Get_Hit_1_4
+    21300010: Skeleton_WonkySkull_Get_Hit_1_5
+    21300012: Skeleton_WonkySkull_Get_Hit_1_6
+    21300014: Skeleton_WonkySkull_Get_Hit_1_7
+    21300016: Skeleton_WonkySkull_Get_Hit_1_8
+    21300018: Skeleton_WonkySkull_Get_Hit_1_9
+    21300020: Skeleton_WonkySkull_Get_Hit_1_10
+    21300022: Skeleton_WonkySkull_Get_Hit_1_11
+    21300024: Skeleton_WonkySkull_Get_Hit_1_12
+    21300026: Skeleton_WonkySkull_Get_Hit_1_13
+    21300028: Skeleton_WonkySkull_Get_Hit_1_14
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -81,7 +96,217 @@ TextureImporter:
     overridden: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 331
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_1
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 331
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_2
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 331
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_3
+      rect:
+        serializedVersion: 2
+        x: 1134
+        y: 331
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_4
+      rect:
+        serializedVersion: 2
+        x: 1512
+        y: 331
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_5
+      rect:
+        serializedVersion: 2
+        x: 1890
+        y: 331
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_6
+      rect:
+        serializedVersion: 2
+        x: 2268
+        y: 331
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_7
+      rect:
+        serializedVersion: 2
+        x: 2646
+        y: 331
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_9
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 0
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_10
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 0
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_11
+      rect:
+        serializedVersion: 2
+        x: 1134
+        y: 0
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_12
+      rect:
+        serializedVersion: 2
+        x: 1512
+        y: 0
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_13
+      rect:
+        serializedVersion: 2
+        x: 1890
+        y: 0
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Skeleton_WonkySkull_Get_Hit_1_14
+      rect:
+        serializedVersion: 2
+        x: 2268
+        y: 0
+        width: 378
+        height: 331
+      alignment: 9
+      pivot: {x: 0.46, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
     outline: []
     physicsShape: []
   spritePackingTag: 

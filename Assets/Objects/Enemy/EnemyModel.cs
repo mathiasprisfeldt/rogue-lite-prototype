@@ -16,6 +16,9 @@ namespace Enemy
 	    [SerializeField]
 	    private Character _character;
 
+        [SerializeField]
+        private EnemyAttackAnim _enemyAttackAnim;
+
         [Space]
         [Header("Enemy Settings:")]
         [SerializeField]
@@ -35,6 +38,15 @@ namespace Enemy
 
         [SerializeField]
 	    private bool _canBackPaddle;
+
+	    [SerializeField, Tooltip("Should the enemy turn if hit from behind?")]
+	    private bool _turnOnBackstab;
+
+	    [SerializeField, Tooltip("Speed added to enemy when player is targeted.")]
+	    private float _engageSpeed;
+
+	    [SerializeField]
+	    private bool _isFlying;
 
         [Space]
         [SerializeField]
@@ -58,7 +70,12 @@ namespace Enemy
 	        set { _character = value; }
 	    }
 
-	    public float AttackCooldown
+	    public EnemyAttackAnim AttackAnim
+	    {
+	        get { return _enemyAttackAnim; }
+	    }
+
+        public float AttackCooldown
 	    {
 	        get { return _attackCooldown; }
 	        set { _attackCooldown = value; }
@@ -86,6 +103,24 @@ namespace Enemy
 	    {
 	        get { return _canBackPaddle; }
 	        set { _canBackPaddle = value; }
+	    }
+
+	    public bool TurnOnBackstab
+	    {
+	        get { return _turnOnBackstab; }
+	        set { _turnOnBackstab = value; }
+	    }
+
+	    public float EngageSpeed
+	    {
+	        get { return _engageSpeed; }
+	        set { _engageSpeed = value; }
+	    }
+
+	    public bool IsFlying
+	    {
+	        get { return _isFlying; }
+	        set { _isFlying = value; }
 	    }
 	}
 }

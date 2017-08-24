@@ -11,8 +11,14 @@ namespace Health
 {
     enum HealthType
     {
-        Normal,
-        Container
+        Container,
+        Normal
+    }
+
+    [Serializable]
+    public class OnDamageEvent : UnityEvent<Character>
+    {
+        
     }
 
     /// <summary>
@@ -23,6 +29,7 @@ namespace Health
     [RequireComponent(typeof(HealthController))]
     public class HealthController : MonoBehaviour
     {
+        private bool _isDead;
         private bool _isLateChecking; //Are we checking in end of frame if we're dead?
 
         #region Inspector Fields
@@ -64,7 +71,10 @@ namespace Health
         private bool _destroyOnDead = true;
 
         [SerializeField]
-        private UnityEvent _deadEvent;
+        private UnityEvent _onDead;
+
+        [SerializeField]
+        private OnDamageEvent _onDamage;
 
         [Header("References:"), Space]
         [SerializeField]
@@ -75,13 +85,34 @@ namespace Health
 
         #endregion
 
-        public bool IsDead { get; set; }
-
-        public UnityEvent DeadEvent
+        public bool IsDead
         {
-            get { return _deadEvent; }
-            set { _deadEvent = value; }
-        } //Event invoked when dead
+            get { return _isDead; }
+            set
+            {
+                //Updating character animator with dead data.
+                if (Character.MainAnimator && _isDead != value)
+                {
+                    Character.MainAnimator.SetBool("Dead", value);
+                    Character.MainAnimator.SetTrigger("Die");
+                }
+
+                _isDead = value; 
+            }
+        }
+
+        //Event invoked when dead
+        public UnityEvent OnDead
+        {
+            get { return _onDead; }
+            set { _onDead = value; }
+        }
+
+        public OnDamageEvent OnDamage
+        {
+            get { return _onDamage; }
+            set { _onDamage = value; }
+        }
 
         public bool IsInvurnable
         {
@@ -129,6 +160,11 @@ namespace Health
             set { _character = value; }
         }
 
+        void Awake()
+        {
+            OnDamage = new OnDamageEvent();
+        }
+
         /// <summary>
         /// Deals amount of damage to object, if it exceeds 0 its dead.
         /// NOTE: If container its calculated in container sizes.
@@ -136,7 +172,9 @@ namespace Health
         /// It always rounds to halfs or wholes.
         /// </summary>
         /// <param name="dmg">Amount of damage to deal.</param>
-        public void Damage(float dmg, bool giveInvurnability = true, Transform from = null)
+        /// <param name="pos">Position from where the damage came from</param>
+        /// <param name="from">Did the damage come from a specific character?</param>
+        public void Damage(float dmg, bool giveInvurnability = true, Vector2 pos = default(Vector2), Character from = null)
         {
             if (dmg <= 0 || IsDead)
                 return;
@@ -152,16 +190,30 @@ namespace Health
             }
 
             //Apply knockback
-            if (from && !_isInvurnable)
+            if (pos != Vector2.zero && !_isInvurnable)
             {
-                _character.KnockbackHandler.AddForce(from.position.ToVector2().DirectionTo(_character.Rigidbody.position) * _knockbackForce, _knockbackDuration);
+                _character.KnockbackHandler.AddForce(pos.DirectionTo(_character.Rigidbody.position) * _knockbackForce, _knockbackDuration);
             }
-                
 
             HealthAmount -= amountToDmg;
 
+            //If we take damage show hit animation.
+            //But dont show if we're invurnable (Only if we take dmg while being it)
+            if (Character.MainAnimator)
+            {
+                if (_isInvurnable)
+                {
+                    if (_dmgWhileInvurnable)
+                        Character.MainAnimator.SetTrigger("Hit");
+                }
+                else
+                    Character.MainAnimator.SetTrigger("Hit");
+            }
+
             if (giveInvurnability || _invurnableOnDmg)
                 StartCoroutine(StartInvurnability(_invurnabilityDuration));
+
+            OnDamage.Invoke(from);
         }
 
         /// <summary>
@@ -182,7 +234,7 @@ namespace Health
 
             if (!IsDead && gotKilled)
             {
-                DeadEvent.Invoke();
+                OnDead.Invoke();
 
                 if (_destroyOnDead)
                     Kill();

@@ -1,0 +1,676 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Archon.SwissArmyLib</name>
+    </assembly>
+    <members>
+        <member name="M:Archon.SwissArmyLib.Automata.IPdaState`1.Pause">
+            <summary>
+            Called when a state is pushed ontop of this state.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.IPdaState`1.Resume">
+            <summary>
+            Called when the state above us is popped.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Automata.IState`2.Machine">
+            <summary>
+            The state machine this state belongs to.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Automata.IState`2.Context">
+            <summary>
+            The context for this state.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.IState`2.Begin">
+            <summary>
+            Called when the state is entered.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.IState`2.Reason">
+            <summary>
+            Called every frame just before <see cref="M:Archon.SwissArmyLib.Automata.IState`2.Think(System.Single)"/>. 
+            Use this to check whether you should change state.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.IState`2.Think(System.Single)">
+            <summary>
+            Called every frame after <see cref="M:Archon.SwissArmyLib.Automata.IState`2.Reason"/>, if the state hasn't been changed.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.IState`2.End">
+            <summary>
+            Called when the state is exited.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PdaState`1.Pause">
+            <summary>
+            Called when a state is pushed ontop of this state.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PdaState`1.Resume">
+            <summary>
+            Called when the state above us is popped.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.Context">
+            <summary>
+            A shared context which all states have access to.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.CurrentState">
+            <summary>
+            The active state.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.#ctor(`0)">
+            <summary>
+            Creates a new PushdownAutomaton.
+            
+            You should use <see cref="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.RegisterStateType(System.Type,System.Func{Archon.SwissArmyLib.Automata.IPdaState{`0}})"/> to register which state types that can be used with the machine.
+            </summary>
+            <param name="context">Data shared among states</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.Update(System.Single)">
+            <summary>
+            Call this every time the machine should update. Eg. every frame.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.ChangeState``1">
+            <summary>
+            Replaces the active state with another state, without notifying the underlying state.
+            </summary>
+            <typeparam name="TState"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PopState">
+            <summary>
+            Pops the current state and resumes the underlying state.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PopStateSilently">
+            <summary>
+            Pops the current state without notifying the underlying state.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PopAll(System.Boolean)">
+            <summary>
+            Pops all states in the stack.
+            </summary>
+            <param name="excludingRoot">Whether to keep the bottom state.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PushState``1">
+            <summary>
+            Pushes a state to the top of the stack and pauses the underlying state.
+            </summary>
+            <typeparam name="TState"></typeparam>
+            <returns>The new state.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PushStateSilently``1">
+            <summary>
+            Pushes a state to the top of the stack without notifying the underlying state.
+            </summary>
+            <typeparam name="TState"></typeparam>
+            <returns>The new state.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.ObtainState``1">
+            <summary>
+            Obtains a pooled instance of the given type.
+            </summary>
+            <typeparam name="TState"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.FreeState(Archon.SwissArmyLib.Automata.IPdaState{`0})">
+            <summary>
+            Frees a state instance and makes it available for reuse.
+            </summary>
+            <param name="state"></param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.GetPool(System.Type)">
+            <summary>
+            Gets a pool for the given state type.
+            </summary>
+            <param name="stateType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.RegisterStateType``1">
+            <summary>
+            Registers a state type in the machine. 
+            A pool for the type will be created that will use the empty constructor.
+            </summary>
+            <typeparam name="TState"></typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.RegisterStateType(System.Type,System.Func{Archon.SwissArmyLib.Automata.IPdaState{`0}})">
+            <summary>
+            Registers a state type in the machine. 
+            A pool for the type will be created which uses the given creationMethod to create new instance when needed.
+            </summary>
+            <param name="type"></param>
+            <param name="creationMethod"></param>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.Context">
+            <summary>
+            A shared context which all states have access to.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.CurrentState">
+            <summary>
+            The active state.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.PreviousState">
+            <summary>
+            The previously active state.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.#ctor(`0)">
+            <summary>
+            Creates a new Finite State Machine.
+            
+            If you need control over how the states are created, you can register them manually using <see cref="!:RegisterState&lt;TState&gt;"/>.
+            If not, then you can freely use <see cref="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.ChangeStateAuto``1"/> which will create the states using their default constructor.
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.Update(System.Single)">
+            <summary>
+            Call this every time the machine should update. Eg. every frame.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.RegisterState(Archon.SwissArmyLib.Automata.IFsmState{`0})">
+            <summary>
+            Preemptively add a state instance.
+            Useful if the state doesn't have an empty constructor and therefore cannot be used with ChangeStateAuto.
+            </summary>
+            <param name="state">The state to register.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.IsStateRegistered(System.Type)">
+            <summary>
+            Checks whether a state type is registered.
+            </summary>
+            <param name="stateType">The state type to check.</param>
+            <returns>True if registered, false otherwise.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.IsStateRegistered``1">
+            <summary>
+            Generic version of <see cref="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.IsStateRegistered(System.Type)"/>.
+            Checks whether a state type is registered.
+            </summary>
+            <typeparam name="TState">The state type to check.</typeparam>
+            <returns>Tru if registered, false otherwise.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.ChangeStateAuto``1">
+            <summary>
+            Changes the active state to the given state type.
+            If a state of that type isn't already registered, it will automatically create a new instance using the empty constructor.
+            </summary>
+            <typeparam name="TState"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.ChangeState``1">
+            <summary>
+            Changes the active state to the given state type. 
+            An instance of that type should already had been registered to use this method.
+            </summary>
+            <typeparam name="TState"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.ChangeState``1(``0)">
+            <summary>
+            Changes the active state to a specific state instance.
+            This will (if not null) also register the state.
+            </summary>
+            <typeparam name="TState"></typeparam>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Automata.State`2.TimeInState">
+            <summary>
+            Amount of (active) time spent in this state since it was entered.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.State`2.Begin">
+            <summary>
+            Called when the state is entered.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.State`2.Reason">
+            <summary>
+            Called every frame just before <see cref="M:Archon.SwissArmyLib.Automata.State`2.Think(System.Single)"/>. 
+            Use this to check whether you should change state.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.State`2.Think(System.Single)">
+            <summary>
+            Called every frame after <see cref="M:Archon.SwissArmyLib.Automata.State`2.Reason"/>, if the state hasn't been changed.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.State`2.End">
+            <summary>
+            Called when the state is exited.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Collections.DictionaryWithDefault`2">
+            <summary>
+            A <see cref="T:System.Collections.Generic.Dictionary`2"/> but with a default value for missing entries.
+            </summary>
+            <typeparam name="TKey"></typeparam>
+            <typeparam name="TValue"></typeparam>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.DictionaryWithDefault`2.DefaultValue">
+            <summary>
+            Default value for missing entries.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.DictionaryWithDefault`2.Item(`0)">
+            <summary>
+            Gets or sets the value associated with the given key.
+            
+            If the key isn't in the dictionary, <see cref="P:Archon.SwissArmyLib.Collections.DictionaryWithDefault`2.DefaultValue"/> will be returned.
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DictionaryWithDefault`2.#ctor">
+            <summary>
+            Creates a new Dictionary with DefaultValue set to TValue's default value.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DictionaryWithDefault`2.#ctor(`1)">
+            <summary>
+            Creates a new Dictionary using the supplied value as the default for missing entries.
+            </summary>
+            <param name="defaultValue"></param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DictionaryWithDefault`2.#ctor(`1,System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Creates a new Dictionary using the supplied value as the default for missing entries and a specific comparer.
+            </summary>
+            <param name="defaultValue"></param>
+            <param name="comparer"></param>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.EventSystem">
+            <summary>
+            A simple event system that uses interfaces instead of delegates to avoid the garbage generated by them.
+            
+            This version is for parameterless events. 
+            See <see cref="T:Archon.SwissArmyLib.Events.EventSystem`1"/> if you need to send data with the event.
+            
+            Events are differentiated by an integer. You are expected to create constants to define your events.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.EventSystem.Invoke(System.Int32)">
+            <summary>
+            Invokes an event.
+            </summary>
+            <param name="eventId">The id of the event.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.EventSystem.AddListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener,System.Int32)">
+            <summary>
+            Adds a listener for an event.
+            </summary>
+            <param name="eventId">The id of the event.</param>
+            <param name="listener">The listener to be called.</param>
+            <param name="priority">The priority of the listener which affects the order which listeners are called in.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.EventSystem.RemoveListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener)">
+            <summary>
+            Removes a listener for an event.
+            </summary>
+            <param name="eventId">The id of the event.</param>
+            <param name="listener">The listener to remove.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.EventSystem.Clear">
+            <summary>
+            Clears all listeners for all events.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.EventSystem.Clear(System.Int32)">
+            <summary>
+            Clears all listeners for a single event.
+            </summary>
+            <param name="eventId">The id of the event.</param>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.EventSystem`1">
+            <summary>
+            A simple event system that uses interfaces instead of delegates to avoid the garbage generated by them.
+            
+            This version is for events with args. 
+            See <see cref="T:Archon.SwissArmyLib.Events.EventSystem"/> if you don't need to send data with the event.
+            
+            Events are differentiated by an integer. You are expected to create constants to define your events.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.EventSystem`1.Invoke(System.Int32,`0)">
+            <summary>
+            Invokes an event.
+            </summary>
+            <param name="eventId">The id of the event.</param>
+            <param name="args">The event args.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.EventSystem`1.AddListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener{`0},System.Int32)">
+            <summary>
+            Adds a listener for an event.
+            </summary>
+            <param name="eventId">The id of the event.</param>
+            <param name="listener">The listener to be called.</param>
+            <param name="priority">The priority of the listener which affects the order which listeners are called in.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.EventSystem`1.RemoveListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener{`0})">
+            <summary>
+            Removes a listener for an event.
+            </summary>
+            <param name="eventId">The id of the event.</param>
+            <param name="listener">The listener to remove.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.EventSystem`1.Clear">
+            <summary>
+            Clears all listeners for all events.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.EventSystem`1.Clear(System.Int32)">
+            <summary>
+            Clears all listeners for a single event.
+            </summary>
+            <param name="eventId">The id of the event.</param>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.IEventListener">
+            <summary>
+            Defines a method to be used for event callbacks.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.IEventListener.OnEvent(System.Int32)">
+            <summary>
+            Called when an event is invoked.
+            </summary>
+            <param name="eventId">The id of the event.</param>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.IEventListener`1">
+            <summary>
+            Defines a method to be used for event callbacks with a parameter of type <typeparamref name="TArgs"/>.
+            </summary>
+            <typeparam name="TArgs"></typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.IEventListener`1.OnEvent(System.Int32,`0)">
+            <summary>
+            Called when an event is invoked.
+            </summary>
+            <param name="eventId">The id of the event.</param>
+            <param name="args">The args for the event.</param>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.TellMeWhen">
+            <summary>
+            A utility class for getting notified after a specific amount of time.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Events.TellMeWhen.NoId">
+            <summary>
+            Default id, if none is supplied
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.Exact(System.Single,Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32,System.Object)">
+            <summary>
+            Schedule a callback to be called at a specific <see cref="P:UnityEngine.Time.time"/>.
+            </summary>
+            <param name="time">The <see cref="P:UnityEngine.Time.time"/> at which the callback should be called.</param>
+            <param name="callback">The callback that will be notified.</param>
+            <param name="id">An id so that you can reidentify the origin of the timer. Optional, but useful if you have more than one timer.</param>
+            <param name="args">An optional args object that will be passed to the callback.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.Exact(System.Single,System.Single,Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32,System.Object)">
+            <summary>
+            Schedule a callback to be called at a specific <see cref="P:UnityEngine.Time.time"/> and repeatedly every <paramref name="repeatInterval"/> there after.
+            </summary>
+            <param name="time">The <see cref="P:UnityEngine.Time.time"/> at which the callback should be called.</param>
+            <param name="repeatInterval">The interval in seconds to repeat the timer.</param>
+            <param name="callback">The callback that will be notified.</param>
+            <param name="id">An id so that you can reidentify the origin of the timer. Optional, but useful if you have more than one timer.</param>
+            <param name="args">An optional args object that will be passed to the callback.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.Seconds(System.Single,Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32,System.Object,System.Boolean)">
+            <summary>
+            Schedule a callback to be called after a specific amount of (scaled) seconds.
+            </summary>
+            <param name="seconds">The amount of seconds before the callback should be called.</param>
+            <param name="callback">The callback that will be notified.</param>
+            <param name="id">An id so that you can reidentify the origin of the timer. Optional, but useful if you have more than one timer.</param>
+            <param name="args">An optional args object that will be passed to the callback.</param>
+            <param name="repeating">Whether the timer should repeat untill cancelled.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.Minutes(System.Single,Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32,System.Object,System.Boolean)">
+            <summary>
+            Schedule a callback to be called after a specific amount of (scaled) minutes.
+            </summary>
+            <param name="minutes">The amount of minutes before the callback should be called.</param>
+            <param name="callback">The callback that will be notified.</param>
+            <param name="id">An id so that you can reidentify the origin of the timer. Optional, but useful if you have more than one timer.</param>
+            <param name="args">An optional args object that will be passed to the callback.</param>
+            <param name="repeating">Whether the timer should repeat untill cancelled.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.ExactUnscaled(System.Single,Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32,System.Object)">
+            <summary>
+            Schedule a callback to be called at a specific <see cref="P:UnityEngine.Time.unscaledTime"/>.
+            </summary>
+            <param name="time">The <see cref="P:UnityEngine.Time.unscaledTime"/> at which the callback should be called.</param>
+            <param name="callback">The callback that will be notified.</param>
+            <param name="id">An id so that you can reidentify the origin of the timer. Optional, but useful if you have more than one timer.</param>
+            <param name="args">An optional args object that will be passed to the callback.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.ExactUnscaled(System.Single,System.Single,Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32,System.Object)">
+            <summary>
+            Schedule a callback to be called at a specific <see cref="P:UnityEngine.Time.unscaledTime"/> and repeatedly every <paramref name="repeatInterval"/> there after.
+            </summary>
+            <param name="time">The <see cref="P:UnityEngine.Time.unscaledTime"/> at which the callback should be called.</param>
+            <param name="repeatInterval">The interval in seconds to repeat the timer.</param>
+            <param name="callback">The callback that will be notified.</param>
+            <param name="id">An id so that you can reidentify the origin of the timer. Optional, but useful if you have more than one timer.</param>
+            <param name="args">An optional args object that will be passed to the callback.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.SecondsUnscaled(System.Single,Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32,System.Object,System.Boolean)">
+            <summary>
+            Schedule a callback to be called after a specific amount of (unscaled) seconds.
+            </summary>
+            <param name="seconds">The amount of seconds before the callback should be called.</param>
+            <param name="callback">The callback that will be notified.</param>
+            <param name="id">An id so that you can reidentify the origin of the timer. Optional, but useful if you have more than one timer.</param>
+            <param name="args">An optional args object that will be passed to the callback.</param>
+            <param name="repeating">Whether the timer should repeat untill cancelled.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.MinutesUnscaled(System.Single,Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32,System.Object,System.Boolean)">
+            <summary>
+            Schedule a callback to be called after a specific amount of (unscaled) minutes.
+            </summary>
+            <param name="minutes">The amount of minutes before the callback should be called.</param>
+            <param name="callback">The callback that will be notified.</param>
+            <param name="id">An id so that you can reidentify the origin of the timer. Optional, but useful if you have more than one timer.</param>
+            <param name="args">An optional args object that will be passed to the callback.</param>
+            <param name="repeating">Whether the timer should repeat untill cancelled.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.CancelScaled(Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback)">
+            <summary>
+            Cancels all scaled timers for the given callback.
+            </summary>
+            <param name="callback">The callback of the timers to cancel.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.CancelScaled(Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32)">
+            <summary>
+            Cancels a scaled timer for the given callback with a specific id.
+            </summary>
+            <param name="callback">The callback of the timer to cancel.</param>
+            <param name="id">The id of the timer to cancel.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.CancelUnscaled(Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback)">
+            <summary>
+            Cancels all unscaled timers for the given callback.
+            </summary>
+            <param name="callback">The callback of the timers to cancel.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.CancelUnscaled(Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32)">
+            <summary>
+            Cancels a unscaled timer for the given callback with a specific id.
+            </summary>
+            <param name="callback">The callback of the timer to cancel.</param>
+            <param name="id">The id of the timer to cancel.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.CancelAll">
+            <summary>
+            Cancels all (both scaled and unscaled) timers for all callbacks.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback">
+            <summary>
+            Defines a method to be used for timer events.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback.OnTimesUp(System.Int32,System.Object)">
+            <summary>
+            Called when a timer is triggered (eg. after X amount of time).
+            </summary>
+            <param name="id">The id of the timer.</param>
+            <param name="args">The supplied event args if supplied when the timer was scheduled.</param>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Gravity.GravitationalEntity">
+            <summary>
+            Makes this <see cref="T:UnityEngine.GameObject"/>'s <see cref="T:UnityEngine.Rigidbody"/> part of the gravitational system.
+            
+            For 2D physic see <see cref="T:Archon.SwissArmyLib.Gravity.GravitationalEntity2D"/>.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Gravity.IGravitationalPoint">
+            <summary>
+            Represents a point with a gravitational pull on entities.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Gravity.IGravitationalPoint.GetForceAt(UnityEngine.Vector3)">
+            <summary>
+            Calculates how much gravitational pull is at a specific location caused by this point.
+            </summary>
+            <param name="location">The location to test.</param>
+            <returns>A vector representing the force at <paramref name="location"/>.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Gravity.SphericalGravitationalPoint">
+            <summary>
+            A sphere-shaped gravitational point.
+            
+            <remarks>The force is currently constant and not dependent on how close the entities are.</remarks>
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Gravity.SphericalGravitationalPoint.Strength">
+            <summary>
+            The gravitational pull of this point.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Gravity.SphericalGravitationalPoint.Radius">
+            <summary>
+            Gets or sets the radius of this gravitational point.
+            
+            <remarks>If <see cref="P:Archon.SwissArmyLib.Gravity.SphericalGravitationalPoint.IsGlobal"/> is true, then this property is ignored.</remarks>
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Gravity.SphericalGravitationalPoint.IsGlobal">
+            <summary>
+            Gets or sets whether this point should affect all entities regardless of whether they're in range.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Gravity.GravitationalEntity2D">
+            <summary>
+            Makes this <see cref="T:UnityEngine.GameObject"/>'s <see cref="T:UnityEngine.Rigidbody2D"/> part of the gravitational system.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Gravity.GravitationalSystem">
+            <summary>
+            A gravitational system to allow for a more flexible gravity instead of just a constant directional gravity.
+            
+            Useful for planets, black holes, magnets etc.
+            
+            Rigidbodies that should be affected should have the <see cref="T:Archon.SwissArmyLib.Gravity.GravitationalEntity"/> component (or <see cref="T:Archon.SwissArmyLib.Gravity.GravitationalEntity2D"/> if using 2d physics).
+            
+            Add gravitational forces by implementing the <see cref="T:Archon.SwissArmyLib.Gravity.IGravitationalPoint"/> interface and registering it in the system.
+            See <see cref="T:Archon.SwissArmyLib.Gravity.SphericalGravitationalPoint"/> for a simple example implementation.
+            
+            <remarks>You might want to set Unity's gravity to (0,0,0).</remarks>
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Gravity.GravitationalSystem.Instance">
+            <summary>
+            A reference to the GravitationalSystem singleton.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Register(Archon.SwissArmyLib.Gravity.IGravitationalPoint)">
+            <summary>
+            Registers a gravitational point to be part of the system.
+            </summary>
+            <param name="point">The point to register.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Register(UnityEngine.Rigidbody)">
+            <summary>
+            Registers a <see cref="T:UnityEngine.Rigidbody"/> that should be affected by gravitational forces in this system.
+            </summary>
+            <param name="rigidbody">The rigidbody to register.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Register(UnityEngine.Rigidbody2D)">
+            <summary>
+            Registers a <see cref="T:UnityEngine.Rigidbody2D"/> that should be affected by gravitational forces in this system.
+            </summary>
+            <param name="rigidbody">The rigidbody to register.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Unregister(Archon.SwissArmyLib.Gravity.IGravitationalPoint)">
+            <summary>
+            Unregisters a gravitational point from the system, so it no longer affects entities.
+            </summary>
+            <param name="point">The point to unregister.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Unregister(UnityEngine.Rigidbody)">
+            <summary>
+            Unregisters a <see cref="T:UnityEngine.Rigidbody"/> from the system, so it no longer is affected by gravitational forces in this system.
+            </summary>
+            <param name="rigidbody">The rigidbody to unregister.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Unregister(UnityEngine.Rigidbody2D)">
+            <summary>
+            Unregisters a <see cref="T:UnityEngine.Rigidbody2D"/> from the system, so it no longer is affected by gravitational forces in this system.
+            </summary>
+            <param name="rigidbody">The rigidbody to unregister.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.GetGravityAtPoint(UnityEngine.Vector3)">
+            <summary>
+            Gets the sum of all gravitational forces at a specific location.
+            </summary>
+            <param name="location">The location to test.</param>
+            <returns>A vector representing the sum of gravitational force at <paramref name="location"/>.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Utils.ColorUtils">
+            <summary>
+            Utility methods for <see cref="T:UnityEngine.Color"/>.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ColorUtils.ToHex(UnityEngine.Color)">
+            <summary>
+            Converts the given color to its equivalent hex color in the form of #RRGGBBAA (eg. #000000FF for opaque black).
+            </summary>
+            <param name="color">The color to convert.</param>
+            <returns>The hex representation of <paramref name="color"/>.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ColorUtils.RichTextColor(System.String,UnityEngine.Color)">
+            <summary>
+            Wraps the supplied string in rich text color tags.
+            </summary>
+            <param name="text">The text to be colored.</param>
+            <param name="color">The color to make the text.</param>
+            <returns><paramref name="text"/> wrapped in color tags.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Utils.Extensions.ListExtensions">
+            <summary>
+            Extensions for List
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Extensions.ListExtensions.Shuffle``1(System.Collections.Generic.IList{``0})">
+            <summary>
+            Shuffles the list using Fisher–Yates shuffle algorithm.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list">The list to shuffle.</param>
+        </member>
+    </members>
+</doc>

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using AcrylecSkeleton.Extensions;
+using UnityEngine;
 
 namespace Enemy
 {
@@ -10,19 +11,29 @@ namespace Enemy
     {
         void FixedUpdate()
         {
-            if (IsActive && App.M.Target && App.M.Character.OnGround)
-                App.C.SetVelocity(new Vector2(Mathf.Round(App.C.ToPlayer.normalized.x), 0));
+            if (IsActive && Context.M.Target)
+            {
+                if (Context.M.Character.OnGround && !Context.M.IsFlying)
+                    Context.C.Move(Mathf.Round(Context.C.ToPlayer.normalized.x) * Vector2.right, forceTurn: true);
+                else if (Context.M.IsFlying)
+                    Context.C.Move(Context.C.ToPlayer.normalized, true, true);
+            }
         }
 
-        public override bool CheckPrerequisite()
+        public override void Reason()
         {
-            return App.M.Target && App.C.CurrentState is EnemyPatrol && !(App.C.CurrentState is EnemyAttack) || App.C.CurrentState == null;
+            base.Reason();
+
+            if (!Context.M.Target)
+                ChangeState<EnemyIdle>();
         }
 
-        public override void StateUpdate()
+        public override bool ShouldTakeover()
         {
-            if (!App.M.Target)
-                App.C.ResetToInitial();
+            if (Context.M.Target && !IsState<EnemyAttack>())
+                return true;
+
+            return false;
         }
     }
 }

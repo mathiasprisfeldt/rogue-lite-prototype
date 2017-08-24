@@ -181,8 +181,9 @@ namespace CharacterController
                 App.C.PlayerActions.UpdateProxy();
         }
 
-        public void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             LastHorizontalDirection = 1;
 
             StartThrow = new Trigger();

@@ -10,21 +10,55 @@ namespace Enemy
     public class EnemyAvoid : EnemyState 
     {
         [SerializeField]
-        private float avoidDistance = 2;
+        private bool _waitForPlayer;
 
-        public override void StateUpdate()
+        [SerializeField]
+        private float _avoidDistance = 2;
+
+        void FixedUpdate()
         {
-            base.StateUpdate();
+            if (IsActive)
+            {
+                float dir = 0;
 
-            if (CheckPrerequisite() && App.M.Character.BumpingDirection == 0)
-                App.C.SetVelocity(new Vector2(-Mathf.Round(App.C.ToPlayer.normalized.x), 0));
-            else
-                App.C.ChangeState(null);
+                if (Context.C.ToPlayer.magnitude < _avoidDistance)
+                    dir = -Mathf.Round(Context.C.ToPlayer.normalized.x);
+
+                Context.C.Move(dir * Vector2.right);
+
+                if (Context.M.CanBackPaddle && Context.C.IsTargetBehind)
+                    Context.C.Turn();
+            }
         }
 
-        public override bool CheckPrerequisite()
+        public override bool ShouldTakeover()
         {
-            return App.C.ToPlayer.magnitude < avoidDistance;
+            if (Context.M.Target && 
+                Context.M.Character.BumpingDirection == 0 && 
+                Context.C.ToPlayer.magnitude < _avoidDistance)
+                return true;
+
+            return false;
+        }
+
+        public override void Reason()
+        {
+            if (!Context.M.Target)
+            {
+                ChangeState<EnemyIdle>();
+                return;
+            }
+
+            if (Context.M.Character.BumpingDirection != 0 || Context.C.ToPlayer.magnitude > _avoidDistance && !_waitForPlayer)
+            {
+                if (Machine.PreviousState is EnemyPatrol && Context.M.CanBackPaddle)
+                    Context.C.Turn();
+
+                ChangeState<EnemyIdle>();
+                return;
+            }
+
+            base.Reason();
         }
     }
 }
