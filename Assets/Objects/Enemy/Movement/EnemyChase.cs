@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using AcrylecSkeleton.Extensions;
+using UnityEngine;
 
 namespace Enemy
 {
@@ -10,8 +11,13 @@ namespace Enemy
     {
         void FixedUpdate()
         {
-            if (IsActive && Context.M.Target && Context.M.Character.OnGround)
-                Context.C.Move(Mathf.Round(Context.C.ToPlayer.normalized.x) * Vector2.right, forceTurn: true);
+            if (IsActive && Context.M.Target)
+            {
+                if (Context.M.Character.OnGround && !Context.M.IsFlying)
+                    Context.C.Move(Mathf.Round(Context.C.ToPlayer.normalized.x) * Vector2.right, forceTurn: true);
+                else if (Context.M.IsFlying)
+                    Context.C.Move(Context.C.ToPlayer.normalized, true, true);
+            }
         }
 
         public override void Reason()

@@ -121,7 +121,7 @@ namespace Enemy
             
             foreach (EnemyState enemyState in _states)
             {
-                if (StateMachine.CurrentState != enemyState && enemyState.ShouldTakeover())
+                if (StateMachine.CurrentState != enemyState && enemyState.enabled && enemyState.ShouldTakeover())
                     StateMachine.ChangeState(enemyState);
             }
 
@@ -181,7 +181,7 @@ namespace Enemy
                 if (!overrideYVel)
                     vel = new Vector2(dir.x, App.M.Character.Rigidbody.velocity.y);
 
-	            App.M.Character.SetVelocity(vel * Time.fixedDeltaTime, true, App.M.Target ? App.M.EngageSpeed : 0);
+	            App.M.Character.SetVelocity(vel * Time.fixedDeltaTime, true, App.M.Target ? App.M.EngageSpeed : 0, overrideYVel);
 
 	            int xDir = Mathf.RoundToInt(dir.x);
                 if (!App.M.CanBackPaddle || forceTurn)

@@ -53,7 +53,7 @@ namespace Controllers
         private AbilityHandler _abilityHandler;
 
         [Header("Settings:")]
-        [SerializeField, Tooltip("Which way are it facing at start?")]
+        [SerializeField, Tooltip("Which way is it facing at start?")]
         private int _startDirection = -1;
 
         [SerializeField]
@@ -61,6 +61,9 @@ namespace Controllers
 
         [SerializeField]
         private float _movementSpeed;
+
+        [SerializeField]
+        private float _flySpeed;
 
         [SerializeField]
         private bool _flipWithVelocity;
@@ -150,6 +153,12 @@ namespace Controllers
             set { _movementSpeed = value; }
         }
 
+        public float FlySpeed
+        {
+            get { return _flySpeed; }
+            set { _flySpeed = value; }
+        }
+
         public AbilityHandler AbilityHandler
         {
             get { return _abilityHandler; }
@@ -225,13 +234,18 @@ namespace Controllers
             LookDirection = Mathf.RoundToInt(dir);
         }
 
-        public virtual void SetVelocity(Vector2 velocity, bool respectMovementSpeed = false, float movementSpeedAddtion = 0)
+        public virtual void SetVelocity(Vector2 velocity, bool respectMovementSpeed = false, float movementSpeedAddtion = 0, bool fly = false)
         {
             if (_healthController.IsDead)
                 return;
 
             if (respectMovementSpeed)
+            {
                 velocity.x *= MovementSpeed + movementSpeedAddtion;
+
+                if (fly)
+                    velocity.y *= FlySpeed + movementSpeedAddtion;
+            }
 
             _rigidbody.velocity = velocity;
         }

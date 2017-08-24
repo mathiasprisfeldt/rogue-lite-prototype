@@ -89,5 +89,10 @@ namespace AcrylecSkeleton.Extensions
             return Vector2.right * v.x + Vector2.up * v.y;
         }
 
+        public static Vector2 Rounded(this Vector2 vec)
+        {
+            return (Mathf.Round(vec.x) * Vector2.right) + (Mathf.Round(vec.y) * Vector2.up);
+        }
+
     }
 }

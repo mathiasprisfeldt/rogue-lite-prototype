@@ -45,6 +45,9 @@ namespace Enemy
 	    [SerializeField, Tooltip("Speed added to enemy when player is targeted.")]
 	    private float _engageSpeed;
 
+	    [SerializeField]
+	    private bool _isFlying;
+
         [Space]
         [SerializeField]
 	    private PlayerApplication _target;
@@ -112,6 +115,12 @@ namespace Enemy
 	    {
 	        get { return _engageSpeed; }
 	        set { _engageSpeed = value; }
+	    }
+
+	    public bool IsFlying
+	    {
+	        get { return _isFlying; }
+	        set { _isFlying = value; }
 	    }
 	}
 }
