@@ -39,7 +39,7 @@ namespace Health
                         continue;
 
                     _healthController.Character.HealthController.Damage(targetCharacter.Damage,
-                        from: sidesTargetCollider.transform);
+                        from: targetCharacter);
                 }
             }
         }

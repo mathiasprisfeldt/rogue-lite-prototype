@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.MVC;
 using Archon.SwissArmyLib.Automata;
+using Controllers;
 using Managers;
 using UnityEngine;
 
@@ -22,8 +24,9 @@ namespace Enemy
 
 	    public Vector2 ToPlayer { get; private set; }
 	    public bool IsTurning { get; private set; }
+	    public bool IsTargetBehind { get; private set; }
 
-	    public FiniteStateMachine<EnemyApplication> StateMachine { get; set; }
+        public FiniteStateMachine<EnemyApplication> StateMachine { get; set; }
 
 	    void Awake()
 	    {
@@ -47,7 +50,14 @@ namespace Enemy
             }
 
 	        StateMachine.ChangeState(_states.FirstOrDefault() ?? idleState);
+
 	    }
+
+	    void Start()
+	    {
+	        App.M.Character.HealthController.OnDamage.AddListener(OnDamage);
+	        App.M.Character.HealthController.OnDead.AddListener(OnDead);
+        }
 
 	    void Update()
 	    {
@@ -75,16 +85,13 @@ namespace Enemy
 	            bool canTarget = true;
 
 	            //Check if the player is behind the player and if can be target if behind.
-	            bool isTargetBehind = false;
+	            IsTargetBehind = false;
 	            int lookDir = App.M.Character.LookDirection;
 
-	            if (lookDir == -1)
-	                isTargetBehind = ToPlayer.x > lookDir;
-	            else if (lookDir == 1)
-	                isTargetBehind = ToPlayer.x < lookDir;
-                
+	            IsTargetBehind = (plyPos.x < ownPos.x ? -1 : 1) != lookDir;
+
                 //If the target is behind and we still can target it, do so.
-	            if (isTargetBehind && !App.M.TargetBehind)
+	            if (IsTargetBehind && !App.M.TargetBehind)
 	                canTarget = false;
 
                 //Check if we can see the player
@@ -96,8 +103,15 @@ namespace Enemy
 	                App.M.Target = null;
 	            }
 
+                //If we're dead dont even bother targeting us.
+	            if (GameManager.Instance.Player.M.ActionController.HealthController.IsDead)
+	            {
+	                canTarget = false;
+	                App.M.Target = null;
+	            }
+
 	            //If target is behind the enemy and is targeted and we're arent turning, turn around.
-	            if (!IsTurning && isTargetBehind && canTarget)
+	            if (!IsTurning && IsTargetBehind && canTarget)
 	                Turn(-1 * lookDir);
 
 	            App.M.Target = canTarget ? GameManager.Instance.Player : App.M.Target;
@@ -112,10 +126,10 @@ namespace Enemy
             }
 
 	        StateMachine.Update(Time.deltaTime);
-            Debug.Log(StateMachine.CurrentState);
         }
 
-        /// <summary>
+
+	    /// <summary>
         /// Method used to turn the enemy around.
         /// If 0, it turns around.
         /// </summary>
@@ -124,7 +138,10 @@ namespace Enemy
             if (dir == 0 && flip)
                 dir = -1 * App.M.Character.LookDirection;
 
-            if (IsTurning || dir == App.M.Character.LookDirection || (dir == 0 && !flip))
+            if (IsTurning || 
+                dir == App.M.Character.LookDirection || 
+                dir == 0 && !flip || 
+                App.M.Character.HealthController.IsDead)
                 return;
 
             //Turn around instantly if turn speed is 0.
@@ -159,20 +176,33 @@ namespace Enemy
         {
 	        if (!IsTurning)
 	        {
+	            Vector2 vel = dir;
+
                 if (!overrideYVel)
-                    dir = new Vector2(dir.x, App.M.Character.Rigidbody.velocity.y);
+                    vel = new Vector2(dir.x, App.M.Character.Rigidbody.velocity.y);
 
-	            App.M.Character.SetVelocity(dir * Time.fixedDeltaTime, true);
+	            App.M.Character.SetVelocity(vel * Time.fixedDeltaTime, true, App.M.Target ? App.M.EngageSpeed : 0);
 
-	            int xVel = Mathf.RoundToInt(dir.x);
+	            int xDir = Mathf.RoundToInt(dir.x);
                 if (!App.M.CanBackPaddle || forceTurn)
-	                Turn(xVel);
+	                Turn(xDir);
 	        }
 	    }
 
 	    public bool IsState<T>()
 	    {
 	        return StateMachine.CurrentState is T;
+	    }
+
+	    private void OnDamage(Character from)
+	    {
+	        if (App.M.TurnOnBackstab && IsTargetBehind)
+                Turn();
+	    }
+
+	    private void OnDead()
+	    {
+	        IsTurning = false;
 	    }
 	}
 }

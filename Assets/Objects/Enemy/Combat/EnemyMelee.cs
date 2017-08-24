@@ -12,7 +12,7 @@ namespace Enemy
         public override void Attack()
         {
             if (CheckHitbox())
-                GameManager.Instance.Player.M.ActionController.HealthController.Damage(Context.M.Character.Damage, from: Context.M.Character.Rigidbody.transform);
+                GameManager.Instance.Player.M.ActionController.HealthController.Damage(Context.M.Character.Damage, from: Context.M.Character);
 
             base.Attack();
         }

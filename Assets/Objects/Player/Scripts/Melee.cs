@@ -15,9 +15,6 @@ namespace Combat
         [SerializeField]
         private CollisionCheck _collisionCheck;
 
-        [SerializeField]
-        private float _damage;
-
         [SerializeField,Range(0f,float.MaxValue)]
         private float _hitCooldown;
 
@@ -60,7 +57,7 @@ namespace Combat
                         if (cc != null)
                             if (cc.Character.HealthController != null)
                             {
-                                cc.Character.HealthController.Damage(_damage, from: _actionsController.Rigidbody.transform);
+                                cc.Character.HealthController.Damage(_actionsController.Damage, from: _actionsController);
                             }
                                 
                     }

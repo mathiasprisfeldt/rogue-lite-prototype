@@ -225,13 +225,13 @@ namespace Controllers
             LookDirection = Mathf.RoundToInt(dir);
         }
 
-        public virtual void SetVelocity(Vector2 velocity, bool respectMovementSpeed = false)
+        public virtual void SetVelocity(Vector2 velocity, bool respectMovementSpeed = false, float movementSpeedAddtion = 0)
         {
             if (_healthController.IsDead)
                 return;
 
             if (respectMovementSpeed)
-                velocity.x *= MovementSpeed;
+                velocity.x *= MovementSpeed + movementSpeedAddtion;
 
             _rigidbody.velocity = velocity;
         }
@@ -259,7 +259,7 @@ namespace Controllers
                 return;
             }
 
-            const float OFFSET = 0.05f;
+            const float OFFSET = 0.5f;
 
             Vector2 pos = _bumpingCollider2D.transform.position;
             Vector2 extents = _bumpingCollider2D.bounds.extents;

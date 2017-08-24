@@ -28,7 +28,7 @@ namespace Enemy
 
         public override bool ShouldTakeover()
         {
-            if (IsState<EnemyIdle>() && !Context.M.Target)
+            if (IsState<EnemyIdle>())
                 return true;
 
             return false;

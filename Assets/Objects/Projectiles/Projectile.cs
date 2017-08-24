@@ -125,8 +125,14 @@ namespace Projectiles
             {
                 CollisionCheck cc = target.GetComponent<CollisionCheck>();
                 if (cc != null)
-                    cc.Character.HealthController.Damage(_damage);
+                {
+                    if (!cc.Character.HealthController.IsDead)
+                        cc.Character.HealthController.Damage(_damage, pos: transform.position);
+                    else
+                        targetHit = false;
+                }
             }
+
             return targetHit;
         }
 

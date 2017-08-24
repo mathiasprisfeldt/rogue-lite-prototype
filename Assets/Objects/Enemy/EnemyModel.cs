@@ -39,6 +39,12 @@ namespace Enemy
         [SerializeField]
 	    private bool _canBackPaddle;
 
+	    [SerializeField, Tooltip("Should the enemy turn if hit from behind?")]
+	    private bool _turnOnBackstab;
+
+	    [SerializeField, Tooltip("Speed added to enemy when player is targeted.")]
+	    private float _engageSpeed;
+
         [Space]
         [SerializeField]
 	    private PlayerApplication _target;
@@ -94,6 +100,18 @@ namespace Enemy
 	    {
 	        get { return _canBackPaddle; }
 	        set { _canBackPaddle = value; }
+	    }
+
+	    public bool TurnOnBackstab
+	    {
+	        get { return _turnOnBackstab; }
+	        set { _turnOnBackstab = value; }
+	    }
+
+	    public float EngageSpeed
+	    {
+	        get { return _engageSpeed; }
+	        set { _engageSpeed = value; }
 	    }
 	}
 }

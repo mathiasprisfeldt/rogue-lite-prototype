@@ -89,7 +89,7 @@ namespace Enemy
 
         public override void Reason()
         {
-            if (!CheckHitbox() && !_canAttack && !_isAttacking)
+            if ((!CheckHitbox() && !_canAttack && !_isAttacking) || !Context.M.Target)
                 ChangeState<EnemyIdle>();
 
             base.Reason();

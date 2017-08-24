@@ -15,11 +15,6 @@ namespace Enemy
         [SerializeField]
         private float _avoidDistance = 2;
 
-        void Start()
-        {
-            //Only here so you can disable this component in inspector.
-        }
-
         void FixedUpdate()
         {
             if (IsActive)
@@ -30,6 +25,9 @@ namespace Enemy
                     dir = -Mathf.Round(Context.C.ToPlayer.normalized.x);
 
                 Context.C.Move(dir * Vector2.right);
+
+                if (Context.M.CanBackPaddle && Context.C.IsTargetBehind)
+                    Context.C.Turn();
             }
         }
 
