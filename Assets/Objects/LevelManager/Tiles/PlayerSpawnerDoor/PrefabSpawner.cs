@@ -12,7 +12,9 @@ public class PrefabSpawner : MonoBehaviour
 
     private void Start()
     {
-        if (_spawn)
+        if (GameManager.Instance.Player != null)
+            GameManager.Instance.Player.transform.position = transform.position;
+        else if (_spawn)
             GameManager.Instance.Player = Instantiate(_prefab, transform.position, Quaternion.identity).GetComponent<PlayerApplication>();
     }
 }

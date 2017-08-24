@@ -26,6 +26,7 @@ namespace CharacterController
         private float _horizontalTimer;
         private float _verticalTimer;
         private bool _directionSwitched;
+        private float _timer;
 
         public float Direction { get; private set; }
 
@@ -38,15 +39,20 @@ namespace CharacterController
 
                 var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed;
                 var collision = (_actionsController.WallSlideCheck.Sides.Left || _actionsController.WallSlideCheck.Sides.Right) && !_actionsController.GroundCollisionCheck.Bottom;
-                if (input && collision && _verticalTimer <= 0 && _horizontalTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None)
+                var valid = input && collision && _verticalTimer <= 0 && _horizontalTimer <= 0 &&
+                            _actionsController.LastUsedCombatAbility == CombatAbility.None;
+
+                if (valid && _timer <= 0)
                 {
                     _horizontalTimer = _horizontalDuration;
                     _verticalTimer = _verticalDuration;
                     Direction = _actionsController.WallSlideCheck.Sides.Left ? 1 : -1;
                     _directionSwitched = false;
                     _actionsController.StartJump = true;
+                    _timer = 0.00f;
                 }
-
+                else if (valid && _timer > 0)
+                    _timer -= Time.deltaTime;
                 return _verticalTimer > 0;
             }
         }
