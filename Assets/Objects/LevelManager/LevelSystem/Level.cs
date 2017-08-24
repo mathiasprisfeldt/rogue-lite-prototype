@@ -59,7 +59,7 @@ public class Level
     }
 
     //Todo Make a better solution
-    public void SpawnLayout(int[,]l)
+    public void SpawnLayout(int[,] l)
     {
         //Create new array and fill with layouts corresponding to the ids given
         Layouts = new Layout[l.GetLength(0), l.GetLength(1)];
@@ -336,9 +336,9 @@ public class Level
         }
 
         LevelManager.Instance.SpawnBackGround(new Vector2(
-            (Layouts.GetLength(0) / 2 *
+            (Layouts.GetLength(0) / 2f *
             Layouts[0, 0].Tiles.GetLength(0)),
-            (Layouts.GetLength(1) / 2 *
+            (Layouts.GetLength(1) / 2f *
             Layouts[0, 0].Tiles.GetLength(1)) * -1));
     }
 
