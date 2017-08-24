@@ -19,5 +19,6 @@ namespace Abilitys
         public ThrowProjectile Throw;
         public Melee Melee;
         public Jump Jump;
+        public Climbing Climing;
     }
 }

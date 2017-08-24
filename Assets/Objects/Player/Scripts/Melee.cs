@@ -38,7 +38,7 @@ namespace Combat
                     && _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {
                     _active = true;
-                    _actionsController.StartMelee = true;
+                    _actionsController.StartMelee.Value = true;
                 }
                     
                 return _active;

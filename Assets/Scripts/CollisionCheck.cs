@@ -145,6 +145,11 @@ public class CollisionCheck : MonoBehaviour
         sides = new CollisionSides(false, false, false, false);
         bool collision = false;
 
+        if (gameObject.name == "NonPlatformTriggers")
+        {
+            
+        }
+
         if (_isDirty && layer == _collisionLayers)
         {
             colliders = _collisionColliders.ToList();

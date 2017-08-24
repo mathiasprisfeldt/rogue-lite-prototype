@@ -60,42 +60,54 @@ public class TileBehaviour : MonoBehaviour
 
     public void SetupTile()
     {
+
+        var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
+        var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
+
+        var up = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.up);
+        var down = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.down);
+        var left = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.left);
+        var right = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.right);
+
+        if (gameObject.name == "1026")
+        {
+            
+        }
+
+        //Up
+        if (up.Type == 1 || up.Type == 6 || down.Type == 18)
+        {
+            TopCollision = gameObject.tag != "Ladder";
+        }
+        //Down
+        if (down.Type == 1 || down.Type == 6 || down.Type == 18)
+        {
+            BottomCollision = true;
+            if (down.GoInstance != null)
+            {
+                Climbable clim = down.GoInstance.GetComponent<Climbable>();
+                if (clim != null)
+                    clim.Top.SetActive(false);
+            }
+
+        }
+        //Left
+        if (left.Type == 1 || left.Type == 6 || left.Type == 18)
+        {
+            LeftCollision = true;
+        }
+        //Right
+        if (right.Type == 1 || right.Type == 6 || right.Type == 18)
+        {
+            RightCollision = true;
+        }
+
+        var spr = GetComponent<SpriteRenderer>();
+        Sprite newSprite = null;
+
+
         if (_autoTexturize)
         {
-            var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
-            var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
-
-            var up = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.up);
-            var down = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.down);
-            var left = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.left);
-            var right = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.right);
-
-            //Up
-            if (up.Type == 1 || up.Type == 6)
-            {
-                TopCollision = true;
-            }
-            //Down
-            if (down.Type == 1 || down.Type == 6)
-            {
-                BottomCollision = true;
-            }
-            //Left
-            if (left.Type == 1 || left.Type == 6)
-            {
-                LeftCollision = true;
-            }
-            //Right
-            if (right.Type == 1 || right.Type == 6)
-            {
-                RightCollision = true;
-            }
-
-            var spr = GetComponent<SpriteRenderer>();
-            Sprite newSprite = null;
-
-
-
             if (LeftCollision && !RightCollision)
                 newSprite = _rightTexture;
 
@@ -137,14 +149,16 @@ public class TileBehaviour : MonoBehaviour
             superParent = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity);
             superParent.name = "Platforms";
         }
-        pb.Istop = true;
+
+
+        pb.Istop = gameObject.tag != "Ladder";
         pb.Left = true;
         pb.Right = true;
 
         foreach (var target in targets)
         {
             TileBehaviour tb = target.GetComponent<TileBehaviour>();
-            if(tb && !tb.LeftCollision)
+            if (tb && !tb.LeftCollision)
                 pb.Left = false;
             if (tb && !tb.RightCollision)
                 pb.Right = false;
@@ -225,7 +239,7 @@ public class TileBehaviour : MonoBehaviour
             {
                 pb.Istop = _isTop;
             }
-                
+
             pb.Tiles.Add(this);
             target.transform.SetParent(parent.transform, true);
         }
@@ -263,7 +277,7 @@ public class TileBehaviour : MonoBehaviour
 
         var goDown = _isTop && (!tLeft && !tRight);
 
-        if ( goDown || !goDown && (!tLeft && !tRight) || nextShouldDown)
+        if (goDown || !goDown && (!tLeft && !tRight) || nextShouldDown)
             nextShouldDown = true;
 
         if (nextShouldDown && tDown && (tDown.TargetTag == TargetTag))

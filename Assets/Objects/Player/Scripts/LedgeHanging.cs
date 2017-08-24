@@ -58,7 +58,7 @@ namespace CharacterController
                     var distance = float.MaxValue;
                     foreach (var c in colliders)
                     {
-                        var tempDistance = Mathf.Abs(_actionsController.TriggerCheck.CollidersToCheck[0].bounds.center.y   - c.bounds.center.y);
+                        var tempDistance = Mathf.Abs(_actionsController.TriggerCheck.CollidersToCheck[0].bounds.center.y - c.bounds.center.y);
                         if (tempDistance < distance)
                         {
                             distance = tempDistance;
@@ -79,6 +79,9 @@ namespace CharacterController
 
                         PlatformBehavior platform = col.gameObject.GetComponent<PlatformBehavior>();
                         if (platform && (!platform.Istop || left && platform.Right || right && platform.Left))
+                            return false;
+
+                        if (col.gameObject.tag == "Ladder")
                             return false;
 
                         if (_actionsController.App.C.PlayerActions.Down &&
@@ -104,7 +107,7 @@ namespace CharacterController
                         if (!_startGrab)
                         {
                             _startGrab = true;
-                            _actionsController.StartGrab = true;
+                            _actionsController.StartGrab.Value = true;
                         }
                         return true;
                     }

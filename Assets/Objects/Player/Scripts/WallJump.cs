@@ -48,7 +48,7 @@ namespace CharacterController
                     _verticalTimer = _verticalDuration;
                     Direction = _actionsController.WallSlideCheck.Sides.Left ? 1 : -1;
                     _directionSwitched = false;
-                    _actionsController.StartJump = true;
+                    _actionsController.StartJump.Value = true;
                     _timer = 0.00f;
                 }
                 else if (valid && _timer > 0)

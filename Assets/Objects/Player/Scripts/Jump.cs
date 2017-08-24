@@ -52,7 +52,7 @@ public class Jump : MovementAbility {
             {
                 _jumpTimer = _jumpDuration;
                 _initialJumpTimer = _initialJumpDuration;
-                _actionsController.StartJump = true;
+                _actionsController.StartJump.Value = true;
                 _gracePeriodTimer = 0;
             }
 
