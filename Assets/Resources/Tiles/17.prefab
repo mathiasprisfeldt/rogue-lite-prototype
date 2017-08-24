@@ -52,4 +52,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _offSet: {x: 0, y: 0}
-  _enemy: {fileID: 1592427729297856, guid: c07bff93411ad4d478b6a39e57311758, type: 2}
+  _enemy: {fileID: 1115539378932434, guid: 3717265b121eb424f9de8b5c5d5c489e, type: 2}
