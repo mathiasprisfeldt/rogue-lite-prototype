@@ -165,6 +165,11 @@ namespace Controllers
             set { _abilityHandler = value; }
         }
 
+        public bool IsFlying
+        {
+            get { return _flySpeed > 0; }
+        }
+
         protected virtual void Awake()
         {
             Flip(_startDirection);
@@ -255,7 +260,7 @@ namespace Controllers
         /// </summary>
         public void StandStill()
         {
-            Rigidbody.velocity = Vector2.up * Rigidbody.velocity.y;
+            Rigidbody.velocity = !IsFlying ? Vector2.up * Rigidbody.velocity.y : Vector2.zero;
         }
 
         /// <summary>

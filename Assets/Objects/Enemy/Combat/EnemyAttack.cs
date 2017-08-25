@@ -115,6 +115,7 @@ namespace Enemy
             _indicatorTimer = Context.M.IndicatorDuration;
             _isAttacking = false;
             _canAttack = false;
+            Debug.Log("ASD");
         }
 
         /// <summary>

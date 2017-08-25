@@ -46,7 +46,7 @@ namespace Enemy
 	    private float _engageSpeed;
 
 	    [SerializeField]
-	    private bool _isFlying;
+	    private bool _hasWallHack;
 
         [Space]
         [SerializeField]
@@ -117,10 +117,10 @@ namespace Enemy
 	        set { _engageSpeed = value; }
 	    }
 
-	    public bool IsFlying
+	    public bool HasWallHack
 	    {
-	        get { return _isFlying; }
-	        set { _isFlying = value; }
+	        get { return _hasWallHack; }
+	        set { _hasWallHack = value; }
 	    }
 	}
 }

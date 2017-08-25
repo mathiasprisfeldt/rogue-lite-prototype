@@ -96,6 +96,7 @@ namespace Enemy
 
                 //Check if we can see the player
                 if (canTarget && 
+                    !App.M.HasWallHack &&
                     Physics2D.RaycastNonAlloc(ownPos, ToPlayer.normalized, viewResults, Mathf.Clamp(ToPlayer.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")) > 0)
 	            {
                     //We cant see the player, lose interest.

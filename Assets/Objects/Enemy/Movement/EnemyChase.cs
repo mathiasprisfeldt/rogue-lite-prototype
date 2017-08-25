@@ -13,9 +13,9 @@ namespace Enemy
         {
             if (IsActive && Context.M.Target)
             {
-                if (Context.M.Character.OnGround && !Context.M.IsFlying)
+                if (Context.M.Character.OnGround && !Context.M.Character.IsFlying)
                     Context.C.Move(Mathf.Round(Context.C.ToPlayer.normalized.x) * Vector2.right, forceTurn: true);
-                else if (Context.M.IsFlying)
+                else if (Context.M.Character.IsFlying)
                     Context.C.Move(Context.C.ToPlayer.normalized, true, true);
             }
         }
