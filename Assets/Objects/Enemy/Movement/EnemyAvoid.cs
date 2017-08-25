@@ -24,7 +24,8 @@ namespace Enemy
                 if (Context.C.ToPlayer.magnitude < _avoidDistance)
                     dir = -Mathf.Round(Context.C.ToPlayer.normalized.x);
 
-                Context.C.Move(dir * Vector2.right);
+                if (Context.M.Character.BumpingDirection != dir)
+                    Context.C.Move(dir * Vector2.right);
 
                 if (Context.M.CanBackPaddle && Context.C.IsTargetBehind)
                     Context.C.Turn();
@@ -49,13 +50,13 @@ namespace Enemy
                 return;
             }
 
-            if (Context.M.Character.BumpingDirection != 0 || Context.C.ToPlayer.magnitude > _avoidDistance && !_waitForPlayer)
+            if (!_waitForPlayer && 
+                !Context.C.IsTargetBehind &&
+                (Machine.PreviousState is EnemyPatrol && Context.M.CanBackPaddle || Context.C.ToPlayer.magnitude < _avoidDistance))
             {
-                if (Machine.PreviousState is EnemyPatrol && Context.M.CanBackPaddle)
-                    Context.C.Turn();
-
+                Context.C.Turn();
                 ChangeState<EnemyIdle>();
-                return;
+                Context.M.Target = null;
             }
 
             base.Reason();

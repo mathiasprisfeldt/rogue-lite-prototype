@@ -25,9 +25,13 @@ namespace Enemy
 
 	    public Vector2 ToPlayer { get; private set; }
 	    public bool IsTurning { get; private set; }
-	    public bool IsTargetBehind { get; private set; }
 
-        public FiniteStateMachine<EnemyApplication> StateMachine { get; set; }
+	    public bool IsTargetBehind
+	    {
+	        get { return (GameManager.Instance.Player.transform.position.x < App.M.Character.Origin.x ? -1 : 1) != App.M.Character.LookDirection; }
+	    }
+
+	    public FiniteStateMachine<EnemyApplication> StateMachine { get; set; }
 
 	    void Awake()
 	    {
@@ -82,17 +86,11 @@ namespace Enemy
 	            ToPlayer.magnitude <=
 	            App.M.ViewRadius)
 	        {
-	            bool canTarget = true;
-
-	            //Check if the player is behind the player and if can be target if behind.
-	            IsTargetBehind = false;
-	            int lookDir = App.M.Character.LookDirection;
-
-	            IsTargetBehind = (plyPos.x < ownPos.x ? -1 : 1) != lookDir;
-
-                //If the target is behind and we still can target it, do so.
-	            if (IsTargetBehind && !App.M.TargetBehind)
-	                canTarget = false;
+                /* 
+                 * First off, if the target is behind us and we aren't 
+                 * allowed to target people behind us, dont do it.
+                 */
+                bool canTarget = !(IsTargetBehind && !App.M.TargetBehind);
 
                 //Check if we can see the player
                 if (canTarget && 
@@ -113,7 +111,7 @@ namespace Enemy
 
 	            //If target is behind the enemy and is targeted and we're arent turning, turn around.
 	            if (!IsTurning && IsTargetBehind && canTarget)
-	                Turn(-1 * lookDir);
+	                Turn(-1 * App.M.Character.LookDirection);
 
 	            App.M.Target = canTarget ? ply : App.M.Target;
 	        }
@@ -122,9 +120,11 @@ namespace Enemy
             
             foreach (EnemyState enemyState in _states)
             {
-                if (StateMachine.CurrentState != enemyState && enemyState.enabled && enemyState.ShouldTakeover())
+                if (enemyState.enabled && enemyState.ShouldTakeover())
                 {
-                    StateMachine.ChangeState(enemyState);
+                    if (StateMachine.CurrentState != enemyState)
+                        StateMachine.ChangeState(enemyState);
+
                     break;
                 }
             }

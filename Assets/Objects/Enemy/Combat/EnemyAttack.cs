@@ -71,6 +71,12 @@ namespace Enemy
             base.Begin();
         }
 
+        public override void End()
+        {
+            base.End();
+            _isAttacking = false;
+        }
+
         public override void Think(float deltaTime)
         {
             if (_isAttacking)

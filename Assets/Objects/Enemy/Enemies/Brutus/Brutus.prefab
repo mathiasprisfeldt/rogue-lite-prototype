@@ -258,7 +258,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1264012589145826}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -8.1, y: -0.62, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4444243083856430}
@@ -420,6 +420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86ed3c021bf55834abe8869c1c660cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isEnabled: 0
 --- !u!114 &114114861512338090
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -442,6 +443,7 @@ MonoBehaviour:
   _canBackPaddle: 1
   _turnOnBackstab: 1
   _engageSpeed: 0
+  _hasWallHack: 0
   _target: {fileID: 0}
 --- !u!114 &114120916525324648
 MonoBehaviour:
@@ -472,6 +474,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7b890f4fafdd4142bb00285fb4c034e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isEnabled: 0
   _drawGizmos: 1
   _attackBoxSize: {x: 5.56, y: 1}
   _attackBoxOffset: {x: 3.52, y: 1.04}
@@ -524,6 +527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f3228ffd2d95f42baead428b518b41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isEnabled: 0
   _waitForPlayer: 1
   _avoidDistance: 5
 --- !u!114 &114445785189084748
@@ -560,7 +564,6 @@ MonoBehaviour:
     m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114948007235721488}
-  _spriteRenderer: {fileID: 0}
 --- !u!114 &114486502349469750
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -647,6 +650,7 @@ MonoBehaviour:
   _startDirection: 1
   _damage: 1
   _movementSpeed: 100
+  _flySpeed: 0
   _flipWithVelocity: 0
   _doFlipWithRotation: 0
 --- !u!212 &212211871764394414
