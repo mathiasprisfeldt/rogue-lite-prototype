@@ -47,6 +47,8 @@ namespace Enemy
         [SerializeField, Tooltip("Speed added to enemy when player is targeted.")]
         private float _engageSpeed;
 
+	    [SerializeField]
+	    private bool _hasWallHack;
         [SerializeField]
         private bool _isFlying;
 
@@ -137,6 +139,18 @@ namespace Enemy
                 GameManager.Instance.EnemiesChange.Invoke();
         }
 
+	    public bool IsFlying
+	    {
+	        get { return _isFlying; }
+	        set { _isFlying = value; }
+	    }
+	}
+	    public bool HasWallHack
+	    {
+	        get { return _hasWallHack; }
+	        set { _hasWallHack = value; }
+	    }
+	}
         public void OnDestroy()
         {
             if (Character.HealthController != null)

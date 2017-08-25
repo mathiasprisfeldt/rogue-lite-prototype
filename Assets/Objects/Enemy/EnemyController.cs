@@ -4,6 +4,7 @@ using System.Linq;
 using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.MVC;
 using Archon.SwissArmyLib.Automata;
+using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using Controllers;
 using Managers;
 using UnityEngine;
@@ -31,26 +32,23 @@ namespace Enemy
 	    void Awake()
 	    {
 	        StateMachine = new FiniteStateMachine<EnemyApplication>(App);
-            _states = new List<EnemyState>();
-            
-	        EnemyIdle idleState = gameObject.AddComponent<EnemyIdle>();
-            StateMachine.RegisterState(idleState);
 
 	        _states = GetComponentsInChildren<EnemyState>().ToList();
-	        _states.Reverse();
             //Setup all states.
             foreach (EnemyState state in _states)
 	        {
                 if (!state.enabled)
                     continue;
 
-	            state.Machine = StateMachine;
 	            state.Context = App;
+	            state.Machine = StateMachine;
                 StateMachine.RegisterState(state); 
             }
 
-	        StateMachine.ChangeState(_states.FirstOrDefault() ?? idleState);
+	        EnemyIdle idleState = gameObject.AddComponent<EnemyIdle>();
+	        StateMachine.RegisterState(idleState);
 
+            StateMachine.ChangeState(_states.FirstOrDefault() ?? idleState);
 	    }
 
 	    void Start()
@@ -61,8 +59,10 @@ namespace Enemy
 
 	    void Update()
 	    {
+	        PlayerApplication ply = GameManager.Instance.Player;
+
 	        Vector2 ownPos = App.M.Character.Origin;
-	        Vector2 plyPos = GameManager.Instance.Player.transform.position.ToVector2();
+	        Vector2 plyPos = ply ? ply.transform.position.ToVector2() : Vector2.zero;
 
             //Calculate if the enemy can turn around.
             if (IsTurning)
@@ -78,7 +78,7 @@ namespace Enemy
 
 	        ToPlayer = plyPos - ownPos;
 	        //Checking if player is in sight
-	        if (GameManager.Instance.Player &&
+	        if (ply &&
 	            ToPlayer.magnitude <=
 	            App.M.ViewRadius)
 	        {
@@ -96,6 +96,7 @@ namespace Enemy
 
                 //Check if we can see the player
                 if (canTarget && 
+                    !App.M.HasWallHack &&
                     Physics2D.RaycastNonAlloc(ownPos, ToPlayer.normalized, viewResults, Mathf.Clamp(ToPlayer.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")) > 0)
 	            {
                     //We cant see the player, lose interest.
@@ -104,7 +105,7 @@ namespace Enemy
 	            }
 
                 //If we're dead dont even bother targeting us.
-	            if (GameManager.Instance.Player.M.ActionController.HealthController.IsDead)
+	            if (ply.M.ActionController.HealthController.IsDead)
 	            {
 	                canTarget = false;
 	                App.M.Target = null;
@@ -114,7 +115,7 @@ namespace Enemy
 	            if (!IsTurning && IsTargetBehind && canTarget)
 	                Turn(-1 * lookDir);
 
-	            App.M.Target = canTarget ? GameManager.Instance.Player : App.M.Target;
+	            App.M.Target = canTarget ? ply : App.M.Target;
 	        }
 	        else
 	            App.M.Target = null;
@@ -122,7 +123,10 @@ namespace Enemy
             foreach (EnemyState enemyState in _states)
             {
                 if (StateMachine.CurrentState != enemyState && enemyState.enabled && enemyState.ShouldTakeover())
+                {
                     StateMachine.ChangeState(enemyState);
+                    break;
+                }
             }
 
 	        StateMachine.Update(Time.deltaTime);

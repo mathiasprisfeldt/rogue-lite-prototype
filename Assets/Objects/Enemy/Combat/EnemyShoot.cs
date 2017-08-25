@@ -19,7 +19,7 @@ namespace Enemy
         public override void Attack()
         {
             int dir = Context.M.Character.LookDirection;
-            Vector2 spawnPos = ((Vector2.right * _spawnPos.x) * dir) + _spawnPos.y * Vector2.up;
+            Vector2 spawnPos = new Vector2(_spawnPos.x, 0) * dir + new Vector2(0, _spawnPos.y);
 
             Projectile projectile = Instantiate(_projectile, transform.position.ToVector2() + spawnPos, Quaternion.identity);
             projectile.Direction = new Vector2(dir, 0);

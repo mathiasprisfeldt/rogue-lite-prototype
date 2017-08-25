@@ -80,9 +80,6 @@ namespace Health
         [SerializeField]
         private Character _character;
 
-        [SerializeField]
-        private SpriteRenderer _spriteRenderer;
-
         #endregion
 
         public bool IsDead
@@ -283,13 +280,6 @@ namespace Health
             if (!IsDead && !IsInvurnable) //If your not dead and not invurnable start the invurnablity timer
             {
                 //If we have a spriterender, save its color.
-                Color savedColor = Color.white;
-                if (_spriteRenderer)
-                {
-                    savedColor = _spriteRenderer.color;
-                    _spriteRenderer.color = Color.red;
-                }
-
                 float timer = duration;
                 IsInvurnable = true;
 
@@ -300,10 +290,6 @@ namespace Health
                 }
 
                 IsInvurnable = false;
-
-                //Set spriterenderer back to tis original color.
-                if (_spriteRenderer)
-                    _spriteRenderer.color = savedColor;
             }
         }
     }

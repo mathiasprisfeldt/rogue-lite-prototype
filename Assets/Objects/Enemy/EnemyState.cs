@@ -11,6 +11,8 @@ namespace Enemy
     /// </summary>
     public abstract class EnemyState : MonoBehaviour, IFsmState<EnemyApplication>
     {
+        [SerializeField] private bool _isEnabled;
+
         public FiniteStateMachine<EnemyApplication> Machine { get; set; }
         public EnemyApplication Context { get; set; }
 
@@ -21,6 +23,7 @@ namespace Enemy
 
         public virtual void Begin()
         {
+            _isEnabled = true;
         }
 
         public virtual void Reason()
@@ -33,6 +36,7 @@ namespace Enemy
 
         public virtual void End()
         {
+            _isEnabled = false;
         }
 
         /// <summary>
