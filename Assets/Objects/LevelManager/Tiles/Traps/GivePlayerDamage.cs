@@ -41,7 +41,7 @@ public class GivePlayerDamage : MonoBehaviour
         {
             var h = collision.GetComponent<CollisionCheck>();
             if (h)
-                h.Character.HealthController.Damage(_damage,transform);
+                h.Character.HealthController.Damage(_damage,true,transform.position);
         }
     }
 }

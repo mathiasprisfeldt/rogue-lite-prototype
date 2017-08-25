@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Enemy;
+using Managers;
+using UnityEngine;
 
 namespace EnemySpawn
 {
@@ -16,7 +18,10 @@ namespace EnemySpawn
 
         public void Spawn()
         {
-            Instantiate(_enemy, transform.position + new Vector3(_offSet.x, _offSet.y), Quaternion.identity);
+            GameObject go = Instantiate(_enemy, transform.position + new Vector3(_offSet.x, _offSet.y), Quaternion.identity);
+            EnemyApplication ea = go.GetComponent<EnemyApplication>();
+            if(ea != null && GameManager.Instance != null)
+                GameManager.Instance.Enemies.Add(ea);
         }
     }
 }

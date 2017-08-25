@@ -231,6 +231,7 @@ namespace Health
 
             if (!IsDead && gotKilled)
             {
+                IsDead = true;
                 OnDead.Invoke();
 
                 if (_destroyOnDead)
@@ -256,6 +257,7 @@ namespace Health
             IsDead = true;
             HealthAmount = _healthInterval.x;
             Destroy(_responsibleGameObject ? _responsibleGameObject : gameObject);
+
         }
 
         /// <summary>

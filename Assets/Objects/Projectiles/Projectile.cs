@@ -42,6 +42,8 @@ namespace Projectiles
         [SerializeField]
         private UnityEvent _onDestroy;
 
+        private bool _used;
+
         public Rigidbody2D RigidBody { get; set; }
 
         public Vector2 Direction { get; set; }
@@ -126,8 +128,11 @@ namespace Projectiles
                 CollisionCheck cc = target.GetComponent<CollisionCheck>();
                 if (cc != null)
                 {
-                    if (!cc.Character.HealthController.IsDead)
+                    if (!cc.Character.HealthController.IsDead && !_used)
+                    {
                         cc.Character.HealthController.Damage(_damage, pos: transform.position);
+                        _used = true;
+                    }                    
                     else
                         targetHit = false;
                 }
