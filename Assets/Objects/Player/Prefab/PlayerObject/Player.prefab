@@ -2781,6 +2781,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07d5b112624c5a5428e83c8f5daa39d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _origin: {fileID: 0}
+  _mainAnimator: {fileID: 0}
   _healthController: {fileID: 114883473055053996}
   _rigidbody: {fileID: 50863075550868558}
   _model: {fileID: 1960660052491594}
@@ -2790,8 +2792,9 @@ MonoBehaviour:
   _knockbackHandler: {fileID: 114236378889174594}
   _abilityHandler: {fileID: 114839822949810884}
   _startDirection: -1
-  _damage: 0
+  _damage: 1
   _movementSpeed: 250
+  _flySpeed: 0
   _flipWithVelocity: 0
   _doFlipWithRotation: 0
   _app: {fileID: 114008459180862610}
@@ -3631,7 +3634,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _collisionCheck: {fileID: 114309314290104366}
-  _damage: 50
   _hitCooldown: 0
   _actionsController: {fileID: 114173897078414380}
 --- !u!114 &114711464830249770
@@ -3888,11 +3890,16 @@ MonoBehaviour:
   _knockbackForce: 300
   _knockbackDuration: 0.2
   _responsibleGameObject: {fileID: 1182516208491314}
-  _destroyOnDead: 0
-  _deadEvent:
+  _destroyOnDead: 1
+  _onDead:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  _onDamage:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114173897078414380}
   _spriteRenderer: {fileID: 212493662664211078}

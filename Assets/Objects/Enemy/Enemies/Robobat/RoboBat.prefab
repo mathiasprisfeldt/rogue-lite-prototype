@@ -448,7 +448,7 @@ MonoBehaviour:
   _application: {fileID: 114131460394400532}
   _character: {fileID: 114347498557357304}
   _enemyAttackAnim: {fileID: 114478443455039304}
-  _viewRadius: 20
+  _viewRadius: 5
   _attackCooldown: 1
   _indicatorDuration: 0.5
   _targetBehind: 1

@@ -18,6 +18,9 @@ namespace Controllers
     /// </summary>
     public class Character : MonoBehaviour
     {
+        private static readonly float BUMPING_RAY_LENGTH = 0.05f;
+        private static readonly Vector2 BUMPING_ORIGIN_OFFSET = new Vector2(.5f, 0);
+
         private Collider2D _bumpingCollider2D; //Collider used for any collisions when bumping.
         private readonly RaycastHit2D[] _bumpingResults = new RaycastHit2D[1]; //Used to store if the player bumped into something platformy
 
@@ -173,7 +176,9 @@ namespace Controllers
         protected virtual void Awake()
         {
             Flip(_startDirection);
-            _bumpingCollider2D = PhysicialCollisionCheck.CollidersToCheck.FirstOrDefault();
+
+            if (PhysicialCollisionCheck)
+                _bumpingCollider2D = PhysicialCollisionCheck.CollidersToCheck.FirstOrDefault();
         }
 
         public virtual void Update()
@@ -183,14 +188,17 @@ namespace Controllers
             if (_flipWithVelocity && _rigidbody)
                 Flip(Mathf.Round(_rigidbody.velocity.x));
 
-            CheckSideBumping();
-
             //Update animation states
             if (MainAnimator)
             {
                 MainAnimator.SetBool("OnGround", OnGround);
                 MainAnimator.SetBool("Moving", State == CharacterState.Moving);
             }
+        }
+
+        void FixedUpdate()
+        {
+            CheckSideBumping();
         }
 
         protected virtual void UpdateState()
@@ -260,7 +268,7 @@ namespace Controllers
         /// </summary>
         public void StandStill()
         {
-            Rigidbody.velocity = !IsFlying ? Vector2.up * Rigidbody.velocity.y : Vector2.zero;
+            Rigidbody.velocity = !IsFlying ? new Vector2(0, Rigidbody.velocity.y) : Vector2.zero;
         }
 
         /// <summary>
@@ -278,33 +286,23 @@ namespace Controllers
                 return;
             }
 
-            const float OFFSET = 0.5f;
-
-            Vector2 pos = _bumpingCollider2D.transform.position;
-            Vector2 extents = _bumpingCollider2D.bounds.extents;
-            Vector2 origin = new Vector2(pos.x, pos.y + _bumpingCollider2D.bounds.size.y / 2 + _bumpingCollider2D.offset.y); //Root origin for raycasts
+            Bounds bounds = _bumpingCollider2D.bounds;
+            
+            Vector2 offset = BUMPING_ORIGIN_OFFSET + new Vector2(Mathf.Abs(Rigidbody.velocity.x), 0) * Time.fixedDeltaTime;
 
             //Calculating needed direction + length & left and right origins.
             Vector2 direction = Vector2.down;
-            float length = extents.y * 2 + OFFSET;
-            Vector2 leftOrigin = origin - new Vector2(extents.x + OFFSET, 0);
-            Vector2 rightOrigin = origin + new Vector2(extents.x - OFFSET, 0);
-
+            float length = BUMPING_RAY_LENGTH;
+            Vector2 leftOrigin = (Vector2) bounds.min - offset;
+            Vector2 rightOrigin = (Vector2) bounds.min + offset + new Vector2(bounds.size.x, 0);
+            
             //Raycasting to check if we're near end of platform.
             bool leftHit = Physics2D.RaycastNonAlloc(leftOrigin, direction * length, _bumpingResults, length, LayerMask.GetMask("Platform")) != 0;
             bool rightHit = Physics2D.RaycastNonAlloc(rightOrigin, direction * length, _bumpingResults, length, LayerMask.GetMask("Platform")) != 0;
 
-            bool leftBump = false;
-            bool rightBump = false;
-
             //If we cant find physical collider checker we log it and move on.
-            if (PhysicialCollisionCheck)
-            {
-                leftBump = PhysicialCollisionCheck.Left;
-                rightBump = PhysicialCollisionCheck.Right;
-            }
-            else
-                Debug.LogWarning("CheckSideBumping requires physical collision check to function properly.", transform);
+            bool leftBump = PhysicialCollisionCheck.Left;
+            bool rightBump = PhysicialCollisionCheck.Right;
 
             if (!leftHit || leftBump)
                 BumpingDirection = -1;

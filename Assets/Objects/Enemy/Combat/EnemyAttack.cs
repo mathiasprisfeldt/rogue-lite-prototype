@@ -37,8 +37,8 @@ namespace Enemy
                 if (Context && Context.M.Character)
                     isLeft = Context.M.Character.LookDirection == -1;
 
-                Vector2 relPos = (isLeft ? -_attackBoxOffset.x : _attackBoxOffset.x) * Vector2.right;
-                return (Vector2.up * _attackBoxOffset.y) + relPos + transform.position.ToVector2();
+                Vector2 relPos = new Vector2(isLeft ? -_attackBoxOffset.x : _attackBoxOffset.x, 0);
+                return new Vector2(0, _attackBoxOffset.y) + relPos + transform.position.ToVector2();
             }
         }
 
@@ -68,6 +68,7 @@ namespace Enemy
         public override void Begin()
         {
             Context.M.Character.StandStill();
+            base.Begin();
         }
 
         public override void Think(float deltaTime)
@@ -115,7 +116,6 @@ namespace Enemy
             _indicatorTimer = Context.M.IndicatorDuration;
             _isAttacking = false;
             _canAttack = false;
-            Debug.Log("ASD");
         }
 
         /// <summary>

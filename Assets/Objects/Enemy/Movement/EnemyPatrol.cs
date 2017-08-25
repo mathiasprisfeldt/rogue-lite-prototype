@@ -13,6 +13,7 @@ namespace Enemy
         public override void Begin()
         {
             _patrolDirection = new Vector2(Context.M.Character.LookDirection, 0);
+            base.Begin();
         }
 
         public override void Think(float deltaTime)

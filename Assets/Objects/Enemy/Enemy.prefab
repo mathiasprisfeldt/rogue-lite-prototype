@@ -341,12 +341,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _application: {fileID: 114934706097754740}
   _character: {fileID: 114175325490778496}
+  _enemyAttackAnim: {fileID: 0}
   _viewRadius: 10
   _attackCooldown: 1
   _indicatorDuration: 1
   _targetBehind: 0
   _turnSpeed: 1
   _canBackPaddle: 1
+  _turnOnBackstab: 0
+  _engageSpeed: 0
+  _hasWallHack: 0
   _target: {fileID: 0}
 --- !u!114 &114175325490778496
 MonoBehaviour:
@@ -359,6 +363,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3acdd29dbce5f6498920973f89d102b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _origin: {fileID: 0}
+  _mainAnimator: {fileID: 0}
   _healthController: {fileID: 114186237611772284}
   _rigidbody: {fileID: 50273672365836138}
   _model: {fileID: 1717467182742574}
@@ -366,9 +372,11 @@ MonoBehaviour:
   _physicialCollisionCheck: {fileID: 114262109355054536}
   _hitbox: {fileID: 114429104793938880}
   _knockbackHandler: {fileID: 114554301543945058}
+  _abilityHandler: {fileID: 0}
   _startDirection: 1
   _damage: 1
-  _movementSpeed: 2
+  _movementSpeed: 3
+  _flySpeed: 0
   _flipWithVelocity: 0
   _doFlipWithRotation: 0
 --- !u!114 &114186237611772284
@@ -394,10 +402,15 @@ MonoBehaviour:
   _knockbackDuration: 0.2
   _responsibleGameObject: {fileID: 1440919203486006}
   _destroyOnDead: 1
-  _deadEvent:
+  _onDead:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  _onDamage:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114175325490778496}
   _spriteRenderer: {fileID: 212031618829676994}
@@ -466,7 +479,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f3228ffd2d95f42baead428b518b41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avoidDistance: 5
+  _waitForPlayer: 0
+  _avoidDistance: 2
 --- !u!114 &114500660037952146
 MonoBehaviour:
   m_ObjectHideFlags: 1
