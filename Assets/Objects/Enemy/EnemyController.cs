@@ -215,6 +215,9 @@ namespace Enemy
 	    private void OnDead()
 	    {
 	        IsTurning = false;
-	    }
-	}
+
+	        if (GameManager.Instance != null)
+	            GameManager.Instance.EnemiesChange.Invoke();
+        }
+    }
 }

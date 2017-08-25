@@ -124,18 +124,6 @@ namespace Enemy
             set { _engageSpeed = value; }
         }
 
-        public void Start()
-        {
-            if (Character.HealthController != null)
-                Character.HealthController.OnDead.AddListener(OnDead);
-        }
-
-        private void OnDead()
-        {
-            if (GameManager.Instance != null)
-                GameManager.Instance.EnemiesChange.Invoke();
-        }
-
 	    public bool IsFlying
 	    {
 	        get { return _isFlying; }
@@ -147,18 +135,12 @@ namespace Enemy
 	        get { return _hasWallHack; }
 	        set { _hasWallHack = value; }
 	    }
-	
-        public void OnDestroy()
-        {
-            if (Character.HealthController != null)
-                Character.HealthController.OnDead.RemoveListener(OnDead);
-        }
-    }
 
-	    public bool NeverForget
-	    {
-	        get { return _neverForget; }
-	        set { _neverForget = value; }
-	    }
-	}
+        public bool NeverForget
+        {
+            get { return _neverForget; }
+            set { _neverForget = value; }
+        }
+
+    }
 }

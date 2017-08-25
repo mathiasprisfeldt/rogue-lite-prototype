@@ -293,5 +293,11 @@ namespace Health
                 IsInvurnable = false;
             }
         }
+
+        void OnDestroy()
+        {
+            OnDamage.RemoveAllListeners();
+            OnDead.RemoveAllListeners();
+        }
     }
 }
