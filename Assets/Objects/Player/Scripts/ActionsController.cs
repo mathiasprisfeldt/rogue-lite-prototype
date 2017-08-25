@@ -139,6 +139,7 @@ namespace CharacterController
         }
 
         public bool Combat { get; set; }
+        public bool ClimbEnd { get; set; }
         public Trigger StartJump { get; set; }
         public Trigger StartDash { get; set; }
         public Trigger StartGrab { get; set; }
@@ -186,6 +187,7 @@ namespace CharacterController
             base.Awake();
             LastHorizontalDirection = 1;
 
+            ClimbEnd = true;
             StartThrow = new Trigger();
             StartCombat = new Trigger();
             StartDash = new Trigger();
@@ -374,6 +376,7 @@ namespace CharacterController
             else if (_abilityReferences.Climing.VerticalActive)
             {
                 LastUsedVerticalMoveAbility = MoveAbility.Climbing;
+                ClimbEnd = false;
                 Animator.SetBool("ClimbEnd", false);
                 _abilityReferences.Climing.HandleVertical(ref velocity);
             }

@@ -121,12 +121,6 @@ namespace Enemy
             set { _engageSpeed = value; }
         }
 
-        public bool IsFlying
-        {
-            get { return _isFlying; }
-            set { _isFlying = value; }
-        }
-
         public void Start()
         {
             if (Character.HealthController != null)
@@ -144,13 +138,13 @@ namespace Enemy
 	        get { return _isFlying; }
 	        set { _isFlying = value; }
 	    }
-	}
+	
 	    public bool HasWallHack
 	    {
 	        get { return _hasWallHack; }
 	        set { _hasWallHack = value; }
 	    }
-	}
+	
         public void OnDestroy()
         {
             if (Character.HealthController != null)
