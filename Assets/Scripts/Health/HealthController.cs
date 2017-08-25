@@ -259,6 +259,7 @@ namespace Health
             IsDead = true;
             HealthAmount = _healthInterval.x;
             Destroy(_responsibleGameObject ? _responsibleGameObject : gameObject);
+
         }
 
         /// <summary>
