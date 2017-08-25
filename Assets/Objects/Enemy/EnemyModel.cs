@@ -48,6 +48,9 @@ namespace Enemy
 	    [SerializeField]
 	    private bool _hasWallHack;
 
+	    [SerializeField, Tooltip("The enemy never loses it target.")]
+	    private bool _neverForget;
+
         [Space]
         [SerializeField]
 	    private PlayerApplication _target;
@@ -121,6 +124,12 @@ namespace Enemy
 	    {
 	        get { return _hasWallHack; }
 	        set { _hasWallHack = value; }
+	    }
+
+	    public bool NeverForget
+	    {
+	        get { return _neverForget; }
+	        set { _neverForget = value; }
 	    }
 	}
 }

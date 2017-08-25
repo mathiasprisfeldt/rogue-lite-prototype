@@ -260,8 +260,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.09705264, y: -0.029880516}
-  m_Size: {x: 0.7769036, y: 0.24062271}
+  m_Offset: {x: -0.019796595, y: 0.026572471}
+  m_Size: {x: 1.0106055, y: 0.5572212}
   m_Direction: 1
 --- !u!95 &95892773872770350
 Animator:
@@ -305,6 +305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f0d2adddc455124799444b14f60f4e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isEnabled: 0
   _drawGizmos: 1
   _attackBoxSize: {x: 0.79, y: 0.71}
   _attackBoxOffset: {x: 0.49, y: 0.03}
@@ -370,7 +371,7 @@ MonoBehaviour:
   _invurnabilityDuration: 0
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 5
+  _healthAmount: 1
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 300
   _knockbackDuration: 0.2
@@ -387,7 +388,6 @@ MonoBehaviour:
     m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114347498557357304}
-  _spriteRenderer: {fileID: 0}
 --- !u!114 &114454672658061792
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -399,6 +399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcb3c90b430f8bd478b66fc0bd62b625, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isEnabled: 0
 --- !u!114 &114478443455039304
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -457,6 +458,7 @@ MonoBehaviour:
   _turnOnBackstab: 1
   _engageSpeed: 50
   _hasWallHack: 1
+  _neverForget: 1
   _target: {fileID: 0}
 --- !u!114 &114656296945533810
 MonoBehaviour:

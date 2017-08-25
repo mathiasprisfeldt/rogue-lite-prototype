@@ -28,7 +28,15 @@ namespace Enemy
 
 	    public bool IsTargetBehind
 	    {
-	        get { return (GameManager.Instance.Player.transform.position.x < App.M.Character.Origin.x ? -1 : 1) != App.M.Character.LookDirection; }
+	        get
+	        {
+	            PlayerApplication ply = GameManager.Instance.Player;
+
+	            if (!ply)
+	                return false;
+
+                return (ply.transform.position.x < App.M.Character.Origin.x ? -1 : 1) != App.M.Character.LookDirection; 
+	        }
 	    }
 
 	    public FiniteStateMachine<EnemyApplication> StateMachine { get; set; }
@@ -115,7 +123,7 @@ namespace Enemy
 
 	            App.M.Target = canTarget ? ply : App.M.Target;
 	        }
-	        else
+	        else if (!App.M.NeverForget)
 	            App.M.Target = null;
             
             foreach (EnemyState enemyState in _states)
