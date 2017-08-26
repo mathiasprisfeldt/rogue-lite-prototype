@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Class for containing a layout
 /// </summary>
-public class Layout
+public struct Layout
 {
     /// <summary>
     /// ID used for linking numbers in files to this layout

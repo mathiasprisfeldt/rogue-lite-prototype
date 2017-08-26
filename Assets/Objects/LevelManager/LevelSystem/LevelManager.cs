@@ -31,8 +31,8 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField]
     private List<TextAsset> _randomLevelsText;
 
-    private List<Level> _forcedLevels = new List<Level>();
-    private List<Level> _randomLevels = new List<Level>();
+    private List<int[,]> _forcedLevels = new List<int[,]>();
+    private List<int[,]> _randomLevels = new List<int[,]>();
 
     //Current level
     public Level CurrentLevel { get; set; }
@@ -48,12 +48,13 @@ public class LevelManager : Singleton<LevelManager>
         {
             if (_forcedLevels.Any())
             {
-                CurrentLevel = _forcedLevels.FirstOrDefault();
-                _forcedLevels.Remove(CurrentLevel);
+                var levelArray = _forcedLevels.FirstOrDefault();
+                CurrentLevel = new Level(levelArray);
+                _forcedLevels.Remove(levelArray);
             }
             else if (_randomLevels.Any())
             {
-                CurrentLevel = _randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)];
+                CurrentLevel = new Level(_randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)]);
             }
             else
                 Debug.Log("There are no levels to loaded");
@@ -85,17 +86,17 @@ public class LevelManager : Singleton<LevelManager>
 
         if (_forcedLevels.Any())
         {
-            CurrentLevel = _forcedLevels.FirstOrDefault();
-            _forcedLevels.Remove(CurrentLevel);
+            var levelArray = _forcedLevels.FirstOrDefault();
+            CurrentLevel = new Level(levelArray);
+            _forcedLevels.Remove(levelArray);
         }
         else if (_randomLevels.Any())
         {
-            CurrentLevel = _randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)];
+            CurrentLevel = new Level(_randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)]);
         }
         else
-            Debug.Log("There are no levels to load");
+            Debug.Log("There are no levels to loaded");
 
-        CurrentLevel.RespawnLayout();
         GameObject go = new GameObject("LevelParent");
         go.AddComponent<Platforms>();
         CurrentLevel.Spawn(go.transform);
@@ -126,12 +127,12 @@ public class LevelManager : Singleton<LevelManager>
     {
         foreach (var item in _forcedLevelsText)
         {
-            _forcedLevels.Add(new Level(CSVReader.SplitCsvGridToInt(item.text, false), Convert.ToInt16(item.name)));
+            _forcedLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
         }
 
         foreach (var item in _randomLevelsText)
         {
-            _randomLevels.Add(new Level(CSVReader.SplitCsvGridToInt(item.text, false), Convert.ToInt16(item.name)));
+            _randomLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
         }
     }
 }

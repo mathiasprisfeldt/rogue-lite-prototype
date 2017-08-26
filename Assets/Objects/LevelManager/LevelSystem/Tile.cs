@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Class containing a tile
 /// </summary>
-public class Tile
+public struct Tile
 {
     //Prefab
     public GameObject Prefab { get; set; }
@@ -15,12 +15,14 @@ public class Tile
     public Tile(GameObject go, int t)
     {
         Prefab = go;
+        GoInstance = null;
         Type = t;
     }
 
     public Tile(int t, GameObject go)
     {
         GoInstance = go;
+        Prefab = null;
         Type = t;
     }
 }
