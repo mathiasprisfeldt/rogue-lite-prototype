@@ -13,7 +13,7 @@ namespace CharacterController
 {
     public enum MoveAbility
     {
-        None, DoubleJump, WallJump, Wallslide, LedgeHanging, Dash, Jump
+        None, DoubleJump, WallJump, Wallslide, LedgeHanging, Dash, Jump, Climbing
     }
 
     public enum CombatAbility
@@ -34,6 +34,9 @@ namespace CharacterController
 
         [SerializeField]
         private CollisionCheck _triggerCheck;
+
+        [SerializeField]
+        private CollisionCheck _nonPlatformTriggerCheck;
 
         [SerializeField]
         private CollisionCheck _collisionCheck;
@@ -136,19 +139,35 @@ namespace CharacterController
         }
 
         public bool Combat { get; set; }
-        public bool StartJump { get; set; }
-        public bool StartDash { get; set; }
-        public bool StartGrab { get; set; }
-        public bool StartCombat { get; set; }
-        public bool StartThrow { get; set; }
-        public bool StartMelee{ get; set; }
+        public bool ClimbEnd { get; set; }
+        public Trigger StartJump { get; set; }
+        public Trigger StartDash { get; set; }
+        public Trigger StartGrab { get; set; }
+        public Trigger StartCombat { get; set; }
+        public Trigger StartThrow { get; set; }
+        public Trigger StartMelee { get; set; }
+        public Trigger StartClimbing { get; set; }
 
         public float LastHorizontalDirection { get; set; }
+        public float Horizontal { get; set; }
+        public float Vertical { get; set; }
 
         public AbilityReferences AbilityReferences
         {
             get { return _abilityReferences; }
             set { _abilityReferences = value; }
+        }
+
+        public CollisionCheck NonPlatformTriggerCheck
+        {
+            get { return _nonPlatformTriggerCheck; }
+            set { _nonPlatformTriggerCheck = value; }
+        }
+
+        public CollisionCheck OnewayCheck
+        {
+            get { return _onewayCheck; }
+            set { _onewayCheck = value; }
         }
 
 
@@ -157,14 +176,26 @@ namespace CharacterController
         {
             base.Update();
 
+            _animator.SetFloat("Health",HealthController.HealthAmount   );
+
             if (App.C.PlayerActions != null)
                 App.C.PlayerActions.UpdateProxy();
         }
 
-        public void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             LastHorizontalDirection = 1;
-        }
+
+            ClimbEnd = true;
+            StartThrow = new Trigger();
+            StartCombat = new Trigger();
+            StartDash = new Trigger();
+            StartGrab = new Trigger();
+            StartJump = new Trigger();
+            StartMelee = new Trigger();
+            StartClimbing = new Trigger();
+    }
 
         void FixedUpdate()
         {
@@ -189,6 +220,8 @@ namespace CharacterController
             HandleMaxSpeed();
             if (App.C.PlayerActions != null)
                 App.C.PlayerActions.ResetProxy();
+            _animator.SetBool("MovingUp",Rigidbody.velocity.y > 0);
+            _animator.SetFloat("Speed",Mathf.Clamp01(new Vector2(Horizontal,Vertical).magnitude));
         }
 
         private bool HandleOnewayColliders()
@@ -201,7 +234,7 @@ namespace CharacterController
                 {
                     if (c.gameObject.tag == "OneWayCollider")
                     {
-                        ModificationHandler.AddModification(new TemporaryLayerChange("ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c,_onewayCheck));
+                        ModificationHandler.AddModification(new TemporaryLayerChange("ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c,OnewayCheck,0));
                         collisionHappened = true;
                     }
 
@@ -249,49 +282,38 @@ namespace CharacterController
             //Onwall
             Animator.SetBool("OnWall", LastUsedVerticalMoveAbility == MoveAbility.Wallslide);
 
+            //Climbing
+            Animator.SetBool("Climbing", LastUsedVerticalMoveAbility == MoveAbility.Climbing);
+
             //Dash
-            if (LastUsedHorizontalMoveAbility == MoveAbility.Dash && StartDash && !Combat)
-            {
-                StartDash = false;
+            if (LastUsedHorizontalMoveAbility == MoveAbility.Dash && StartDash.Value && !Combat)
                 Animator.SetTrigger("Dash");
-            }
              
 
             //Melee
-            if (StartMelee)
-            {
+            if (StartMelee.Value)
                 Animator.SetTrigger("Melee");
-                StartMelee = false;
-            }
                 
 
             //Throw
-            if (StartThrow)
-            {
+            if (StartThrow.Value)
                 Animator.SetTrigger("Throw");
-                StartThrow = false;
-            }
 
             //Start Jump
-            if (StartJump)
-            {
-                StartJump = false;
+            if (StartJump.Value)
                 Animator.SetTrigger("Jump");
-            }
 
             //GrabLedge
-            if (StartGrab)
-            {
-                StartGrab = false;
+            if (StartGrab.Value)
                 Animator.SetTrigger("GrabLedge");
-            }
 
             //GrabLedge
-            if (StartCombat)
-            {
-                StartCombat = false;
+            if (StartCombat.Value)
                 Animator.SetTrigger("Combat");
-            }
+
+            //Climb
+            if(StartClimbing.Value)
+                Animator.SetTrigger("Climb");
 
         }
 
@@ -318,7 +340,7 @@ namespace CharacterController
         {
             if (LastUsedCombatAbility != combatAbility)
             {
-                StartCombat = true;
+                StartCombat.Value = true;
                 LastUsedCombatAbility = combatAbility;
                 
             }
@@ -329,19 +351,16 @@ namespace CharacterController
 
         private void HandleVerticalMovement(ref Vector2 velocity)
         {
+            Vertical = App.C.PlayerActions.Vertical;
             LastUsedVerticalMoveAbility = MoveAbility.None;
             List<Collider2D> col = new List<Collider2D>();
             if (CollisionCheck.Sides.BottomColliders != null)
                 col = CollisionCheck.Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
 
+            
             if (HandleOnewayColliders())
             {
                 
-            }
-            else if (_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive)
-            {
-                LastUsedVerticalMoveAbility = MoveAbility.LedgeHanging;
-                _abilityReferences.LedgeHanging.HandleVertical(ref velocity);
             }
             else if (_abilityReferences.Dash && _abilityReferences.Dash.VerticalActive)
             {
@@ -354,6 +373,13 @@ namespace CharacterController
                 LastUsedVerticalMoveAbility = MoveAbility.WallJump;
                 _abilityReferences.WallJump.HandleVertical(ref velocity);
             }
+            else if (_abilityReferences.Climing.VerticalActive)
+            {
+                LastUsedVerticalMoveAbility = MoveAbility.Climbing;
+                ClimbEnd = false;
+                Animator.SetBool("ClimbEnd", false);
+                _abilityReferences.Climing.HandleVertical(ref velocity);
+            }
             else if (_abilityReferences.DoubleJump && _abilityReferences.DoubleJump.VerticalActive)
             {
                 LastUsedVerticalMoveAbility = MoveAbility.DoubleJump;
@@ -363,6 +389,11 @@ namespace CharacterController
             {
                 _abilityReferences.Jump.HandleVertical(ref velocity);
                 LastUsedVerticalMoveAbility = MoveAbility.Jump;
+            }
+            else if (_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive)
+            {
+                LastUsedVerticalMoveAbility = MoveAbility.LedgeHanging;
+                _abilityReferences.LedgeHanging.HandleVertical(ref velocity);
             }
             else if (_abilityReferences.WallSlide && _abilityReferences.WallSlide.VerticalActive)
             {
@@ -383,17 +414,17 @@ namespace CharacterController
                 _dashEnded = true;
 
             LastUsedHorizontalMoveAbility = MoveAbility.None;
-            var horizontal = App.C.PlayerActions.Horizontal;
+            Horizontal = App.C.PlayerActions.Horizontal;
             LastHorizontalDirection = _model.transform.localScale.x > 0 ? 1 : -1;
-            Flip(horizontal);
+            Flip(Horizontal);
 
-            if (CollisionCheck.Sides.Left && horizontal < 0)
-                horizontal = 0;
+            if (CollisionCheck.Sides.Left && Horizontal < 0)
+                Horizontal = 0;
 
-            if (CollisionCheck.Sides.Right && horizontal > 0)
-                horizontal = 0;
+            if (CollisionCheck.Sides.Right && Horizontal > 0)
+                Horizontal = 0;
 
-            velocity += new Vector2(MovementSpeed*horizontal, 0);
+            velocity += new Vector2(MovementSpeed* Horizontal, 0);
             
             if (_abilityReferences.Dash && _abilityReferences.Dash.HorizontalActive)
             {
@@ -405,6 +436,11 @@ namespace CharacterController
             {
                 LastUsedHorizontalMoveAbility = MoveAbility.WallJump;
                 _abilityReferences.WallJump.HandleHorizontal(ref velocity);                
+            }
+            else if (_abilityReferences.Climing && _abilityReferences.Climing.HorizontalActive)
+            {
+                LastUsedHorizontalMoveAbility = MoveAbility.Climbing;
+                _abilityReferences.Climing.HandleHorizontal(ref velocity);
             }
             else if (_abilityReferences.WallSlide && _abilityReferences.WallSlide.HorizontalActive)
             {
@@ -421,9 +457,11 @@ namespace CharacterController
         private LayerMask _oldLayer;
         private Collider2D _targetCollider;
         private CollisionCheck _collisonCheck;
+        private float _timer;
 
-        public TemporaryLayerChange(string name, string targetLayer, Collider2D targetCollider, CollisionCheck collisionCheck) : base(name)
+        public TemporaryLayerChange(string name, string targetLayer, Collider2D targetCollider, CollisionCheck collisionCheck, float time) : base(name)
         {
+            _timer = time;
             _targetLayer = LayerMask.NameToLayer(targetLayer);
             if (_targetLayer == -1)
             {
@@ -450,7 +488,9 @@ namespace CharacterController
 
         public override void UpdateModificaiton()
         {
-            if(!_collisonCheck.Sides.TargetColliders.Contains(_targetCollider))
+            if (_timer > 0)
+                _timer -= UnityEngine.Time.deltaTime;
+            if(!_collisonCheck.Sides.TargetColliders.Contains(_targetCollider) && _timer <= 0)
                 ModificationHandler.RemoveModification(this);
         }
 

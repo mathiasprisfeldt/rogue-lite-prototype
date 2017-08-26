@@ -37,7 +37,7 @@ namespace Special
                     _projectileSpawned = false;
                     _throwActive = true;
                     _cooldownTimer = _cooldown;
-                    _actionsController.StartThrow = true;
+                    _actionsController.StartThrow.Value = true;
                 }
 
                 return _throwActive;

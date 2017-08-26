@@ -15,9 +15,6 @@ namespace Combat
         [SerializeField]
         private CollisionCheck _collisionCheck;
 
-        [SerializeField]
-        private float _damage;
-
         [SerializeField,Range(0f,float.MaxValue)]
         private float _hitCooldown;
 
@@ -38,7 +35,7 @@ namespace Combat
                     && _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {
                     _active = true;
-                    _actionsController.StartMelee = true;
+                    _actionsController.StartMelee.Value = true;
                 }
                     
                 return _active;
@@ -49,20 +46,17 @@ namespace Combat
         {
             if (_cooldownTimer > 0)
                 _cooldownTimer -= Time.deltaTime;
-            if(_active)
+            if (_active)
             {
                 foreach (var c in _collisionCheck.Sides.TargetColliders)
                 {
                     if (!_objectsTouched.Contains(c.gameObject))
                     {
                         _objectsTouched.Add(c.gameObject);
+
                         CollisionCheck cc = c.gameObject.GetComponent<CollisionCheck>();
-                        if (cc != null)
-                            if (cc.Character.HealthController != null)
-                            {
-                                cc.Character.HealthController.Damage(_damage, from: _actionsController.Rigidbody.transform);
-                            }
-                                
+                        if (cc && cc.Character.HealthController != null && !cc.Character.HealthController.IsDead)
+                            cc.Character.HealthController.Damage(_actionsController.Damage, from: _actionsController);
                     }
                 }
             }

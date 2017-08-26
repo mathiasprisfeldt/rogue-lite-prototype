@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using Abilitys;
 using Health;
 using UnityEngine;
@@ -17,7 +18,19 @@ namespace Controllers
     /// </summary>
     public class Character : MonoBehaviour
     {
+        private static readonly float BUMPING_RAY_LENGTH = 0.05f;
+        private static readonly Vector2 BUMPING_ORIGIN_OFFSET = new Vector2(.5f, 0);
+
+        private Collider2D _bumpingCollider2D; //Collider used for any collisions when bumping.
+        private readonly RaycastHit2D[] _bumpingResults = new RaycastHit2D[1]; //Used to store if the player bumped into something platformy
+
         [Header("References:")]
+        [SerializeField]
+        private Transform _origin;
+
+        [SerializeField]
+        private Animator _mainAnimator;
+
         [SerializeField]
         private HealthController _healthController;
 
@@ -43,7 +56,7 @@ namespace Controllers
         private AbilityHandler _abilityHandler;
 
         [Header("Settings:")]
-        [SerializeField, Tooltip("Which way are it facing at start?")]
+        [SerializeField, Tooltip("Which way is it facing at start?")]
         private int _startDirection = -1;
 
         [SerializeField]
@@ -51,6 +64,9 @@ namespace Controllers
 
         [SerializeField]
         private float _movementSpeed;
+
+        [SerializeField]
+        private float _flySpeed;
 
         [SerializeField]
         private bool _flipWithVelocity;
@@ -75,6 +91,17 @@ namespace Controllers
         /// 1 = Right
         /// </summary>
         public int BumpingDirection { get; set; }
+
+        public Vector2 Origin
+        {
+            get { return _origin.position; }
+        }
+
+        public Animator MainAnimator
+        {
+            get { return _mainAnimator; }
+            set { _mainAnimator = value; }
+        }
 
         public HealthController HealthController
         {
@@ -111,6 +138,12 @@ namespace Controllers
             set { _hitbox = value; }
         }
 
+        public KnockbackHandler KnockbackHandler
+        {
+            get { return _knockbackHandler; }
+            set { _knockbackHandler = value; }
+        }
+
         public float Damage
         {
             get { return _damage; }
@@ -123,10 +156,10 @@ namespace Controllers
             set { _movementSpeed = value; }
         }
 
-        public KnockbackHandler KnockbackHandler
+        public float FlySpeed
         {
-            get { return _knockbackHandler; }
-            set { _knockbackHandler = value; }
+            get { return _flySpeed; }
+            set { _flySpeed = value; }
         }
 
         public AbilityHandler AbilityHandler
@@ -135,9 +168,17 @@ namespace Controllers
             set { _abilityHandler = value; }
         }
 
-        void Awake()
+        public bool IsFlying
+        {
+            get { return _flySpeed > 0; }
+        }
+
+        protected virtual void Awake()
         {
             Flip(_startDirection);
+
+            if (PhysicialCollisionCheck)
+                _bumpingCollider2D = PhysicialCollisionCheck.CollidersToCheck.FirstOrDefault();
         }
 
         public virtual void Update()
@@ -147,12 +188,23 @@ namespace Controllers
             if (_flipWithVelocity && _rigidbody)
                 Flip(Mathf.Round(_rigidbody.velocity.x));
 
+            //Update animation states
+            if (MainAnimator)
+            {
+                MainAnimator.SetBool("OnGround", OnGround);
+                MainAnimator.SetBool("Moving", State == CharacterState.Moving);
+            }
+        }
+
+        void FixedUpdate()
+        {
             CheckSideBumping();
         }
 
         protected virtual void UpdateState()
         {
-            if (OnGround && !_rigidbody.IsSleeping())
+            //TODO: Maybe find a better way to check if the character is moving or not.
+            if (OnGround && _rigidbody.velocity != Vector2.zero)
             {
                 State = CharacterState.Moving;
             }
@@ -166,11 +218,19 @@ namespace Controllers
             }
         }
 
+        /// <summary>
+        /// Flips the characters visual direction and look direction.
+        /// </summary>
+        /// <param name="dir"></param>
         public void Flip(Vector2 dir)
         {
             Flip(Mathf.RoundToInt(dir.normalized.x));
         }
 
+        /// <summary>
+        /// Flips the characters visual direction and look direction.
+        /// </summary>
+        /// <param name="dir"></param>
         public void Flip(float dir)
         {
             if (dir == 0 || dir == LookDirection)
@@ -187,12 +247,28 @@ namespace Controllers
             LookDirection = Mathf.RoundToInt(dir);
         }
 
-        public virtual void SetVelocity(Vector2 velocity, bool respectMovementSpeed = false)
+        public virtual void SetVelocity(Vector2 velocity, bool respectMovementSpeed = false, float movementSpeedAddtion = 0, bool fly = false)
         {
+            if (_healthController.IsDead)
+                return;
+
             if (respectMovementSpeed)
-                velocity *= MovementSpeed;
+            {
+                velocity.x *= MovementSpeed + movementSpeedAddtion;
+
+                if (fly)
+                    velocity.y *= FlySpeed + movementSpeedAddtion;
+            }
 
             _rigidbody.velocity = velocity;
+        }
+
+        /// <summary>
+        /// Forces the character to stand still.
+        /// </summary>
+        public void StandStill()
+        {
+            Rigidbody.velocity = !IsFlying ? new Vector2(0, Rigidbody.velocity.y) : Vector2.zero;
         }
 
         /// <summary>
@@ -201,42 +277,32 @@ namespace Controllers
         /// </summary>
         public void CheckSideBumping()
         {
+            if (!OnGround)
+                return;
+
             if (!PhysicialCollisionCheck || !PhysicialCollisionCheck.CollidersToCheck.Any())
             {
                 Debug.LogWarning("CheckSideBumping requires physical collider reference to function properly.", transform);
                 return;
             }
 
-            Collider2D collider = PhysicialCollisionCheck.CollidersToCheck.FirstOrDefault();
-
-            //Offsets for raycasts
-            Vector2 xOffset = new Vector2(0.01f, 0);
-            Vector2 yOffset = new Vector2(0, 0.01f);
-
-            Vector2 pos = collider.transform.position;
-            Vector2 extents = collider.bounds.extents;
-            Vector2 origin = new Vector2(pos.x, pos.y + collider.bounds.size.y / 2 + collider.offset.y); //Root origin for raycasts
+            Bounds bounds = _bumpingCollider2D.bounds;
+            
+            Vector2 offset = BUMPING_ORIGIN_OFFSET + new Vector2(Mathf.Abs(Rigidbody.velocity.x), 0) * Time.fixedDeltaTime;
 
             //Calculating needed direction + length & left and right origins.
-            Vector2 direction = Vector2.down * extents.y * 2 - yOffset;
-            Vector2 leftOrigin = origin - xOffset - new Vector2(extents.x, 0);
-            Vector2 rightOrigin = origin + xOffset + new Vector2(extents.x, 0);
-
+            Vector2 direction = Vector2.down;
+            float length = BUMPING_RAY_LENGTH;
+            Vector2 leftOrigin = (Vector2) bounds.min - offset;
+            Vector2 rightOrigin = (Vector2) bounds.min + offset + new Vector2(bounds.size.x, 0);
+            
             //Raycasting to check if we're near end of platform.
-            bool leftHit = Physics2D.RaycastAll(leftOrigin, direction, LayerMask.GetMask("Platform")).Any();
-            bool rightHit = Physics2D.RaycastAll(rightOrigin, direction, LayerMask.GetMask("Platform")).Any();
-
-            bool leftBump = false;
-            bool rightBump = false;
+            bool leftHit = Physics2D.RaycastNonAlloc(leftOrigin, direction * length, _bumpingResults, length, LayerMask.GetMask("Platform")) != 0;
+            bool rightHit = Physics2D.RaycastNonAlloc(rightOrigin, direction * length, _bumpingResults, length, LayerMask.GetMask("Platform")) != 0;
 
             //If we cant find physical collider checker we log it and move on.
-            if (PhysicialCollisionCheck)
-            {
-                leftBump = PhysicialCollisionCheck.Left;
-                rightBump = PhysicialCollisionCheck.Right;
-            }
-            else
-                Debug.LogWarning("CheckSideBumping requires physical collision check to function properly.", transform);
+            bool leftBump = PhysicialCollisionCheck.Left;
+            bool rightBump = PhysicialCollisionCheck.Right;
 
             if (!leftHit || leftBump)
                 BumpingDirection = -1;

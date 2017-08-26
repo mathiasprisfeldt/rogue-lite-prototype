@@ -1,10 +1,8 @@
 ﻿using AcrylecSkeleton.Extensions;
-using Archon.SwissArmyLib.Automata;
-using Enemy;
 using Projectiles;
 using UnityEngine;
 
-namespace EnemyShoot
+namespace Enemy
 {
     /// <summary>
     /// Purpose: Basic class for all enemies that can shoot.
@@ -20,14 +18,19 @@ namespace EnemyShoot
 
         public override void Attack()
         {
-            Instantiate(_projectile, transform.position.ToVector2() + _spawnPos, Quaternion.identity);
+            int dir = Context.M.Character.LookDirection;
+            Vector2 spawnPos = new Vector2(_spawnPos.x, 0) * dir + new Vector2(0, _spawnPos.y);
+
+            Projectile projectile = Instantiate(_projectile, transform.position.ToVector2() + spawnPos, Quaternion.identity);
+            projectile.Direction = new Vector2(dir, 0);
+            projectile.Shoot();
 
             base.Attack();
         }
 
         protected override void OnDrawGizmosSelected()
         {
-            if (!_drawGizmos)
+            if (!_drawGizmos || !enabled)
                 return;
 
             Gizmos.DrawSphere(_spawnPos + transform.position.ToVector2(), 0.15f);

@@ -66,7 +66,8 @@ namespace AcrylecSkeleton.Extensions
 
         public static Vector2 MultiplyVector2(this Vector3 v1, Vector2 v2)
         {
-            return new Vector2(v1.x*v2.x,v1.y*v2.y);
+            Vector2 v1Converted = v1.ToVector2();
+            return ((v1Converted.x * v2.x) * Vector2.right) + ((v1Converted.y * v2.y) * Vector2.up);
         }
 
         /// <summary>
@@ -85,7 +86,12 @@ namespace AcrylecSkeleton.Extensions
 
         public static Vector2 ToVector2(this Vector3 v)
         {
-            return new Vector2(v.x,v.y);
+            return Vector2.right * v.x + Vector2.up * v.y;
+        }
+
+        public static Vector2 Rounded(this Vector2 vec)
+        {
+            return (Mathf.Round(vec.x) * Vector2.right) + (Mathf.Round(vec.y) * Vector2.up);
         }
 
     }

@@ -1,6 +1,12 @@
-﻿using AcrylecSkeleton.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using AcrylecSkeleton.Utilities;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
+using Enemy;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Managers
 {
@@ -11,6 +17,9 @@ namespace Managers
     public class GameManager : Singleton<GameManager>
     {
         private PlayerApplication _player;
+
+        private List<EnemyApplication> _enemies = new List<EnemyApplication>();
+        public UnityEvent EnemiesChange = new Button.ButtonClickedEvent();
 
         public PlayerApplication Player
         {
@@ -27,6 +36,29 @@ namespace Managers
                 return _player;
             }
             set { _player = value; }
+        }
+
+        public List<EnemyApplication> Enemies
+        {
+            get
+            {
+                return _enemies;
+            }
+
+            set
+            {
+               _enemies = value;
+            }
+        }
+
+        public void Start()
+        {
+            SceneManager.sceneUnloaded += SceneManagerOnSceneUnloaded;
+        }
+
+        private void SceneManagerOnSceneUnloaded(Scene arg0)
+        {
+            Enemies.Clear();
         }
     }
 }

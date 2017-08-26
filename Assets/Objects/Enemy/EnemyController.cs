@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.MVC;
 using Archon.SwissArmyLib.Automata;
+using Assets.Objects.PlayerMovement.Player.Prefab.Player;
+using Controllers;
 using Managers;
 using UnityEngine;
 
@@ -15,58 +18,63 @@ namespace Enemy
 	/// </summary>
 	public class EnemyController : Controller<EnemyApplication>
 	{
+        private readonly RaycastHit2D[] viewResults = new RaycastHit2D[1]; //Array used to store results from testing player view.
+	    private List<EnemyState> _states;
 	    private float _whereToTurnTo;
 	    private float _turnTimer;
-
-	    private EnemyState _initialState;
 
 	    public Vector2 ToPlayer { get; private set; }
 	    public bool IsTurning { get; private set; }
 
-        public List<EnemyState> States { get; set; }
-	    public EnemyState LastState { get; set; }
-	    public EnemyState CurrentState { get; set; }
+	    public bool IsTargetBehind
+	    {
+	        get
+	        {
+	            PlayerApplication ply = GameManager.Instance.Player;
 
-	    public FiniteStateMachine<EnemyController> StateMachine { get; set; }
+	            if (!ply)
+	                return false;
+
+                return (ply.transform.position.x < App.M.Character.Origin.x ? -1 : 1) != App.M.Character.LookDirection; 
+	        }
+	    }
+
+	    public FiniteStateMachine<EnemyApplication> StateMachine { get; set; }
 
 	    void Awake()
 	    {
-	        StateMachine = new FiniteStateMachine<EnemyController>(this);
-	    }
+	        StateMachine = new FiniteStateMachine<EnemyApplication>(App);
 
-	    void Start()
-	    {
-            States = new List<EnemyState>();
-
-	        //Setup all states.
-	        foreach (EnemyState state in GetComponentsInChildren<EnemyState>())
+	        _states = GetComponentsInChildren<EnemyState>().ToList();
+            //Setup all states.
+            foreach (EnemyState state in _states)
 	        {
                 if (!state.enabled)
                     continue;
 
-	            States.Add(state);
+	            state.Context = App;
+	            state.Machine = StateMachine;
+                StateMachine.RegisterState(state); 
+            }
 
-	            if (!_initialState && state.IsActive)
-	                _initialState = state;
+	        EnemyIdle idleState = gameObject.AddComponent<EnemyIdle>();
+	        StateMachine.RegisterState(idleState);
 
-	            state.IsActive = false;
-	        }
-
-	        if (!States.Any())
-	        {
-	            Debug.LogWarning("EnemyController has no AI states.", transform);
-                return;
-	        }
-
-            ChangeState(_initialState, _initialState == null || _initialState.IsIsolated);
+            StateMachine.ChangeState(_states.FirstOrDefault() ?? idleState);
 	    }
+
+	    void Start()
+	    {
+	        App.M.Character.HealthController.OnDamage.AddListener(OnDamage);
+	        App.M.Character.HealthController.OnDead.AddListener(OnDead);
+        }
 
 	    void Update()
 	    {
-            StateMachine.Update(Time.deltaTime);
+	        PlayerApplication ply = GameManager.Instance.Player;
 
-	        Vector2 ownPos = App.M.Character.Rigidbody.position;
-	        Vector2 plyPos = GameManager.Instance.Player.transform.position.ToVector2();
+	        Vector2 ownPos = App.M.Character.Origin;
+	        Vector2 plyPos = ply ? ply.transform.position.ToVector2() : Vector2.zero;
 
             //Calculate if the enemy can turn around.
             if (IsTurning)
@@ -82,98 +90,70 @@ namespace Enemy
 
 	        ToPlayer = plyPos - ownPos;
 	        //Checking if player is in sight
-	        if (GameManager.Instance.Player &&
+	        if (ply &&
 	            ToPlayer.magnitude <=
 	            App.M.ViewRadius)
 	        {
-	            bool canTarget = true;
-
-	            //Check if the player is behind the player and if can be target if behind.
-	            bool isTargetBehind = false;
-	            int lookDir = App.M.Character.LookDirection;
-
-	            if (lookDir == -1)
-	                isTargetBehind = ToPlayer.x > lookDir;
-	            else if (lookDir == 1)
-	                isTargetBehind = ToPlayer.x < lookDir;
-                
-                //If the target is behind and we still can target it, do so.
-	            if (isTargetBehind && !App.M.TargetBehind)
-	                canTarget = false;
+                /* 
+                 * First off, if the target is behind us and we aren't 
+                 * allowed to target people behind us, dont do it.
+                 */
+                bool canTarget = !(IsTargetBehind && !App.M.TargetBehind);
 
                 //Check if we can see the player
                 if (canTarget && 
-                    Physics2D.RaycastAll(ownPos, ownPos.DirectionTo(plyPos), Mathf.Clamp(ToPlayer.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")).Any())
+                    !App.M.HasWallHack &&
+                    Physics2D.RaycastNonAlloc(ownPos, ToPlayer.normalized, viewResults, Mathf.Clamp(ToPlayer.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")) > 0)
 	            {
                     //We cant see the player, lose interest.
 	                canTarget = false;
 	                App.M.Target = null;
 	            }
 
+                //If we're dead dont even bother targeting us.
+	            if (ply.M.ActionController.HealthController.IsDead)
+	            {
+	                canTarget = false;
+	                App.M.Target = null;
+	            }
+
 	            //If target is behind the enemy and is targeted and we're arent turning, turn around.
-	            if (!IsTurning && isTargetBehind && canTarget)
-	                Turn(-1 * lookDir);
+	            if (!IsTurning && IsTargetBehind && canTarget)
+	                Turn(-1 * App.M.Character.LookDirection);
 
-	            App.M.Target = canTarget ? GameManager.Instance.Player : App.M.Target;
+	            App.M.Target = canTarget ? ply : App.M.Target;
 	        }
-	        else
+	        else if (!App.M.NeverForget)
 	            App.M.Target = null;
+            
+            foreach (EnemyState enemyState in _states)
+            {
+                if (enemyState.enabled && enemyState.ShouldTakeover())
+                {
+                    if (StateMachine.CurrentState != enemyState)
+                        StateMachine.ChangeState(enemyState);
 
-	        //Check the states prerequisites & parallel updates.
-	        foreach (EnemyState enemyState in States)
-	        {
-	            if (enemyState != CurrentState && enemyState.CheckPrerequisite())
-	                ChangeState(enemyState, enemyState.IsIsolated);
+                    break;
+                }
+            }
 
-                if (enemyState.IsActive)
-                    enemyState.StateUpdate();
-	        }
-	    }
+	        StateMachine.Update(Time.deltaTime);
+        }
 
-        /// <summary>
-        /// Changes the current enemy state to desired one.
-        /// </summary>
-        /// <typeparam name="T">The state to change to.</typeparam>
-        /// <param name="isolate">Should it disable all other states.</param>
-	    public void ChangeState<T>(bool isolate = true)
-	    {
-            ChangeState(States.FirstOrDefault(state => state is T), isolate);
-	    }
 
-	    public void ChangeState(EnemyState desiredState, bool isolate = true)
-	    {
-	        if (CurrentState == desiredState)
-	            return;
-	        
-            //Current is now last
-	        if (CurrentState)
-	        {
-	            LastState = CurrentState;
-	            LastState.StateEnd();
-	        }
-
-	        //Disable all other state components if isolated.
-            if (isolate)
-	            States.Where(state => state != desiredState).ToList().ForEach(state => state.IsActive = false);
-
-	        if (desiredState)
-	        {
-	            desiredState.IsActive = true;
-	            CurrentState = desiredState;
-	            CurrentState.StateStart();
-	        }
-	        else
-	        {
-	            CurrentState = null;
-	        }
-	    }
-
-        /// <summary>
+	    /// <summary>
         /// Method used to turn the enemy around.
+        /// If 0, it turns around.
         /// </summary>
-	    public void Turn(int dir)
+	    public void Turn(int dir, bool flip = false)
         {
-            if (IsTurning || dir == App.M.Character.LookDirection)
+            if (dir == 0 && flip)
+                dir = -1 * App.M.Character.LookDirection;
+
+            if (IsTurning || 
+                dir == App.M.Character.LookDirection || 
+                dir == 0 && !flip || 
+                App.M.Character.HealthController.IsDead)
                 return;
 
             //Turn around instantly if turn speed is 0.
@@ -190,48 +170,54 @@ namespace Enemy
         }
 
         /// <summary>
-        /// Sets velocity on character, but turns if needed.
+        /// Flips/Turns the enemy around.
         /// </summary>
-        /// <param name="vel"></param>
-	    public void SetVelocity(Vector2 vel, bool overrideYVel = false, bool forceTurn = false)
+	    public void Turn()
 	    {
+	        Turn(0, true);
+	    }
+
+	    /// <summary>
+	    /// Moves the enemy to a specific direction, but turns if needed.
+	    /// It calculates the velocity with movement speed and fixedDeltaTime.
+	    /// </summary>
+	    /// <param name="dir">Direction movement</param>
+	    /// <param name="overrideYVel">If false, it doesn't touch Y axis.</param>
+	    /// <param name="forceTurn">Should it force turning around?</param>
+	    public void Move(Vector2 dir, bool overrideYVel = false, bool forceTurn = false)
+        {
 	        if (!IsTurning)
 	        {
+	            Vector2 vel = dir;
+
                 if (!overrideYVel)
-                    vel = new Vector2(vel.x, App.M.Character.Rigidbody.velocity.y);
+                    vel = new Vector2(dir.x, App.M.Character.Rigidbody.velocity.y);
 
-	            App.M.Character.SetVelocity(vel, true);
+	            App.M.Character.SetVelocity(vel * Time.fixedDeltaTime, true, App.M.Target ? App.M.EngageSpeed : 0, overrideYVel);
 
+	            int xDir = Mathf.RoundToInt(dir.x);
                 if (!App.M.CanBackPaddle || forceTurn)
-	                Turn(Mathf.RoundToInt(vel.x));
+	                Turn(xDir);
 	        }
 	    }
 
-        /// <summary>
-        /// Changes the state back to the initial one.
-        /// </summary>
-	    public void ResetToInitial()
+	    public bool IsState<T>()
 	    {
-            if (_initialState)
-	            ChangeState(_initialState);
+	        return StateMachine.CurrentState is T;
 	    }
 
-        /// <summary>
-        /// Changes state to the last one.
-        /// </summary>
-	    public void ResetToLast()
+	    private void OnDamage(Character from)
 	    {
-            if (LastState)
-	            ChangeState(LastState);
+	        if (App.M.TurnOnBackstab && IsTargetBehind)
+                Turn();
 	    }
 
-        /// <summary>
-        /// Used for checking if the current state matches T
-        /// </summary>
-        /// <typeparam name="T">Type of state</typeparam>
-	    public bool IsState<T>() where T : EnemyState
+	    private void OnDead()
 	    {
-	        return CurrentState is T;
-	    }
+	        IsTurning = false;
+
+	        if (GameManager.Instance != null)
+	            GameManager.Instance.EnemiesChange.Invoke();
+        }
     }
 }

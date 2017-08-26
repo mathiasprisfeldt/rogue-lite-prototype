@@ -40,7 +40,7 @@ namespace CharacterController
                 {
                     if (input)
                     {
-                        _actionsController.StartDash = true;
+                        _actionsController.StartDash.Value = true;
                         _direction = _actionsController.Model.transform.localScale.x > 0 ? 1 : -1;
                         var leftInput = _actionsController.App.C.PlayerActions.Left;
                         var rightInput = _actionsController.App.C.PlayerActions.Right;

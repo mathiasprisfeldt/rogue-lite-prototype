@@ -128,7 +128,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf3ae6dffecdbd4f8dbd9820285dc67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 10
+  _damage: 1
+  _timeToLive: 15
+  _useConstantForce: 0
+  _force: 0
   _layersToHit:
     serializedVersion: 2
     m_Bits: 16384
@@ -137,6 +140,12 @@ MonoBehaviour:
     m_Bits: 512
   _tagsToHit:
   - Enemy
+  _animHandlesDestruction: 0
+  _onDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!212 &212280877413235598
 SpriteRenderer:
   m_ObjectHideFlags: 1

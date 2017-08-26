@@ -1,8 +1,7 @@
 ﻿using Enemy;
 using Managers;
-using UnityEngine;
 
-namespace EnemyMelee
+namespace Enemy
 {
     /// <summary>
     /// Purpose: Base class for any melee attack states for enemies.
@@ -12,8 +11,8 @@ namespace EnemyMelee
     {
         public override void Attack()
         {
-            if (CheckHitbox())
-                GameManager.Instance.Player.M.ActionController.HealthController.Damage(App.M.Character.Damage, from: App.M.Character.Rigidbody.transform);
+            if (IsActive && CheckHitbox())
+                GameManager.Instance.Player.M.ActionController.HealthController.Damage(Context.M.Character.Damage, from: Context.M.Character);
 
             base.Attack();
         }

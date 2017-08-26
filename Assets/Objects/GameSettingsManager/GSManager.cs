@@ -10,7 +10,7 @@ namespace Managers
     public class GSManager : Singleton<GSManager>
     {
         [SerializeField]
-        private float _healthContainerSize = 10;
+        private float _healthContainerSize = 1;
 
         public float HealthContainerSize
         {
