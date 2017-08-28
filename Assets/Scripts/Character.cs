@@ -92,6 +92,8 @@ namespace Controllers
         /// </summary>
         public int BumpingDirection { get; set; }
 
+        public bool LockMovement { get; set; }
+
         public Vector2 Origin
         {
             get { return _origin.position; }
@@ -249,11 +251,11 @@ namespace Controllers
 
         public virtual void SetVelocity(Vector2 velocity, bool respectMovementSpeed = false, float movementSpeedAddtion = 0, bool fly = false)
         {
-            if (_healthController.IsDead)
+            if (_healthController.IsDead || LockMovement)
                 return;
 
             if (respectMovementSpeed)
-            {
+            {               
                 velocity.x *= MovementSpeed + movementSpeedAddtion;
 
                 if (fly)

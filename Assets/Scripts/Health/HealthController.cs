@@ -188,9 +188,7 @@ namespace Health
 
             //Apply knockback
             if (pos != Vector2.zero && !_isInvurnable)
-            {
                 _character.KnockbackHandler.AddForce(pos.DirectionTo(_character.Rigidbody.position) * _knockbackForce, _knockbackDuration);
-            }
 
             HealthAmount -= amountToDmg;
 

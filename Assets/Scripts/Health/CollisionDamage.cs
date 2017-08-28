@@ -24,7 +24,7 @@ namespace Health
 
         void Update()
         {
-            if (_healthController.Character.HealthController.IsInvurnable)
+            if (_healthController.IsInvurnable || _healthController.IsDead)
                 return;
 
             foreach (Collider2D sidesTargetCollider in _healthController.Character.Hitbox.Sides.TargetColliders)
@@ -38,8 +38,10 @@ namespace Health
                     if (targetCharacter.HealthController.IsDead)
                         continue;
 
-                    _healthController.Character.HealthController.Damage(targetCharacter.Damage,
-                        from: targetCharacter);
+                    _healthController.Damage(
+                        targetCharacter.Damage,
+                        from: targetCharacter, 
+                        pos: targetCharacter.Origin);
                 }
             }
         }
