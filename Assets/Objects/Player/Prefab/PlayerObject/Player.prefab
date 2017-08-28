@@ -2958,6 +2958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cbd00e50cc37944ba0ec9840c4d6c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lockMovement: 0
 --- !u!114 &114244779261525874
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3205,9 +3206,9 @@ MonoBehaviour:
   _actionsController: {fileID: 114173897078414380}
   _hangDistance: 0.55
   _sensitivity: 0.2
-  _pushUpForce: 70
+  _pushUpForce: 80
   _pushUpDuration: 0.2
-  _pushDownForce: 40
+  _pushDownForce: 80
   _pushDownDuration: 0.2
 --- !u!114 &114327364014281900
 MonoBehaviour:
@@ -3902,7 +3903,6 @@ MonoBehaviour:
     m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114173897078414380}
-  _spriteRenderer: {fileID: 212493662664211078}
 --- !u!114 &114889574662704972
 MonoBehaviour:
   m_ObjectHideFlags: 1
