@@ -788,6 +788,26 @@ Prefab:
       propertyPath: m_SortingOrder
       value: -36
       objectReference: {fileID: 0}
+    - target: {fileID: 114323172994149904, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _pushDownDuration
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114323172994149904, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _pushDownForce
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 114323172994149904, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _pushUpDuration
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114323172994149904, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _pushUpForce
+      value: 80
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
   m_IsPrefabParent: 0

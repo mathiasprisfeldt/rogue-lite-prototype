@@ -28,7 +28,7 @@ namespace CharacterController
                     return false;
 
                 if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed && _actionsController.State == CharacterState.InAir
-                    && _jumpTimer <= 0 && !_hasJumped)
+                    && _jumpTimer <= 0 && !_hasJumped && _actionsController.LastUsedVerticalMoveAbility == MoveAbility.None)
                 {
                     _jumpTimer = _jumpDuration;
                     _hasJumped = true;
