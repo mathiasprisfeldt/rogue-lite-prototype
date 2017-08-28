@@ -20,11 +20,6 @@ public class Level
     public Dictionary<TilePos, TileBehaviour> BorderTiles { get; set; }
 
     /// <summary>
-    /// ID
-    /// </summary>
-    public int ID { get; set; }
-
-    /// <summary>
     /// Background image, not used currently
     /// </summary>
     public Texture2D BG { get; set; }
@@ -34,10 +29,9 @@ public class Level
     /// </summary>
     /// <param name="layouts">Layouts array</param>
     /// <param name="id">id</param>
-    public Level(Layout[,] layouts, int id)
+    public Level(Layout[,] layouts)
     {
         Layouts = layouts;
-        ID = id;
     }
 
     /// <summary>
@@ -45,31 +39,17 @@ public class Level
     /// </summary>
     /// <param name="l">Layout array described in an int array with ids for layouts</param>
     /// <param name="id">id</param>
-    public Level(int[,] l, int id)
+    public Level(int[,] l)
     {
         _originalLayout = l;
-        SpawnLayout(l);
-        ID = id;
-    }
 
-    //Todo Make a better solution
-    public void RespawnLayout()
-    {
-        SpawnLayout(_originalLayout);
-    }
-
-    //Todo Make a better solution
-    public void SpawnLayout(int[,] l)
-    {
         //Create new array and fill with layouts corresponding to the ids given
         Layouts = new Layout[l.GetLength(0), l.GetLength(1)];
-        _originalLayout = l;
         for (int i = 0; i < l.GetLength(0); i++)
         {
             for (int j = 0; j < l.GetLength(1); j++)
             {
-                var layoutCandidate = LevelDataManager.Instance.Layouts.FirstOrDefault(x => x.ID == l[i, j]) ??
-                    LevelDataManager.Instance.Layouts.FirstOrDefault();
+                var layoutCandidate = LevelDataManager.Instance.Layouts.FirstOrDefault(x => x.ID == l[i, j]);
 
                 Layouts[i, j] = new Layout(layoutCandidate.ID, layoutCandidate.Tiles.Clone() as Tile[,]);
             }
