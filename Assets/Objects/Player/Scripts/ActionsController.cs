@@ -151,6 +151,7 @@ namespace CharacterController
         public float LastHorizontalDirection { get; set; }
         public float Horizontal { get; set; }
         public float Vertical { get; set; }
+        public float InAirTImer { get; set; }
 
         public AbilityReferences AbilityReferences
         {
@@ -227,6 +228,7 @@ namespace CharacterController
         private bool HandleOnewayColliders()
         {
             var collisionHappened = false;
+
             if (GroundCollisionCheck.Sides.BottomColliders != null && GroundCollisionCheck.Sides.BottomColliders.Count > 0
             && App.C.PlayerActions.Down && App.C.PlayerActions.ProxyInputActions.Jump.WasPressed)
             {
@@ -262,6 +264,11 @@ namespace CharacterController
                 State = CharacterState.Idle;
             else
                 State = CharacterState.InAir;
+
+            if(State == CharacterState.InAir)
+                InAirTImer += Time.deltaTime;
+            else if (InAirTImer > 0)
+                InAirTImer = 0;
         }
 
 
@@ -357,53 +364,50 @@ namespace CharacterController
             if (CollisionCheck.Sides.BottomColliders != null)
                 col = CollisionCheck.Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
 
-            
-            if (HandleOnewayColliders())
-            {
-                
-            }
-            else if (_abilityReferences.Dash && _abilityReferences.Dash.VerticalActive)
-            {
-                LastUsedVerticalMoveAbility = MoveAbility.Dash;
-                _abilityReferences.Dash.HandleVertical(ref velocity);
-            }
-            else if (_abilityReferences.WallJump && _abilityReferences.WallJump.VerticalActive &&
-                     !(_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive))
-            {
-                LastUsedVerticalMoveAbility = MoveAbility.WallJump;
-                _abilityReferences.WallJump.HandleVertical(ref velocity);
-            }
-            else if (_abilityReferences.Climing.VerticalActive)
-            {
-                LastUsedVerticalMoveAbility = MoveAbility.Climbing;
-                ClimbEnd = false;
-                Animator.SetBool("ClimbEnd", false);
-                _abilityReferences.Climing.HandleVertical(ref velocity);
-            }
-            else if (_abilityReferences.DoubleJump && _abilityReferences.DoubleJump.VerticalActive)
-            {
-                LastUsedVerticalMoveAbility = MoveAbility.DoubleJump;
-                _abilityReferences.DoubleJump.HandleVertical(ref velocity);
-            }
-            else if (_abilityReferences.Jump && _abilityReferences.Jump.VerticalActive)
-            {
-                _abilityReferences.Jump.HandleVertical(ref velocity);
-                LastUsedVerticalMoveAbility = MoveAbility.Jump;
-            }
-            else if (_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive)
-            {
-                LastUsedVerticalMoveAbility = MoveAbility.LedgeHanging;
-                _abilityReferences.LedgeHanging.HandleVertical(ref velocity);
-            }
-            else if (_abilityReferences.WallSlide && _abilityReferences.WallSlide.VerticalActive)
-            {
-                LastUsedVerticalMoveAbility = MoveAbility.Wallslide;
-                _abilityReferences.WallSlide.HandleVertical(ref velocity);
-            }
-            else
-                velocity = new Vector2(velocity.x, 0);
 
-
+            if (!HandleOnewayColliders())
+            {
+                if (_abilityReferences.Dash && _abilityReferences.Dash.VerticalActive)
+                {
+                    LastUsedVerticalMoveAbility = MoveAbility.Dash;
+                    _abilityReferences.Dash.HandleVertical(ref velocity);
+                }
+                else if (_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive)
+                {
+                    LastUsedVerticalMoveAbility = MoveAbility.LedgeHanging;
+                    _abilityReferences.LedgeHanging.HandleVertical(ref velocity);
+                }
+                else if (_abilityReferences.WallJump && _abilityReferences.WallJump.VerticalActive &&
+                         !(_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive))
+                {
+                    LastUsedVerticalMoveAbility = MoveAbility.WallJump;
+                    _abilityReferences.WallJump.HandleVertical(ref velocity);
+                }
+                else if (_abilityReferences.Climing.VerticalActive)
+                {
+                    LastUsedVerticalMoveAbility = MoveAbility.Climbing;
+                    ClimbEnd = false;
+                    Animator.SetBool("ClimbEnd", false);
+                    _abilityReferences.Climing.HandleVertical(ref velocity);
+                }
+                else if (_abilityReferences.DoubleJump && _abilityReferences.DoubleJump.VerticalActive)
+                {
+                    LastUsedVerticalMoveAbility = MoveAbility.DoubleJump;
+                    _abilityReferences.DoubleJump.HandleVertical(ref velocity);
+                }
+                else if (_abilityReferences.Jump && _abilityReferences.Jump.VerticalActive)
+                {
+                    _abilityReferences.Jump.HandleVertical(ref velocity);
+                    LastUsedVerticalMoveAbility = MoveAbility.Jump;
+                }
+                else if (_abilityReferences.WallSlide && _abilityReferences.WallSlide.VerticalActive)
+                {
+                    LastUsedVerticalMoveAbility = MoveAbility.Wallslide;
+                    _abilityReferences.WallSlide.HandleVertical(ref velocity);
+                }
+                else
+                    velocity = new Vector2(velocity.x, 0);
+            }
 
         }
 

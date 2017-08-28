@@ -142,7 +142,7 @@ namespace CharacterController
         }
         public void Update()
         {
-            if (_startGrab && !VerticalActive)
+            if (_startGrab && _actionsController.LastUsedVerticalMoveAbility != MoveAbility.LedgeHanging)
                 _startGrab = false;
         }
     }
