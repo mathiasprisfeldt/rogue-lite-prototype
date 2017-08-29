@@ -34,8 +34,12 @@ namespace Special
             get {
                 if (!Active)
                     return Active;
+                var throwOnWAll = _actionsController.TriggerCheck.Sides.Left && _actionsController.LastHorizontalDirection < 0 
+                    || _actionsController.TriggerCheck.Sides.Right && _actionsController.LastHorizontalDirection > 0;
+
                 if (_actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Special.WasPressed
-                    && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None && _actionsController.ManaHandler.Mana >= _manaCost)
+                    && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None && _actionsController.ManaHandler.Mana >= _manaCost 
+                    && !throwOnWAll)
                 {
                     _actionsController.ManaHandler.Mana -= _manaCost;
                     _projectileSpawned = false;

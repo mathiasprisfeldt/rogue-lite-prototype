@@ -35,6 +35,8 @@ namespace ManaContainers
         private PlayerApplication _playerApplication;
 
 
+
+
         // Update is called once per frame
         void Update()
         {
@@ -72,7 +74,7 @@ namespace ManaContainers
                 }
 
             }
-            _overflowText.text = _manaHandler.Mana > _manaContrainers.Count ? (Mathf.Floor(_manaHandler.Mana - _manaContrainers.Count)) + "x" : "";
+            _overflowText.text = _manaHandler.Mana > _manaContrainers.Count ? "+" + (Mathf.Floor(_manaHandler.Mana - _manaContrainers.Count)) : "";
         }
 
         public void OnDestroy()

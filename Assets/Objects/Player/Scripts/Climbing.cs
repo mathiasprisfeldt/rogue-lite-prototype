@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AcrylecSkeleton.ModificationSystem;
 using CharacterController;
+using Controllers;
 using UnityEngine;
 
 /// <summary>
@@ -20,6 +22,20 @@ public class Climbing : MovementAbility
     private bool _climbing;
     private bool _fall;
     private float _fallTimer;
+    private float _cooldown;
+
+    public void Start()
+    {
+        if(_actionsController.HealthController != null)
+        _actionsController.HealthController.OnDamage.AddListener(OnDamage);
+    }
+
+    private void OnDamage(Character arg0)
+    {
+        _fall = true;
+        _fallTimer = .01f;
+        _cooldown = 0.2f;
+    }
 
     public override bool HorizontalActive
     {
@@ -45,10 +61,10 @@ public class Climbing : MovementAbility
             var isActive = _climeObject != null && (_actionsController.App.C.PlayerActions.Up || _actionsController.App.C.PlayerActions.Down)
                     || OnLadder(_actionsController.GroundCollisionCheck) != null && _actionsController.App.C.PlayerActions.Down;
 
-            if (!_climbing && isActive)
+            if (!_climbing && isActive && _cooldown <= 0)
                 _climbing = true;
 
-            return isActive || _climbing;
+            return (isActive || _climbing) && _cooldown <= 0;
         }
     }
 
@@ -121,6 +137,8 @@ public class Climbing : MovementAbility
 
         if (_fallTimer > 0)
             _fallTimer -= Time.deltaTime;
+        if (_cooldown > 0)
+            _cooldown -= Time.deltaTime;
 
         if (_fallTimer <= 0 && _fall)
         {

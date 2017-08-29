@@ -243,7 +243,7 @@ namespace Controllers
         /// Flips the characters visual direction and look direction.
         /// </summary>
         /// <param name="dir"></param>
-        public void Flip(float dir)
+        public virtual void Flip(float dir)
         {
             if (dir == 0 || dir == LookDirection)
                 return;
@@ -255,7 +255,7 @@ namespace Controllers
             }
             else
                 _model.transform.localScale = new Vector2(dir < 0 ? -1 : 1, transform.localScale.y);
-
+            
             LookDirection = Mathf.RoundToInt(dir);
         }
 

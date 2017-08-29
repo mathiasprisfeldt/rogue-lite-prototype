@@ -73,7 +73,7 @@ public class HealthContainers : MonoBehaviour
             }
             
         }
-        _overflowText.text = _healthController.HealthAmount > _healthContainers.Count ? (Mathf.Floor(_healthController.HealthAmount - _healthContainers.Count)) + "x" : "";
+        _overflowText.text = _healthController.HealthAmount > _healthContainers.Count ? "+" + (Mathf.Floor(_healthController.HealthAmount - _healthContainers.Count)) : "";
     }
 
     public void OnDestroy()

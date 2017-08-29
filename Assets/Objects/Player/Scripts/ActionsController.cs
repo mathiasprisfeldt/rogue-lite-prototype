@@ -415,6 +415,12 @@ namespace CharacterController
 
         }
 
+        public override void Flip(float dir)
+        {
+            if (dir != 0)
+                LastHorizontalDirection = dir > 0 ? 1 : -1;
+            base.Flip(dir);
+        }
 
         private void HandleHorizontalMovement(ref Vector2 velocity)
         {
@@ -423,7 +429,7 @@ namespace CharacterController
 
             LastUsedHorizontalMoveAbility = MoveAbility.None;
             Horizontal = App.C.PlayerActions.Horizontal;
-            LastHorizontalDirection = _model.transform.localScale.x > 0 ? 1 : -1;
+            //LastHorizontalDirection = _model.transform.localScale.x > 0 ? 1 : -1;
             if(!Combat)
                 Flip(Horizontal);
 
