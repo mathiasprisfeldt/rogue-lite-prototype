@@ -192,7 +192,13 @@ namespace Health
 
             //Apply knockback
             if (pos != Vector2.zero && !_isInvurnable && HealthAmount > 0)
-                _character.KnockbackHandler.AddForce(pos.DirectionTo(_character.Rigidbody.position) * _knockbackForce, _knockbackDuration);
+            {
+                var dir = pos.DirectionTo(_character.Rigidbody.position);
+                if (Math.Abs(dir.y) < 0.01f)
+                    dir.y = 1f;
+                _character.KnockbackHandler.AddForce( dir * _knockbackForce, _knockbackDuration);
+            }
+                
 
             //If we take damage show hit animation.
             //But dont show if we're invurnable (Only if we take dmg while being it)

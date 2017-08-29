@@ -348,6 +348,8 @@ MonoBehaviour:
   _hitbox: {fileID: 114190174452112448}
   _knockbackHandler: {fileID: 114539416218621420}
   _abilityHandler: {fileID: 0}
+  _manaHandler: {fileID: 0}
+  _bumberCollisionCheck: {fileID: 0}
   _startDirection: 1
   _damage: 1
   _movementSpeed: 100
@@ -373,8 +375,8 @@ MonoBehaviour:
   _dmgWhileInvurnable: 0
   _healthAmount: 1
   _healthInterval: {x: 0, y: 100}
-  _knockbackForce: 300
-  _knockbackDuration: 0.2
+  _knockbackForce: 600
+  _knockbackDuration: 0.1
   _responsibleGameObject: {fileID: 1872977180287926}
   _destroyOnDead: 0
   _onDead:
@@ -388,6 +390,11 @@ MonoBehaviour:
     m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114347498557357304}
+  OnHealEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!114 &114454672658061792
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -435,7 +442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cbd00e50cc37944ba0ec9840c4d6c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lockMovement: 0
+  _lockMovement: 1
 --- !u!114 &114562797456618854
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -451,8 +458,8 @@ MonoBehaviour:
   _character: {fileID: 114347498557357304}
   _enemyAttackAnim: {fileID: 114478443455039304}
   _viewRadius: 5
-  _attackCooldown: 1
-  _indicatorDuration: 0.5
+  _attackCooldown: 0.5
+  _indicatorDuration: 0
   _targetBehind: 1
   _turnSpeed: 0.1
   _canBackPaddle: 0

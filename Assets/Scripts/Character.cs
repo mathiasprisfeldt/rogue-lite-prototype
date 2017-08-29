@@ -59,6 +59,9 @@ namespace Controllers
         [SerializeField]
         private ManaHandler _manaHandler;
 
+        [SerializeField]
+        private CollisionCheck _bumberCollisionCheck;
+
         [Header("Settings:")]
         [SerializeField, Tooltip("Which way is it facing at start?")]
         private int _startDirection = -1;
@@ -292,7 +295,7 @@ namespace Controllers
             if (!OnGround)
                 return;
 
-            if (!PhysicialCollisionCheck || !PhysicialCollisionCheck.CollidersToCheck.Any())
+            if (!_bumberCollisionCheck || !_bumberCollisionCheck.CollidersToCheck.Any())
             {
                 Debug.LogWarning("CheckSideBumping requires physical collider reference to function properly.", transform);
                 return;
@@ -313,8 +316,8 @@ namespace Controllers
             bool rightHit = Physics2D.RaycastNonAlloc(rightOrigin, direction * length, _bumpingResults, length, LayerMask.GetMask("Platform")) != 0;
 
             //If we cant find physical collider checker we log it and move on.
-            bool leftBump = PhysicialCollisionCheck.Left;
-            bool rightBump = PhysicialCollisionCheck.Right;
+            bool leftBump = _bumberCollisionCheck.Left;
+            bool rightBump = _bumberCollisionCheck.Right;
 
             if (!leftHit || leftBump)
                 BumpingDirection = -1;

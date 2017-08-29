@@ -2793,6 +2793,7 @@ MonoBehaviour:
   _knockbackHandler: {fileID: 114236378889174594}
   _abilityHandler: {fileID: 114839822949810884}
   _manaHandler: {fileID: 114721248807424670}
+  _bumberCollisionCheck: {fileID: 0}
   _startDirection: -1
   _damage: 1
   _movementSpeed: 250
@@ -3768,7 +3769,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1219576123015342}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a4272d3062b810a468bebb41011304db, type: 3}
   m_Name: 
@@ -3908,8 +3909,8 @@ MonoBehaviour:
   _dmgWhileInvurnable: 0
   _healthAmount: 3
   _healthInterval: {x: 0, y: 100}
-  _knockbackForce: 300
-  _knockbackDuration: 0.2
+  _knockbackForce: 600
+  _knockbackDuration: 0.1
   _responsibleGameObject: {fileID: 1182516208491314}
   _destroyOnDead: 1
   _onDead:

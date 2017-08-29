@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GivePlayerDamage : MonoBehaviour
+public class GiveDamage : MonoBehaviour
 {
     [SerializeField]
     private float _damage;
@@ -19,6 +19,9 @@ public class GivePlayerDamage : MonoBehaviour
 
     [SerializeField]
     private LayerMask _layersMask;
+
+    [SerializeField]
+    private List<string> _tags = new List<string>();
 
     private bool _hasRotated;
 
@@ -40,7 +43,7 @@ public class GivePlayerDamage : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && _layersMask == (_layersMask | (1 << collision.gameObject.layer)))
+        if (_tags.Contains(collision.gameObject.tag) && _layersMask == (_layersMask | (1 << collision.gameObject.layer)))
         {
             var h = collision.GetComponent<CollisionCheck>();
             if (h)
