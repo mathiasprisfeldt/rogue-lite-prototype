@@ -376,6 +376,13 @@ namespace CharacterController
                     LastUsedVerticalMoveAbility = MoveAbility.Dash;
                     _abilityReferences.Dash.HandleVertical(ref velocity);
                 }
+                else if (_abilityReferences.Climing.VerticalActive)
+                {
+                    LastUsedVerticalMoveAbility = MoveAbility.Climbing;
+                    ClimbEnd = false;
+                    Animator.SetBool("ClimbEnd", false);
+                    _abilityReferences.Climing.HandleVertical(ref velocity);
+                }
                 else if (_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive)
                 {
                     LastUsedVerticalMoveAbility = MoveAbility.LedgeHanging;
@@ -386,13 +393,6 @@ namespace CharacterController
                 {
                     LastUsedVerticalMoveAbility = MoveAbility.WallJump;
                     _abilityReferences.WallJump.HandleVertical(ref velocity);
-                }
-                else if (_abilityReferences.Climing.VerticalActive)
-                {
-                    LastUsedVerticalMoveAbility = MoveAbility.Climbing;
-                    ClimbEnd = false;
-                    Animator.SetBool("ClimbEnd", false);
-                    _abilityReferences.Climing.HandleVertical(ref velocity);
                 }
                 else if (_abilityReferences.DoubleJump && _abilityReferences.DoubleJump.VerticalActive)
                 {

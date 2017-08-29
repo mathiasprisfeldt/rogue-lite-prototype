@@ -475,6 +475,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: InCombat
     m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: ClimbEnd
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102751716408075330}
   m_Solo: 0
