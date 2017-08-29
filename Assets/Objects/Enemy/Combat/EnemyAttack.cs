@@ -125,6 +125,7 @@ namespace Enemy
             _indicatorTimer = Context.M.IndicatorDuration;
             _isAttacking = false;
             _canAttack = false;
+            SetCombat(false);
         }
 
         /// <summary>
@@ -137,7 +138,11 @@ namespace Enemy
 
             //Play attack animation
             if (Context.M.Character.MainAnimator && Context.M.AttackAnim)
+            {
                 Context.M.Character.MainAnimator.SetTrigger("Attack");
+                SetCombat(true);
+            }
+                
             else
                 Attack();
         }
@@ -169,6 +174,11 @@ namespace Enemy
             }
 
             return false;
+        }
+
+        public void SetCombat(bool boolean)
+        {
+            Context.M.Character.MainAnimator.SetBool("InCombat", boolean);
         }
     }
 }

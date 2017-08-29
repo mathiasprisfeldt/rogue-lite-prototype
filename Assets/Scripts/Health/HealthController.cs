@@ -82,6 +82,8 @@ namespace Health
 
         #endregion
 
+        public UnityEvent OnHealEvent;
+
         public bool IsDead
         {
             get { return _isDead; }
@@ -186,11 +188,11 @@ namespace Health
                     break;
             }
 
-            //Apply knockback
-            if (pos != Vector2.zero && !_isInvurnable)
-                _character.KnockbackHandler.AddForce(pos.DirectionTo(_character.Rigidbody.position) * _knockbackForce, _knockbackDuration);
-
             HealthAmount -= amountToDmg;
+
+            //Apply knockback
+            if (pos != Vector2.zero && !_isInvurnable && HealthAmount > 0)
+                _character.KnockbackHandler.AddForce(pos.DirectionTo(_character.Rigidbody.position) * _knockbackForce, _knockbackDuration);
 
             //If we take damage show hit animation.
             //But dont show if we're invurnable (Only if we take dmg while being it)
@@ -218,6 +220,7 @@ namespace Health
         public void Heal(float health)
         {
             HealthAmount += health;
+            OnHealEvent.Invoke();
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AcrylecSkeleton.Utilities;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
+using Controllers;
 using Health;
 using Managers;
 using TMPro;
@@ -26,18 +27,12 @@ public class HealthContainers : MonoBehaviour
     [SerializeField]
     private Sprite _full;
 
-    private int _oldHealth;
     private PlayerApplication _playerApplication;
 
 
-    private void FindPlayer()
+    private void OnDamage(Character arg0)
     {
-        _playerApplication = GameObject.FindObjectOfType<PlayerApplication>();
-        if (_playerApplication && _playerApplication.C.Health != null)
-        {
-            _healthController = _playerApplication.C.Health;
-            UpdateHealthbar();
-        }
+        UpdateHealthbar();
     }
 
     // Update is called once per frame
@@ -48,14 +43,13 @@ public class HealthContainers : MonoBehaviour
             _playerApplication = GameManager.Instance.Player;
             _healthController = _playerApplication.C.Health;
             UpdateHealthbar();
-        }
-        if (_healthController)
-        {
-            if (_healthController.HealthAmount != _oldHealth)
-                UpdateHealthbar();
-            _oldHealth = (int)_healthController.HealthAmount;
-        }
-	    
+            if (_healthController)
+            {
+                _healthController.OnDamage.AddListener(OnDamage);
+                _healthController.OnHealEvent.AddListener(UpdateHealthbar);
+            }
+                
+        }	    
     }
 
     private void UpdateHealthbar()
@@ -80,5 +74,16 @@ public class HealthContainers : MonoBehaviour
             
         }
         _overflowText.text = _healthController.HealthAmount > _healthContainers.Count ? (Mathf.Floor(_healthController.HealthAmount - _healthContainers.Count)) + "x" : "";
+    }
+
+    public void OnDestroy()
+    {
+        if (_healthController)
+        {
+            _healthController.OnDamage.RemoveListener(OnDamage);
+            _healthController.OnHealEvent.RemoveListener(UpdateHealthbar);
+
+        }
+
     }
 }

@@ -435,6 +435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cbd00e50cc37944ba0ec9840c4d6c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lockMovement: 0
 --- !u!114 &114562797456618854
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -458,6 +459,7 @@ MonoBehaviour:
   _turnOnBackstab: 1
   _engageSpeed: 50
   _hasWallHack: 1
+  _isFlying: 0
   _neverForget: 1
   _target: {fileID: 0}
 --- !u!114 &114656296945533810

@@ -117,6 +117,9 @@ MonoBehaviour:
   _DamageOverTime: 0
   _autoRotate: 0
   _tileBehavior: {fileID: 0}
+  _layersMask:
+    serializedVersion: 2
+    m_Bits: 16384
 --- !u!212 &212450191870236806
 SpriteRenderer:
   m_ObjectHideFlags: 1

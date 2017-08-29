@@ -86,6 +86,9 @@ MonoBehaviour:
   _DamageOverTime: 0
   _autoRotate: 1
   _tileBehavior: {fileID: 114625380300017496}
+  _layersMask:
+    serializedVersion: 2
+    m_Bits: 16384
 --- !u!114 &114625380300017496
 MonoBehaviour:
   m_ObjectHideFlags: 1

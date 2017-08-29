@@ -110,7 +110,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 1
-  m_UsedByComposite: 0
+  m_UsedByComposite: 1
   m_Offset: {x: 0, y: 0.47}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resistance: 0
-  _top: {fileID: 1142595412628232}
+  _top: {fileID: 61974170586207122}
 --- !u!212 &212822601863995860
 SpriteRenderer:
   m_ObjectHideFlags: 1

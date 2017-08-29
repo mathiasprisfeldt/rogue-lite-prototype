@@ -4,6 +4,7 @@ using Abilitys;
 using Health;
 using UnityEngine;
 using Knockbacks;
+using Mana;
 
 namespace Controllers
 {
@@ -54,6 +55,9 @@ namespace Controllers
 
         [SerializeField]
         private AbilityHandler _abilityHandler;
+
+        [SerializeField]
+        private ManaHandler _manaHandler;
 
         [Header("Settings:")]
         [SerializeField, Tooltip("Which way is it facing at start?")]
@@ -168,6 +172,12 @@ namespace Controllers
         {
             get { return _abilityHandler; }
             set { _abilityHandler = value; }
+        }
+
+        public ManaHandler ManaHandler
+        {
+            get { return _manaHandler; }
+            set { _manaHandler = value; }
         }
 
         public bool IsFlying

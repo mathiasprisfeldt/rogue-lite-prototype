@@ -17,6 +17,9 @@ public class GivePlayerDamage : MonoBehaviour
     [SerializeField]
     private TileBehaviour _tileBehavior;
 
+    [SerializeField]
+    private LayerMask _layersMask;
+
     private bool _hasRotated;
 
     public void Update()
@@ -37,7 +40,7 @@ public class GivePlayerDamage : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player" && _layersMask == (_layersMask | (1 << collision.gameObject.layer)))
         {
             var h = collision.GetComponent<CollisionCheck>();
             if (h)

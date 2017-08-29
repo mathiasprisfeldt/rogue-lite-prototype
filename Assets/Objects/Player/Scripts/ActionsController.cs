@@ -7,6 +7,7 @@ using UnityEngine;
 using AcrylecSkeleton.ModificationSystem;
 using Combat;
 using Controllers;
+using Mana;
 using Special;
 
 namespace CharacterController
@@ -55,6 +56,7 @@ namespace CharacterController
 
         [SerializeField]
         private Transform _throwPoint;
+
 
         private Vector2 _velocity;
 
@@ -170,6 +172,8 @@ namespace CharacterController
             get { return _onewayCheck; }
             set { _onewayCheck = value; }
         }
+
+
 
 
         // Update is called once per frame
@@ -420,7 +424,8 @@ namespace CharacterController
             LastUsedHorizontalMoveAbility = MoveAbility.None;
             Horizontal = App.C.PlayerActions.Horizontal;
             LastHorizontalDirection = _model.transform.localScale.x > 0 ? 1 : -1;
-            Flip(Horizontal);
+            if(!Combat)
+                Flip(Horizontal);
 
             if (CollisionCheck.Sides.Left && Horizontal < 0)
                 Horizontal = 0;

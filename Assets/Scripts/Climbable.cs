@@ -11,7 +11,7 @@ public class Climbable : MonoBehaviour
     private float resistance;
 
     [SerializeField]
-    private GameObject _top;
+    private Collider2D _top;
 
     public float Resistance
     {
@@ -26,7 +26,7 @@ public class Climbable : MonoBehaviour
         }
     }
 
-    public GameObject Top
+    public Collider2D Top
     {
         get { return _top; }
         set { _top = value; }

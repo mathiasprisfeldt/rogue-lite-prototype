@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: dfd6658ccb57a3941894b47e7fb3a922
-timeCreated: 1503439621
+guid: 3c8e2f6705f47314db133b72bdcaf3ac
+timeCreated: 1503995396
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -14,8 +14,6 @@ TextureImporter:
     21300014: RoboBat_bat_Hit_7
     21300016: RoboBat_bat_Hit_8
     21300018: RoboBat_bat_Hit_9
-    21300020: RoboBat_bat_Hit_10
-    21300022: RoboBat_bat_Hit_11
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -91,14 +89,6 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: WebGL
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -107,11 +97,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 261
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
+        y: 320
+        width: 314
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -120,12 +110,12 @@ TextureImporter:
       name: RoboBat_bat_Hit_1
       rect:
         serializedVersion: 2
-        x: 361
-        y: 261
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
+        x: 314
+        y: 320
+        width: 314
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -134,12 +124,12 @@ TextureImporter:
       name: RoboBat_bat_Hit_2
       rect:
         serializedVersion: 2
-        x: 722
-        y: 261
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
+        x: 628
+        y: 320
+        width: 314
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -148,12 +138,12 @@ TextureImporter:
       name: RoboBat_bat_Hit_3
       rect:
         serializedVersion: 2
-        x: 1083
-        y: 261
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
+        x: 942
+        y: 320
+        width: 314
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -162,12 +152,12 @@ TextureImporter:
       name: RoboBat_bat_Hit_4
       rect:
         serializedVersion: 2
-        x: 1444
-        y: 261
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
+        x: 1256
+        y: 320
+        width: 314
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -176,12 +166,12 @@ TextureImporter:
       name: RoboBat_bat_Hit_5
       rect:
         serializedVersion: 2
-        x: 1805
-        y: 261
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
+        x: 1570
+        y: 320
+        width: 314
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -190,12 +180,12 @@ TextureImporter:
       name: RoboBat_bat_Hit_6
       rect:
         serializedVersion: 2
-        x: 2166
-        y: 261
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
+        x: 1884
+        y: 320
+        width: 314
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -204,12 +194,12 @@ TextureImporter:
       name: RoboBat_bat_Hit_7
       rect:
         serializedVersion: 2
-        x: 2527
-        y: 261
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
+        x: 2198
+        y: 320
+        width: 314
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -220,10 +210,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
+        width: 314
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -232,40 +222,12 @@ TextureImporter:
       name: RoboBat_bat_Hit_9
       rect:
         serializedVersion: 2
-        x: 361
+        x: 2198
         y: 0
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: RoboBat_bat_Hit_10
-      rect:
-        serializedVersion: 2
-        x: 722
-        y: 0
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: RoboBat_bat_Hit_11
-      rect:
-        serializedVersion: 2
-        x: 1083
-        y: 0
-        width: 361
-        height: 261
-      alignment: 9
-      pivot: {x: 0.8, y: 0.2}
+        width: 314
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

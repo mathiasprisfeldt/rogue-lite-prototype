@@ -21,6 +21,9 @@ namespace Special
         [SerializeField]
         private ActionsController _actionsController;
 
+        [SerializeField]
+        private int _manaCost;
+
         private bool _throwActive;
         private float _cooldownTimer;
         private bool _projectileSpawned;
@@ -32,8 +35,9 @@ namespace Special
                 if (!Active)
                     return Active;
                 if (_actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Special.WasPressed
-                    && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None)
+                    && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None && _actionsController.ManaHandler.Mana >= _manaCost)
                 {
+                    _actionsController.ManaHandler.Mana -= _manaCost;
                     _projectileSpawned = false;
                     _throwActive = true;
                     _cooldownTimer = _cooldown;

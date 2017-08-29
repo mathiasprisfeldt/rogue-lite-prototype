@@ -1,4 +1,5 @@
 using AcrylecSkeleton.MVC;
+using CharacterController;
 using Controllers;
 using Health;
 using RogueLiteInput;
@@ -14,12 +15,12 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
     public class PlayerController : Controller<PlayerApplication>
     {
         [SerializeField]
-        private Character _character;
+        private ActionsController _character;
 
         public InputActions PlayerActions { get; set; }
         public HealthController Health { get; set; }
 
-        public Character Character
+        public ActionsController Character
         {
             get { return _character; }
             set { _character = value; }

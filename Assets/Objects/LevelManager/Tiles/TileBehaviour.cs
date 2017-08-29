@@ -82,7 +82,7 @@ public class TileBehaviour : MonoBehaviour
             {
                 Climbable clim = down.GoInstance.GetComponent<Climbable>();
                 if (clim != null)
-                    clim.Top.SetActive(false);
+                    clim.Top.gameObject.SetActive(false);
             }
 
         }
@@ -97,12 +97,15 @@ public class TileBehaviour : MonoBehaviour
             RightCollision = true;
         }
 
-        var spr = GetComponent<SpriteRenderer>();
-        Sprite newSprite = null;
+        
+        
 
 
         if (_autoTexturize)
         {
+            var spr = GetComponent<SpriteRenderer>();
+            Sprite newSprite = spr.sprite;
+
             if (LeftCollision && !RightCollision)
                 newSprite = _rightTexture;
 
@@ -158,11 +161,19 @@ public class TileBehaviour : MonoBehaviour
                     pb.Left = false;
                 if (tb && !tb.RightCollision)
                     pb.Right = false;
+                if (tb && tb.TopCollision)
+                    pb.Istop = false;
 
                 pb.Tiles.Add(this);
                 target.transform.SetParent(parent.transform, true);
                 Platforms p = superParent.GetComponent<Platforms>();
                 p.ParentToThis(parent.transform, pb.Tiles.Count, false);
+
+                Climbable climbable = target.GetComponent<Climbable>();
+                if (climbable != null)
+                {
+                    climbable.Top.transform.SetParent(parent.transform,true);
+                }
             }
         }    
         
