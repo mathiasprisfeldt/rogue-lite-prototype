@@ -126,6 +126,8 @@ namespace Enemy
             _isAttacking = false;
             _canAttack = false;
             SetCombat(false);
+            if (Context.M.Character.AttackIndication)
+                Context.M.Character.AttackIndication.HideIndicator(.1f);
         }
 
         /// <summary>
@@ -135,6 +137,9 @@ namespace Enemy
         private void PreAttack()
         {
             _isAttacking = true;
+            if(Context.M.Character.AttackIndication)
+                Context.M.Character.AttackIndication.ShowIndicator(.1f);
+
 
             //Play attack animation
             if (Context.M.Character.MainAnimator && Context.M.AttackAnim)

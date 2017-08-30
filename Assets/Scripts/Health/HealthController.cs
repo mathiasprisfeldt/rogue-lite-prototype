@@ -213,10 +213,13 @@ namespace Health
                     Character.MainAnimator.SetTrigger("Hit");
             }
 
+            if (!IsInvurnable)
+                OnDamage.Invoke(from);
+
             if (giveInvurnability || _invurnableOnDmg)
                 StartCoroutine(StartInvurnability(_invurnabilityDuration));
 
-            OnDamage.Invoke(from);
+            
         }
 
         /// <summary>

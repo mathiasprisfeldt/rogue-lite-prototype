@@ -1,5 +1,6 @@
 ﻿using CharacterController;
 using Combat;
+using Meele;
 using Special;
 using UnityEngine;
 
@@ -20,5 +21,6 @@ namespace Abilitys
         public Melee Melee;
         public Jump Jump;
         public Climbing Climing;
+        public DownMeele DownMeele;
     }
 }

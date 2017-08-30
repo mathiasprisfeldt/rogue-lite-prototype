@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Linq;
 using Abilitys;
+using Flash;
 using Health;
+using Indication;
 using UnityEngine;
 using Knockbacks;
 using Mana;
@@ -62,6 +64,9 @@ namespace Controllers
         [SerializeField]
         private CollisionCheck _bumberCollisionCheck;
 
+        [SerializeField]
+        private AttackIndication _attackIndication;
+
         [Header("Settings:")]
         [SerializeField, Tooltip("Which way is it facing at start?")]
         private int _startDirection = -1;
@@ -77,6 +82,7 @@ namespace Controllers
 
         [SerializeField]
         private bool _flipWithVelocity;
+
 
         [SerializeField, Tooltip("If on it will flip with rotation instead of scaling.")]
         private bool _doFlipWithRotation = true;
@@ -186,6 +192,12 @@ namespace Controllers
         public bool IsFlying
         {
             get { return _flySpeed > 0; }
+        }
+
+        public AttackIndication AttackIndication
+        {
+            get { return _attackIndication; }
+            set { _attackIndication = value; }
         }
 
         protected virtual void Awake()

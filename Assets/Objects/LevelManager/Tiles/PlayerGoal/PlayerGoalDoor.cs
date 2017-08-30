@@ -54,7 +54,7 @@ public class PlayerGoalDoor : MonoBehaviour
             }
         }
         _spriteRenderer.sprite = _isOpen ? _open : _closed;
-        _text.text = _currentNumberOfEnemies + "/" + _numberOfEnemies;
+        _text.text = _numberOfEnemies - _currentNumberOfEnemies + "/" + _numberOfEnemies;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

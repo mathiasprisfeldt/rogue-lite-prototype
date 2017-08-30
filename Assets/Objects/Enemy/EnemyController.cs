@@ -71,6 +71,9 @@ namespace Enemy
 
 	    void Update()
 	    {
+            if (App.M.Character.HealthController.IsDead)
+                return;
+
 	        PlayerApplication ply = GameManager.Instance.Player;
 
 	        Vector2 ownPos = App.M.Character.Origin;
@@ -215,8 +218,10 @@ namespace Enemy
 	    private void OnDead()
 	    {
 	        IsTurning = false;
+            if(App.M.Character.AttackIndication.Show)
+                App.M.Character.AttackIndication.HideIndicator(.1f);
 
-	        if (GameManager.Instance != null)
+            if (GameManager.Instance != null)
 	            GameManager.Instance.EnemiesChange.Invoke();
         }
     }

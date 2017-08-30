@@ -19,7 +19,7 @@ namespace CharacterController
 
     public enum CombatAbility
     {
-        None, Melee, Throw
+        None, Melee, Throw, DownMelee
     }
 
     public class ActionsController : Character
@@ -47,6 +47,9 @@ namespace CharacterController
 
         [SerializeField]
         private CollisionCheck _onewayCheck;
+
+        [SerializeField]
+        private CollisionCheck _downCheck;
 
         [SerializeField]
         private Animator _animator;
@@ -149,6 +152,7 @@ namespace CharacterController
         public Trigger StartThrow { get; set; }
         public Trigger StartMelee { get; set; }
         public Trigger StartClimbing { get; set; }
+        public Trigger StartDownMeele { get; set; }
 
         public float LastHorizontalDirection { get; set; }
         public float Horizontal { get; set; }
@@ -173,7 +177,11 @@ namespace CharacterController
             set { _onewayCheck = value; }
         }
 
-
+        public CollisionCheck DownCheck
+        {
+            get { return _downCheck; }
+            set { _downCheck = value; }
+        }
 
 
         // Update is called once per frame
@@ -181,7 +189,7 @@ namespace CharacterController
         {
             base.Update();
 
-            _animator.SetFloat("Health",HealthController.HealthAmount   );
+            _animator.SetFloat("Health", HealthController.HealthAmount);
 
             if (App.C.PlayerActions != null)
                 App.C.PlayerActions.UpdateProxy();
@@ -200,24 +208,25 @@ namespace CharacterController
             StartJump = new Trigger();
             StartMelee = new Trigger();
             StartClimbing = new Trigger();
-    }
+            StartDownMeele = new Trigger();
+        }
 
         void FixedUpdate()
         {
             _velocity = new Vector2(0, 0);
-                       
+
             HandleCombat();
             HandleHorizontalMovement(ref _velocity);
-            HandleVerticalMovement(ref _velocity);  
+            HandleVerticalMovement(ref _velocity);
             HandleAnimationParameters();
 
             float y = 0;
             float x = 0;
 
-            x = _velocity.x*Time.fixedDeltaTime;
-            y = Velocity.y != 0 || _knockbackHandler.Active ? _velocity.y*Time.fixedDeltaTime : Rigidbody.velocity.y;
+            x = _velocity.x * Time.fixedDeltaTime;
+            y = Velocity.y != 0 || _knockbackHandler.Active ? _velocity.y * Time.fixedDeltaTime : Rigidbody.velocity.y;
 
-            SetVelocity(new Vector2(x,y ));                
+            SetVelocity(new Vector2(x, y));
 
             if (_dashTimer > 0)
                 _dashTimer -= Time.fixedDeltaTime;
@@ -225,8 +234,8 @@ namespace CharacterController
             HandleMaxSpeed();
             if (App.C.PlayerActions != null)
                 App.C.PlayerActions.ResetProxy();
-            _animator.SetBool("MovingUp",Rigidbody.velocity.y > 0);
-            _animator.SetFloat("Speed",Mathf.Clamp01(new Vector2(Horizontal,Vertical).magnitude));
+            _animator.SetBool("MovingUp", Rigidbody.velocity.y > 0);
+            _animator.SetFloat("Speed", Mathf.Clamp01(new Vector2(Horizontal, Vertical).magnitude));
         }
 
         private bool HandleOnewayColliders()
@@ -240,7 +249,7 @@ namespace CharacterController
                 {
                     if (c.gameObject.tag == "OneWayCollider")
                     {
-                        ModificationHandler.AddModification(new TemporaryLayerChange("ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c,OnewayCheck,0));
+                        ModificationHandler.AddModification(new TemporaryLayerChange("ChangeLayerOf" + c.gameObject.name, "NonPlayerCollision", c, OnewayCheck, 0));
                         collisionHappened = true;
                     }
 
@@ -251,10 +260,10 @@ namespace CharacterController
 
         private void HandleMaxSpeed()
         {
-            var predictGravity = Rigidbody.velocity.y + Physics2D.gravity.y*Rigidbody.gravityScale;
+            var predictGravity = Rigidbody.velocity.y + Physics2D.gravity.y * Rigidbody.gravityScale;
             if (predictGravity <= -_maxFallSpeed)
             {
-                Rigidbody.velocity -= new Vector2(0,Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed))*Time.fixedDeltaTime);
+                Rigidbody.velocity -= new Vector2(0, Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed)) * Time.fixedDeltaTime);
 
             }
         }
@@ -269,7 +278,7 @@ namespace CharacterController
             else
                 State = CharacterState.InAir;
 
-            if(State == CharacterState.InAir)
+            if (State == CharacterState.InAir)
                 InAirTImer += Time.deltaTime;
             else if (InAirTImer > 0)
                 InAirTImer = 0;
@@ -299,12 +308,12 @@ namespace CharacterController
             //Dash
             if (LastUsedHorizontalMoveAbility == MoveAbility.Dash && StartDash.Value && !Combat)
                 Animator.SetTrigger("Dash");
-             
+
 
             //Melee
             if (StartMelee.Value)
                 Animator.SetTrigger("Melee");
-                
+
 
             //Throw
             if (StartThrow.Value)
@@ -323,8 +332,12 @@ namespace CharacterController
                 Animator.SetTrigger("Combat");
 
             //Climb
-            if(StartClimbing.Value)
+            if (StartClimbing.Value)
                 Animator.SetTrigger("Climb");
+
+            //SwordDown
+            if (StartDownMeele.Value)
+                Animator.SetTrigger("SwordDown");
 
         }
 
@@ -333,6 +346,10 @@ namespace CharacterController
             if (_abilityReferences.Throw && _abilityReferences.Throw.KnifeActive)
             {
                 BeginCombat(CombatAbility.Throw);
+            }
+            else if (_abilityReferences.DownMeele && _abilityReferences.DownMeele.Active)
+            {
+                BeginCombat(CombatAbility.DownMelee);
             }
             else if (_abilityReferences.Melee && _abilityReferences.Melee.Active)
             {
@@ -343,7 +360,7 @@ namespace CharacterController
                 LastUsedCombatAbility = CombatAbility.None;
                 Combat = false;
             }
-                
+
         }
 
 
@@ -353,7 +370,7 @@ namespace CharacterController
             {
                 StartCombat.Value = true;
                 LastUsedCombatAbility = combatAbility;
-                
+
             }
 
             Combat = true;
@@ -376,6 +393,22 @@ namespace CharacterController
                     LastUsedVerticalMoveAbility = MoveAbility.Dash;
                     _abilityReferences.Dash.HandleVertical(ref velocity);
                 }
+                else if (_abilityReferences.WallJump && _abilityReferences.WallJump.VerticalActive &&
+         !(_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive))
+                {
+                    LastUsedVerticalMoveAbility = MoveAbility.WallJump;
+                    _abilityReferences.WallJump.HandleVertical(ref velocity);
+                }
+                else if (_abilityReferences.Jump && _abilityReferences.Jump.VerticalActive)
+                {
+                    _abilityReferences.Jump.HandleVertical(ref velocity);
+                    LastUsedVerticalMoveAbility = MoveAbility.Jump;
+                }
+                else if (_abilityReferences.DoubleJump && _abilityReferences.DoubleJump.VerticalActive)
+                {
+                    LastUsedVerticalMoveAbility = MoveAbility.DoubleJump;
+                    _abilityReferences.DoubleJump.HandleVertical(ref velocity);
+                }
                 else if (_abilityReferences.Climing.VerticalActive)
                 {
                     LastUsedVerticalMoveAbility = MoveAbility.Climbing;
@@ -387,22 +420,6 @@ namespace CharacterController
                 {
                     LastUsedVerticalMoveAbility = MoveAbility.LedgeHanging;
                     _abilityReferences.LedgeHanging.HandleVertical(ref velocity);
-                }
-                else if (_abilityReferences.WallJump && _abilityReferences.WallJump.VerticalActive &&
-                         !(_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive))
-                {
-                    LastUsedVerticalMoveAbility = MoveAbility.WallJump;
-                    _abilityReferences.WallJump.HandleVertical(ref velocity);
-                }
-                else if (_abilityReferences.DoubleJump && _abilityReferences.DoubleJump.VerticalActive)
-                {
-                    LastUsedVerticalMoveAbility = MoveAbility.DoubleJump;
-                    _abilityReferences.DoubleJump.HandleVertical(ref velocity);
-                }
-                else if (_abilityReferences.Jump && _abilityReferences.Jump.VerticalActive)
-                {
-                    _abilityReferences.Jump.HandleVertical(ref velocity);
-                    LastUsedVerticalMoveAbility = MoveAbility.Jump;
                 }
                 else if (_abilityReferences.WallSlide && _abilityReferences.WallSlide.VerticalActive)
                 {
@@ -430,7 +447,7 @@ namespace CharacterController
             LastUsedHorizontalMoveAbility = MoveAbility.None;
             Horizontal = App.C.PlayerActions.Horizontal;
             //LastHorizontalDirection = _model.transform.localScale.x > 0 ? 1 : -1;
-            if(!Combat)
+            if (!Combat)
                 Flip(Horizontal);
 
             if (CollisionCheck.Sides.Left && Horizontal < 0)
@@ -439,18 +456,18 @@ namespace CharacterController
             if (CollisionCheck.Sides.Right && Horizontal > 0)
                 Horizontal = 0;
 
-            velocity += new Vector2(MovementSpeed* Horizontal, 0);
-            
+            velocity += new Vector2(MovementSpeed * Horizontal, 0);
+
             if (_abilityReferences.Dash && _abilityReferences.Dash.HorizontalActive)
             {
                 LastUsedHorizontalMoveAbility = MoveAbility.Dash;
-                _abilityReferences.Dash.HandleHorizontal(ref velocity);           
+                _abilityReferences.Dash.HandleHorizontal(ref velocity);
             }
-            else if (_abilityReferences.WallJump && _abilityReferences.WallJump.HorizontalActive 
+            else if (_abilityReferences.WallJump && _abilityReferences.WallJump.HorizontalActive
                 && !(_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive))
             {
                 LastUsedHorizontalMoveAbility = MoveAbility.WallJump;
-                _abilityReferences.WallJump.HandleHorizontal(ref velocity);                
+                _abilityReferences.WallJump.HandleHorizontal(ref velocity);
             }
             else if (_abilityReferences.Climing && _abilityReferences.Climing.HorizontalActive)
             {
@@ -505,7 +522,7 @@ namespace CharacterController
         {
             if (_timer > 0)
                 _timer -= UnityEngine.Time.deltaTime;
-            if(!_collisonCheck.Sides.TargetColliders.Contains(_targetCollider) && _timer <= 0)
+            if (!_collisonCheck.Sides.TargetColliders.Contains(_targetCollider) && _timer <= 0)
                 ModificationHandler.RemoveModification(this);
         }
 
