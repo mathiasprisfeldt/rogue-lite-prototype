@@ -497,12 +497,13 @@ MonoBehaviour:
   _targetBehind: 0
   _turnSpeed: 1
   _canBackPaddle: 1
-  _turnOnBackstab: 1
+  _turnOnBackstab: 0
   _engageSpeed: 0
   _hasWallHack: 0
   _isFlying: 0
   _neverForget: 0
   _staggerDuration: 0.5
+  _memoryDuration: 2
   _target: {fileID: 0}
 --- !u!114 &114120916525324648
 MonoBehaviour:

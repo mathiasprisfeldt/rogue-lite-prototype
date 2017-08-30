@@ -4,6 +4,7 @@ using System.Linq;
 using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.MVC;
 using Archon.SwissArmyLib.Automata;
+using Archon.SwissArmyLib.Events;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using Controllers;
 using Managers;
@@ -16,17 +17,20 @@ namespace Enemy
 	/// Created by: MP-L
 	/// Data: Monday, August 14, 2017
 	/// </summary>
-	public class EnemyController : Controller<EnemyApplication>
+	public class EnemyController : Controller<EnemyApplication>, TellMeWhen.ITimerCallback
 	{
+	    private const int EVENT_TURN = 0,
+	        EVENT_STAGGING = 1,
+            EVENT_MEMORY = 2;
+
         private readonly RaycastHit2D[] viewResults = new RaycastHit2D[1]; //Array used to store results from testing player view.
 	    private List<EnemyState> _states;
 	    private float _whereToTurnTo;
-	    private float _turnTimer;
-	    private float _staggerTimer;
 
 	    public Vector2 ToPlayer { get; private set; }
 	    public bool IsTurning { get; private set; }
 	    public bool IsStagging { get; set; }
+	    public bool IsRemembering { get; set; } //Is the enemy remembering the player?
 
 	    public bool IsTargetBehind
 	    {
@@ -78,23 +82,11 @@ namespace Enemy
 	        Vector2 ownPos = App.M.Character.Origin;
 	        Vector2 plyPos = ply ? ply.transform.position.ToVector2() : Vector2.zero;
 
-            //Calculate if the enemy can turn around.
-            if (IsTurning)
-	        {
-	            _turnTimer -= Time.deltaTime;
-
-	            if (_turnTimer <= 0)
-	            {
-	                App.M.Character.Flip(_whereToTurnTo);
-	                IsTurning = false;
-	            }
-            }
-
 	        ToPlayer = plyPos - ownPos;
 	        //Checking if player is in sight
 	        if (ply &&
-	            ToPlayer.magnitude <=
-	            App.M.ViewRadius)
+                !IsRemembering &&
+	            ToPlayer.magnitude <= App.M.ViewRadius)
 	        {
                 /* 
                  * First off, if the target is behind us and we aren't 
@@ -119,25 +111,14 @@ namespace Enemy
 	                App.M.Target = null;
 	            }
 
-	            //If target is behind the enemy and is targeted and we're arent turning, turn around.
-	            if (!IsTurning && IsTargetBehind && canTarget)
-	                Turn(-1 * App.M.Character.LookDirection);
-
 	            App.M.Target = canTarget ? ply : App.M.Target;
 	        }
-	        else if (!App.M.NeverForget)
+	        else if (!App.M.NeverForget && !IsRemembering)
 	            App.M.Target = null;
 
-	        if (IsStagging)
-	        {
-	            _staggerTimer -= Time.deltaTime;
-
-	            if (_staggerTimer <= 0)
-	            {
-	                IsStagging = false;
-	                _staggerTimer = App.M.StaggerDuration;
-	            }
-	        }
+	        //If target is behind the enemy and is targeted and we're arent turning, turn around.
+	        if (!IsTurning && IsTargetBehind && App.M.Target)
+	            Turn(-1 * App.M.Character.LookDirection);
 
             /**
              * Update state stuff
@@ -172,6 +153,8 @@ namespace Enemy
                 App.M.Character.HealthController.IsDead)
                 return;
 
+            App.M.Character.StandStill();
+
             //Turn around instantly if turn speed is 0.
             if (App.M.TurnSpeed == 0)
             {
@@ -179,9 +162,10 @@ namespace Enemy
                 return;
             }
 
-            App.M.Character.SetVelocity(Vector2.zero);
             IsTurning = true;
-            _turnTimer = App.M.TurnSpeed;
+            TellMeWhen.CancelScaled(this, EVENT_TURN);
+            TellMeWhen.Seconds(App.M.TurnSpeed, this, EVENT_TURN);
+
             _whereToTurnTo = dir;
         }
 
@@ -227,11 +211,22 @@ namespace Enemy
 	        if (App.M.TurnOnBackstab && IsTargetBehind)
                 Turn();
 
-            float staggerDuration = App.M.StaggerDuration;
-            if (staggerDuration != 0) //If stagger duration is 0, we dont want to stagger.
+            //If the enemy can remember the player, do so.
+	        if (App.M.MemoryDuration != 0)
+	        {
+	            IsRemembering = true;
+                App.M.Target = GameManager.Instance.Player;
+                TellMeWhen.CancelScaled(this, EVENT_MEMORY);
+	            TellMeWhen.Seconds(App.M.MemoryDuration, this, EVENT_MEMORY);
+	        }
+
+	        float staggingDuration = App.M.StaggerDuration;
+	        if (staggingDuration != 0 && !IsStagging)
 	        {
 	            IsStagging = true;
-	            _staggerTimer = staggerDuration;
+
+                TellMeWhen.CancelScaled(this, EVENT_STAGGING);
+	            TellMeWhen.Seconds(staggingDuration, this, EVENT_STAGGING);
 	        }
 	    }
 
@@ -244,5 +239,26 @@ namespace Enemy
 
             App.M.Character.SetSortingLayer(GSManager.Instance.CorpsesSortingLayerID);
         }
-    }
+
+	    public void OnTimesUp(int id, object args)
+	    {
+            if (!this)
+                return;
+
+	        switch (id)
+	        {
+	            case EVENT_TURN:
+	                App.M.Character.Flip(_whereToTurnTo);
+	                IsTurning = false;
+	                break;
+	            case EVENT_STAGGING:
+	                IsStagging = false;
+	                break;
+	            case EVENT_MEMORY:
+	                App.M.Target = null;
+	                IsRemembering = false;
+	                break;
+	        }
+	    }
+	}
 }

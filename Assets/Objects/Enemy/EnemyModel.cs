@@ -59,6 +59,9 @@ namespace Enemy
         [SerializeField, Tooltip("If 0, it doesn't stagger.")]
         private float _staggerDuration;
 
+        [SerializeField, Tooltip("How long it takes for the enemy to forget the player.")]
+        private float _memoryDuration;
+
         [Space]
         [SerializeField]
         private PlayerApplication _target;
@@ -144,6 +147,12 @@ namespace Enemy
         {
             get { return _staggerDuration; }
             set { _staggerDuration = value; }
+        }
+
+        public float MemoryDuration
+        {
+            get { return _memoryDuration; }
+            set { _memoryDuration = value; }
         }
 
         public PlayerApplication Target
