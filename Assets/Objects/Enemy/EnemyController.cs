@@ -241,6 +241,8 @@ namespace Enemy
 
 	        if (GameManager.Instance != null)
 	            GameManager.Instance.EnemiesChange.Invoke();
+
+            App.M.Character.SetSortingLayer(GSManager.Instance.CorpsesSortingLayerID);
         }
     }
 }
