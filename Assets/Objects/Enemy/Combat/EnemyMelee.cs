@@ -1,4 +1,5 @@
-﻿using Enemy;
+﻿using AcrylecSkeleton.Extensions;
+using Enemy;
 using Managers;
 using UnityEngine;
 // ReSharper disable FieldCanBeMadeReadOnly.Local
@@ -23,6 +24,16 @@ namespace Enemy
                 GameManager.Instance.Player.M.ActionController.HealthController.Damage(Context.M.Character.Damage, from: Context.M.Character, pos: transform.position);
 
             base.Attack();
+        }
+
+        protected override void OnDrawGizmosSelected()
+        {
+            if (!_drawGizmos || !enabled)
+                return;
+
+            Gizmos.DrawWireCube(GetHitboxPos(_attackBoxOffset), _attackBoxSize);
+
+            base.OnDrawGizmosSelected();
         }
     }
 }

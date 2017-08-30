@@ -133,17 +133,6 @@ namespace Enemy
                 Attack();
         }
 
-        protected virtual void OnDrawGizmosSelected()
-        {
-            if (!_drawGizmos || !enabled)
-                return;
-
-            if (enabled && Context && _indicatorTimer != Context.M.IndicatorDuration)
-                Gizmos.DrawSphere(transform.position.ToVector2() + new Vector2(0, 1), .15f);
-
-            Gizmos.DrawWireCube(GetHitboxPos(), _hitBoxSize);
-        }
-
         /// <summary>
         /// Is the player hitting our hitbox? Using attack hitbox trigger values.
         /// </summary>
@@ -195,6 +184,17 @@ namespace Enemy
         public void SetCombat(bool boolean)
         {
             Context.M.Character.MainAnimator.SetBool("InCombat", boolean);
+        }
+
+        protected virtual void OnDrawGizmosSelected()
+        {
+            if (!_drawGizmos || !enabled)
+                return;
+
+            if (enabled && Context && _indicatorTimer != Context.M.IndicatorDuration)
+                Gizmos.DrawSphere(transform.position.ToVector2() + new Vector2(0, 1), .15f);
+
+            Gizmos.DrawWireCube(GetHitboxPos(), _hitBoxSize);
         }
     }
 }
