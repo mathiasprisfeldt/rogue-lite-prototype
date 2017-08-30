@@ -308,6 +308,7 @@ namespace Health
         {
             OnDamage.RemoveAllListeners();
             OnDead.RemoveAllListeners();
+            OnHealEvent.RemoveAllListeners();
         }
     }
 }

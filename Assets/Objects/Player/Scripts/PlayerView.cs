@@ -27,22 +27,14 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 
 	    private void OnDamage(Character arg0)
 	    {
-	        ScreenFlash.StartFlash(ScreenFlash.DamageColor,1f);
+            if(ScreenFlash != null)
+	            ScreenFlash.StartFlash(ScreenFlash.DamageColor,1f);
 	    }
 
 	    private void OnHeal()
 	    {
-            ScreenFlash.StartFlash(ScreenFlash.HealColor, 1f);
-
-        }
-
-	    public void OnDestroy()
-	    {
-            if (App.C.Character.HealthController)
-            {
-                App.C.Character.HealthController.OnHealEvent.RemoveListener(OnHeal);
-                App.C.Character.HealthController.OnDamage.RemoveListener(OnDamage);
-            }
+	        if (ScreenFlash != null)
+                ScreenFlash.StartFlash(ScreenFlash.HealColor, 1f);
         }
 	}
 }
