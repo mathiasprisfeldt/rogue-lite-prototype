@@ -22,9 +22,11 @@ namespace Enemy
 	    private List<EnemyState> _states;
 	    private float _whereToTurnTo;
 	    private float _turnTimer;
+	    private float _staggerTimer;
 
 	    public Vector2 ToPlayer { get; private set; }
 	    public bool IsTurning { get; private set; }
+	    public bool IsStagging { get; set; }
 
 	    public bool IsTargetBehind
 	    {
@@ -125,7 +127,21 @@ namespace Enemy
 	        }
 	        else if (!App.M.NeverForget)
 	            App.M.Target = null;
-            
+
+	        if (IsStagging)
+	        {
+	            _staggerTimer -= Time.deltaTime;
+
+	            if (_staggerTimer <= 0)
+	            {
+	                IsStagging = false;
+	                _staggerTimer = App.M.StaggerDuration;
+	            }
+	        }
+
+            /**
+             * Update state stuff
+             */
             foreach (EnemyState enemyState in _states)
             {
                 if (enemyState.enabled && enemyState.ShouldTakeover())
@@ -186,7 +202,7 @@ namespace Enemy
 	    /// <param name="forceTurn">Should it force turning around?</param>
 	    public void Move(Vector2 dir, bool overrideYVel = false, bool forceTurn = false)
         {
-	        if (!IsTurning)
+	        if (!IsTurning && !IsStagging)
 	        {
 	            Vector2 vel = dir;
 
@@ -210,6 +226,13 @@ namespace Enemy
 	    {
 	        if (App.M.TurnOnBackstab && IsTargetBehind)
                 Turn();
+
+            float staggerDuration = App.M.StaggerDuration;
+            if (staggerDuration != 0) //If stagger duration is 0, we dont want to stagger.
+	        {
+	            IsStagging = true;
+	            _staggerTimer = staggerDuration;
+	        }
 	    }
 
 	    private void OnDead()

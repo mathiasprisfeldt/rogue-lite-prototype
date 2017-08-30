@@ -65,7 +65,7 @@ namespace Enemy
 
         public override void Think(float deltaTime)
         {
-            if (_isAttacking)
+            if (_isAttacking || Context.C.IsStagging)
                 return;
 
             //Attack when player gets close.
@@ -85,7 +85,7 @@ namespace Enemy
             if (_isAttacking)
                 return;
 
-            if (!CheckHitbox() && !_canAttack || !Context.M.Target)
+            if (!CheckHitbox() || !_canAttack || !Context.M.Target)
                 ChangeState<EnemyIdle>();
 
             base.Reason();
@@ -120,6 +120,9 @@ namespace Enemy
         /// </summary>
         private void PreAttack()
         {
+            if (!CheckHitbox())
+                return;
+
             _isAttacking = true;
 
             //Play attack animation

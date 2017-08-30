@@ -49,11 +49,15 @@ namespace Enemy
 
 	    [SerializeField]
 	    private bool _hasWallHack;
+
         [SerializeField]
         private bool _isFlying;
 
 	    [SerializeField, Tooltip("The enemy never loses it target.")]
 	    private bool _neverForget;
+
+        [SerializeField, Tooltip("If 0, it doesn't stagger.")]
+        private float _staggerDuration;
 
         [Space]
         [SerializeField]
@@ -63,12 +67,6 @@ namespace Enemy
         {
             get { return _viewRadius; }
             set { _viewRadius = value; }
-        }
-
-        public PlayerApplication Target
-        {
-            get { return _target; }
-            set { _target = value; }
         }
 
         public Character Character
@@ -142,5 +140,16 @@ namespace Enemy
             set { _neverForget = value; }
         }
 
+        public float StaggerDuration
+        {
+            get { return _staggerDuration; }
+            set { _staggerDuration = value; }
+        }
+
+        public PlayerApplication Target
+        {
+            get { return _target; }
+            set { _target = value; }
+        }
     }
 }

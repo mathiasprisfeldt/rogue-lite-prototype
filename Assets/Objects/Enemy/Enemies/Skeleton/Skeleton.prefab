@@ -617,6 +617,7 @@ MonoBehaviour:
   _hasWallHack: 0
   _isFlying: 0
   _neverForget: 0
+  _staggerDuration: 0.5
   _target: {fileID: 0}
 --- !u!114 &114716576231743168
 MonoBehaviour:
