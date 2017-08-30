@@ -16,31 +16,17 @@ namespace Enemy
         private bool _isAttacking;
         private float _indicatorTimer;
         private float _cooldownTimer;
-        private bool _canAttack;
+        private bool _canAttack = true;
         private Collider2D[] _hitboxResults = new Collider2D[10];
 
         [SerializeField]
         protected bool _drawGizmos;
 
-        [SerializeField]
-        private Vector2 _attackBoxSize = Vector2.one;
+        [Header("Attack Trigger Box:"), SerializeField]
+        private Vector2 _hitBoxSize = Vector2.one;
 
         [SerializeField]
-        private Vector2 _attackBoxOffset = Vector2.right;
-
-        public Vector2 Hitbox
-        {
-            get
-            {
-                bool isLeft = false;
-
-                if (Context && Context.M.Character)
-                    isLeft = Context.M.Character.LookDirection == -1;
-
-                Vector2 relPos = new Vector2(isLeft ? -_attackBoxOffset.x : _attackBoxOffset.x, 0);
-                return new Vector2(0, _attackBoxOffset.y) + relPos + transform.position.ToVector2();
-            }
-        }
+        private Vector2 _hitBoxOffset = Vector2.right;
 
         void Start()
         {
@@ -79,7 +65,7 @@ namespace Enemy
 
         public override void Think(float deltaTime)
         {
-            if (_isAttacking)
+            if (_isAttacking || Context.C.IsStagging)
                 return;
 
             //Attack when player gets close.
@@ -99,7 +85,7 @@ namespace Enemy
             if (_isAttacking)
                 return;
 
-            if (!CheckHitbox() && !_canAttack || !Context.M.Target)
+            if (!CheckHitbox() || !_canAttack || !Context.M.Target)
                 ChangeState<EnemyIdle>();
 
             base.Reason();
@@ -110,7 +96,7 @@ namespace Enemy
             if (_isAttacking)
                 return true;
 
-            if (CheckHitbox() && Context.M.Target && _canAttack && !Context.C.IsTurning)
+            if (CheckHitbox() && Context.M.Target && !Context.C.IsTurning)
                 return true;
 
             return false;
@@ -136,6 +122,9 @@ namespace Enemy
         /// </summary>
         private void PreAttack()
         {
+            if (!CheckHitbox())
+                return;
+
             _isAttacking = true;
             if(Context.M.Character.AttackIndication)
                 Context.M.Character.AttackIndication.ShowIndicator(.1f);
@@ -152,25 +141,23 @@ namespace Enemy
                 Attack();
         }
 
-        protected virtual void OnDrawGizmosSelected()
+        /// <summary>
+        /// Is the player hitting our hitbox? Using attack hitbox trigger values.
+        /// </summary>
+        /// <returns>True if it hit the player.</returns>
+        public bool CheckHitbox()
         {
-            if (!_drawGizmos || !enabled)
-                return;
-
-            if (enabled && Context && _indicatorTimer != Context.M.IndicatorDuration)
-                Gizmos.DrawSphere(transform.position.ToVector2() + new Vector2(0, 1), .15f);
-
-            Gizmos.DrawWireCube(Hitbox, _attackBoxSize);
+            return CheckHitbox(_hitBoxOffset, _hitBoxSize);
         }
 
         /// <summary>
         /// Is the player hitting our hitbox?
         /// </summary>
-        /// <returns>True if it hit something good.</returns>
-        public bool CheckHitbox()
+        /// <returns>True if it hit the player.</returns>
+        public bool CheckHitbox(Vector2 offset, Vector2 size)
         {
             //TODO: Properly needs optimizing
-            int hitCount = Physics2D.OverlapBoxNonAlloc(Hitbox, _attackBoxSize, 0, _hitboxResults, LayerMask.GetMask("Hitbox"));
+            int hitCount = Physics2D.OverlapBoxNonAlloc(GetHitboxPos(offset), size, 0, _hitboxResults, LayerMask.GetMask("Hitbox"));
 
             for (int i = 0; i < hitCount; i++)
             {
@@ -181,9 +168,41 @@ namespace Enemy
             return false;
         }
 
+        /// <summary>
+        /// Returns position of a hitbox with a given offset, relative to character.
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public Vector2 GetHitboxPos(Vector2 offset)
+        {
+            bool isLeft = false;
+
+            if (Context && Context.M.Character)
+                isLeft = Context.M.Character.LookDirection == -1;
+
+            Vector2 relPos = new Vector2(isLeft ? -offset.x : offset.x, 0);
+            return new Vector2(0, offset.y) + relPos + transform.position.ToVector2();
+        }
+
+        public Vector2 GetHitboxPos()
+        {
+            return GetHitboxPos(_hitBoxOffset);
+        }
+
         public void SetCombat(bool boolean)
         {
             Context.M.Character.MainAnimator.SetBool("InCombat", boolean);
+        }
+
+        protected virtual void OnDrawGizmosSelected()
+        {
+            if (!_drawGizmos || !enabled)
+                return;
+
+            if (enabled && Context && _indicatorTimer != Context.M.IndicatorDuration)
+                Gizmos.DrawSphere(transform.position.ToVector2() + new Vector2(0, 1), .15f);
+
+            Gizmos.DrawWireCube(GetHitboxPos(), _hitBoxSize);
         }
     }
 }

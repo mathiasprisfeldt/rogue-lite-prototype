@@ -12,10 +12,19 @@ namespace Managers
         [SerializeField]
         private float _healthContainerSize = 1;
 
+        [SerializeField]
+        private int _corpsesSortingLayerId = 2;
+
         public float HealthContainerSize
         {
             get { return _healthContainerSize; }
             set { _healthContainerSize = value; }
+        }
+
+        public int CorpsesSortingLayerID
+        {
+            get { return _corpsesSortingLayerId; }
+            set { _corpsesSortingLayerId = value; }
         }
     }
 }

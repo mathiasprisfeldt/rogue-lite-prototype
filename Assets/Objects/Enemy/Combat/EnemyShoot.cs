@@ -8,7 +8,7 @@ namespace Enemy
     /// Purpose: Basic class for all enemies that can shoot.
     /// Creator: MP
     /// </summary>
-    public class EnemyShoot : EnemyAttack
+    public class EnemyShoot : EnemyMelee
     {
         [SerializeField, Tooltip("Recipe for projectile.")]
         private Projectile _projectile;
@@ -24,7 +24,7 @@ namespace Enemy
             Projectile projectile = Instantiate(_projectile, transform.position.ToVector2() + spawnPos, Quaternion.identity);
             projectile.Direction = new Vector2(dir, 0);
             projectile.Shoot();
-
+             
             base.Attack();
         }
 
@@ -37,7 +37,5 @@ namespace Enemy
 
             base.OnDrawGizmosSelected();
         }
-
-        
     }
 }

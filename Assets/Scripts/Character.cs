@@ -24,12 +24,16 @@ namespace Controllers
         private static readonly float BUMPING_RAY_LENGTH = 0.05f;
         private static readonly Vector2 BUMPING_ORIGIN_OFFSET = new Vector2(.5f, 0);
 
+        private int _originalSortingLayerIndex;
         private Collider2D _bumpingCollider2D; //Collider used for any collisions when bumping.
         private readonly RaycastHit2D[] _bumpingResults = new RaycastHit2D[1]; //Used to store if the player bumped into something platformy
 
         [Header("References:")]
         [SerializeField]
         private Transform _origin;
+
+        [SerializeField]
+        private SpriteRenderer _mainSpriteRenderer;
 
         [SerializeField]
         private Animator _mainAnimator;
@@ -206,6 +210,9 @@ namespace Controllers
 
             if (PhysicialCollisionCheck)
                 _bumpingCollider2D = PhysicialCollisionCheck.CollidersToCheck.FirstOrDefault();
+
+            if (_mainSpriteRenderer)
+                _originalSortingLayerIndex = SortingLayer.GetLayerValueFromID(_mainSpriteRenderer.sortingLayerID);
         }
 
         public virtual void Update()
@@ -337,6 +344,17 @@ namespace Controllers
                 BumpingDirection = 1;
             else
                 BumpingDirection = 0;
+        }
+
+        public void SetSortingLayer(int sortingLayerIndex)
+        {
+            if (_mainSpriteRenderer)
+                _mainSpriteRenderer.sortingLayerID = SortingLayer.layers[sortingLayerIndex].id;
+        }
+
+        public void SetSortingLayer()
+        {
+            SetSortingLayer(_originalSortingLayerIndex);
         }
     }
 }
