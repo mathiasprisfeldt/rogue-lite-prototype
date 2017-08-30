@@ -35,7 +35,7 @@ namespace Enemy
 	            if (!ply)
 	                return false;
 
-                return (ply.transform.position.x < App.M.Character.Origin.x ? -1 : 1) != App.M.Character.LookDirection; 
+                return (ply.transform.position.x < App.transform.position.x ? -1 : 1) != App.M.Character.LookDirection; 
 	        }
 	    }
 
@@ -60,7 +60,7 @@ namespace Enemy
 	        EnemyIdle idleState = gameObject.AddComponent<EnemyIdle>();
 	        StateMachine.RegisterState(idleState);
 
-            StateMachine.ChangeState(_states.FirstOrDefault() ?? idleState);
+            StateMachine.ChangeState(idleState);
 	    }
 
 	    void Start()

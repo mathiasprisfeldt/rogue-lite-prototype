@@ -24,7 +24,7 @@ namespace Enemy
             Projectile projectile = Instantiate(_projectile, transform.position.ToVector2() + spawnPos, Quaternion.identity);
             projectile.Direction = new Vector2(dir, 0);
             projectile.Shoot();
-
+             
             base.Attack();
         }
 
