@@ -562,6 +562,8 @@ MonoBehaviour:
   _hasWallHack: 0
   _isFlying: 0
   _neverForget: 0
+  _staggerDuration: 0.5
+  _memoryDuration: 2
   _target: {fileID: 0}
 --- !u!114 &114120916525324648
 MonoBehaviour:
@@ -594,8 +596,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isEnabled: 0
   _drawGizmos: 1
-  _attackBoxSize: {x: 5.56, y: 1}
-  _attackBoxOffset: {x: 3.52, y: 1.04}
+  _hitBoxSize: {x: 6, y: 1.32}
+  _hitBoxOffset: {x: 3, y: 1}
+  _attackBoxSize: {x: 3, y: 1.94}
+  _attackBoxOffset: {x: 1.5, y: 1}
   _projectile: {fileID: 114159514260344410, guid: f6f2a202e1deaf64c8613c8fcea309cc,
     type: 2}
   _spawnPos: {x: 1.72, y: 1.13}
@@ -791,6 +795,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _origin: {fileID: 4246237889471624}
+  _mainSpriteRenderer: {fileID: 0}
   _mainAnimator: {fileID: 95876270362459374}
   _healthController: {fileID: 114445785189084748}
   _rigidbody: {fileID: 50233200786168534}

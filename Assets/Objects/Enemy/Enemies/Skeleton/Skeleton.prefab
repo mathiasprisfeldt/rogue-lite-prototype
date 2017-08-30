@@ -511,6 +511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _origin: {fileID: 4534865491374808}
+  _mainSpriteRenderer: {fileID: 0}
   _mainAnimator: {fileID: 95308415895287884}
   _healthController: {fileID: 114553832253138858}
   _rigidbody: {fileID: 50908249873362160}
@@ -572,6 +573,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isEnabled: 0
   _drawGizmos: 1
+  _hitBoxSize: {x: 0.57, y: 1.5}
+  _hitBoxOffset: {x: 0.85, y: 0.85}
   _attackBoxSize: {x: 0.57, y: 1.5}
   _attackBoxOffset: {x: 0.85, y: 0.85}
 --- !u!114 &114505224297272836
@@ -676,6 +679,8 @@ MonoBehaviour:
   _hasWallHack: 0
   _isFlying: 0
   _neverForget: 0
+  _staggerDuration: 0.5
+  _memoryDuration: 2
   _target: {fileID: 0}
 --- !u!114 &114706593762941964
 MonoBehaviour:
