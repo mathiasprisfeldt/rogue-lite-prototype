@@ -338,6 +338,9 @@ namespace Controllers
             bool leftBump = _bumberCollisionCheck.Left;
             bool rightBump = _bumberCollisionCheck.Right;
 
+            if (leftBump && rightBump)
+                Debug.Log("ASD");
+
             if (!leftHit || leftBump)
                 BumpingDirection = -1;
             else if (!rightHit || rightBump)
