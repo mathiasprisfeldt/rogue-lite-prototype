@@ -92,7 +92,7 @@ public class Climbing : MovementAbility
 
     private Collider2D OnLadder(CollisionCheck collisionCheck)
     {
-        return collisionCheck.Sides.BottomColliders.FirstOrDefault(c => c.gameObject.tag == "Ladder");
+        return collisionCheck.Sides.TargetColliders.FirstOrDefault(c => c.gameObject.tag == "Ladder");
     }
 
     private Climbable GetClosestClimable()
