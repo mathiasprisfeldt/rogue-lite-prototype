@@ -19,12 +19,15 @@ namespace Enemy
         public override void Think(float deltaTime)
         {
             int bumpingDirection = Context.M.Character.BumpingDirection;
+            int lookDir = Context.M.Character.LookDirection;
 
             //If we're bumping into something, change direction.
-            if (bumpingDirection != 0)
-                _patrolDirection.x = -Context.M.Character.BumpingDirection;
+            if (bumpingDirection == -1 &&  lookDir == -1)
+                _patrolDirection.x = 1;
+            else if (bumpingDirection == 1 && lookDir == 1)
+                _patrolDirection.x = -1;
             else
-                _patrolDirection.x = Context.M.Character.LookDirection;
+                _patrolDirection.x = lookDir;
         }
 
         public override bool ShouldTakeover()
