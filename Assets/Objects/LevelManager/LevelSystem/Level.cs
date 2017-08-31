@@ -81,8 +81,6 @@ public class Level
         bool right = t.TX > Layouts[t.LX, t.LY].Tiles.GetLength(0) - 1 && pos.LX == Layouts.GetLength(0) - 1;
         bool bottom = t.TY > Layouts[t.LX, t.LY].Tiles.GetLength(1) - 1 && pos.LY == Layouts.GetLength(1) - 1;
 
-
-
         //Left
         if (t.TX < 0 && t.LX > 0)
         {
@@ -112,7 +110,7 @@ public class Level
         if (left || right || top || bottom)
         {
             if (BorderTiles.Keys.Contains(t))
-                return new Tile(1, BorderTiles[t].gameObject);
+                return new Tile(1, BorderTiles[t].gameObject, BorderTiles[t].gameObject.GetComponent<TileBehaviour>().PhsyicalBlock);
             else
                 return new Tile(null, -1);
         }
@@ -170,8 +168,6 @@ public class Level
                             GameObject go = LevelManager.Instance.SpawnTile(transform.position + tilePos, t.Prefab, parent: parent.transform);
                             go.name = i.ToString() + j.ToString() + x.ToString() + y.ToString();
 
-                            Layouts[i, j].Tiles[x, y] = new Tile(t.Type, go);
-
                             TileBehaviour tb = go.GetComponent<TileBehaviour>();
                             if (tb)
                             {
@@ -182,6 +178,8 @@ public class Level
                             {
                                 nonTilebehavior.Add(go);
                             }
+
+                            Layouts[i, j].Tiles[x, y] = new Tile(t.Type, go, tb == null ? false : tb.PhsyicalBlock);
                         }
 
                         left = x == 0 && i == 0;

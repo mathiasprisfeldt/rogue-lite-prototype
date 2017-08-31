@@ -23,6 +23,8 @@ public class TileBehaviour : MonoBehaviour
 {
     [SerializeField]
     private GameObject _parent;
+    [SerializeField]
+    private bool _physicalBlock;
 
     private Queue<TileBehaviour> _queue = new Queue<TileBehaviour>();
 
@@ -50,6 +52,11 @@ public class TileBehaviour : MonoBehaviour
 
     public TilePos TilePos { get; set; }
 
+    public bool PhsyicalBlock
+    {
+        get { return _physicalBlock; }        
+    }
+
     public string TargetTag
     {
         get { return _targetTag; }
@@ -70,12 +77,12 @@ public class TileBehaviour : MonoBehaviour
         var right = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.right);
 
         //Up
-        if (up.Type == 1 || up.Type == 6 || down.Type == 18)
+        if (up.PhysicalBlock)
         {
             TopCollision = gameObject.tag != "Ladder";
         }
         //Down
-        if (down.Type == 1 || down.Type == 6 || down.Type == 18)
+        if (down.PhysicalBlock)
         {
             BottomCollision = true;
             if (down.GoInstance != null)
@@ -86,21 +93,9 @@ public class TileBehaviour : MonoBehaviour
             }
 
         }
-        //Left
-        if (left.Type == 1 || left.Type == 6 || left.Type == 18)
-        {
-            LeftCollision = true;
-        }
-        //Right
-        if (right.Type == 1 || right.Type == 6 || right.Type == 18)
-        {
-            RightCollision = true;
-        }
-
+            LeftCollision = left.PhysicalBlock;        
+            RightCollision = right.PhysicalBlock;
         
-        
-
-
         if (_autoTexturize)
         {
             var spr = GetComponent<SpriteRenderer>();
