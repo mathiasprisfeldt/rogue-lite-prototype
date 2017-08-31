@@ -157,6 +157,8 @@ public class CollisionCheck : MonoBehaviour
             return sides.Top || sides.Bottom || sides.Right || sides.Left;
         }
         sides.Colliders = CollidersToCheck.ToList();
+        var name = transform.root.gameObject.name;
+
         foreach (var c in CollidersToCheck)
         {
             Collider2D[] t = new Collider2D[10];
@@ -205,6 +207,38 @@ public class CollisionCheck : MonoBehaviour
                         sides.Left = true;
                         sides.LeftColliders.Add(t[i]);
                     }
+
+                    //TODO: HACKISH: This wouldnt work properly if the collider is inside it.
+                    //If the target collider is inside us, we check which one is superior.
+                    if (sides.Left && sides.Right)
+                    {
+                        if (t[i].bounds.center.x > c.bounds.center.x)
+                        {
+                            sides.Left = false;
+                            sides.LeftColliders.Remove(t[i]);
+                        }
+                        else
+                        {
+                            sides.Right = false;
+                            sides.RightColliders.Remove(t[i]);
+                        }
+                    }
+                    
+                    //Also do this for top and bottom
+                    if (sides.Top && sides.Bottom)
+                    {
+                        if (t[i].bounds.center.y > c.bounds.center.y)
+                        {
+                            sides.Top = false;
+                            sides.TopColliders.Remove(t[i]);
+                        }
+                        else
+                        {
+                            sides.Bottom = false;
+                            sides.BottomColliders.Remove(t[i]);
+                        }
+                    }
+
                     collision = sides.Top || sides.Bottom || sides.Right || sides.Left;
                     if (collision)
                         sides.TargetColliders.Add(t[i]);
