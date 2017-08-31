@@ -136,6 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parent: {fileID: 1335697151304256, guid: 3e6513b0f605e634ab0f7abb1ae786af, type: 2}
+  _physicalBlock: 1
   _targetTag: Ladder
   _autoTexturize: 0
   _leftTexture: {fileID: 0}
@@ -188,7 +189,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1015216537
-  m_SortingLayer: -1
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8335d36726c14db4ea1d9b9a97c4fd5c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
