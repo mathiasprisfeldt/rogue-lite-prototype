@@ -23,10 +23,15 @@ namespace CharacterController
         [SerializeField, Range(0, 1)]
         private float _whenToSwicthDirection;
 
+        [SerializeField]
+        private float _graceperiod;
+
         private float _horizontalTimer;
         private float _verticalTimer;
         private bool _directionSwitched;
         private float _timer;
+        private float _gracePeriodTimer;
+        private bool _lastValidLeft;
 
         public float Direction { get; private set; }
 
@@ -37,19 +42,27 @@ namespace CharacterController
                 if (!base.VerticalActive)
                     return false;
 
-                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed;
                 var collision = (_actionsController.WallSlideCheck.Sides.Left || _actionsController.WallSlideCheck.Sides.Right) && !_actionsController.GroundCollisionCheck.Bottom;
-                var valid = input && collision && _verticalTimer <= 0 && _horizontalTimer <= 0 &&
-                            _actionsController.LastUsedCombatAbility == CombatAbility.None;
+                if (collision)
+                {
+                    _gracePeriodTimer = _graceperiod;
+                    _lastValidLeft = _actionsController.WallSlideCheck.Sides.Left;
+                }
+                    
+
+                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed;
+                var valid = input && _gracePeriodTimer > 0 && _verticalTimer <= 0 && _horizontalTimer <= 0 &&
+                            _actionsController.LastUsedCombatAbility == CombatAbility.None;                
 
                 if (valid && _timer <= 0)
                 {
                     _horizontalTimer = _horizontalDuration;
                     _verticalTimer = _verticalDuration;
-                    Direction = _actionsController.WallSlideCheck.Sides.Left ? 1 : -1;
+                    Direction = _lastValidLeft ? 1 : -1;
                     _directionSwitched = false;
                     _actionsController.StartJump.Value = true;
                     _timer = 0.00f;
+                    _gracePeriodTimer = 0;      
                 }
                 else if (valid && _timer > 0)
                     _timer -= Time.deltaTime;
@@ -69,7 +82,7 @@ namespace CharacterController
 
         public override void HandleVertical(ref Vector2 velocity)
         {
-            velocity = new Vector2(velocity.x, _actionsController.Rigidbody.CalculateVerticalSpeed(_verticalForce / _verticalDuration));
+            velocity = new Vector2(velocity.x, _actionsController.Rigidbody.CalculateVerticalSpeed((_verticalForce / _verticalDuration)*Time.deltaTime));
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)
@@ -92,7 +105,7 @@ namespace CharacterController
                 _horizontalTimer = 0;
                 return;
             }
-            velocity = new Vector2((_horizontalForce / _horizontalDuration) * Direction, velocity.y);
+            velocity = new Vector2(((_horizontalForce / _horizontalDuration) * Time.deltaTime) * Direction, velocity.y);
         }
 
         public void FixedUpdate()
@@ -109,6 +122,8 @@ namespace CharacterController
                 _verticalTimer = 0;
             if (_verticalTimer > 0)
                 _verticalTimer -= Time.fixedDeltaTime;
+            if (_gracePeriodTimer > 0)
+                _gracePeriodTimer -= Time.deltaTime;
         }
     }
 }

@@ -57,14 +57,15 @@ public class Jump : MovementAbility {
             }
 
             if(_initialJumpTimer <= 0)
-                if (!(pa != null && pa.Jump.IsPressed && _jumpTimer > 0))
+                if (!(pa != null && pa.Jump.IsPressed) && _jumpTimer > 0)
                 {
                     _jumpTimer = 0;
                 }
                     
 
             if ((_actionsController.GroundCollisionCheck.Sides.BottomColliders != null 
-                && _actionsController.GroundCollisionCheck.Sides.BottomColliders.Count > 0 && pa != null && pa.Down && pa.ProxyInputActions.Jump.WasPressed))
+                && _actionsController.GroundCollisionCheck.Sides.BottomColliders.Count > 0 
+                && pa != null && pa.Down && pa.ProxyInputActions.Jump.WasPressed))
                 return true;
 
             return _jumpTimer > 0 || _initialJumpTimer > 0;

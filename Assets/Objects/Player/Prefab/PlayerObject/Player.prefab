@@ -2856,6 +2856,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _origin: {fileID: 0}
+  _mainSpriteRenderer: {fileID: 0}
   _mainAnimator: {fileID: 0}
   _healthController: {fileID: 114883473055053996}
   _rigidbody: {fileID: 50863075550868558}
@@ -2867,7 +2868,6 @@ MonoBehaviour:
   _abilityHandler: {fileID: 114839822949810884}
   _manaHandler: {fileID: 114721248807424670}
   _bumberCollisionCheck: {fileID: 0}
-  _attackIndication: {fileID: 0}
   _startDirection: -1
   _damage: 1
   _movementSpeed: 250
@@ -3004,11 +3004,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _actionsController: {fileID: 114173897078414380}
-  _verticalForce: 600
-  _horizontalForce: 80
-  _horizontalDuration: 0.3
-  _verticalDuration: 0.3
-  _whenToSwicthDirection: 0.5
+  _verticalForce: 12000
+  _horizontalForce: 3000
+  _horizontalDuration: 0.35
+  _verticalDuration: 0.12
+  _whenToSwicthDirection: 0
+  _graceperiod: 0.2
 --- !u!114 &114229662466771864
 MonoBehaviour:
   m_ObjectHideFlags: 1

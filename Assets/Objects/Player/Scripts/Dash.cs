@@ -25,7 +25,7 @@ namespace CharacterController
         private float _cooldownTimer;
         private Vector2 _oldVelocity;
         private float _direction;
-
+        private bool _canDash;
 
         public override bool HorizontalActive
         {
@@ -36,14 +36,12 @@ namespace CharacterController
                 if (!base.HorizontalActive)
                     return false;
 
-                if ((input || _dashing) && _cooldownTimer <= 0 && !_actionsController.Combat)
+                if ((input && _canDash|| _dashing) && _cooldownTimer <= 0 && !_actionsController.Combat)
                 {
                     if (input)
                     {
                         _actionsController.StartDash.Value = true;
                         _direction = _actionsController.Model.transform.localScale.x > 0 ? 1 : -1;
-                        var leftInput = _actionsController.App.C.PlayerActions.Left;
-                        var rightInput = _actionsController.App.C.PlayerActions.Right;
 
                         if (_direction > 0 && _actionsController.WallSlideCheck.Right || _direction < 0 && _actionsController.WallSlideCheck.Left)
                             return false;
@@ -51,6 +49,7 @@ namespace CharacterController
                         _dashing = true;
                         _oldVelocity = _actionsController.Rigidbody.velocity;
                         _dashingTimer = _dashDuration;
+                        _canDash = false;
                     }
                     return true;
                 }
@@ -69,6 +68,17 @@ namespace CharacterController
                 _cooldownTimer -= Time.deltaTime;
             if (_dashingTimer > 0)
                 _dashingTimer -= Time.deltaTime;
+            if (_actionsController.LastUsedVerticalMoveAbility != MoveAbility.Dash)
+            {
+                _cooldownTimer = 0;
+                _dashingTimer = 0;
+            }
+            if (!_canDash)
+            {
+                if (_actionsController.OnGround || _actionsController.WallSlideCheck.Sides.Left ||
+                    _actionsController.WallSlideCheck.Sides.Right)
+                    _canDash = true;
+            }
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)
