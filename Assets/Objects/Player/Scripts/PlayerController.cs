@@ -30,6 +30,7 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
         {
             Health = GetComponentInChildren<HealthController>();
             PlayerActions = new InputActions();
+           _character.HealthController.OnDead.AddListener(LevelManager.Instance.ResetGame);
         }
 
         public void Update()

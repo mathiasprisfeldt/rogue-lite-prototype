@@ -11,7 +11,7 @@ public class CollisionCheck : MonoBehaviour
 
     private bool _isDirty;
 
-    private CollisionSides _collisionSides = new CollisionSides(false, false, false, false);
+    private CollisionSides _collisionSides = new CollisionSides();
     private List<Collider2D> _collisionColliders = new List<Collider2D>();
 
     [SerializeField]
@@ -50,9 +50,8 @@ public class CollisionCheck : MonoBehaviour
         {
             if (_isDirty)
                 return Sides.Top;
-            CollisionSides temp = new CollisionSides(false, false, false, false);
-            IsColliding(out temp);
-            return temp.Top;
+            IsColliding(ref _collisionSides);
+            return _collisionSides.Top;
         }
     }
     public bool Bottom
@@ -61,9 +60,8 @@ public class CollisionCheck : MonoBehaviour
         {
             if (_isDirty)
                 return Sides.Bottom;
-            CollisionSides temp = new CollisionSides(false, false, false, false);
-            IsColliding(out temp);
-            return temp.Bottom;
+            IsColliding(ref _collisionSides);
+            return _collisionSides.Bottom;
         }
     }
     public bool Left
@@ -72,9 +70,8 @@ public class CollisionCheck : MonoBehaviour
         {
             if (_isDirty)
                 return Sides.Left;
-            CollisionSides temp = new CollisionSides(false, false, false, false);
-            IsColliding(out temp);
-            return temp.Left;
+            IsColliding(ref _collisionSides);
+            return _collisionSides.Left;
         }
     }
     public bool Right
@@ -83,9 +80,8 @@ public class CollisionCheck : MonoBehaviour
         {
             if (_isDirty)
                 return Sides.Right;
-            CollisionSides temp = new CollisionSides(false, false, false, false);
-            IsColliding(out temp);
-            return temp.Right;
+            IsColliding(ref _collisionSides);
+            return _collisionSides.Right;
         }
     }
 
@@ -95,7 +91,7 @@ public class CollisionCheck : MonoBehaviour
         {
             if(_isDirty)
                 return _collisionSides;
-            IsColliding(out _collisionSides);
+            IsColliding(ref _collisionSides);
             return _collisionSides;
         }
 
@@ -117,15 +113,15 @@ public class CollisionCheck : MonoBehaviour
         return IsColliding(CollisionLayers, out colliders);
     }
 
-    public bool IsColliding(out CollisionSides sides)
+    public bool IsColliding(ref CollisionSides sides)
     {
         var temp = new List<Collider2D>();
-        return IsColliding(CollisionLayers, out temp, out sides);
+        return IsColliding(CollisionLayers, out temp, ref sides);
     }
 
-    public bool IsColliding(out List<Collider2D> colliders, out CollisionSides sides)
+    public bool IsColliding(out List<Collider2D> colliders, ref CollisionSides sides)
     {
-        return IsColliding(CollisionLayers, out colliders, out sides);
+        return IsColliding(CollisionLayers, out colliders, ref sides);
     }
 
     public bool IsColliding(LayerMask layer)
@@ -136,19 +132,13 @@ public class CollisionCheck : MonoBehaviour
 
     public bool IsColliding(LayerMask layer, out List<Collider2D> colliders)
     {
-        var temp = new CollisionSides(false, false, false, false);
-        return IsColliding(layer, out colliders, out temp);
+        return IsColliding(layer, out colliders, ref _collisionSides);
     }
 
-    public bool IsColliding(LayerMask layer, out List<Collider2D> colliders, out CollisionSides sides)
+    public bool IsColliding(LayerMask layer, out List<Collider2D> colliders, ref CollisionSides sides)
     {
-        sides = new CollisionSides(false, false, false, false);
+        sides.Reset();
         bool collision = false;
-
-        if (gameObject.name == "NonPlatformTriggers")
-        {
-            
-        }
 
         if (_isDirty && layer == _collisionLayers)
         {
@@ -266,7 +256,7 @@ public class CollisionCheck : MonoBehaviour
     }
 }
 
-public struct CollisionSides
+public class CollisionSides
 {
     public bool Top { get; set; }
     public bool Bottom { get; set; }
@@ -280,13 +270,8 @@ public struct CollisionSides
     public List<Collider2D> TargetColliders { get; set; }
     public List<Collider2D> Colliders { get; set; }
 
-    public CollisionSides(bool top, bool bottom, bool right, bool left) : this()
+    public CollisionSides()
     {
-        Top = top;
-        Bottom = bottom;
-        Right = right;
-        Left = left;
-
         TopColliders = new List<Collider2D>();
         BottomColliders = new List<Collider2D>();
         RightColliders = new List<Collider2D>();
@@ -295,5 +280,18 @@ public struct CollisionSides
         Colliders = new List<Collider2D>();
     }
 
+    public void Reset()
+    {
+        Top = false;
+        Bottom = false;
+        Left = false;
+        Right = false;
 
+        TopColliders.Clear();
+        BottomColliders.Clear();
+        RightColliders.Clear();
+        LeftColliders.Clear();
+        TargetColliders.Clear();
+        Colliders.Clear();
+    }
 }
