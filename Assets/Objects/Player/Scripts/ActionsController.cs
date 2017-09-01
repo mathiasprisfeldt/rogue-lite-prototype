@@ -264,10 +264,8 @@ namespace CharacterController
             if (predictGravity <= -_maxFallSpeed)
             {
                 Rigidbody.velocity -= new Vector2(0, Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed)) * Time.fixedDeltaTime);
-
             }
         }
-
 
         protected override void UpdateState()
         {
@@ -388,13 +386,13 @@ namespace CharacterController
 
             if (!HandleOnewayColliders())
             {
-                if (_abilityReferences.Dash && _abilityReferences.Dash.VerticalActive)
+                if (_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive)
                 {
-                    LastUsedVerticalMoveAbility = MoveAbility.Dash;
-                    _abilityReferences.Dash.HandleVertical(ref velocity);
+                    LastUsedVerticalMoveAbility = MoveAbility.LedgeHanging;
+                    _abilityReferences.LedgeHanging.HandleVertical(ref velocity);
                 }
                 else if (_abilityReferences.WallJump && _abilityReferences.WallJump.VerticalActive &&
-         !(_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive))
+                    !(_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive))
                 {
                     LastUsedVerticalMoveAbility = MoveAbility.WallJump;
                     _abilityReferences.WallJump.HandleVertical(ref velocity);
@@ -409,17 +407,17 @@ namespace CharacterController
                     LastUsedVerticalMoveAbility = MoveAbility.DoubleJump;
                     _abilityReferences.DoubleJump.HandleVertical(ref velocity);
                 }
+                else if (_abilityReferences.Dash && _abilityReferences.Dash.VerticalActive)
+                {
+                    LastUsedVerticalMoveAbility = MoveAbility.Dash;
+                    _abilityReferences.Dash.HandleVertical(ref velocity);
+                }
                 else if (_abilityReferences.Climing.VerticalActive)
                 {
                     LastUsedVerticalMoveAbility = MoveAbility.Climbing;
                     ClimbEnd = false;
                     Animator.SetBool("ClimbEnd", false);
                     _abilityReferences.Climing.HandleVertical(ref velocity);
-                }
-                else if (_abilityReferences.LedgeHanging && _abilityReferences.LedgeHanging.VerticalActive)
-                {
-                    LastUsedVerticalMoveAbility = MoveAbility.LedgeHanging;
-                    _abilityReferences.LedgeHanging.HandleVertical(ref velocity);
                 }
                 else if (_abilityReferences.WallSlide && _abilityReferences.WallSlide.VerticalActive)
                 {
@@ -429,7 +427,6 @@ namespace CharacterController
                 else
                     velocity = new Vector2(velocity.x, 0);
             }
-
         }
 
         public override void Flip(float dir)
@@ -446,7 +443,6 @@ namespace CharacterController
 
             LastUsedHorizontalMoveAbility = MoveAbility.None;
             Horizontal = App.C.PlayerActions.Horizontal;
-            //LastHorizontalDirection = _model.transform.localScale.x > 0 ? 1 : -1;
             if (!Combat)
                 Flip(Horizontal);
 

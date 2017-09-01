@@ -35,14 +35,6 @@ namespace Indication
 
         public void Update()
         {
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                if (_show)
-                    HideIndicator(.02f);
-                else
-                    ShowIndicator(.05f);
-            }
-
             if (_transitionTimer > 0)
             {
                 _transitionTimer -= Time.deltaTime;

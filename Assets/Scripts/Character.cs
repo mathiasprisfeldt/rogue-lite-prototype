@@ -68,9 +68,6 @@ namespace Controllers
         [SerializeField]
         private CollisionCheck _bumberCollisionCheck;
 
-        [SerializeField]
-        private AttackIndication _attackIndication;
-
         [Header("Settings:")]
         [SerializeField, Tooltip("Which way is it facing at start?")]
         private int _startDirection = -1;
@@ -196,12 +193,6 @@ namespace Controllers
         public bool IsFlying
         {
             get { return _flySpeed > 0; }
-        }
-
-        public AttackIndication AttackIndication
-        {
-            get { return _attackIndication; }
-            set { _attackIndication = value; }
         }
 
         protected virtual void Awake()

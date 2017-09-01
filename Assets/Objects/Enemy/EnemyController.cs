@@ -97,15 +97,6 @@ namespace Enemy
                  */
                 bool canTarget = !(IsTargetBehind && !App.M.TargetBehind);
 
-                //Check if we can see the player
-                if (canTarget && 
-                    !App.M.HasWallHack &&
-                    Physics2D.RaycastNonAlloc(ownPos, ToPlayer.normalized, viewResults, Mathf.Clamp(ToPlayer.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")) > 0)
-	            {
-                    //We cant see the player, lose interest.
-	                canTarget = false;
-	                App.M.Target = null;
-	            }
 
                 //If we're dead dont even bother targeting us.
 	            if (ply.M.ActionController.HealthController.IsDead)
@@ -119,8 +110,17 @@ namespace Enemy
 	        else if (!App.M.NeverForget && !IsRemembering)
 	            App.M.Target = null;
 
-	        //If target is behind the enemy and is targeted and we're arent turning, turn around.
-	        if (!IsTurning && IsTargetBehind && App.M.Target)
+	        //Check if we can see the player
+	        if (App.M.Target &&
+	            !App.M.HasWallHack &&
+	            Physics2D.RaycastNonAlloc(ownPos, ToPlayer.normalized, viewResults, Mathf.Clamp(ToPlayer.magnitude, 0, App.M.ViewRadius), LayerMask.GetMask("Platform")) > 0)
+	        {
+	            //We cant see the player, lose interest.
+	            App.M.Target = null;
+	        }
+
+            //If target is behind the enemy and is targeted and we're arent turning, turn around.
+            if (!IsTurning && IsTargetBehind && App.M.Target)
 	            Turn(-1 * App.M.Character.LookDirection);
 
             /**
@@ -230,14 +230,21 @@ namespace Enemy
 
                 TellMeWhen.CancelScaled(this, EVENT_STAGGING);
 	            TellMeWhen.Seconds(staggingDuration, this, EVENT_STAGGING);
-	        }
+
+                if (App.M.StaggerIndicator)
+                    App.M.StaggerIndicator.ShowIndicator(.1f);
+            }
 	    }
 
 	    private void OnDead()
 	    {
 	        IsTurning = false;
-            if(App.M.Character.AttackIndication.Show)
-                App.M.Character.AttackIndication.HideIndicator(.1f);
+
+            if(App.M.AttackIndicator.Show)
+                App.M.AttackIndicator.HideIndicator(.1f);
+
+	        if (App.M.StaggerIndicator)
+	            App.M.StaggerIndicator.HideIndicator(.1f);
 
             if (GameManager.Instance != null)
 	            GameManager.Instance.EnemiesChange.Invoke();
@@ -258,6 +265,9 @@ namespace Enemy
 	                break;
 	            case EVENT_STAGGING:
 	                IsStagging = false;
+
+                    if (App.M.StaggerIndicator)
+                        App.M.StaggerIndicator.HideIndicator(.1f);
 	                break;
 	            case EVENT_MEMORY:
 	                App.M.Target = null;

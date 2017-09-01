@@ -112,8 +112,9 @@ namespace Enemy
             _isAttacking = false;
             _canAttack = false;
             SetCombat(false);
-            if (Context.M.Character.AttackIndication)
-                Context.M.Character.AttackIndication.HideIndicator(.1f);
+
+            if (Context.M.AttackIndicator)
+                Context.M.AttackIndicator.HideIndicator(.1f);
         }
 
         /// <summary>
@@ -126,9 +127,9 @@ namespace Enemy
                 return;
 
             _isAttacking = true;
-            if(Context.M.Character.AttackIndication)
-                Context.M.Character.AttackIndication.ShowIndicator(.1f);
 
+            if(Context.M.AttackIndicator)
+                Context.M.AttackIndicator.ShowIndicator(.1f);
 
             //Play attack animation
             if (Context.M.Character.MainAnimator && Context.M.AttackAnim)
@@ -136,7 +137,6 @@ namespace Enemy
                 Context.M.Character.MainAnimator.SetTrigger("Attack");
                 SetCombat(true);
             }
-                
             else
                 Attack();
         }

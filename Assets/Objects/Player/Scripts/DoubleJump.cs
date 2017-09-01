@@ -52,8 +52,12 @@ namespace CharacterController
         {
             if(_jumpTimer > 0)
                 _jumpTimer -= Time.fixedDeltaTime;
-            if (_actionsController.OnGround )
-                _hasJumped = false;
+            if (_hasJumped)
+            {
+                if (_actionsController.OnGround || _actionsController.WallSlideCheck.Sides.Left ||
+                    _actionsController.WallSlideCheck.Sides.Right)
+                    _hasJumped = false;
+            }
         }
 
     }
