@@ -3009,7 +3009,7 @@ MonoBehaviour:
   _horizontalDuration: 0.35
   _verticalDuration: 0.12
   _whenToSwicthDirection: 0
-  _graceperiod: 0.2
+  _graceperiod: 0.1
 --- !u!114 &114229662466771864
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3933,7 +3933,7 @@ MonoBehaviour:
   _wallJump: 1
   _dash: 1
   _ledgeHanging: 1
-  _throw: 1
+  _throw: 0
 --- !u!114 &114850136985437648
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4002,7 +4002,7 @@ MonoBehaviour:
   _invurnabilityDuration: 1
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 3
+  _healthAmount: 1
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 600
   _knockbackDuration: 0.1
