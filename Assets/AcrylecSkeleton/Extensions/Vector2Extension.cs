@@ -97,5 +97,9 @@ namespace AcrylecSkeleton.Extensions
             return Mathf.Atan2(vector.x, vector.y);
         }
 
+        public static Vector2 Vector2Multiply(this Vector2 a, Vector2 b)
+        {
+            return new Vector2(a.x * b.x, a.y * b.y);
+        }
     }
 }
