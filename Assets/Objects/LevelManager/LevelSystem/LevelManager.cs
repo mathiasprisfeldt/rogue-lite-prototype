@@ -120,6 +120,15 @@ public class LevelManager : Singleton<LevelManager>
         return Instantiate(tileRecipe ?? BorderTile, pos + _tileSpawnOffset, rot, parent);
     }
 
+    public void ResetGame()
+    {
+        _forcedLevels.Clear();
+        _randomLevels.Clear();
+
+        LoadLevels();
+        LoadNextLevel();
+    }
+
     /// <summary>
     /// levels form given level files
     /// </summary>
