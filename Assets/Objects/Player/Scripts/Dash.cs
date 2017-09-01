@@ -20,6 +20,8 @@ namespace CharacterController
         [SerializeField]
         private AnimationCurve _dashCurve;
 
+        public bool InitialDash { get; set; }
+
         private bool _dashing;
         private float _dashingTimer;
         private float _cooldownTimer;
@@ -33,6 +35,8 @@ namespace CharacterController
             {
                 var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
 
+                InitialDash = false;
+
                 if (!base.HorizontalActive)
                     return false;
 
@@ -42,6 +46,7 @@ namespace CharacterController
                     {
                         _actionsController.StartDash.Value = true;
                         _direction = _actionsController.Model.transform.localScale.x > 0 ? 1 : -1;
+                        InitialDash = true;
 
                         if (_direction > 0 && _actionsController.WallSlideCheck.Right || _direction < 0 && _actionsController.WallSlideCheck.Left)
                             return false;
