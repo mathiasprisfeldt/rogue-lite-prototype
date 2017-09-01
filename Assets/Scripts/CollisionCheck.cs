@@ -8,12 +8,6 @@ using UnityEngine;
 
 public class CollisionCheck : MonoBehaviour
 {
-
-    private bool _isDirty;
-
-    private CollisionSides _collisionSides = new CollisionSides();
-    private List<Collider2D> _collisionColliders = new List<Collider2D>();
-
     [SerializeField]
     private List<Collider2D> _collidersToCheck = new List<Collider2D>();
 
@@ -25,6 +19,13 @@ public class CollisionCheck : MonoBehaviour
 
     [SerializeField]
     private Character _character;
+
+    private bool _isDirty;
+
+    private CollisionSides _collisionSides = new CollisionSides();
+    private List<Collider2D> _collisionColliders = new List<Collider2D>();
+    private Collider2D[] _contacts = new Collider2D[10];
+
 
     public List<Collider2D> CollidersToCheck
     {
@@ -50,7 +51,7 @@ public class CollisionCheck : MonoBehaviour
         {
             if (_isDirty)
                 return Sides.Top;
-            IsColliding(ref _collisionSides);
+            IsColliding(_collisionSides);
             return _collisionSides.Top;
         }
     }
@@ -60,7 +61,7 @@ public class CollisionCheck : MonoBehaviour
         {
             if (_isDirty)
                 return Sides.Bottom;
-            IsColliding(ref _collisionSides);
+            IsColliding(_collisionSides);
             return _collisionSides.Bottom;
         }
     }
@@ -70,7 +71,7 @@ public class CollisionCheck : MonoBehaviour
         {
             if (_isDirty)
                 return Sides.Left;
-            IsColliding(ref _collisionSides);
+            IsColliding(_collisionSides);
             return _collisionSides.Left;
         }
     }
@@ -80,7 +81,7 @@ public class CollisionCheck : MonoBehaviour
         {
             if (_isDirty)
                 return Sides.Right;
-            IsColliding(ref _collisionSides);
+            IsColliding(_collisionSides);
             return _collisionSides.Right;
         }
     }
@@ -91,7 +92,7 @@ public class CollisionCheck : MonoBehaviour
         {
             if(_isDirty)
                 return _collisionSides;
-            IsColliding(ref _collisionSides);
+            IsColliding(_collisionSides);
             return _collisionSides;
         }
 
@@ -113,15 +114,15 @@ public class CollisionCheck : MonoBehaviour
         return IsColliding(CollisionLayers, out colliders);
     }
 
-    public bool IsColliding(ref CollisionSides sides)
+    public bool IsColliding(CollisionSides sides)
     {
         var temp = new List<Collider2D>();
-        return IsColliding(CollisionLayers, out temp, ref sides);
+        return IsColliding(CollisionLayers, out temp, sides);
     }
 
-    public bool IsColliding(out List<Collider2D> colliders, ref CollisionSides sides)
+    public bool IsColliding(out List<Collider2D> colliders, CollisionSides sides)
     {
-        return IsColliding(CollisionLayers, out colliders, ref sides);
+        return IsColliding(CollisionLayers, out colliders, sides);
     }
 
     public bool IsColliding(LayerMask layer)
@@ -132,110 +133,112 @@ public class CollisionCheck : MonoBehaviour
 
     public bool IsColliding(LayerMask layer, out List<Collider2D> colliders)
     {
-        return IsColliding(layer, out colliders, ref _collisionSides);
+        return IsColliding(layer, out colliders, _collisionSides);
     }
 
-    public bool IsColliding(LayerMask layer, out List<Collider2D> colliders, ref CollisionSides sides)
+    public bool IsColliding(LayerMask layer, out List<Collider2D> colliders, CollisionSides sides)
     {
         sides.Reset();
         bool collision = false;
 
         if (_isDirty && layer == _collisionLayers)
         {
-            colliders = _collisionColliders.ToList();
+            colliders = _collisionColliders;
             sides = Sides;
             return sides.Top || sides.Bottom || sides.Right || sides.Left;
         }
-        sides.Colliders = CollidersToCheck.ToList();
-        var name = transform.root.gameObject.name;
 
         foreach (var c in CollidersToCheck)
         {
-            Collider2D[] t = new Collider2D[10];
+            for (int i = 0; i < _contacts.Length; i++)
+            {
+                _contacts[i] = null;
+            }
+
             if (c == null)
                 continue;
-            int numberOfCollisions = c.GetContacts(t);
+            int numberOfCollisions = c.GetContacts(_contacts);
 
             if (numberOfCollisions == 0)
                 break;
 
 
 
-            for (int i = 0; i < t.Length; i++)
+            for (int i = 0; i < _contacts.Length; i++)
             {
-                if (t[i] == null)
+                if (_contacts[i] == null)
                     continue;
-                if (CollisionLayers == (CollisionLayers | (1 << t[i].gameObject.layer)))
+                if (CollisionLayers == (CollisionLayers | (1 << _contacts[i].gameObject.layer)))
                 {
 
-                    if (sides.Top || (c.bounds.min.y <= t[i].bounds.min.y
-                        && (_tolerance == 0 || Mathf.Abs(c.bounds.max.y - t[i].bounds.min.y) <= _tolerance)))
+                    if (sides.Top || (c.bounds.min.y <= _contacts[i].bounds.min.y
+                        && (_tolerance == 0 || Mathf.Abs(c.bounds.max.y - _contacts[i].bounds.min.y) <= _tolerance)))
                     {
                         sides.Top = true;
-                        sides.TopColliders.Add(t[i]);
+                        sides.TopColliders.Add(_contacts[i]);
 
                     }
 
-                    if (sides.Bottom || (c.bounds.max.y >= t[i].bounds.max.y
-                        && (_tolerance == 0 || Mathf.Abs(c.bounds.min.y - t[i].bounds.max.y) <= _tolerance)))
+                    if (sides.Bottom || (c.bounds.max.y >= _contacts[i].bounds.max.y
+                        && (_tolerance == 0 || Mathf.Abs(c.bounds.min.y - _contacts[i].bounds.max.y) <= _tolerance)))
                     {
                         sides.Bottom = true;
-                        sides.BottomColliders.Add(t[i]);
+                        sides.BottomColliders.Add(_contacts[i]);
                     }
 
 
-                    if (sides.Right || (c.bounds.min.x <= t[i].bounds.min.x
-                        && (_tolerance == 0 || Mathf.Abs(c.bounds.max.x - t[i].bounds.min.x) <= _tolerance)))
+                    if (sides.Right || (c.bounds.min.x <= _contacts[i].bounds.min.x
+                        && (_tolerance == 0 || Mathf.Abs(c.bounds.max.x - _contacts[i].bounds.min.x) <= _tolerance)))
                     {
                         sides.Right = true;
-                        sides.RightColliders.Add(t[i]);
+                        sides.RightColliders.Add(_contacts[i]);
                     }
 
-                    if (sides.Left || (c.bounds.max.x >= t[i].bounds.max.x
-                        && (_tolerance == 0 || Mathf.Abs(c.bounds.min.x - t[i].bounds.max.x) <= _tolerance)))
+                    if (sides.Left || (c.bounds.max.x >= _contacts[i].bounds.max.x
+                        && (_tolerance == 0 || Mathf.Abs(c.bounds.min.x - _contacts[i].bounds.max.x) <= _tolerance)))
                     {
                         sides.Left = true;
-                        sides.LeftColliders.Add(t[i]);
+                        sides.LeftColliders.Add(_contacts[i]);
                     }
 
                     //TODO: HACKISH: This wouldnt work properly if the collider is inside it.
                     //If the target collider is inside us, we check which one is superior.
                     if (sides.Left && sides.Right)
                     {
-                        if (t[i].bounds.center.x > c.bounds.center.x)
+                        if (_contacts[i].bounds.center.x > c.bounds.center.x)
                         {
                             sides.Left = false;
-                            sides.LeftColliders.Remove(t[i]);
+                            sides.LeftColliders.Remove(_contacts[i]);
                         }
                         else
                         {
                             sides.Right = false;
-                            sides.RightColliders.Remove(t[i]);
+                            sides.RightColliders.Remove(_contacts[i]);
                         }
                     }
                     
                     //Also do this for top and bottom
                     if (sides.Top && sides.Bottom)
                     {
-                        if (t[i].bounds.center.y > c.bounds.center.y)
+                        if (_contacts[i].bounds.center.y > c.bounds.center.y)
                         {
                             sides.Top = false;
-                            sides.TopColliders.Remove(t[i]);
+                            sides.TopColliders.Remove(_contacts[i]);
                         }
                         else
                         {
                             sides.Bottom = false;
-                            sides.BottomColliders.Remove(t[i]);
+                            sides.BottomColliders.Remove(_contacts[i]);
                         }
                     }
 
                     collision = sides.Top || sides.Bottom || sides.Right || sides.Left;
                     if (collision)
-                        sides.TargetColliders.Add(t[i]);
+                        sides.TargetColliders.Add(_contacts[i]);
                 }
             }
         }
-        colliders = sides.TargetColliders.ToList();
+        colliders = sides.TargetColliders;
 
         if (layer == _collisionLayers)
             SetDirty(sides);
@@ -268,7 +271,6 @@ public class CollisionSides
     public List<Collider2D> RightColliders { get; set; }
     public List<Collider2D> LeftColliders { get; set; }
     public List<Collider2D> TargetColliders { get; set; }
-    public List<Collider2D> Colliders { get; set; }
 
     public CollisionSides()
     {
@@ -277,7 +279,6 @@ public class CollisionSides
         RightColliders = new List<Collider2D>();
         LeftColliders = new List<Collider2D>();
         TargetColliders = new List<Collider2D>();
-        Colliders = new List<Collider2D>();
     }
 
     public void Reset()
@@ -292,6 +293,5 @@ public class CollisionSides
         RightColliders.Clear();
         LeftColliders.Clear();
         TargetColliders.Clear();
-        Colliders.Clear();
     }
 }
