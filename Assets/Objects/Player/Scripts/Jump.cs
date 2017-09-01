@@ -68,6 +68,13 @@ public class Jump : MovementAbility {
                 && pa != null && pa.Down && pa.ProxyInputActions.Jump.WasPressed))
                 return true;
 
+            if (_actionsController.AbilityReferences.Dash.InitialDash)
+            {
+                _jumpTimer = 0;
+                _initialJumpTimer = 0;
+                _gracePeriodTimer = 0;
+            }
+
             return _jumpTimer > 0 || _initialJumpTimer > 0;
         }
     }
