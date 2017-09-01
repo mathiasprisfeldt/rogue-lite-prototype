@@ -138,7 +138,6 @@ public class CollisionCheck : MonoBehaviour
 
     public bool IsColliding(LayerMask layer, out List<Collider2D> colliders, CollisionSides sides)
     {
-        sides.Reset();
         bool collision = false;
 
         if (_isDirty && layer == _collisionLayers)
@@ -147,6 +146,8 @@ public class CollisionCheck : MonoBehaviour
             sides = Sides;
             return sides.Top || sides.Bottom || sides.Right || sides.Left;
         }
+
+        sides.Reset();
 
         foreach (var c in CollidersToCheck)
         {

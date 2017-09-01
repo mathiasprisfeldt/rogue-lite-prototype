@@ -18,7 +18,6 @@ public class Climbing : MovementAbility
     private float _horizontalSpeed;
 
     private Climbable _climeObject;
-    private bool _firstTime;
     private bool _climbing;
     private bool _fall;
     private float _fallTimer;
@@ -52,17 +51,15 @@ public class Climbing : MovementAbility
             if (_climeObject == null)
                 _climeObject = GetClosestClimable();
 
-            if (_climeObject != null && !_firstTime)
-            {
-                _actionsController.StartClimbing.Value = true;
-                _firstTime = true;
-            }
-
-            var isActive = _climeObject != null && (_actionsController.App.C.PlayerActions.Up || _actionsController.App.C.PlayerActions.Down)
-                    || OnLadder(_actionsController.GroundCollisionCheck) != null && _actionsController.App.C.PlayerActions.Down;
+            var isActive = _climeObject != null && (_actionsController.App.C.PlayerActions.Up || _actionsController.App.C.PlayerActions.Down) && !_actionsController.Combat
+                    || OnLadder(_actionsController.GroundCollisionCheck) != null && _actionsController.App.C.PlayerActions.Down && !_actionsController.Combat;
 
             if (!_climbing && isActive && _cooldown <= 0)
+            {
+                _actionsController.StartClimbing.Value = true;
                 _climbing = true;
+                Debug.Log("Yes");
+            }
 
             return (isActive || _climbing) && _cooldown <= 0;
         }
@@ -105,7 +102,7 @@ public class Climbing : MovementAbility
         {
             var tempDistance = Mathf.Abs(_actionsController.NonPlatformTriggerCheck.CollidersToCheck[0].bounds.center.y - c.bounds.center.y);
 
-            if (tempDistance < distance)
+            if (tempDistance < distance && c.gameObject.tag == "Ladder")
             {
                 Climbable caTemp = c.gameObject.GetComponent<Climbable>();
                 if (caTemp != null)
@@ -124,8 +121,10 @@ public class Climbing : MovementAbility
     public void LateUpdate()
     {
         _climeObject = null;
-        if (!VerticalActive)
-            _firstTime = false;
+        if (OnLadder(_actionsController.NonPlatformTriggerCheck) == null)
+        {
+            OnLadder(_actionsController.NonPlatformTriggerCheck);
+        }
         if (_climbing && (OnLadder(_actionsController.NonPlatformTriggerCheck) == null ) ||
             _actionsController.Combat)
             _climbing = false;
