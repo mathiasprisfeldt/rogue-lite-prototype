@@ -2,6 +2,7 @@ using System;
 using AcrylecSkeleton.MVC;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using Controllers;
+using Indication;
 using Managers;
 using UnityEngine;
 
@@ -20,6 +21,12 @@ namespace Enemy
 
         [SerializeField]
         private EnemyAttackAnim _enemyAttackAnim;
+
+        [SerializeField]
+        private AttackIndication _attackIndicator;
+
+        [SerializeField]
+        private AttackIndication _staggerIndicator;
 
         [Space]
         [Header("Enemy Settings:")]
@@ -81,6 +88,18 @@ namespace Enemy
         public EnemyAttackAnim AttackAnim
         {
             get { return _enemyAttackAnim; }
+        }
+
+        public AttackIndication AttackIndicator
+        {
+            get { return _attackIndicator; }
+            set { _attackIndicator = value; }
+        }
+
+        public AttackIndication StaggerIndicator
+        {
+            get { return _staggerIndicator; }
+            set { _staggerIndicator = value; }
         }
 
         public float AttackCooldown
