@@ -147,6 +147,9 @@ namespace Enemy
         /// </summary>
 	    public void Turn(int dir, bool flip = false)
         {
+            if (IsState<EnemyAttack>() || IsStagging) //Dont turn if we're attacking.
+                return;
+
             if (dir == 0 && flip)
                 dir = -1 * App.M.Character.LookDirection;
 
@@ -171,6 +174,12 @@ namespace Enemy
 
             _whereToTurnTo = dir;
         }
+
+	    public void StopTurn()
+	    {
+	        IsTurning = false;
+            TellMeWhen.CancelScaled(this, EVENT_TURN);
+	    }
 
         /// <summary>
         /// Flips/Turns the enemy around.
@@ -211,9 +220,6 @@ namespace Enemy
 
 	    private void OnDamage(Character from)
 	    {
-	        if (App.M.TurnOnBackstab && IsTargetBehind)
-                Turn();
-
             //If the enemy can remember the player, do so.
 	        if (App.M.MemoryDuration != 0)
 	        {
@@ -223,13 +229,25 @@ namespace Enemy
 	            TellMeWhen.Seconds(App.M.MemoryDuration, this, EVENT_MEMORY);
 	        }
 
-	        float staggingDuration = App.M.StaggerDuration;
-	        if (staggingDuration != 0 && !IsStagging)
+            //For the rest of OnDamage code, if we're in attack state dont do anything.
+            if (IsState<EnemyAttack>())
+                return;
+
+	        if (App.M.TurnOnBackstab && IsTargetBehind)
+	            Turn();
+
+            float staggingDuration = App.M.StaggerDuration;
+
+            if (staggingDuration != 0 && !IsStagging)
 	        {
+                StopTurn();
+
 	            IsStagging = true;
 
                 TellMeWhen.CancelScaled(this, EVENT_STAGGING);
 	            TellMeWhen.Seconds(staggingDuration, this, EVENT_STAGGING);
+
+                App.M.Character.StandStill();
 
                 if (App.M.StaggerIndicator)
                     App.M.StaggerIndicator.ShowIndicator(.1f);

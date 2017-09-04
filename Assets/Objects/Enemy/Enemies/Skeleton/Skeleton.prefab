@@ -690,10 +690,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isEnabled: 0
   _drawGizmos: 1
-  _hitBoxSize: {x: 0.57, y: 1.5}
-  _hitBoxOffset: {x: 0.85, y: 0.85}
-  _attackBoxSize: {x: 0.57, y: 1.5}
-  _attackBoxOffset: {x: 0.85, y: 0.85}
+  _hitBoxSize: {x: 1.09, y: 1.5}
+  _hitBoxOffset: {x: 0.58, y: 0.85}
+  _attackBoxSize: {x: 1.09, y: 1.5}
+  _attackBoxOffset: {x: 0.58, y: 0.85}
 --- !u!114 &114466314149153096
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -748,7 +748,7 @@ MonoBehaviour:
   _invurnabilityDuration: 0
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 2
+  _healthAmount: 100
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 600
   _knockbackDuration: 0.1
@@ -799,10 +799,10 @@ MonoBehaviour:
   _attackIndicator: {fileID: 114195926670245762}
   _staggerIndicator: {fileID: 114466314149153096}
   _viewRadius: 10
-  _attackCooldown: 1
-  _indicatorDuration: 0
+  _attackCooldown: 0.2
+  _indicatorDuration: 0.35
   _targetBehind: 1
-  _turnSpeed: 1
+  _turnSpeed: 0.25
   _canBackPaddle: 0
   _turnOnBackstab: 1
   _engageSpeed: 100
