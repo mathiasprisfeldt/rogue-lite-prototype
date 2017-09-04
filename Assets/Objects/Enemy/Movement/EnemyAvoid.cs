@@ -10,9 +10,6 @@ namespace Enemy
     public class EnemyAvoid : EnemyState 
     {
         [SerializeField]
-        private bool _waitForPlayer;
-
-        [SerializeField]
         private float _avoidDistance = 2;
 
         void FixedUpdate()
@@ -34,7 +31,7 @@ namespace Enemy
 
         public override bool ShouldTakeover()
         {
-            if (Context.M.Target && 
+            if (Context.C.Target && 
                 Context.M.Character.BumpingDirection == 0 && 
                 Context.C.ToPlayer.magnitude < _avoidDistance)
                 return true;
@@ -44,19 +41,10 @@ namespace Enemy
 
         public override void Reason()
         {
-            if (!Context.M.Target)
+            if (!Context.C.Target)
             {
                 ChangeState<EnemyIdle>();
                 return;
-            }
-
-            if (!_waitForPlayer && 
-                !Context.C.IsTargetBehind &&
-                (Machine.PreviousState is EnemyPatrol && Context.M.CanBackPaddle || Context.C.ToPlayer.magnitude < _avoidDistance))
-            {
-                Context.C.Turn();
-                ChangeState<EnemyIdle>();
-                Context.M.Target = null;
             }
 
             base.Reason();

@@ -11,7 +11,10 @@ namespace Enemy
     {
         void FixedUpdate()
         {
-            if (IsActive && Context.M.Target && Context.M.Character.BumpingDirection == 0)
+            if (!IsActive)
+                return;
+
+            if (Context.C.Target && Context.M.Character.BumpingDirection == 0)
             {
                 if (Context.M.Character.OnGround && !Context.M.Character.IsFlying)
                     Context.C.Move(Mathf.Round(Context.C.ToPlayer.normalized.x) * Vector2.right, forceTurn: true);
@@ -26,14 +29,15 @@ namespace Enemy
         {
             base.Reason();
 
-            if (!Context.M.Target)
+            if (!Context.C.Target)
                 ChangeState<EnemyIdle>();
         }
 
         public override bool ShouldTakeover()
         {
-            if (Context.M.Target && 
-                !IsState<EnemyAttack>())
+            if (Context.C.Target && 
+                !IsState<EnemyAttack>() &&
+                !IsState<EnemyAvoid>())
                 return true;
 
             return false;

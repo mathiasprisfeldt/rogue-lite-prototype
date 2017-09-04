@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AcrylecSkeleton.Extensions;
 using Controllers;
 using Managers;
@@ -13,6 +14,9 @@ namespace Enemy
     /// </summary>
     public abstract class EnemyAttack : EnemyState
     {
+        private const float INDICATOR_IN_TIME = .05f;
+        private const float INDICATOR_OUT_TIME = .1f;
+
         private bool _isAttacking;
         private float _indicatorTimer;
         private float _cooldownTimer;
@@ -60,18 +64,33 @@ namespace Enemy
         public override void End()
         {
             base.End();
+
             _isAttacking = false;
+
+            if (Context.M.AttackIndicator)
+                Context.M.AttackIndicator.HideIndicator(INDICATOR_OUT_TIME);
+
+            Context.M.Character.MainAnimator.ResetTrigger("Hit"); //If Hit has been triggered while attacking, reset it.
         }
 
         public override void Think(float deltaTime)
         {
-            if (_isAttacking || Context.C.IsStagging)
+            if (Context.C.IsStagging)
                 return;
 
             //Attack when player gets close.
             if (_canAttack)
             {
                 _indicatorTimer -= deltaTime;
+
+                //Runs when idicatation has started.
+                if (!_isAttacking)
+                {
+                    _isAttacking = true;
+
+                    if (Context.M.AttackIndicator && !Context.M.AttackIndicator.Show)
+                        Context.M.AttackIndicator.ShowIndicator(INDICATOR_IN_TIME);
+                }
 
                 if (_indicatorTimer <= 0)
                 {
@@ -85,7 +104,7 @@ namespace Enemy
             if (_isAttacking)
                 return;
 
-            if (!CheckHitbox() || !_canAttack || !Context.M.Target)
+            if (!CheckHitbox() || !_canAttack || !Context.C.Target)
                 ChangeState<EnemyIdle>();
 
             base.Reason();
@@ -96,7 +115,10 @@ namespace Enemy
             if (_isAttacking)
                 return true;
 
-            if (CheckHitbox() && Context.M.Target && !Context.C.IsTurning)
+            if (CheckHitbox() && 
+                Context.C.Target &&
+                !Context.C.IsTurning && 
+                _canAttack)
                 return true;
 
             return false;
@@ -107,14 +129,14 @@ namespace Enemy
         /// </summary>
         public virtual void Attack()
         {
-            _cooldownTimer = Context.M.AttackCooldown;
-            _indicatorTimer = Context.M.IndicatorDuration;
-            _isAttacking = false;
-            _canAttack = false;
             SetCombat(false);
 
             if (Context.M.AttackIndicator)
-                Context.M.AttackIndicator.HideIndicator(.1f);
+                Context.M.AttackIndicator.HideIndicator(INDICATOR_OUT_TIME);
+
+            _cooldownTimer = Context.M.AttackCooldown;
+            _indicatorTimer = Context.M.IndicatorDuration;
+            _isAttacking = false;
         }
 
         /// <summary>
@@ -123,19 +145,14 @@ namespace Enemy
         /// </summary>
         private void PreAttack()
         {
-            if (!CheckHitbox())
-                return;
-
-            _isAttacking = true;
-
-            if(Context.M.AttackIndicator)
-                Context.M.AttackIndicator.ShowIndicator(.1f);
+            SetCombat(true);
+            _canAttack = false;
 
             //Play attack animation
             if (Context.M.Character.MainAnimator && Context.M.AttackAnim)
             {
                 Context.M.Character.MainAnimator.SetTrigger("Attack");
-                SetCombat(true);
+                
             }
             else
                 Attack();
