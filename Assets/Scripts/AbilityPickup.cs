@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Abilitys;
 using Managers;
@@ -23,6 +24,8 @@ namespace Pickups
 
         private HandledAbility _currentAbility;
 
+        private static event Action AbilityPickupAction;
+
         public void Start()
         {
             _currentAbility = HandledAbility.None;
@@ -31,7 +34,13 @@ namespace Pickups
             {
                 CheckAbility(ah);
             }
-                
+
+            AbilityPickupAction += OnAbilityPickupAction;
+        }
+
+        private void OnAbilityPickupAction()
+        {
+            _currentAbility = HandledAbility.None;
         }
 
         private void CheckAbility(AbilityHandler ah)
@@ -71,6 +80,11 @@ namespace Pickups
                 if (cc.Character.AbilityHandler != null)
                 {
                     cc.Character.AbilityHandler.UnlockAbility(_currentAbility);
+
+                    AbilityPickupAction -= OnAbilityPickupAction;
+                    if(AbilityPickupAction != null)
+                        AbilityPickupAction.Invoke();
+
                     Destroy(gameObject);
                 }
                     
