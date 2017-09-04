@@ -137,6 +137,9 @@ public class LevelManager : Singleton<LevelManager>
     /// </summary>
     public void LoadLevels()
     {
+        if (_forcedLevelsText == null || _randomLevelsText == null)
+            return;
+
         foreach (var item in _forcedLevelsText)
         {
             _forcedLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
