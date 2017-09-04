@@ -138,7 +138,6 @@ public class CollisionCheck : MonoBehaviour
 
     public bool IsColliding(LayerMask layer, out List<Collider2D> colliders, CollisionSides sides)
     {
-        sides.Reset();
         bool collision = false;
 
         if (_isDirty && layer == _collisionLayers)
@@ -147,6 +146,8 @@ public class CollisionCheck : MonoBehaviour
             sides = Sides;
             return sides.Top || sides.Bottom || sides.Right || sides.Left;
         }
+
+        sides.Reset();
 
         foreach (var c in CollidersToCheck)
         {
@@ -201,35 +202,34 @@ public class CollisionCheck : MonoBehaviour
                         sides.LeftColliders.Add(_contacts[i]);
                     }
 
-                    //TODO: HACKISH: This wouldnt work properly if the collider is inside it.
                     //If the target collider is inside us, we check which one is superior.
                     if (sides.Left && sides.Right)
                     {
-                        if (_contacts[i].bounds.center.x > c.bounds.center.x)
-                        {
-                            sides.Left = false;
-                            sides.LeftColliders.Remove(_contacts[i]);
-                        }
-                        else
-                        {
-                            sides.Right = false;
-                            sides.RightColliders.Remove(_contacts[i]);
-                        }
+                        sides.ApproxHorizontal = _contacts[i].bounds.center.x > c.bounds.center.x
+                            ? CollisionSides.ColHorizontal.Right
+                            : CollisionSides.ColHorizontal.Left;
                     }
-                    
+                    else
+                    {
+                        if (sides.Left)
+                            sides.ApproxHorizontal = CollisionSides.ColHorizontal.Left;
+                        else if (sides.Right)
+                            sides.ApproxHorizontal = CollisionSides.ColHorizontal.Right;
+                    }
+
                     //Also do this for top and bottom
                     if (sides.Top && sides.Bottom)
                     {
-                        if (_contacts[i].bounds.center.y > c.bounds.center.y)
-                        {
-                            sides.Top = false;
-                            sides.TopColliders.Remove(_contacts[i]);
-                        }
-                        else
-                        {
-                            sides.Bottom = false;
-                            sides.BottomColliders.Remove(_contacts[i]);
-                        }
+                        sides.ApproxVertical = _contacts[i].bounds.center.y > c.bounds.center.y
+                            ? CollisionSides.ColVertical.Bottom
+                            : CollisionSides.ColVertical.Top;
+                    }
+                    else
+                    {
+                        if (sides.Top)
+                            sides.ApproxVertical = CollisionSides.ColVertical.Top;
+                        else if (sides.Bottom)
+                            sides.ApproxVertical = CollisionSides.ColVertical.Bottom;
                     }
 
                     collision = sides.Top || sides.Bottom || sides.Right || sides.Left;
@@ -261,6 +261,23 @@ public class CollisionCheck : MonoBehaviour
 
 public class CollisionSides
 {
+    public enum ColHorizontal
+    {
+        None,
+        Left,
+        Right
+    }
+
+    public enum ColVertical
+    {
+        None,
+        Top,
+        Bottom
+    }
+
+    public ColHorizontal ApproxHorizontal { get; set; }
+    public ColVertical ApproxVertical { get; set; }
+
     public bool Top { get; set; }
     public bool Bottom { get; set; }
     public bool Right { get; set; }
@@ -283,6 +300,9 @@ public class CollisionSides
 
     public void Reset()
     {
+        ApproxHorizontal = ColHorizontal.None;
+        ApproxVertical = ColVertical.None;
+
         Top = false;
         Bottom = false;
         Left = false;

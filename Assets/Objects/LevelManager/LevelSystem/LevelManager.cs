@@ -57,7 +57,10 @@ public class LevelManager : Singleton<LevelManager>
                 CurrentLevel = new Level(_randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)]);
             }
             else
+            {
                 Debug.Log("There are no levels to loaded");
+                return;
+            }
 
             GameObject go = new GameObject("LevelParent");
             go.AddComponent<Platforms>();
@@ -134,6 +137,9 @@ public class LevelManager : Singleton<LevelManager>
     /// </summary>
     public void LoadLevels()
     {
+        if (_forcedLevelsText == null || _randomLevelsText == null)
+            return;
+
         foreach (var item in _forcedLevelsText)
         {
             _forcedLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));

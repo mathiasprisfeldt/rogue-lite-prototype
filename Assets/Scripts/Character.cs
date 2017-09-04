@@ -326,12 +326,9 @@ namespace Controllers
             bool rightHit = Physics2D.RaycastNonAlloc(rightOrigin, direction * length, _bumpingResults, length, LayerMask.GetMask("Platform")) != 0;
 
             //If we cant find physical collider checker we log it and move on.
-            bool leftBump = _bumberCollisionCheck.Left;
-            bool rightBump = _bumberCollisionCheck.Right;
-
-            if (leftBump && rightBump)
-                Debug.Log("ASD");
-
+            bool leftBump = _bumberCollisionCheck.Sides.ApproxHorizontal == CollisionSides.ColHorizontal.Left;
+            bool rightBump = _bumberCollisionCheck.Sides.ApproxHorizontal == CollisionSides.ColHorizontal.Right;
+            
             if (!leftHit || leftBump)
                 BumpingDirection = -1;
             else if (!rightHit || rightBump)
