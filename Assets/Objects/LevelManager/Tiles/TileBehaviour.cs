@@ -122,7 +122,7 @@ public class TileBehaviour : MonoBehaviour
         List<GameObject> targets = new List<GameObject>();
         Touched = true;
 
-        CheckHorizontalComposite(ref targets, false);
+        CheckHorizontalComposite(ref targets, _isTop);
         if (targets.Count <= 1)
         {
             Touched = false;
@@ -174,10 +174,8 @@ public class TileBehaviour : MonoBehaviour
         
     }
 
-    public void CheckHorizontalComposite(ref List<GameObject> targets, bool continueDown)
+    public void CheckHorizontalComposite(ref List<GameObject> targets, bool isTop)
     {
-        bool nextShouldDown = continueDown;
-
         targets.Add(gameObject);
         TileBehaviour tLeft = null;
         TileBehaviour tRight = null;
@@ -190,13 +188,13 @@ public class TileBehaviour : MonoBehaviour
         if (right != null)
             tRight = right.GetComponent<TileBehaviour>();
 
-        if (tLeft && !tLeft.Touched && (tLeft.TargetTag == TargetTag))
+        if (tLeft && !tLeft.Touched && tLeft._isTop == isTop && (tLeft.TargetTag == TargetTag))
         {
             tLeft.Touched = true;
             _queue.Enqueue(tLeft);
         }
 
-        if (tRight && !tRight.Touched && (tRight.TargetTag == TargetTag))
+        if (tRight && !tRight.Touched && tRight._isTop == isTop && (tRight.TargetTag == TargetTag))
         {
             tRight.Touched = true;
             _queue.Enqueue(tRight);
@@ -206,7 +204,7 @@ public class TileBehaviour : MonoBehaviour
         {
             var temp = _queue.Dequeue();
             temp.Touched = true;
-            temp.CheckHorizontalComposite(ref targets, nextShouldDown);
+            temp.CheckHorizontalComposite(ref targets, isTop);
         }
     }
 
