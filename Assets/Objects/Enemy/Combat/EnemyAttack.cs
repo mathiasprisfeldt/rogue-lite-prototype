@@ -104,7 +104,7 @@ namespace Enemy
             if (_isAttacking)
                 return;
 
-            if (!CheckHitbox() || !_canAttack || !Context.M.Target)
+            if (!CheckHitbox() || !_canAttack || !Context.C.Target)
                 ChangeState<EnemyIdle>();
 
             base.Reason();
@@ -116,7 +116,7 @@ namespace Enemy
                 return true;
 
             if (CheckHitbox() && 
-                Context.M.Target &&
+                Context.C.Target &&
                 !Context.C.IsTurning && 
                 _canAttack)
                 return true;

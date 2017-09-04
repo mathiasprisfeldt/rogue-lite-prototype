@@ -28,11 +28,11 @@ namespace Enemy
         [SerializeField]
         private AttackIndication _staggerIndicator;
 
+        [SerializeField]
+        private CollisionCheck _viewBox;
+
         [Space]
         [Header("Enemy Settings:")]
-        [SerializeField]
-        private float _viewRadius;
-
         [SerializeField]
         private float _attackCooldown;
 
@@ -69,16 +69,6 @@ namespace Enemy
         [SerializeField, Tooltip("How long it takes for the enemy to forget the player.")]
         private float _memoryDuration;
 
-        [Space]
-        [SerializeField]
-        private PlayerApplication _target;
-
-        public float ViewRadius
-        {
-            get { return _viewRadius; }
-            set { _viewRadius = value; }
-        }
-
         public Character Character
         {
             get { return _character; }
@@ -100,6 +90,12 @@ namespace Enemy
         {
             get { return _staggerIndicator; }
             set { _staggerIndicator = value; }
+        }
+
+        public CollisionCheck ViewBox
+        {
+            get { return _viewBox; }
+            set { _viewBox = value; }
         }
 
         public float AttackCooldown
@@ -174,10 +170,5 @@ namespace Enemy
             set { _memoryDuration = value; }
         }
 
-        public PlayerApplication Target
-        {
-            get { return _target; }
-            set { _target = value; }
-        }
     }
 }
