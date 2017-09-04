@@ -34,7 +34,8 @@ namespace Knockbacks
         [SerializeField]
         private Vector2 _defaultKnockbackDir;
 
-        [SerializeField] private AnimationCurve _velCurve =
+        [SerializeField]
+        private AnimationCurve _velCurve =
             new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 1));
 
         [SerializeField]
@@ -49,7 +50,7 @@ namespace Knockbacks
 
         private readonly List<KnockBack> _knocksBacks = new List<KnockBack>();
 
-        public event Action Started; 
+        public event Action Started;
         public event Action Done;
 
         void Awake()
@@ -78,7 +79,7 @@ namespace Knockbacks
             {
                 if (_knocksBacks[i].Time > 0)
                 {
-                    _knocksBacks[i].Time = Mathf.Clamp01(_knocksBacks[i].Time - Time.deltaTime/_knocksBacks[i].Duration);
+                    _knocksBacks[i].Time = Mathf.Clamp01(_knocksBacks[i].Time - Time.deltaTime / _knocksBacks[i].Duration);
 
                     float time = _knocksBacks[i].Time;
                     Vector2 targetVel = _knocksBacks[i].OriginalVelocity.Vector2Multiply(new Vector2(time, _velCurve.Evaluate(1 - time)));
@@ -91,14 +92,13 @@ namespace Knockbacks
                     if (Done != null && i == 0)
                         Done.Invoke();
                 }
-            }  
+            }
         }
 
         void FixedUpdate()
         {
             if (!Active)
                 return;
-
             _character.Rigidbody.velocity = _character.Rigidbody.CounterGravity(ApplyKnockback()) * Time.fixedDeltaTime;
         }
 
@@ -125,8 +125,15 @@ namespace Knockbacks
 
                 //If we use the force parameter to detect where to direct the force do so.
                 if (_flipDefaultDir)
+                {
                     if (force.x > 0)
                         dir.x *= -1;
+                    if (force.x > 0 && _character.PhysicialCollisionCheck.Right)
+                        dir.x *= -1;
+                    else if (force.x < 0 && _character.PhysicialCollisionCheck.Left)
+                        dir.x *= -1;
+                }
+                    
 
                 force = dir * _defaultForce;
                 duration = _defaultDuration;
@@ -141,6 +148,17 @@ namespace Knockbacks
         public void AddForce()
         {
             AddForce(_defaultKnockbackDir * _defaultForce, _defaultDuration);
+        }
+
+        public void Clear()
+        {
+            for (int i = _knocksBacks.Count - 1; i >= 0; i--)
+            {
+                _knocksBacks.RemoveAt(i);
+
+                if (Done != null && i == 0)
+                    Done.Invoke();
+            }
         }
     }
 }

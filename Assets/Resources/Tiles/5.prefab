@@ -92,6 +92,7 @@ MonoBehaviour:
   _tags:
   - Player
   - Enemy
+  _safetyRespawn: 1
 --- !u!114 &114625380300017496
 MonoBehaviour:
   m_ObjectHideFlags: 1

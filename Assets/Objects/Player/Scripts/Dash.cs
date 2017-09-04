@@ -78,7 +78,7 @@ namespace CharacterController
                 _cooldownTimer = 0;
                 _dashingTimer = 0;
             }
-            if (!_canDash)
+            if (!_canDash && !_dashing)
             {
                 if (_actionsController.OnGround || _actionsController.WallSlideCheck.Sides.Left ||
                     _actionsController.WallSlideCheck.Sides.Right)

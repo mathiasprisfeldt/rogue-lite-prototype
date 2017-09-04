@@ -3,6 +3,7 @@ using Controllers;
 using Managers;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Flash
@@ -23,9 +24,14 @@ namespace Flash
         private Color _healColor;
 
         private Color _targetColor;
-        private float _currentFlashDuration;
-        private float _flashTimer;
         private PlayerView _playerView;
+        private float _fadeInTimer;
+        private float _fadeOutTimer;
+        private float _fadeInDuration;
+        private float _fadeOutDuration;
+
+        public UnityEvent OnStartEvent;
+        public UnityEvent OnEndEvent;
 
         public Color DamageColor
         {
@@ -37,13 +43,16 @@ namespace Flash
             get { return _healColor; }
         }
 
-        public void StartFlash(Color targetColor, float time)
+        public void StartFlash(Color targetColor, float time, float fadeinTime = .5f)
         {
             _targetColor = targetColor;
             Color newColor = targetColor;
             newColor.a = 0;
-            _currentFlashDuration = time;
-            _flashTimer = time;
+            OnStartEvent.Invoke();
+            _fadeInTimer = Mathf.Clamp01(fadeinTime) * time;
+            _fadeOutTimer = time - _fadeInTimer;
+            _fadeInDuration = _fadeInTimer;
+            _fadeOutDuration = _fadeOutTimer;
         }
 
 
@@ -55,22 +64,29 @@ namespace Flash
                 _playerView.ScreenFlash = this;
             }
 
-            if (_flashTimer > 0)
+            if (_fadeInTimer > 0 || _fadeOutTimer > 0)
             {
-                if (_flashTimer > _currentFlashDuration/2)
+                if (_fadeInTimer > 0)
                 {
                     Color color = _targetColor;
-                    color.a = Mathf.Abs(((_flashTimer/2) / (_currentFlashDuration / 2))) * _targetColor.a;
+                    color.a = Mathf.Abs(_fadeInTimer/_fadeInDuration - 1)*_targetColor.a;
                     _image.color = color;
+                    _fadeInTimer -= Time.deltaTime;
                 }
-                else
+                else if (_fadeOutTimer > 0)
                 {
                     Color color = _targetColor;
-                    color.a = ((_flashTimer/2) / (_currentFlashDuration / 2)) * _targetColor.a;
+                    color.a = _fadeOutTimer / _fadeOutDuration * _targetColor.a;
                     _image.color = color;
-                }
-                _flashTimer -= Time.deltaTime;
+                    _fadeOutTimer -= Time.deltaTime;
+                }                  
             }
+        }
+
+        public void OnDestroy()
+        {
+            OnEndEvent.RemoveAllListeners();
+            OnStartEvent.RemoveAllListeners();
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using AcrylecSkeleton.MVC;
 using Controllers;
 using Flash;
+using UnityEngine;
 
 namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 {
@@ -20,21 +21,28 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 	        {
                 App.C.Character.HealthController.OnHealEvent.AddListener(OnHeal);
                 App.C.Character.HealthController.OnDamage.AddListener(OnDamage);
+                App.C.Character.OnSafetyRespawn.AddListener(OnSafetyRespawn);
             }
 	        
 
         }
 
+	    private void OnSafetyRespawn()
+	    {
+            if (ScreenFlash != null)
+                ScreenFlash.StartFlash(Color.black, 1f, 0);
+        }
+
 	    private void OnDamage(Character arg0)
 	    {
             if(ScreenFlash != null)
-	            ScreenFlash.StartFlash(ScreenFlash.DamageColor,1f);
+	            ScreenFlash.StartFlash(ScreenFlash.DamageColor,1f,0.1f);
 	    }
 
 	    private void OnHeal()
 	    {
 	        if (ScreenFlash != null)
-                ScreenFlash.StartFlash(ScreenFlash.HealColor, 1f);
+                ScreenFlash.StartFlash(ScreenFlash.HealColor, 1f,0.1f);
         }
 	}
 }
