@@ -137,20 +137,14 @@ public class LevelManager : Singleton<LevelManager>
     /// </summary>
     public void LoadLevels()
     {
-        if (_forcedLevels.Any())
+        foreach (var item in _forcedLevelsText)
         {
-            foreach (var item in _forcedLevelsText)
-            {
-                _forcedLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
-            }
+            _forcedLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
         }
 
-        if (_randomLevels.Any())
+        foreach (var item in _randomLevelsText)
         {
-            foreach (var item in _randomLevelsText)
-            {
-                _randomLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
-            }
+            _randomLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
         }
     }
 }
