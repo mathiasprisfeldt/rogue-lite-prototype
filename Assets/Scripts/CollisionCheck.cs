@@ -205,20 +205,32 @@ public class CollisionCheck : MonoBehaviour
                     //If the target collider is inside us, we check which one is superior.
                     if (sides.Left && sides.Right)
                     {
-                        sides.ApproxHorizontal = _contacts[i].bounds.center.x > c.bounds.center.x ? 
-                            CollisionSides.ColHorizontal.Right : CollisionSides.ColHorizontal.Left;
+                        sides.ApproxHorizontal = _contacts[i].bounds.center.x > c.bounds.center.x
+                            ? CollisionSides.ColHorizontal.Right
+                            : CollisionSides.ColHorizontal.Left;
                     }
                     else
-                        sides.ApproxHorizontal = CollisionSides.ColHorizontal.None;
+                    {
+                        if (sides.Left)
+                            sides.ApproxHorizontal = CollisionSides.ColHorizontal.Left;
+                        else if (sides.Right)
+                            sides.ApproxHorizontal = CollisionSides.ColHorizontal.Right;
+                    }
 
                     //Also do this for top and bottom
                     if (sides.Top && sides.Bottom)
                     {
-                        sides.ApproxVertical = _contacts[i].bounds.center.y > c.bounds.center.y ?
-                            CollisionSides.ColVertical.Bottom : CollisionSides.ColVertical.Top;
+                        sides.ApproxVertical = _contacts[i].bounds.center.y > c.bounds.center.y
+                            ? CollisionSides.ColVertical.Bottom
+                            : CollisionSides.ColVertical.Top;
                     }
                     else
-                        sides.ApproxVertical = CollisionSides.ColVertical.None;
+                    {
+                        if (sides.Top)
+                            sides.ApproxVertical = CollisionSides.ColVertical.Top;
+                        else if (sides.Bottom)
+                            sides.ApproxVertical = CollisionSides.ColVertical.Bottom;
+                    }
 
                     collision = sides.Top || sides.Bottom || sides.Right || sides.Left;
                     if (collision)

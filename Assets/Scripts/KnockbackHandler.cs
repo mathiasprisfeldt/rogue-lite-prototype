@@ -63,13 +63,13 @@ namespace Knockbacks
         private void OnDone()
         {
             if (_lockMovement)
-                _character.LockMovement = true;
+                _character.LockMovement = false;
         }
 
         private void OnStarted()
         {
             if (_lockMovement)
-                _character.LockMovement = false;
+                _character.LockMovement = true;
         }
 
         public void Update()
@@ -111,14 +111,8 @@ namespace Knockbacks
         public Vector2 ApplyKnockback(ref Vector2 velocity)
         {
             for (int i = _knocksBacks.Count - 1; i >= 0; i--)
-            {
-                if (_knocksBacks[i].Time > 0)
-                {
-                    velocity += _knocksBacks[i].Velocity;
-                }
-                else
-                    _knocksBacks.RemoveAt(i);
-            }
+                velocity += _knocksBacks[i].Velocity;
+
             Velocity = velocity;
             return velocity;
         }
