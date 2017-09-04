@@ -23,6 +23,9 @@ public class GiveDamage : MonoBehaviour
     [SerializeField]
     private List<string> _tags = new List<string>();
 
+    [SerializeField]
+    private bool _safetyRespawn;
+
     private bool _hasRotated;
 
     public void Update()
@@ -47,7 +50,16 @@ public class GiveDamage : MonoBehaviour
         {
             var h = collision.GetComponent<CollisionCheck>();
             if (h)
-                h.Character.HealthController.Damage(_damage,true,transform.position);
+            {
+                h.Character.HealthController.Damage(_damage, true, transform.position);
+                if (_safetyRespawn && h.Character.SafetyRespawn)
+                {
+                    h.Character.SafetyRespawn.Respawn();
+                }
+                    
+                    
+            }
+                
         }
     }
 }

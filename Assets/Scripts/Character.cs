@@ -7,6 +7,7 @@ using Indication;
 using UnityEngine;
 using Knockbacks;
 using Mana;
+using UnityEngine.Events;
 
 namespace Controllers
 {
@@ -68,6 +69,9 @@ namespace Controllers
         [SerializeField]
         private CollisionCheck _bumberCollisionCheck;
 
+        [SerializeField]
+        private SafetyRespawn _safetyRespawn;
+
         [Header("Settings:")]
         [SerializeField, Tooltip("Which way is it facing at start?")]
         private int _startDirection = -1;
@@ -87,6 +91,8 @@ namespace Controllers
 
         [SerializeField, Tooltip("If on it will flip with rotation instead of scaling.")]
         private bool _doFlipWithRotation = true;
+
+        public UnityEvent OnSafetyRespawn;
 
         public CharacterState State { get; set; }
 
@@ -193,6 +199,11 @@ namespace Controllers
         public bool IsFlying
         {
             get { return _flySpeed > 0; }
+        }
+
+        public SafetyRespawn SafetyRespawn
+        {
+            get { return _safetyRespawn; }
         }
 
         protected virtual void Awake()

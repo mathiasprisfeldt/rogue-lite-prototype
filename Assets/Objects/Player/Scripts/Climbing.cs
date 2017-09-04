@@ -51,14 +51,13 @@ public class Climbing : MovementAbility
             if (_climeObject == null)
                 _climeObject = GetClosestClimable();
 
-            var isActive = _climeObject != null && (_actionsController.App.C.PlayerActions.Up || _actionsController.App.C.PlayerActions.Down) && !_actionsController.Combat
-                    || OnLadder(_actionsController.GroundCollisionCheck) != null && _actionsController.App.C.PlayerActions.Down && !_actionsController.Combat;
+            var isActive = _climeObject != null && (_actionsController.App.C.PlayerActions.Up || (_actionsController.App.C.PlayerActions.Down && !_actionsController.OnGround)) 
+                && !_actionsController.Combat|| OnLadder(_actionsController.GroundCollisionCheck) != null && _actionsController.App.C.PlayerActions.Down && !_actionsController.Combat;
 
             if (!_climbing && isActive && _cooldown <= 0)
             {
                 _actionsController.StartClimbing.Value = true;
                 _climbing = true;
-                Debug.Log("Yes");
             }
 
             return (isActive || _climbing) && _cooldown <= 0;
