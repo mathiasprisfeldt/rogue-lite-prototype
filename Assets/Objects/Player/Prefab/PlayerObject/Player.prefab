@@ -4057,7 +4057,7 @@ MonoBehaviour:
   _wallJump: 1
   _dash: 0
   _ledgeHanging: 1
-  _throw: 0
+  _throw: 1
 --- !u!114 &114850136985437648
 MonoBehaviour:
   m_ObjectHideFlags: 1
