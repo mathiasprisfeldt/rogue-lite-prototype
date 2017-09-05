@@ -38,15 +38,14 @@ namespace Indication
             if (_transitionTimer > 0)
             {
                 _transitionTimer -= Time.deltaTime;
-                var transitionValue = 0f;
+
+                float transitionValue;
                 if (_show)
                     transitionValue = (_currentTransitionDuration - _transitionTimer) / _currentTransitionDuration;
                 else
                     transitionValue = _transitionTimer / _currentTransitionDuration;
                 transitionValue = Mathf.Clamp01(transitionValue);
                 transform.localScale = new Vector3(transitionValue, transitionValue);
-                
-                
             }
             
         }

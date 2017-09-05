@@ -29,6 +29,8 @@ namespace CharacterController
         private float _direction;
         private bool _canDash;
 
+        public float CoolDownTimer { get; set; }
+
         public override bool HorizontalActive
         {
             get
@@ -37,7 +39,7 @@ namespace CharacterController
 
                 InitialDash = false;
 
-                if (!base.HorizontalActive)
+                if (!base.HorizontalActive || CoolDownTimer > 0)
                     return false;
 
                 if ((input && _canDash|| _dashing) && _cooldownTimer <= 0 && !_actionsController.Combat)
@@ -67,7 +69,7 @@ namespace CharacterController
             get { return HorizontalActive; }
         }
 
-        public void Update()
+        public void FixedUpdate()
         {
             if (_cooldownTimer > 0)
                 _cooldownTimer -= Time.deltaTime;
@@ -84,6 +86,8 @@ namespace CharacterController
                     _actionsController.WallSlideCheck.Sides.Right)
                     _canDash = true;
             }
+            if (CoolDownTimer > 0)
+                CoolDownTimer -= Time.deltaTime;
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)
