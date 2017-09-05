@@ -64,9 +64,15 @@ namespace CharacterController
                     _timer = 0.00f;
                     _gracePeriodTimer = 0;
                     if (Direction > 0)
-                        _actionsController.AbilityReferences.Dash.LeftCooldown = .5f;
+                    {
+                        _actionsController.AbilityReferences.Dash.LeftCooldown = .6f;
+                        _actionsController.AbilityReferences.Dash.RightCooldown = 0;
+                    }
                     else
-                        _actionsController.AbilityReferences.Dash.RightCooldown = .5f;
+                    {
+                        _actionsController.AbilityReferences.Dash.RightCooldown = .6f;
+                        _actionsController.AbilityReferences.Dash.LeftCooldown = 0;
+                    }
                 }
                 else if (valid && _timer > 0)
                     _timer -= Time.deltaTime;

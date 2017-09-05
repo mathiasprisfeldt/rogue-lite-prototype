@@ -71,6 +71,7 @@ namespace CharacterController
         private MoveAbility _lastUsedHorizontalMoveAbility;
         private CombatAbility _lastUsedCombatAbility;
         private bool _dashEnded;
+        private LastSprint _lastSprint = new LastSprint(false, false);
 
 
         public Vector2 Velocity
@@ -452,11 +453,7 @@ namespace CharacterController
             if (CollisionCheck.Sides.Right && Horizontal > 0)
                 Horizontal = 0;
 
-            var tempMovementSpeed = MovementSpeed;
-            if (App.C.PlayerActions.Sprint.IsPressed && OnGround)
-                tempMovementSpeed += MovementSpeed * 0.5f;
-
-            velocity += new Vector2(tempMovementSpeed * Horizontal, 0);
+            velocity += new Vector2(MovementSpeed * Horizontal, 0);
 
             if (_abilityReferences.Dash && _abilityReferences.Dash.HorizontalActive)
             {
@@ -481,6 +478,24 @@ namespace CharacterController
             }
         }
 
+    }
+
+    public struct LastSprint
+    {
+        public bool Active { get; private set; }
+        public bool IsLeft { get; private set; }
+
+        public LastSprint(bool active, bool isLeft) : this()
+        {
+            Active = active;
+            IsLeft = isLeft;
+        }
+
+        public void SetActive(bool active, bool isLeft)
+        {
+            Active = active;
+            IsLeft = isLeft;
+        }
     }
 
     public class TemporaryLayerChange : Modification
