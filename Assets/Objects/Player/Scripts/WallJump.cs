@@ -63,7 +63,10 @@ namespace CharacterController
                     _actionsController.StartJump.Value = true;
                     _timer = 0.00f;
                     _gracePeriodTimer = 0;
-                    _actionsController.AbilityReferences.Dash.CoolDownTimer = 0.5f;
+                    if (Direction > 0)
+                        _actionsController.AbilityReferences.Dash.LeftCooldown = .5f;
+                    else
+                        _actionsController.AbilityReferences.Dash.RightCooldown = .5f;
                 }
                 else if (valid && _timer > 0)
                     _timer -= Time.deltaTime;

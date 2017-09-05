@@ -704,12 +704,18 @@ MonoBehaviour:
   _abilityHandler: {fileID: 0}
   _manaHandler: {fileID: 0}
   _bumberCollisionCheck: {fileID: 114129242314163612}
+  _safetyRespawn: {fileID: 0}
   _startDirection: 1
   _damage: 1
   _movementSpeed: 100
   _flySpeed: 0
   _flipWithVelocity: 0
   _doFlipWithRotation: 0
+  OnSafetyRespawn:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!114 &114129242314163612
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -823,12 +829,13 @@ MonoBehaviour:
   _invurnabilityDuration: 0
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 100
+  _healthAmount: 2
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 600
   _knockbackDuration: 0.1
   _responsibleGameObject: {fileID: 1115539378932434}
   _destroyOnDead: 0
+  _trapImmune: 0
   _onDead:
     m_PersistentCalls:
       m_Calls: []

@@ -106,6 +106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _parent: {fileID: 0}
   _physicalBlock: 1
+  _trap: 1
   _targetTag: 
   _autoTexturize: 0
   _leftTexture: {fileID: 0}

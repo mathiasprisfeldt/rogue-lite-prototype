@@ -71,10 +71,14 @@ namespace Health
         private bool _destroyOnDead = true;
 
         [SerializeField]
+        private bool _trapImmune;
+
+        [SerializeField]
         private UnityEvent _onDead;
 
         [SerializeField]
         private OnDamageEvent _onDamage;
+
 
         [Header("References:"), Space]
         [SerializeField]
@@ -157,6 +161,11 @@ namespace Health
         {
             get { return _character; }
             set { _character = value; }
+        }
+
+        public bool TrapImmune
+        {
+            get { return _trapImmune; }
         }
 
         void Awake()
