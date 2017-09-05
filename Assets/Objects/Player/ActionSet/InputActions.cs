@@ -120,19 +120,19 @@ namespace RogueLiteInput
 
             //Keyboard inputs
             //Left keyboard
-            LeftInput.AddDefaultBinding(Key.A);
+            LeftInput.AddDefaultBinding(Key.LeftArrow);
             LeftInput.AddDefaultBinding(Key.None);
 
             //Right
-            RightInput.AddDefaultBinding(Key.D);
+            RightInput.AddDefaultBinding(Key.RightArrow);
             RightInput.AddDefaultBinding(Key.None);
 
             //Down
-            DownInput.AddDefaultBinding(Key.S);
+            DownInput.AddDefaultBinding(Key.DownArrow);
             DownInput.AddDefaultBinding(Key.None);
 
             //Up
-            UpInput.AddDefaultBinding(Key.W);
+            UpInput.AddDefaultBinding(Key.UpArrow);
             UpInput.AddDefaultBinding(Key.None);
 
             //Jump
@@ -140,19 +140,19 @@ namespace RogueLiteInput
             Jump.AddDefaultBinding(Key.None);
 
             //Dash
-            Dash.AddDefaultBinding(Key.LeftShift);
+            Dash.AddDefaultBinding(Key.Shift);
             Dash.AddDefaultBinding(Key.None);
 
             //Attack
-            Attack.AddDefaultBinding(Key.J);
+            Attack.AddDefaultBinding(Key.D);
             Attack.AddDefaultBinding(Key.None);
 
             //Special
-            Special.AddDefaultBinding(Key.K);
+            Special.AddDefaultBinding(Key.S);
             Special.AddDefaultBinding(Key.None);
 
             //Sprint
-            Sprint.AddDefaultBinding(Key.Shift);
+            Sprint.AddDefaultBinding(Key.None);
             Sprint.AddDefaultBinding(Key.None);
 
             //Gamepad inputs
@@ -189,7 +189,7 @@ namespace RogueLiteInput
             Attack.AddDefaultBinding(Key.None);
 
             //Sprint
-            Sprint.AddDefaultBinding(InputControlType.RightBumper);
+            Sprint.AddDefaultBinding(InputControlType.None);
             Sprint.AddDefaultBinding(InputControlType.None);
 
         }
@@ -242,6 +242,12 @@ namespace RogueLiteInput
         public ProxyPlayerAction Dash { get; set; }
         public ProxyPlayerAction Attack { get; set; }
         public ProxyPlayerAction Special { get; set; }
+        public ProxyPlayerAction Up { get; set; }
+        public ProxyPlayerAction Down { get; set; }
+        public ProxyPlayerAction Left { get; set; }
+        public ProxyPlayerAction Right { get; set; }
+        public ProxyPlayerAction Sprint { get; set; }
+
 
         public ProxyInputActions()
         {
@@ -249,6 +255,11 @@ namespace RogueLiteInput
             Dash = new ProxyPlayerAction();
             Attack = new ProxyPlayerAction();
             Special = new ProxyPlayerAction();
+            Up = new ProxyPlayerAction();
+            Down = new ProxyPlayerAction();
+            Left = new ProxyPlayerAction();
+            Right = new ProxyPlayerAction();
+            Sprint = new ProxyPlayerAction();
         }
 
         public void UpdateData(InputActions actions)
@@ -257,6 +268,11 @@ namespace RogueLiteInput
             Dash.UpdateData(actions.Dash);
             Attack.UpdateData(actions.Attack);
             Special.UpdateData(actions.Special);
+            Up.UpdateData(actions.UpInput);
+            Down.UpdateData(actions.DownInput);
+            Left.UpdateData(actions.LeftInput);
+            Right.UpdateData(actions.RightInput);
+            Sprint.UpdateData(actions.Sprint);
         }
 
         public void Reset()
@@ -265,6 +281,11 @@ namespace RogueLiteInput
             Dash.Reset();
             Attack.Reset();
             Special.Reset();
+            Up.Reset();
+            Down.Reset();
+            Left.Reset();
+            Right.Reset();
+            Sprint.Reset();
         }
     }
 }

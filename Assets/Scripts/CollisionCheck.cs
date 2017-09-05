@@ -151,10 +151,6 @@ public class CollisionCheck : MonoBehaviour
         }
 
         sides.Reset();
-        if (gameObject.name == "MeleeCollider")
-        {
-            
-        }
 
         foreach (var c in CollidersToCheck)
         {
