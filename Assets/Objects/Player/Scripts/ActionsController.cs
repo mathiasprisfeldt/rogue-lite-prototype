@@ -198,7 +198,7 @@ namespace CharacterController
         protected override void Awake()
         {
             base.Awake();
-            LastHorizontalDirection = 1;
+            LastHorizontalDirection = LookDirection;
 
             ClimbEnd = true;
             StartThrow = new Trigger();
