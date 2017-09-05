@@ -164,7 +164,10 @@ namespace Enemy
         /// <returns>True if it hit the player.</returns>
         public bool CheckHitbox()
         {
-            return CheckHitbox(_hitBoxOffset, _hitBoxSize);
+            if (_hitBoxOffset != Vector2.zero && _hitBoxSize != Vector2.zero)
+                return CheckHitbox(_hitBoxOffset, _hitBoxSize);
+
+            return Context.M.ViewBox.IsColliding();
         }
 
         /// <summary>

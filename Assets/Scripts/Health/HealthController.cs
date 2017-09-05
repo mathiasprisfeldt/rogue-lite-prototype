@@ -199,6 +199,9 @@ namespace Health
 
             HealthAmount -= amountToDmg;
 
+            if (IsDead)
+                return;
+
             //Apply knockback
             if (pos != Vector2.zero && !_isInvurnable && HealthAmount > 0)
             {
@@ -208,7 +211,6 @@ namespace Health
                 _character.KnockbackHandler.AddForce( dir * _knockbackForce, _knockbackDuration);
             }
                 
-
             //If we take damage show hit animation.
             //But dont show if we're invurnable (Only if we take dmg while being it)
             if (Character.MainAnimator)
@@ -227,8 +229,6 @@ namespace Health
 
             if (giveInvurnability || _invurnableOnDmg)
                 StartCoroutine(StartInvurnability(_invurnabilityDuration));
-
-            
         }
 
         /// <summary>
