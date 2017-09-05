@@ -881,13 +881,13 @@ MonoBehaviour:
   _attackIndicator: {fileID: 114195926670245762}
   _staggerIndicator: {fileID: 114466314149153096}
   _viewBox: {fileID: 114000060024915830}
-  _attackCooldown: 0.2
-  _indicatorDuration: 0.35
+  _attackCooldown: 0
+  _indicatorDuration: 0.05
   _targetBehind: 1
   _turnSpeed: 0.25
   _canBackPaddle: 0
   _turnOnBackstab: 1
-  _engageSpeed: 100
+  _engageSpeed: 200
   _hasWallHack: 0
   _isFlying: 0
   _neverForget: 0

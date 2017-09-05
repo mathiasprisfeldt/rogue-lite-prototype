@@ -431,7 +431,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1264012589145826}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.78, y: -0.62, z: 0}
+  m_LocalPosition: {x: -11.65, y: -0.62, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4444243083856430}
@@ -598,7 +598,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 8.729986, y: 2.4803076}
+  m_Size: {x: 15.996739, y: 2.4803076}
   m_EdgeRadius: 0
 --- !u!61 &61959578695449300
 BoxCollider2D:
@@ -730,10 +730,10 @@ MonoBehaviour:
   _attackIndicator: {fileID: 114798016652054944}
   _staggerIndicator: {fileID: 114889455597712132}
   _viewBox: {fileID: 114542735523210502}
-  _attackCooldown: 1
-  _indicatorDuration: 0.25
+  _attackCooldown: 0.75
+  _indicatorDuration: 0
   _targetBehind: 0
-  _turnSpeed: 1
+  _turnSpeed: 0.5
   _canBackPaddle: 1
   _turnOnBackstab: 1
   _engageSpeed: 0
@@ -741,7 +741,7 @@ MonoBehaviour:
   _isFlying: 0
   _neverForget: 0
   _staggerDuration: 0.5
-  _memoryDuration: 3
+  _memoryDuration: 5
 --- !u!114 &114120916525324648
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -773,8 +773,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isEnabled: 0
   _drawGizmos: 1
-  _hitBoxSize: {x: 6, y: 1.32}
-  _hitBoxOffset: {x: 3, y: 1}
+  _hitBoxSize: {x: 8, y: 4}
+  _hitBoxOffset: {x: 4, y: 2}
   _attackBoxSize: {x: 3, y: 1.94}
   _attackBoxOffset: {x: 1.5, y: 1}
   _projectile: {fileID: 114159514260344410, guid: f6f2a202e1deaf64c8613c8fcea309cc,
@@ -803,11 +803,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cbd00e50cc37944ba0ec9840c4d6c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lockMovement: 0
-  _flipDefaultDir: 0
-  _forceDefaultValues: 0
-  _defaultForce: 0
-  _defaultKnockbackDir: {x: 0, y: 0}
+  _lockMovement: 1
+  _flipDefaultDir: 1
+  _forceDefaultValues: 1
+  _defaultForce: 10
+  _defaultKnockbackDir: {x: -1, y: 1}
   _velCurve:
     serializedVersion: 2
     m_Curve:
@@ -826,7 +826,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _defaultDuration: 0
+  _defaultDuration: 0.25
 --- !u!114 &114319610772336438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1036,12 +1036,18 @@ MonoBehaviour:
   _abilityHandler: {fileID: 0}
   _manaHandler: {fileID: 0}
   _bumberCollisionCheck: {fileID: 114513903109215036}
+  _safetyRespawn: {fileID: 0}
   _startDirection: 1
   _damage: 1
   _movementSpeed: 100
   _flySpeed: 0
   _flipWithVelocity: 0
   _doFlipWithRotation: 0
+  OnSafetyRespawn:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!212 &212211871764394414
 SpriteRenderer:
   m_ObjectHideFlags: 1

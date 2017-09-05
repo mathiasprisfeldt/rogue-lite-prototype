@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AcrylecSkeleton.Utilities;
 using Archon.SwissArmyLib.Events;
 using TMPro;
 using UnityEngine;
@@ -88,7 +89,7 @@ namespace Projectiles
                 return;
             }
 
-            if (_layerToDestoryOn == (_layerToDestoryOn | (1 << collision.gameObject.layer)))
+            if (_layerToDestoryOn.Contains(collision.gameObject.layer))
                 Kill();
         }
 
@@ -120,9 +121,9 @@ namespace Projectiles
 
         private bool TargetCheck(GameObject target)
         {
-            var targetHit = _layersToHit == (_layersToHit | (1 << target.layer))
+            var targetHit = _layersToHit.Contains(target.layer)
                 && !(_tagsToHit.Count > 0 && !_tagsToHit.Contains(target.tag));
-
+            
             if (targetHit)
             {
                 CollisionCheck cc = target.GetComponent<CollisionCheck>();

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Archon.SwissArmyLib.Editor</name>
+    </assembly>
+    <members>
+        <member name="T:Archon.SwissArmyLib.Editor.Utils.ExecutionOrderManager">
+            <summary>
+            Looks for classes using the <see cref="T:Archon.SwissArmyLib.Utils.Editor.ExecutionOrderAttribute"/> and sets their execution order.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Editor.Utils.ReadOnlyDrawer">
+            <summary>
+            Makes fields marked with <see cref="T:Archon.SwissArmyLib.Utils.Editor.ReadOnlyAttribute"/> uninteractable via the inspector.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Editor.Utils.ReadOnlyDrawer.OnGUI(UnityEngine.Rect,UnityEditor.SerializedProperty,UnityEngine.GUIContent)">
+            <inheritdoc />
+        </member>
+        <member name="M:Archon.SwissArmyLib.Editor.ResourceSystem.ResourcePoolEditor.OnInspectorGUI">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

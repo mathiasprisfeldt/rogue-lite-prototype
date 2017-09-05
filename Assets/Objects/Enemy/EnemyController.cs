@@ -108,6 +108,7 @@ namespace Enemy
 	        Vector2 ownPos = App.M.Character.Origin;
 	        Vector2 plyPos = ply ? ply.transform.position.ToVector2() : Vector2.zero;
 
+	        PlayerApplication newTarget = Target;
 	        ToPlayer = plyPos - ownPos;
 	        //Checking if player is in sight
 	        if (ply &&
@@ -124,22 +125,24 @@ namespace Enemy
 	            if (ply.M.ActionController.HealthController.IsDead)
 	            {
 	                canTarget = false;
-	                Target = null;
+	                newTarget = null;
 	            }
 
-	            Target = canTarget ? ply : Target;
+	            newTarget = canTarget ? ply : newTarget;
 	        }
 	        else if (!IsRemembering)
-	            Target = null;
+	            newTarget = null;
 
 	        //Check if we can see the player
-	        if (Target &&
+	        if (newTarget &&
 	            !App.M.HasWallHack &&
 	            Physics2D.RaycastNonAlloc(ownPos, ToPlayer.normalized, viewResults, Mathf.Clamp(ToPlayer.magnitude, 0, viewBoxMaxLength), LayerMask.GetMask("Platform")) > 0)
 	        {
-	            //We cant see the player, lose interest.
-	            Target = null;
+                //We cant see the player, lose interest.
+	            newTarget = null;
 	        }
+
+	        Target = newTarget;
 
             //If target is behind the enemy and is targeted and we're arent turning, turn around.
             if (!IsTurning && IsTargetBehind && Target)

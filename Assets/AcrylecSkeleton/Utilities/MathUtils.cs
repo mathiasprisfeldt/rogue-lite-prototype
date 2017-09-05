@@ -146,5 +146,9 @@ namespace AcrylecSkeleton.Utilities
             return Mathf.Round(number * nearest) / nearest;
         }
 
+        public static bool FastApproximately(this float a, float b, float tolerance = 0)
+        {
+            return Math.Abs(a - b) < tolerance;
+        }
     }
 }
