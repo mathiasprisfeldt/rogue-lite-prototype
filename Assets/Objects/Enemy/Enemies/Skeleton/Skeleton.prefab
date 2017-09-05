@@ -829,7 +829,7 @@ MonoBehaviour:
   _invurnabilityDuration: 0
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 2
+  _healthAmount: 3
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 600
   _knockbackDuration: 0.1
