@@ -452,7 +452,11 @@ namespace CharacterController
             if (CollisionCheck.Sides.Right && Horizontal > 0)
                 Horizontal = 0;
 
-            velocity += new Vector2(MovementSpeed * Horizontal, 0);
+            var tempMovementSpeed = MovementSpeed;
+            if (App.C.PlayerActions.Sprint.IsPressed && OnGround)
+                tempMovementSpeed += MovementSpeed * 0.5f;
+
+            velocity += new Vector2(tempMovementSpeed * Horizontal, 0);
 
             if (_abilityReferences.Dash && _abilityReferences.Dash.HorizontalActive)
             {

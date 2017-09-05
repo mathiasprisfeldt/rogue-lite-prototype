@@ -835,6 +835,7 @@ MonoBehaviour:
   _knockbackDuration: 0.1
   _responsibleGameObject: {fileID: 1115539378932434}
   _destroyOnDead: 0
+  _trapImmune: 0
   _onDead:
     m_PersistentCalls:
       m_Calls: []

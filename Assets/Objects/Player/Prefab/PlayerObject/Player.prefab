@@ -2778,7 +2778,7 @@ MonoBehaviour:
   _initialJumpForce: 50
   _initialJumpDuration: 0.05
   _jumpDuration: 0.15
-  _gracePeriod: 0.5
+  _gracePeriod: 0.2
 --- !u!114 &114105065633640464
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2863,8 +2863,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fd25099da936334fb71b4fa1a0d42b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _knockbackForce: 400
-  _knockbackDuration: 0.15
+  _knockbackForce: 1600
+  _knockbackDuration: 0.05
   _collisionCheck: {fileID: 114309314290104366}
   _hitCooldown: 0
   _actionsController: {fileID: 114173897078414380}
@@ -3067,12 +3067,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _actionsController: {fileID: 114173897078414380}
-  _verticalForce: 12000
-  _horizontalForce: 3000
+  _verticalForce: 20000
+  _horizontalForce: 5000
   _horizontalDuration: 0.35
   _verticalDuration: 0.12
   _whenToSwicthDirection: 0
-  _graceperiod: 0.2
+  _graceperiod: 0.1
 --- !u!114 &114229662466771864
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3899,7 +3899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e44a4dcfad2e4794abd3c214a068647c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mana: 3
+  _mana: 0
   OnManaChange:
     m_PersistentCalls:
       m_Calls: []
@@ -4052,10 +4052,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _abilityReferences: {fileID: 114321217263922428}
-  _doubleJump: 1
+  _doubleJump: 0
   _wallSlide: 1
   _wallJump: 1
-  _dash: 1
+  _dash: 0
   _ledgeHanging: 1
   _throw: 1
 --- !u!114 &114850136985437648
@@ -4126,12 +4126,13 @@ MonoBehaviour:
   _invurnabilityDuration: 1
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 99999
+  _healthAmount: 3
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 600
   _knockbackDuration: 0.1
   _responsibleGameObject: {fileID: 1182516208491314}
   _destroyOnDead: 1
+  _trapImmune: 0
   _onDead:
     m_PersistentCalls:
       m_Calls: []

@@ -26,6 +26,9 @@ public class TileBehaviour : MonoBehaviour
     [SerializeField]
     private bool _physicalBlock;
 
+    [SerializeField]
+    private bool _trap;
+
     private Queue<TileBehaviour> _queue = new Queue<TileBehaviour>();
 
     private bool _isTop;
@@ -48,6 +51,12 @@ public class TileBehaviour : MonoBehaviour
     public bool BottomCollision { get; set; }
     public bool LeftCollision { get; set; }
     public bool RightCollision { get; set; }
+
+    public Tile TopTile { get; set; }
+    public Tile BottomTile { get; set; }
+    public Tile LeftTile { get; set; }
+    public Tile RightTile { get; set; }
+
     public bool SetupDone { get; set; }
 
     public TilePos TilePos { get; set; }
@@ -63,6 +72,11 @@ public class TileBehaviour : MonoBehaviour
         set { _targetTag = value; }
     }
 
+    public bool Trap
+    {
+        get { return _trap; }
+    }
+
     [SerializeField]
     private LayerMask _colMask;
 
@@ -71,30 +85,30 @@ public class TileBehaviour : MonoBehaviour
         var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
         var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
 
-        var up = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.up);
-        var down = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.down);
-        var left = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.left);
-        var right = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.right);
+        TopTile = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.up);
+        BottomTile = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.down);
+        LeftTile = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.left);
+        RightTile = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.right);
 
         //Up
-        if (up.PhysicalBlock)
+        if (TopTile.PhysicalBlock)
         {
             TopCollision = gameObject.tag != "Ladder";
         }
         //Down
-        if (down.PhysicalBlock)
+        if (BottomTile.PhysicalBlock)
         {
             BottomCollision = true;
-            if (down.GoInstance != null)
+            if (BottomTile.GoInstance != null)
             {
-                Climbable clim = down.GoInstance.GetComponent<Climbable>();
+                Climbable clim = BottomTile.GoInstance.GetComponent<Climbable>();
                 if (clim != null)
                     clim.Top.gameObject.SetActive(false);
             }
 
         }
-            LeftCollision = left.PhysicalBlock;        
-            RightCollision = right.PhysicalBlock;
+            LeftCollision = LeftTile.PhysicalBlock;        
+            RightCollision = RightTile.PhysicalBlock;
         
         if (_autoTexturize)
         {
@@ -120,16 +134,17 @@ public class TileBehaviour : MonoBehaviour
     public void StartHorizontalComposite(ref int amountOfPlatforms)
     {
         List<GameObject> targets = new List<GameObject>();
+        List<TileBehaviour> tiles = new List<TileBehaviour>();
         Touched = true;
 
-        CheckHorizontalComposite(ref targets, _isTop);
+        CheckHorizontalComposite(ref targets, _isTop, ref tiles);
         if (targets.Count <= 1)
         {
             Touched = false;
             return;
         }
 
-        
+
         if (_parent != null)
         {
             var parent = Instantiate(_parent, Vector2.zero, Quaternion.identity, transform.root);
@@ -167,14 +182,21 @@ public class TileBehaviour : MonoBehaviour
                 Climbable climbable = target.GetComponent<Climbable>();
                 if (climbable != null)
                 {
-                    climbable.Top.transform.SetParent(parent.transform,true);
+                    climbable.Top.transform.SetParent(parent.transform, true);
                 }
+            }
+        }
+        else
+        {
+            foreach (var tileBehaviour in tiles)
+            {
+                tileBehaviour.Touched = false;
             }
         }    
         
     }
 
-    public void CheckHorizontalComposite(ref List<GameObject> targets, bool isTop)
+    public void CheckHorizontalComposite(ref List<GameObject> targets, bool isTop, ref List<TileBehaviour> tiles)
     {
         targets.Add(gameObject);
         TileBehaviour tLeft = null;
@@ -192,28 +214,31 @@ public class TileBehaviour : MonoBehaviour
         {
             tLeft.Touched = true;
             _queue.Enqueue(tLeft);
+            tiles.Add(tLeft);
         }
 
         if (tRight && !tRight.Touched && tRight._isTop == isTop && (tRight.TargetTag == TargetTag))
         {
             tRight.Touched = true;
             _queue.Enqueue(tRight);
+            tiles.Add(tRight);
         }
 
         while (_queue.Count > 0)
         {
             var temp = _queue.Dequeue();
             temp.Touched = true;
-            temp.CheckHorizontalComposite(ref targets, isTop);
+            temp.CheckHorizontalComposite(ref targets, isTop, ref tiles);
         }
     }
 
     public void StartVerticalComposite(ref int amountOfPlatforms)
     {
         List<GameObject> targets = new List<GameObject>();
+        List<TileBehaviour> tiles = new List<TileBehaviour>(); 
         Touched = true;
 
-        CheckVerticalCompisite(ref targets, false);
+        CheckVerticalCompisite(ref targets, false, ref tiles);
         if (targets.Count <= 1)
         {
             Touched = false;
@@ -250,11 +275,18 @@ public class TileBehaviour : MonoBehaviour
             Platforms p = superParent.GetComponent<Platforms>();
             p.ParentToThis(parent.transform, pb.Tiles.Count, true);
         }
+        else
+        {
+            foreach (var tileBehaviour in tiles)
+            {
+                tileBehaviour.Touched = false;
+            }
+        }
         
 
     }
 
-    public void CheckVerticalCompisite(ref List<GameObject> targets, bool continueDown)
+    public void CheckVerticalCompisite(ref List<GameObject> targets, bool continueDown, ref List<TileBehaviour> tiles )
     {
         bool nextShouldDown = continueDown;
 
@@ -290,13 +322,14 @@ public class TileBehaviour : MonoBehaviour
             Touched = true;
             tDown.Touched = true;
             _queue.Enqueue(tDown);
+            tiles.Add(tDown);
         }
 
         while (_queue.Count > 0)
         {
             var temp = _queue.Dequeue();
             temp.Touched = true;
-            temp.CheckVerticalCompisite(ref targets, nextShouldDown);
+            temp.CheckVerticalCompisite(ref targets, nextShouldDown,ref tiles);
         }
     }
 }

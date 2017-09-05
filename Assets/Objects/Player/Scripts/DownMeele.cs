@@ -66,7 +66,7 @@ namespace Meele
                         {
                             cc.Character.HealthController.Damage(_actionsController.Damage, from: _actionsController);
                             _knockbackAdded = true;
-                            _actionsController.App.C.Character.KnockbackHandler.AddForce(new Vector2(0,1 + _knockbackForce), _knockbackDuration);
+                            _actionsController.App.C.Character.KnockbackHandler.AddForce(new Vector2(0,_knockbackForce), _knockbackDuration,true,false);
                         }
                             
                     }
