@@ -39,6 +39,7 @@ namespace RogueLiteInput
         public PlayerAction Dash { get; set; }        
         public PlayerAction Attack { get; set; }
         public PlayerAction Special { get; set; }
+        public PlayerAction Sprint { get; set; }
 
         public PlayerOneAxisAction RawHorizontal { get; set; }
         public PlayerOneAxisAction RawVertical { get; set; }
@@ -111,6 +112,7 @@ namespace RogueLiteInput
             UpInput = CreatePlayerAction("Up");
             Attack = CreatePlayerAction("Attack");
             Special = CreatePlayerAction("Special");
+            Sprint = CreatePlayerAction("Sprint");
 
             RawHorizontal = CreateOneAxisPlayerAction(LeftInput, RightInput);
             RawVertical = CreateOneAxisPlayerAction(DownInput, UpInput);
@@ -147,7 +149,11 @@ namespace RogueLiteInput
 
             //Special
             Special.AddDefaultBinding(Key.K);
-            Attack.AddDefaultBinding(Key.None);
+            Special.AddDefaultBinding(Key.None);
+
+            //Sprint
+            Sprint.AddDefaultBinding(Key.Shift);
+            Sprint.AddDefaultBinding(Key.None);
 
             //Gamepad inputs
             //Left
@@ -181,6 +187,10 @@ namespace RogueLiteInput
             //Special
             Special.AddDefaultBinding(InputControlType.Action4);
             Attack.AddDefaultBinding(Key.None);
+
+            //Sprint
+            Sprint.AddDefaultBinding(InputControlType.RightBumper);
+            Sprint.AddDefaultBinding(InputControlType.None);
 
         }
 

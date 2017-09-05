@@ -39,7 +39,7 @@ namespace CharacterController
         {
             get
             {
-                if (!base.VerticalActive)
+                if (!base.VerticalActive || _actionsController.AbilityReferences.LedgeHanging.VerticalActive)
                     return false;
 
                 var collision = (_actionsController.WallSlideCheck.Sides.Left || _actionsController.WallSlideCheck.Sides.Right) && !_actionsController.GroundCollisionCheck.Bottom;
