@@ -9,14 +9,23 @@ namespace Enemy
     /// </summary>
     public class EnemyPatrol : EnemyState
     {
+        private Vector2 _lastTurnPosition;
+        private float _turnPosDistance; //Distance between last turn pos and current pos when turning.
+
         private Vector2 _homePoint;
         private Vector2 _patrolDirection = Vector2.right;
 
         [SerializeField]
         private float _homeDistance = 5;
 
+        [SerializeField]
+        private float _giveUpThreshhold = .5f;
+
         public override void Begin()
         {
+            _turnPosDistance = _giveUpThreshhold*2;
+            _lastTurnPosition = Vector2.zero;
+
             _homePoint = Context.M.Character.Rigidbody.position;
             _patrolDirection = new Vector2(Context.M.Character.LookDirection, 0);
             base.Begin();
@@ -24,6 +33,10 @@ namespace Enemy
 
         public override void Act(float deltaTime)
         {
+            if (Context.C.IsTurning)
+                return;
+
+            Vector2 plyPos = Context.M.Character.Rigidbody.position;
             Vector2 targetDirection = _patrolDirection;
 
             int bumpingDirection = Context.M.Character.BumpingDirection;
@@ -39,8 +52,22 @@ namespace Enemy
 
             //If the enemy gets too far out, change its direction.
             if (!_homeDistance.FastApproximately(0) && 
-                Vector2.Distance(_homePoint, Context.M.Character.Rigidbody.position) > _homeDistance)
-                targetDirection = (_homePoint - Context.M.Character.Rigidbody.position).normalized;
+                Vector2.Distance(_homePoint, plyPos) > _homeDistance)
+                targetDirection = (_homePoint - plyPos).normalized;
+
+            //Check distance from current pos to last turn pos.
+            if (_patrolDirection != targetDirection && _turnPosDistance > _giveUpThreshhold)
+            {
+                if (_lastTurnPosition != Vector2.zero)
+                {
+                    float tempDist = Vector2.Distance(_lastTurnPosition, plyPos);
+
+                    if (tempDist < _turnPosDistance)
+                        _turnPosDistance = tempDist;
+                }
+
+                _lastTurnPosition = plyPos;
+            }
 
             _patrolDirection = targetDirection;
         }
@@ -56,7 +83,7 @@ namespace Enemy
         void FixedUpdate()
         {
             //If we're patrolling, move the enemy.
-            if (IsActive)
+            if (IsActive && _turnPosDistance >= _giveUpThreshhold)
             {
                 if (Context.M.Character.OnGround)
                     Context.C.Move(_patrolDirection, forceTurn: true);

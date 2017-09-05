@@ -139,7 +139,7 @@ namespace Controllers
 
         public bool OnGround
         {
-            get { return GroundCollisionCheck && GroundCollisionCheck.Bottom; }
+            get { return GroundCollisionCheck && GroundCollisionCheck.Bottom && !GroundCollisionCheck.Top; }
         }
 
         public CollisionCheck GroundCollisionCheck
