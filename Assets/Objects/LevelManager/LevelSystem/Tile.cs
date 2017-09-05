@@ -12,8 +12,9 @@ public struct Tile
     public GameObject GoInstance { get; set; }
     public int Type { get; set; }
     public bool PhysicalBlock { get; set; }
+    public bool IsTrap { get; set; }
 
-    public Tile(GameObject go, int t)
+    public Tile(GameObject go, int t) : this()
     {
         Prefab = go;
         GoInstance = null;
@@ -21,11 +22,12 @@ public struct Tile
         PhysicalBlock = false;
     }
 
-    public Tile(int t, GameObject go, bool phys)
+    public Tile(int t, GameObject go, bool phys, bool isTrap) : this()
     {
         GoInstance = go;
         Prefab = null;
         Type = t;
         PhysicalBlock = phys;
+        IsTrap = isTrap;
     }
 }

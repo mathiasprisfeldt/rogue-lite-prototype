@@ -29,26 +29,35 @@ namespace CharacterController
         private float _direction;
         private bool _canDash;
 
-        public float CoolDownTimer { get; set; }
+        public float LeftCooldown { get; set; }
+        public float RightCooldown { get; set; }
 
         public override bool HorizontalActive
         {
             get
             {
-                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Dash.WasPressed && _cooldownTimer <= 0 && !_dashing;
+                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Dash.WasPressed 
+                    && _cooldownTimer <= 0 && !_dashing;
 
                 InitialDash = false;
 
-                if (!base.HorizontalActive || CoolDownTimer > 0)
+                if (!base.HorizontalActive)
                     return false;
 
                 if ((input && _canDash|| _dashing) && _cooldownTimer <= 0 && !_actionsController.Combat)
                 {
                     if (input)
                     {
-                        _actionsController.StartDash.Value = true;
+                        
                         _direction = _actionsController.Model.transform.localScale.x > 0 ? 1 : -1;
+
+                        if (_direction > 0 && RightCooldown > 0)
+                            return false;
+                        if (_direction < 0 && LeftCooldown > 0)
+                            return false;
+
                         InitialDash = true;
+                        _actionsController.StartDash.Value = true;
 
                         if (_direction > 0 && _actionsController.WallSlideCheck.Right || _direction < 0 && _actionsController.WallSlideCheck.Left)
                             return false;
@@ -86,8 +95,10 @@ namespace CharacterController
                     _actionsController.WallSlideCheck.Sides.Right)
                     _canDash = true;
             }
-            if (CoolDownTimer > 0)
-                CoolDownTimer -= Time.deltaTime;
+            if (LeftCooldown > 0)
+                LeftCooldown -= Time.deltaTime;
+            if (RightCooldown > 0)
+                RightCooldown -= Time.deltaTime;
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)

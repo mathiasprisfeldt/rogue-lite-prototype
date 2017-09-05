@@ -82,7 +82,9 @@ namespace Knockbacks
                     _knocksBacks[i].Time = Mathf.Clamp01(_knocksBacks[i].Time - Time.deltaTime / _knocksBacks[i].Duration);
 
                     float time = _knocksBacks[i].Time;
-                    Vector2 targetVel = _knocksBacks[i].OriginalVelocity.Vector2Multiply(new Vector2(time, _velCurve.Evaluate(1 - time)));
+                    Vector2 targetVel = _knocksBacks[i].OriginalVelocity / _knocksBacks[i].Duration * Time.deltaTime;
+                    if (_knocksBacks[i].UseCurve)
+                        targetVel = _knocksBacks[i].OriginalVelocity.Vector2Multiply(new Vector2(time, _velCurve.Evaluate(1 - time)));
                     _knocksBacks[i].Velocity = targetVel;
                 }
                 else
@@ -117,9 +119,9 @@ namespace Knockbacks
             return velocity;
         }
 
-        public void AddForce(Vector2 force, float duration)
+        public void AddForce(Vector2 force, float duration, bool overrideDefault = false, bool useCurve = true)
         {
-            if (_forceDefaultValues)
+            if (_forceDefaultValues && !overrideDefault)
             {
                 Vector2 dir = _defaultKnockbackDir;
 
@@ -142,7 +144,7 @@ namespace Knockbacks
             if (Started != null && !_knocksBacks.Any())
                 Started.Invoke();
 
-            _knocksBacks.Add(new KnockBack(force, duration));
+            _knocksBacks.Add(new KnockBack(force, duration, useCurve));
         }
 
         public void AddForce()
@@ -169,12 +171,14 @@ public class KnockBack
     public Vector2 Velocity { get; set; }
     public float Time { get; set; }
     public float Duration { get; private set; }
+    public bool UseCurve { get; private set; }
 
-    public KnockBack(Vector2 velocity, float time)
+    public KnockBack(Vector2 velocity, float time, bool useCurve)
     {
         OriginalVelocity = velocity;
         Velocity = Vector2.zero;
         Time = 1;
         Duration = time;
+        UseCurve = useCurve;
     }
 }

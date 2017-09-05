@@ -110,7 +110,10 @@ public class Level
         if (left || right || top || bottom)
         {
             if (BorderTiles.Keys.Contains(t))
-                return new Tile(1, BorderTiles[t].gameObject, BorderTiles[t].gameObject.GetComponent<TileBehaviour>().PhsyicalBlock);
+            {
+                TileBehaviour tileBehaviour = BorderTiles[t].gameObject.GetComponent<TileBehaviour>();
+                return new Tile(1, BorderTiles[t].gameObject, tileBehaviour.PhsyicalBlock,tileBehaviour.Trap);
+            }
             else
                 return new Tile(null, -1);
         }
@@ -179,7 +182,7 @@ public class Level
                                 nonTilebehavior.Add(go);
                             }
 
-                            Layouts[i, j].Tiles[x, y] = new Tile(t.Type, go, tb == null ? false : tb.PhsyicalBlock);
+                            Layouts[i, j].Tiles[x, y] = new Tile(t.Type, go, tb == null ? false : tb.PhsyicalBlock, tb == null ? false : tb.Trap);
                         }
 
                         left = x == 0 && i == 0;

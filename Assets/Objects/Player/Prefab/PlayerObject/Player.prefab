@@ -2863,8 +2863,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fd25099da936334fb71b4fa1a0d42b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _knockbackForce: 400
-  _knockbackDuration: 0.15
+  _knockbackForce: 1600
+  _knockbackDuration: 0.05
   _collisionCheck: {fileID: 114309314290104366}
   _hitCooldown: 0
   _actionsController: {fileID: 114173897078414380}
@@ -4126,12 +4126,13 @@ MonoBehaviour:
   _invurnabilityDuration: 1
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 99999
+  _healthAmount: 3
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 600
   _knockbackDuration: 0.1
   _responsibleGameObject: {fileID: 1182516208491314}
   _destroyOnDead: 1
+  _trapImmune: 0
   _onDead:
     m_PersistentCalls:
       m_Calls: []

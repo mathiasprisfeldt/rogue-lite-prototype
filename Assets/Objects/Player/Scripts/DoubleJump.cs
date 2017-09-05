@@ -27,9 +27,6 @@ namespace CharacterController
                 if (!base.VerticalActive)
                     return false;
 
-                if (_actionsController.AbilityReferences.WallJump.VerticalActive)
-                    _hasJumped = true;
-
                 if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed && _actionsController.State == CharacterState.InAir
                     && _jumpTimer <= 0 && !_hasJumped && _actionsController.LastUsedVerticalMoveAbility == MoveAbility.None)
                 {
@@ -60,6 +57,8 @@ namespace CharacterController
                 if (_actionsController.OnGround)
                     _hasJumped = false;
             }
+            if (!_hasJumped && _actionsController.AbilityReferences.WallJump.VerticalActive)
+                _hasJumped = true;
         }
 
     }

@@ -24,7 +24,8 @@ public class CollisionCheck : MonoBehaviour
 
     private CollisionSides _collisionSides = new CollisionSides();
     private List<Collider2D> _collisionColliders = new List<Collider2D>();
-    private Collider2D[] _contacts = new Collider2D[10];
+    private Collider2D[] _contacts = new Collider2D[30];
+    private ContactFilter2D _contactFilter = new ContactFilter2D();
 
 
     public List<Collider2D> CollidersToCheck
@@ -102,6 +103,8 @@ public class CollisionCheck : MonoBehaviour
     {
         if (!CollidersToCheck.Any())
             Debug.LogWarning("CollisionCheck doesn't have any colliders to check on!", transform);
+        _contactFilter.useTriggers = true;
+        _contactFilter.useLayerMask = true;
     }
 
     public bool IsColliding()
@@ -148,6 +151,10 @@ public class CollisionCheck : MonoBehaviour
         }
 
         sides.Reset();
+        if (gameObject.name == "MeleeCollider")
+        {
+            
+        }
 
         foreach (var c in CollidersToCheck)
         {
@@ -158,7 +165,9 @@ public class CollisionCheck : MonoBehaviour
 
             if (c == null)
                 continue;
-            int numberOfCollisions = c.GetContacts(_contacts);
+            _contactFilter.layerMask = layer;
+
+            int numberOfCollisions = c.GetContacts(_contactFilter,_contacts);
 
             if (numberOfCollisions == 0)
                 break;
