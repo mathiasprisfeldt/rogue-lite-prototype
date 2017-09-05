@@ -73,7 +73,7 @@ namespace Enemy
             Context.M.Character.MainAnimator.ResetTrigger("Hit"); //If Hit has been triggered while attacking, reset it.
         }
 
-        public override void Think(float deltaTime)
+        public override void Act(float deltaTime)
         {
             if (Context.C.IsStagging)
                 return;

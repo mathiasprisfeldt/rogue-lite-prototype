@@ -31,11 +31,11 @@
         </member>
         <member name="M:Archon.SwissArmyLib.Automata.IState`2.Reason">
             <summary>
-            Called every frame just before <see cref="M:Archon.SwissArmyLib.Automata.IState`2.Think(System.Single)"/>. 
+            Called every frame just before <see cref="M:Archon.SwissArmyLib.Automata.IState`2.Act(System.Single)"/>. 
             Use this to check whether you should change state.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Automata.IState`2.Think(System.Single)">
+        <member name="M:Archon.SwissArmyLib.Automata.IState`2.Act(System.Single)">
             <summary>
             Called every frame after <see cref="M:Archon.SwissArmyLib.Automata.IState`2.Reason"/>, if the state hasn't been changed.
             </summary>
@@ -169,10 +169,20 @@
             <summary>
             Creates a new Finite State Machine.
             
-            If you need control over how the states are created, you can register them manually using <see cref="!:RegisterState&lt;TState&gt;"/>.
+            If you need control over how the states are created, you can register them manually using <see cref="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.RegisterState(Archon.SwissArmyLib.Automata.IFsmState{`0})"/>.
+            If not, then you can freely use <see cref="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.ChangeStateAuto``1"/> which will create the states using their default constructor.
+            </summary>
+            <param name="context">A shared context for the states.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.#ctor(`0,Archon.SwissArmyLib.Automata.IFsmState{`0})">
+            <summary>
+            Creates a new Finite State Machine and changes the state to <paramref name="startState"/>.
+            
+            If you need control over how the states are created, you can register them manually using <see cref="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.RegisterState(Archon.SwissArmyLib.Automata.IFsmState{`0})"/>.
             If not, then you can freely use <see cref="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.ChangeStateAuto``1"/> which will create the states using their default constructor.
             </summary>
             <param name="context"></param>
+            <param name="startState"></param>
         </member>
         <member name="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.Update(System.Single)">
             <summary>
@@ -226,6 +236,12 @@
             <param name="state"></param>
             <returns></returns>
         </member>
+        <member name="P:Archon.SwissArmyLib.Automata.State`2.Machine">
+            <inheritdoc />
+        </member>
+        <member name="P:Archon.SwissArmyLib.Automata.State`2.Context">
+            <inheritdoc />
+        </member>
         <member name="P:Archon.SwissArmyLib.Automata.State`2.TimeInState">
             <summary>
             Amount of (active) time spent in this state since it was entered.
@@ -238,11 +254,11 @@
         </member>
         <member name="M:Archon.SwissArmyLib.Automata.State`2.Reason">
             <summary>
-            Called every frame just before <see cref="M:Archon.SwissArmyLib.Automata.State`2.Think(System.Single)"/>. 
+            Called every frame just before <see cref="M:Archon.SwissArmyLib.Automata.State`2.Act(System.Single)"/>. 
             Use this to check whether you should change state.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Automata.State`2.Think(System.Single)">
+        <member name="M:Archon.SwissArmyLib.Automata.State`2.Act(System.Single)">
             <summary>
             Called every frame after <see cref="M:Archon.SwissArmyLib.Automata.State`2.Reason"/>, if the state hasn't been changed.
             </summary>
@@ -250,6 +266,114 @@
         <member name="M:Archon.SwissArmyLib.Automata.State`2.End">
             <summary>
             Called when the state is exited.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Collections.DelayedList`1">
+            <summary>
+                A list wrapper that delays adding or removing item from the list until <see cref="M:Archon.SwissArmyLib.Collections.DelayedList`1.ProcessPending" /> is called.
+            </summary>
+            <typeparam name="T">The type of items this list should contain.</typeparam>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.DelayedList`1.Count">
+            <summary>
+                Gets the amount of items in the list.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.#ctor">
+            <summary>
+                Creates a new DelayedList which uses <see cref="T:System.Collections.Generic.List`1" />.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.#ctor(System.Collections.Generic.IList{`0})">
+            <summary>
+                Creates a new DelayedList that wraps the given list.
+            </summary>
+            <param name="list">The list to wrap.</param>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.DelayedList`1.BackingList">
+            <summary>
+                A readonly version of the list containing processed items.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.DelayedList`1.Item(System.Int32)">
+            <summary>
+                Gets the item at a specific index.
+            </summary>
+            <param name="index">The index of the item.</param>
+            <returns>The item at the specified index.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.GetEnumerator">
+            <summary>
+                Gets an enumerator for the backing list.
+            </summary>
+            <returns>The enumerator.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+                Gets an enumerator for the backing list.
+            </summary>
+            <returns>The enumerator.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.Add(`0)">
+            <summary>
+                Adds an item to the list the next time <see cref="M:Archon.SwissArmyLib.Collections.DelayedList`1.ProcessPending" /> is called.
+            </summary>
+            <param name="item">The item to add.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.Remove(`0)">
+            <summary>
+                Removes an item from the list the next time <see cref="M:Archon.SwissArmyLib.Collections.DelayedList`1.ProcessPending" /> is called.
+            </summary>
+            <param name="item">The item to add.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.Clear">
+            <summary>
+                Clears all items from the list and all pending additions and removals.
+                <remark>
+                    <see cref="E:Archon.SwissArmyLib.Collections.DelayedList`1.PreItemAddition" /> and <see cref="E:Archon.SwissArmyLib.Collections.DelayedList`1.PreItemRemoval" /> are not invoked by this method!
+                </remark>
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.Contains(`0)">
+            <summary>
+                Checks whether the backing list currently contains a specific item.
+            </summary>
+            <param name="item">The item to check for.</param>
+            <returns>True if found, false otherwise.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.CopyTo(`0[],System.Int32)">
+            <summary>
+                Copies the contents of the backing list to the specified array starting at the specified index.
+            </summary>
+            <param name="array">The array to copy to.</param>
+            <param name="arrayIndex">The index to start from.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.IndexOf(`0)">
+            <summary>
+                Gets the index of an item in the list.
+            </summary>
+            <param name="item">The item to get the index for.</param>
+            <returns>The index of the item, or -1 if not found.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.RemoveAt(System.Int32)">
+            <summary>
+                Removes the item found at the specified index the next time <see cref="M:Archon.SwissArmyLib.Collections.DelayedList`1.ProcessPending" /> is called.
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="E:Archon.SwissArmyLib.Collections.DelayedList`1.PreItemAddition">
+            <summary>
+                Called just before pending items are actually added to the list.
+            </summary>
+        </member>
+        <member name="E:Archon.SwissArmyLib.Collections.DelayedList`1.PreItemRemoval">
+            <summary>
+                Called just before pending items are actually removed from the list.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.DelayedList`1.ProcessPending">
+            <summary>
+                Processes all pending additions and removals.
             </summary>
         </member>
         <member name="T:Archon.SwissArmyLib.Collections.DictionaryWithDefault`2">
@@ -290,23 +414,256 @@
             <param name="defaultValue"></param>
             <param name="comparer"></param>
         </member>
-        <member name="T:Archon.SwissArmyLib.Events.EventSystem">
+        <member name="T:Archon.SwissArmyLib.Collections.PrioritizedItem`1">
             <summary>
-            A simple event system that uses interfaces instead of delegates to avoid the garbage generated by them.
-            
-            This version is for parameterless events. 
-            See <see cref="T:Archon.SwissArmyLib.Events.EventSystem`1"/> if you need to send data with the event.
-            
-            Events are differentiated by an integer. You are expected to create constants to define your events.
+            Represents an item and its priority.
+            </summary>
+            <typeparam name="T">The type of the item.</typeparam>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Collections.PrioritizedItem`1.Item">
+            <summary>
+            The item that is prioritized.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Events.EventSystem.Invoke(System.Int32)">
+        <member name="F:Archon.SwissArmyLib.Collections.PrioritizedItem`1.Priority">
+            <summary>
+            The priority of the item.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedItem`1.#ctor(`0,System.Int32)">
+            <summary>
+            Creates a new prioritized item.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Collections.PrioritizedList`1">
+            <summary>
+            A list of items sorted by their priority.
+            
+            <remarks>
+                Currently it's unintuitively only sorted ascendingly. Sorry.
+            </remarks>
+            </summary>
+            <typeparam name="T">The type of the prioritized items.</typeparam>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.PrioritizedList`1.Count">
+            <summary>
+            Gets the amount of items in the list.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.PrioritizedList`1.Item(System.Int32)">
+            <summary>
+            Gets the item at the specified index.
+            </summary>
+            <param name="index">The index for the item to retrieve.</param>
+            <returns>The item at the specified index.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.Add(Archon.SwissArmyLib.Collections.PrioritizedItem{`0})">
+            <summary>
+            Adds a prioritized item to the list.
+            </summary>
+            <param name="item">The prioritized item to add.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.Add(`0)">
+            <summary>
+            Adds an item to the list with priority 0.
+            </summary>
+            <param name="item">The item to add.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.Add(`0,System.Int32)">
+            <summary>
+            Adds an item to the list with the specified priority.
+            </summary>
+            <param name="item">The item to add.</param>
+            <param name="priority">The priority to give the item.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.Remove(Archon.SwissArmyLib.Collections.PrioritizedItem{`0})">
+            <summary>
+            Removes a prioritized item from the list.
+            </summary>
+            <param name="item">The item to remove.</param>
+            <returns>True if found and removed, false otherwise.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.Remove(`0)">
+            <summary>
+            Removes an item from the list.
+            </summary>
+            <param name="item">The item to remove.</param>
+            <returns>True if found and removed, false otherwise.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.RemoveAt(System.Int32)">
+            <summary>
+            Removes the item found at the specified index.
+            </summary>
+            <param name="index">The index of the item to remove.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.Clear">
+            <summary>
+            Clears all items from the list.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.Contains(Archon.SwissArmyLib.Collections.PrioritizedItem{`0})">
+            <summary>
+            Checks whether the list contains the specified prioritized item.
+            </summary>
+            <param name="item">The item to check if the list contains.</param>
+            <returns>True if found, false otherwise.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.Contains(`0)">
+            <summary>
+            Checks whether the list contains the specified item.
+            </summary>
+            <param name="item">The item to check if the list contains.</param>
+            <returns>True if found, false otherwise.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.CopyTo(Archon.SwissArmyLib.Collections.PrioritizedItem{`0}[],System.Int32)">
+            <summary>
+            Copies the list prioritized items to an array starting at the specified index.
+            </summary>
+            <param name="array">The array to copy to.</param>
+            <param name="arrayIndex">The index to start at.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.CopyTo(`0[],System.Int32)">
+            <summary>
+            Copies the list items to an array starting at the specified index.
+            </summary>
+            <param name="array">The array to copy to.</param>
+            <param name="arrayIndex">The index to start at.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.IndexOf(Archon.SwissArmyLib.Collections.PrioritizedItem{`0})">
+            <summary>
+            Gets the index of a prioritized item in the list.
+            </summary>
+            <param name="item">The item to get the index for.</param>
+            <returns>The index of the item in the list or -1 if not found.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.IndexOf(`0)">
+            <summary>
+            Gets the index of a item in the list.
+            </summary>
+            <param name="item">The item to get the index for.</param>
+            <returns>The index of the item in the list or -1 if not found.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.PrioritizedList`1.GetEnumerator">
+            <summary>
+            Gets an enumerator for the list items.
+            </summary>
+            <returns>The enumerator.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.Event">
+            <summary>
+            A simple event handler that uses interfaces instead of delegates to avoid the garbage generated by them.
+            
+            This is the parameterless version. 
+            See <see cref="T:Archon.SwissArmyLib.Events.Event`1"/> if you need to send data with the event.
+            
+            Listeners are required to implement the <see cref="T:Archon.SwissArmyLib.Events.IEventListener"/> interface.
+            
+            Events are differentiated by an integer. You are expected to create constants to define your events and make them unique.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Events.Event.Id">
+            <summary>
+            Gets the ID of this event.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.Event.#ctor(System.Int32)">
+            <summary>
+            Creates a new Event with the specified ID.
+            </summary>
+            <param name="id">The id of the event.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.Event.AddListener(Archon.SwissArmyLib.Events.IEventListener,System.Int32)">
+            <summary>
+            Adds a listener for the event with an optional call-order priority.
+            </summary>
+            <param name="listener">The listener to add.</param>
+            <param name="priority">The priority of the listener compared to other listeners. Controls whether the listener is called before or after other listeners.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.Event.RemoveListener(Archon.SwissArmyLib.Events.IEventListener)">
+            <summary>
+            Removes a listener from the event.
+            </summary>
+            <param name="listener">The listener to remove</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.Event.Invoke">
+            <summary>
+            Notifies all listeners that the event occured.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.Event.Clear">
+            <summary>
+            Clears all listeners
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.Event`1">
+            <summary>
+            A simple event handler that uses interfaces instead of delegates to avoid the garbage generated by them.
+            
+            This is the parameterized version. 
+            See <see cref="T:Archon.SwissArmyLib.Events.Event"/> if you don't need to send data with the event.
+            
+            Listeners are required to implement the <see cref="T:Archon.SwissArmyLib.Events.IEventListener`1"/> interface.
+            
+            Events are differentiated by an integer. You are expected to create constants to define your events and make them unique.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Events.Event`1.Id">
+            <summary>
+            Gets the ID of this event.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.Event`1.#ctor(System.Int32)">
+            <summary>
+            Creates a new Event with the specified ID.
+            </summary>
+            <param name="id">The id of the event.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.Event`1.AddListener(Archon.SwissArmyLib.Events.IEventListener{`0},System.Int32)">
+            <summary>
+            Adds a listener for the event with an optional call-order priority.
+            </summary>
+            <param name="listener">The listener to add.</param>
+            <param name="priority">The priority of the listener compared to other listeners. Controls whether the listener is called before or after other listeners.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.Event`1.RemoveListener(Archon.SwissArmyLib.Events.IEventListener{`0})">
+            <summary>
+            Removes a listener from the event.
+            </summary>
+            <param name="listener">The listener to remove</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.Event`1.Invoke(`0)">
+            <summary>
+            Notifies all listeners that the event occured.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.Event`1.Clear">
+            <summary>
+            Clears all listeners
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.GlobalEvents">
+            <summary>
+            A manager of events that do not belong to any specific object but instead can be listened to by anyone and invoked by anyone.
+            
+            Useful for GameLoaded, MatchEnded and similar events.
+            
+            This uses <see cref="T:Archon.SwissArmyLib.Events.Event"/> which in turn uses interface instead of delegates in order to avoid the often short-lived memory they allocate.
+            
+            This version is for parameterless events. 
+            See <see cref="T:Archon.SwissArmyLib.Events.GlobalEvents`1"/> if you need to send data with the events.
+            
+            Events are differentiated by an integer. You are expected to create constants to define your events.
+            
+            <seealso cref="T:Archon.SwissArmyLib.Events.IEventListener"/>
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents.Invoke(System.Int32)">
             <summary>
             Invokes an event.
             </summary>
             <param name="eventId">The id of the event.</param>
         </member>
-        <member name="M:Archon.SwissArmyLib.Events.EventSystem.AddListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener,System.Int32)">
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents.AddListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener,System.Int32)">
             <summary>
             Adds a listener for an event.
             </summary>
@@ -314,42 +671,54 @@
             <param name="listener">The listener to be called.</param>
             <param name="priority">The priority of the listener which affects the order which listeners are called in.</param>
         </member>
-        <member name="M:Archon.SwissArmyLib.Events.EventSystem.RemoveListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener)">
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents.RemoveListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener)">
             <summary>
             Removes a listener for an event.
             </summary>
             <param name="eventId">The id of the event.</param>
             <param name="listener">The listener to remove.</param>
         </member>
-        <member name="M:Archon.SwissArmyLib.Events.EventSystem.Clear">
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents.RemoveListener(Archon.SwissArmyLib.Events.IEventListener)">
+            <summary>
+            Removes the specified listener from all events.
+            </summary>
+            <param name="listener">The listener to unsubscribe from all events.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents.Clear">
             <summary>
             Clears all listeners for all events.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Events.EventSystem.Clear(System.Int32)">
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents.Clear(System.Int32)">
             <summary>
             Clears all listeners for a single event.
             </summary>
             <param name="eventId">The id of the event.</param>
         </member>
-        <member name="T:Archon.SwissArmyLib.Events.EventSystem`1">
+        <member name="T:Archon.SwissArmyLib.Events.GlobalEvents`1">
             <summary>
-            A simple event system that uses interfaces instead of delegates to avoid the garbage generated by them.
+            A manager of events that do not belong to any specific object but instead can be listened to by anyone and invoked by anyone.
+            
+            Useful for GameLoaded, MatchEnded and similar events.
+            
+            This uses <see cref="T:Archon.SwissArmyLib.Events.Event"/> which in turn uses interface instead of delegates in order to avoid the often short-lived memory they allocate.
             
             This version is for events with args. 
-            See <see cref="T:Archon.SwissArmyLib.Events.EventSystem"/> if you don't need to send data with the event.
+            See <see cref="T:Archon.SwissArmyLib.Events.GlobalEvents"/> if you need to send data with the events.
             
             Events are differentiated by an integer. You are expected to create constants to define your events.
+            
+            <seealso cref="T:Archon.SwissArmyLib.Events.IEventListener`1"/>
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Events.EventSystem`1.Invoke(System.Int32,`0)">
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents`1.Invoke(System.Int32,`0)">
             <summary>
             Invokes an event.
             </summary>
             <param name="eventId">The id of the event.</param>
             <param name="args">The event args.</param>
         </member>
-        <member name="M:Archon.SwissArmyLib.Events.EventSystem`1.AddListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener{`0},System.Int32)">
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents`1.AddListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener{`0},System.Int32)">
             <summary>
             Adds a listener for an event.
             </summary>
@@ -357,19 +726,25 @@
             <param name="listener">The listener to be called.</param>
             <param name="priority">The priority of the listener which affects the order which listeners are called in.</param>
         </member>
-        <member name="M:Archon.SwissArmyLib.Events.EventSystem`1.RemoveListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener{`0})">
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents`1.RemoveListener(System.Int32,Archon.SwissArmyLib.Events.IEventListener{`0})">
             <summary>
             Removes a listener for an event.
             </summary>
             <param name="eventId">The id of the event.</param>
             <param name="listener">The listener to remove.</param>
         </member>
-        <member name="M:Archon.SwissArmyLib.Events.EventSystem`1.Clear">
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents`1.RemoveListener(Archon.SwissArmyLib.Events.IEventListener{`0})">
+            <summary>
+            Removes the specified listener from all events.
+            </summary>
+            <param name="listener">The listener to unsubscribe from all events.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents`1.Clear">
             <summary>
             Clears all listeners for all events.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Events.EventSystem`1.Clear(System.Int32)">
+        <member name="M:Archon.SwissArmyLib.Events.GlobalEvents`1.Clear(System.Int32)">
             <summary>
             Clears all listeners for a single event.
             </summary>
@@ -399,6 +774,104 @@
             <param name="eventId">The id of the event.</param>
             <param name="args">The args for the event.</param>
         </member>
+        <member name="T:Archon.SwissArmyLib.Events.ManagedUpdate">
+            <summary>
+            A relay for Unity update events.
+            Here's why you might want to use this:
+            https://blogs.unity3d.com/2015/12/23/1k-update-calls/
+            In short; avoid overhead of Native C++ --> Managed C# calls.
+            
+            Also useful for non-MonoBehaviours that needs to be part of the update loop as well.
+            
+            Events your can subscribe to:
+                <see cref="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnUpdate"/>
+                <see cref="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnLateUpdate"/>
+                <see cref="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnFixedUpdate"/>
+            
+            <seealso cref="T:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour"/>
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnUpdate">
+            <summary>
+            Event handler that is called every update.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnLateUpdate">
+            <summary>
+            Event handler that is called every update but after the regular Update.
+            <seealso cref="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnUpdate"/>
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnFixedUpdate">
+            <summary>
+            Event handler that is called every fixed update.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.ManagedUpdate.EventIds">
+            <summary>
+            Relayed event ids.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour">
+            <summary>
+            A subclass of MonoBehaviour that uses <see cref="T:Archon.SwissArmyLib.Events.ManagedUpdate"/> for update events.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.ExecutionOrder">
+            <summary>
+            Affects whether this components' events will be called before or after others'.
+            
+            Basically a reimplementation of Unity's ScriptExecutionOrder.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.UsesUpdate">
+            <summary>
+            Whether you want to use <see cref="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnUpdate"/>.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.UsesLateUpdate">
+            <summary>
+            Whether you want to use <see cref="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnLateUpdate"/>.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.UsesFixedUpdate">
+            <summary>
+            Whether you want to use <see cref="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnFixedUpdate"/>.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.Start">
+            <summary>
+            Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnEnable">
+            <summary>
+            Called when the component is enabled.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnDisable">
+            <summary>
+            Called when the component is disabled.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnEvent(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnUpdate">
+            <summary>
+            Called every frame if <see cref="P:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.UsesUpdate"/> is true and the component is enabled.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnLateUpdate">
+            <summary>
+            Called every frame just after <see cref="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnUpdate"/> if <see cref="P:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.UsesLateUpdate"/> is true and the component is enabled.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnFixedUpdate">
+            <summary>
+            This function is called every fixed framerate frame if <see cref="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnFixedUpdate"/> is true and the component is enabled.
+            </summary>
+        </member>
         <member name="T:Archon.SwissArmyLib.Events.TellMeWhen">
             <summary>
             A utility class for getting notified after a specific amount of time.
@@ -408,6 +881,9 @@
             <summary>
             Default id, if none is supplied
             </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.Finalize">
+            <inheritdoc />
         </member>
         <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.Exact(System.Single,Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32,System.Object)">
             <summary>
@@ -537,14 +1013,14 @@
             For 2D physic see <see cref="T:Archon.SwissArmyLib.Gravity.GravitationalEntity2D"/>.
             </summary>
         </member>
-        <member name="T:Archon.SwissArmyLib.Gravity.IGravitationalPoint">
+        <member name="T:Archon.SwissArmyLib.Gravity.IGravitationalAffecter">
             <summary>
-            Represents a point with a gravitational pull on entities.
+            Represents a gravitational pull on entities.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Gravity.IGravitationalPoint.GetForceAt(UnityEngine.Vector3)">
+        <member name="M:Archon.SwissArmyLib.Gravity.IGravitationalAffecter.GetForceAt(UnityEngine.Vector3)">
             <summary>
-            Calculates how much gravitational pull is at a specific location caused by this point.
+            Calculates how much gravitational pull is at a specific location caused by this affecter.
             </summary>
             <param name="location">The location to test.</param>
             <returns>A vector representing the force at <paramref name="location"/>.</returns>
@@ -573,6 +1049,9 @@
             Gets or sets whether this point should affect all entities regardless of whether they're in range.
             </summary>
         </member>
+        <member name="M:Archon.SwissArmyLib.Gravity.SphericalGravitationalPoint.GetForceAt(UnityEngine.Vector3)">
+            <inheritdoc />
+        </member>
         <member name="T:Archon.SwissArmyLib.Gravity.GravitationalEntity2D">
             <summary>
             Makes this <see cref="T:UnityEngine.GameObject"/>'s <see cref="T:UnityEngine.Rigidbody2D"/> part of the gravitational system.
@@ -586,22 +1065,20 @@
             
             Rigidbodies that should be affected should have the <see cref="T:Archon.SwissArmyLib.Gravity.GravitationalEntity"/> component (or <see cref="T:Archon.SwissArmyLib.Gravity.GravitationalEntity2D"/> if using 2d physics).
             
-            Add gravitational forces by implementing the <see cref="T:Archon.SwissArmyLib.Gravity.IGravitationalPoint"/> interface and registering it in the system.
+            Add gravitational forces by implementing the <see cref="T:Archon.SwissArmyLib.Gravity.IGravitationalAffecter"/> interface and registering it in the system.
             See <see cref="T:Archon.SwissArmyLib.Gravity.SphericalGravitationalPoint"/> for a simple example implementation.
             
             <remarks>You might want to set Unity's gravity to (0,0,0).</remarks>
             </summary>
         </member>
-        <member name="P:Archon.SwissArmyLib.Gravity.GravitationalSystem.Instance">
-            <summary>
-            A reference to the GravitationalSystem singleton.
-            </summary>
+        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Finalize">
+            <inheritdoc />
         </member>
-        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Register(Archon.SwissArmyLib.Gravity.IGravitationalPoint)">
+        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Register(Archon.SwissArmyLib.Gravity.IGravitationalAffecter)">
             <summary>
-            Registers a gravitational point to be part of the system.
+            Registers a gravitational affecter to be part of the system.
             </summary>
-            <param name="point">The point to register.</param>
+            <param name="affecter">The affecter to register.</param>
         </member>
         <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Register(UnityEngine.Rigidbody)">
             <summary>
@@ -615,11 +1092,11 @@
             </summary>
             <param name="rigidbody">The rigidbody to register.</param>
         </member>
-        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Unregister(Archon.SwissArmyLib.Gravity.IGravitationalPoint)">
+        <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Unregister(Archon.SwissArmyLib.Gravity.IGravitationalAffecter)">
             <summary>
-            Unregisters a gravitational point from the system, so it no longer affects entities.
+            Unregisters a gravitational affecter from the system, so it no longer affects entities.
             </summary>
-            <param name="point">The point to unregister.</param>
+            <param name="affecter">The affecter to unregister.</param>
         </member>
         <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Unregister(UnityEngine.Rigidbody)">
             <summary>
@@ -639,6 +1116,758 @@
             </summary>
             <param name="location">The location to test.</param>
             <returns>A vector representing the sum of gravitational force at <paramref name="location"/>.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Pooling.PoolableGroup">
+            <summary>
+            Manages a list of IPoolable components found in the hierarchy of this GameObject and notifies them when it is spawned and despawned.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolableGroup.AddManually(Archon.SwissArmyLib.Pooling.IPoolable)">
+            <summary>
+            Manually add a poolable object to be notified when this component is spawned or despawned.
+            
+            Useful if you dynamically add IPoolable components at runtime.
+            </summary>
+            <param name="poolable">The poolable object that should be notified.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolableGroup.RemoveManually(Archon.SwissArmyLib.Pooling.IPoolable)">
+            <summary>
+            Manually removes a poolable object so that it no longer is notified when this component is spawned or despawned.
+            </summary>
+            <param name="poolable">The poolable object that should no longer be notified.</param>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceEvent.OriginalDelta">
+            <inheritdoc />
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceEvent.ModifiedDelta">
+            <inheritdoc />
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceEvent.AppliedDelta">
+            <inheritdoc />
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceEvent.Source">
+            <inheritdoc />
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceEvent.Args">
+            <inheritdoc />
+        </member>
+        <member name="T:Archon.SwissArmyLib.ResourceSystem.IResourceChangeEvent">
+            <summary>
+            Defines an event for after a resource pool has been changed.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.IResourceChangeEvent.OriginalDelta">
+            <summary>
+            Gets the originally requested resource change.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.IResourceChangeEvent.ModifiedDelta">
+            <summary>
+            Gets the modified delta after listeners of <see cref="F:Archon.SwissArmyLib.ResourceSystem.ResourcePool.OnPreChange"/> had their chance to affect it.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.IResourceChangeEvent.AppliedDelta">
+            <summary>
+            Gets the actual applied (and clamped) delta. 
+            Basically just the difference in resource amount before and after the change.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.ResourceSystem.IResourcePreChangeEvent">
+            <summary>
+            Defines a change event that has not yet happened, and can be altered.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.IResourcePreChangeEvent.OriginalDelta">
+            <summary>
+            Gets the originally requested resource change.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.IResourcePreChangeEvent.ModifiedDelta">
+            <summary>
+            Gets or sets the modified delta that will be applied after this event.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.ResourceSystem.IResourceEvent">
+            <summary>
+            Defines a barebones resource event.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.IResourceEvent.Source">
+            <summary>
+            Gets the source of the resource change. 
+            Can be null.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.IResourceEvent.Args">
+            <summary>
+            Gets the args that the sender sent with the change.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.ResourceSystem.ResourcePool">
+            <summary>
+            A generic resource pool (eg. health, mana, energy).
+            
+            <seealso cref="T:Archon.SwissArmyLib.ResourceSystem.ResourceRegen"/>
+            <seealso cref="T:Archon.SwissArmyLib.ResourceSystem.Shield"/>
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.ResourceSystem.ResourcePool.EventIds">
+            <summary>
+            Event ids for resource change events.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.ResourceSystem.ResourcePool.OnPreChange">
+            <summary>
+            Event called just before the resource amount is changed. 
+            You can affect the applied change by modifying <see cref="P:Archon.SwissArmyLib.ResourceSystem.IResourcePreChangeEvent.ModifiedDelta"/>.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.ResourceSystem.ResourcePool.OnChange">
+            <summary>
+            Event called after the resource amount has been changed.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.ResourceSystem.ResourcePool.OnEmpty">
+            <summary>
+            Event called once the pool has been completely emptied.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.ResourceSystem.ResourcePool.OnFull">
+            <summary>
+            Event called when the pool has been completely filled.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.ResourceSystem.ResourcePool.OnRenew">
+            <summary>
+            Event called when the pool is renewed using <see cref="M:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Renew(System.Object,System.Object,System.Boolean)"/>.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Current">
+            <summary>
+            Gets the current amount of resource in this pool.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Max">
+            <summary>
+            Gets or sets the maximum amount of source that can be in this pool.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourcePool.EmptyTillRenewed">
+            <summary>
+            Gets or sets whether adding resource should be disabled after the pool is completely empty, until it is renewed using <see cref="M:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Renew(System.Object,System.Object,System.Boolean)"/> again.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Percentage">
+            <summary>
+            Gets a how full the resource is percentage-wise (0 to 1)
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourcePool.IsEmpty">
+            <summary>
+            Gets whether the pool is completely empty.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourcePool.IsFull">
+            <summary>
+            Gets whether the pool is completely empty.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Awake">
+            <summary>
+            Called when the MonoBehaviour is added to a GameObject.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Add(System.Single,System.Object,System.Object,System.Boolean)">
+            <summary>
+            Adds the specified amount of resource to the pool.
+            </summary>
+            <param name="amount">The amount to add.</param>
+            <param name="source">The source of the change.</param>
+            <param name="args">Optional args that will be passed to listeners.</param>
+            <param name="forced">Controls whether to force the change, despite modifications by listeners.</param>
+            <returns>The resulting change in the pool.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Remove(System.Single,System.Object,System.Object,System.Boolean)">
+            <summary>
+            Removes the specified amount of resource to the pool.
+            </summary>
+            <param name="amount">The amount to remove.</param>
+            <param name="source">The source of the change.</param>
+            <param name="args">Optional args that will be passed to listeners.</param>
+            <param name="forced">Controls whether to force the change, despite modifications by listeners.</param>
+            <returns>The resulting change in the pool.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Empty(System.Object,System.Object,System.Boolean)">
+            <summary>
+            Completely empties the pool.
+            </summary>
+            <param name="source">The source of the change.</param>
+            <param name="args">Optional args that will be passed to listeners.</param>
+            <param name="forced">Controls whether to force the change, despite modifications by listeners.</param>
+            <returns>The resulting change in the pool.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Fill(System.Object,System.Object,System.Boolean)">
+            <summary>
+            Fully fills the pool.
+            </summary>
+            <param name="source">The source of the change.</param>
+            <param name="args">Optional args that will be passed to listeners.</param>
+            <param name="forced">Controls whether to force the change, despite modifications by listeners.</param>
+            <returns>The resulting change in the pool.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Fill(System.Single,System.Object,System.Object,System.Boolean)">
+            <summary>
+            Fills the pool to the specified amount.
+            </summary>
+            <param name="toValue">The amount of resource to restore to.</param>
+            <param name="source">The source of the change.</param>
+            <param name="args">Optional args that will be passed to listeners.</param>
+            <param name="forced">Controls whether to force the change, despite modifications by listeners.</param>
+            <returns>The resulting change in the pool.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Renew(System.Object,System.Object,System.Boolean)">
+            <summary>
+            Fully restores the pool, regardless of <see cref="P:Archon.SwissArmyLib.ResourceSystem.ResourcePool.EmptyTillRenewed"/>.
+            </summary>
+            <param name="source">The source of the change.</param>
+            <param name="args">Optional args that will be passed to listeners.</param>
+            <param name="forced">Controls whether to force the change, despite modifications by listeners.</param>
+            <returns>The resulting change in the pool.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Renew(System.Single,System.Object,System.Object,System.Boolean)">
+            <summary>
+            Restores the pool to the specified amount, regardless of <see cref="P:Archon.SwissArmyLib.ResourceSystem.ResourcePool.EmptyTillRenewed"/>.
+            </summary>
+            <param name="toValue">The amount of resource to restore to.</param>
+            <param name="source">The source of the change.</param>
+            <param name="args">Optional args that will be passed to listeners.</param>
+            <param name="forced">Controls whether to force the change, despite modifications by listeners.</param>
+            <returns>The resulting change in the pool.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourcePool.Change(System.Single,System.Object,System.Object,System.Boolean)">
+            <summary>
+            Changes the resource amount by <paramref name="delta"/>.
+            </summary>
+            <param name="delta">The delta to apply.</param>
+            <param name="source">The source of the change.</param>
+            <param name="args">Optional args that will be passed to listeners.</param>
+            <param name="forced">Controls whether to force the change, despite modifications by listeners.</param>
+            <returns>The resulting change in the pool.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.ResourceSystem.ResourceRegen">
+            <summary>
+            Adds resource to a pool at a constant rate or in intervals.
+            
+            If the <see cref="P:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.Target"/> is not set, it will try to find a resource pool on the same GameObject.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.Interval">
+            <summary>
+            Gets or sets how often in seconds that <see cref="P:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.AmountPerInterval"/> resources should be gained.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.AmountPerInterval">
+            <summary>
+            Gets or sets the amount of resource that should be gained every <see cref="P:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.Interval"/>.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.ConstantAmountPerSecond">
+            <summary>
+            Gets or sets the amount of resource that should be gained per second.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.DownTimeOnResourceLoss">
+            <summary>
+            Gets or sets the amount of time in seconds to stop healing after the <see cref="P:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.Target"/> loses resource.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.Target">
+            <summary>
+            Gets or sets the target <see cref="T:Archon.SwissArmyLib.ResourceSystem.ResourcePool"/> that should regen.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.Awake">
+            <summary>
+            Called when the MonoBehaviour is added to a GameObject.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.OnEnable">
+            <summary>
+            Called when the MonoBehaviour is enabled.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.OnDisable">
+            <summary>
+            Called when the MonoBehaviour is disabled.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.ResourceRegen.Update">
+            <summary>
+            Called every frame.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.ResourceSystem.Shield">
+            <summary>
+            A resource pool that is used to protect another resource pool from getting drained. 
+            The shield intercepts the event and applies some of the change to itself, only letting part (or none at all) of the change get through.
+            
+            If the <see cref="P:Archon.SwissArmyLib.ResourceSystem.Shield.ProtectedTarget"/> is not set, it will try to find a resource pool on the same GameObject.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.Shield.ProtectedTarget">
+            <summary>
+            Gets or sets the target that this shield should protect.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.Shield.AbsorptionFlat">
+            <summary>
+            Gets or sets the flat amount of removed resource that should be absorbed by the shield.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.Shield.AbsorptionScaling">
+            <summary>
+            Gets or sets the fraction of removed resource that should be absorbed by the shield.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.Shield.EmptiesWithTarget">
+            <summary>
+            Gets or sets whether the shield should get fully drained when the target is empty.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.ResourceSystem.Shield.RenewsWithTarget">
+            <summary>
+            Gets or sets whether the shield should renew when the target does.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.Shield.Awake">
+            <inheritdoc />
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.Shield.OnEnable">
+            <summary>
+            Called when the MonoBehaviour is enabled.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.Shield.OnDisable">
+            <summary>
+            Called when the MonoBehaviour is disabled.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.Shield.Change(System.Single,System.Object,System.Object,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.Shield.OnEvent(System.Int32,Archon.SwissArmyLib.ResourceSystem.IResourcePreChangeEvent)">
+            <inheritdoc />
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.Shield.OnEvent(System.Int32,Archon.SwissArmyLib.ResourceSystem.IResourceEvent)">
+            <inheritdoc />
+        </member>
+        <member name="M:Archon.SwissArmyLib.ResourceSystem.Shield.GetDefaultTarget">
+            <summary>
+            Attempts to find a different resource pool on this GameObject.
+            </summary>
+            <returns>The found pool, or null if none were found.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Utils.Editor.ExecutionOrderAttribute">
+            <summary>
+            Changes the ScriptExecutionOrder of a <see cref="T:UnityEngine.MonoBehaviour"/> if it's not already explicitly set (or if <see cref="F:Archon.SwissArmyLib.Utils.Editor.ExecutionOrderAttribute.Forced"/> is true).
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Utils.Editor.ExecutionOrderAttribute.Order">
+            <summary>
+            The order you want for the script to have.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Utils.Editor.ExecutionOrderAttribute.Forced">
+            <summary>
+            Whether you want the order to be forcibly set and not just used as a default value.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Utils.Editor.ReadOnlyAttribute">
+            <summary>
+            Marks the field to be unchangable via the inspector.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Utils.Editor.ReadOnlyAttribute.OnlyWhilePlaying">
+            <summary>
+            Whether it should only be readonly during play mode.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Utils.Lazy`1">
+            <summary>
+            Provides support for lazy initialization.
+            
+            If you're on .NET 4.0 or higher you might want to use System.Lazy instead.
+            </summary>
+            <typeparam name="T">The type of the lazily initialized value.</typeparam>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.Lazy`1.Value">
+            <summary>
+            Gets the lazily initialized value of this <see cref="T:Archon.SwissArmyLib.Utils.Lazy`1"/> instance.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.Lazy`1.IsValueCreated">
+            <summary>
+            Gets whether the value has been initialized.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Lazy`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Archon.SwissArmyLib.Utils.Lazy`1"/> class. 
+            The default constructor will be used to create the lazily initialized value.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Lazy`1.#ctor(System.Func{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Archon.SwissArmyLib.Utils.Lazy`1"/> class. 
+            The specified initialization function will be used.
+            </summary>
+            <param name="valueFactory">The function to use for producing the lazily initialized value.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Lazy`1.ToString">
+            <summary>
+            Creates a string representation of <see cref="P:Archon.SwissArmyLib.Utils.Lazy`1.Value"/> property for this instance.
+            </summary>
+            <returns>The result of ToString() on the lazily initialized value.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Lazy`1.op_Explicit(Archon.SwissArmyLib.Utils.Lazy{`0})~`0">
+            <summary>
+            Explicitly casts the <paramref name="lazy"/> to its lazily initialized value.
+            </summary>
+            <param name="lazy"></param>
+            <returns><see cref="P:Archon.SwissArmyLib.Utils.Lazy`1.Value"/></returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Utils.ServiceLocator">
+            <summary>
+                A (somewhat) simple implementation of the service locator pattern.
+                The ServiceLocator knows about MonoBehaviours and how to work with them.
+                Creating scene-specific resolvers that only live as long as their respective scene is also supported.
+                <remarks>
+                    Please note that when you load a new scene, the MonoBehaviours in that scene will have their Awake()
+                    method called before their scene becomes the active one. This means you can't rely on
+                    SceneManager.GetActiveScene() to return the scene they're in, so you might want to use GameObject.scene
+                    to specify which scene to register the resolver for.
+                </remarks>
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingleton``1">
+            <summary>
+                Registers a concrete singleton of the given type.
+            </summary>
+            <typeparam name="T">The type of the singleton.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterLazySingleton``1">
+            <summary>
+                Registers a concrete singleton of the given type.
+                The instance won't be created until the first time it is resolved.
+            </summary>
+            <typeparam name="T">The type of the singleton.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``1">
+            <summary>
+                Registers a scene-specific concrete singleton of the given type.
+                <remarks>The resolver is registered for the active scene according to <see cref="M:UnityEngine.SceneManagement.SceneManager.GetActiveScene" />.</remarks>
+            </summary>
+            <typeparam name="T">The type of the singleton.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterLazySingletonForScene``1">
+            <summary>
+                Registers a scene-specific concrete singleton of the given type.
+                The instance won't be created until the first time it is resolved.
+                <remarks>The resolver is registered for the active scene according to <see cref="M:UnityEngine.SceneManagement.SceneManager.GetActiveScene" />.</remarks>
+            </summary>
+            <typeparam name="T">The type of the singleton.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``1(UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Registers a scene-specific concrete singleton of the given type.
+            </summary>
+            <typeparam name="T">The type of the singleton.</typeparam>
+            <param name="scene">The scene to register the transient type for.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterLazySingletonForScene``1(UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Registers a scene-specific concrete singleton of the given type.
+                The instance won't be created until the first time it is resolved.
+            </summary>
+            <typeparam name="T">The type of the singleton.</typeparam>
+            <param name="scene">The scene to register the transient type for.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingleton``2">
+            <summary>
+                Registers a concrete singleton of the type <typeparamref name="TConcrete" /> for the abstract type
+                <typeparamref name="TAbstract" />.
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete singleton implementation.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterLazySingleton``2">
+            <summary>
+                Registers a concrete singleton of the type <typeparamref name="TConcrete" /> for the abstract type
+                <typeparamref name="TAbstract" />.
+                The instance won't be created until the first time it is resolved.
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete singleton implementation.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``2">
+            <summary>
+                Registers a scene-specific concrete singleton of the type <typeparamref name="TConcrete" /> for the abstract type
+                <typeparamref name="TAbstract" />.
+                <remarks>The resolver is registered for the active scene according to <see cref="M:UnityEngine.SceneManagement.SceneManager.GetActiveScene" />.</remarks>
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete singleton implementation.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterLazySingletonForScene``2">
+            <summary>
+                Registers a scene-specific concrete singleton of the type <typeparamref name="TConcrete" /> for the abstract type
+                <typeparamref name="TAbstract" />.
+                The instance won't be created until the first time it is resolved.
+                <remarks>The resolver is registered for the active scene according to <see cref="M:UnityEngine.SceneManagement.SceneManager.GetActiveScene" />.</remarks>
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete singleton implementation.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``2(UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Registers a scene-specific concrete singleton of the type <typeparamref name="TConcrete" /> for the abstract type
+                <typeparamref name="TAbstract" />.
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete singleton implementation.</typeparam>
+            <param name="scene">The scene to register the transient type for.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterLazySingletonForScene``2(UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Registers a scene-specific concrete singleton of the type <typeparamref name="TConcrete" /> for the abstract type
+                <typeparamref name="TAbstract" />.
+                The instance won't be created until the first time it is resolved.
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete singleton implementation.</typeparam>
+            <param name="scene">The scene to register the transient type for.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingleton``1(``0)">
+            <summary>
+                Registers a specific instance to be a singleton for its concrete type.
+            </summary>
+            <typeparam name="T">The type of the singleton.</typeparam>
+            <param name="instance">The instance to register as a singleton.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``1(``0)">
+            <summary>
+                Registers a specific instance to be a scene-specific singleton for its concrete type.
+                <remarks>The resolver is registered for the active scene according to <see cref="M:UnityEngine.SceneManagement.SceneManager.GetActiveScene" />.</remarks>
+            </summary>
+            <typeparam name="T">The type of the singleton.</typeparam>
+            <param name="instance">The instance to register as a singleton.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``1(``0,UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Registers a specific instance to be a scene-specific singleton for its concrete type.
+            </summary>
+            <typeparam name="T">The type of the singleton.</typeparam>
+            <param name="instance">The instance to register as a singleton.</param>
+            <param name="scene">The scene to register the transient type for.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransient``1">
+            <summary>
+                Registers a concrete transient type.
+                A new instance of the given type will be returned each time it is resolved.
+            </summary>
+            <typeparam name="T">The concrete transient type to register.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransientForScene``1">
+            <summary>
+                Registers scene-specific a concrete transient type.
+                A new instance of the given type will be returned each time it is resolved.
+                <remarks>The resolver is registered for the active scene according to <see cref="M:UnityEngine.SceneManagement.SceneManager.GetActiveScene" />.</remarks>
+            </summary>
+            <typeparam name="T">The concrete transient type to register.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransientForScene``1(UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Registers scene-specific a concrete transient type.
+                A new instance of the given type will be returned each time it is resolved.
+            </summary>
+            <typeparam name="T">The concrete transient type to register.</typeparam>
+            <param name="scene">The scene to register the transient type for.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransient``2">
+            <summary>
+                Registers a concrete transient type to return new instances of when the abstract type
+                <typeparamref name="TAbstract" /> is resolved.
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete transient type to return when <typeparamref name="TAbstract" /> is resolved.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransientForScene``2">
+            <summary>
+                Registers a scene-specific concrete transient type to return new instances of when the abstract type
+                <typeparamref name="TAbstract" /> is resolved.
+                <remarks>The resolver is registered for the active scene according to <see cref="M:UnityEngine.SceneManagement.SceneManager.GetActiveScene" />.</remarks>
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete transient type to return when <typeparamref name="TAbstract" /> is resolved.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransientForScene``2(UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Registers a scene-specific concrete transient type to return new instances of when the abstract type
+                <typeparamref name="TAbstract" /> is resolved.
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete transient type to return when <typeparamref name="TAbstract" /> is resolved.</typeparam>
+            <param name="scene">The scene to register the transient type for.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransient``1(System.Func{``0})">
+            <summary>
+                Registers a concrete transient type to return new instances of when <typeparamref name="T" /> is resolved.
+                The specified resolver will be used for producing the instances.
+            </summary>
+            <typeparam name="T">The concrete transient type to register.</typeparam>
+            <param name="factory">The factory that will be used for creating instances.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransientForScene``1(System.Func{``0})">
+            <summary>
+                Registers a scene-specific concrete transient type to return new instances of when <typeparamref name="T" /> is
+                resolved.
+                The specified resolver will be used for producing the instances.
+                <remarks>The resolver is registered for the active scene according to <see cref="M:UnityEngine.SceneManagement.SceneManager.GetActiveScene" />.</remarks>
+            </summary>
+            <typeparam name="T">The concrete transient type to register.</typeparam>
+            <param name="factory">The factory that will be used for creating instances.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransientForScene``1(System.Func{``0},UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Registers a scene-specific concrete transient type to return new instances of when <typeparamref name="T" /> is
+                resolved.
+                The specified resolver will be used for producing the instances.
+            </summary>
+            <typeparam name="T">The concrete transient type to register.</typeparam>
+            <param name="factory">The factory that will be used for creating instances.</param>
+            <param name="scene">The scene to register the transient type for.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransient``2(System.Func{``1})">
+            <summary>
+                Registers a concrete transient type to return new instances of when the abstract type
+                <typeparamref name="TAbstract" /> is resolved.
+                The specified resolver will be used for producing the instances.
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete transient type to return when <typeparamref name="TAbstract" /> is resolved.</typeparam>
+            <param name="factory">The factory that will be used for creating instances.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransientForScene``2(System.Func{``1})">
+            <summary>
+                Registers a scene-specific concrete transient type to return new instances of when the abstract type
+                <typeparamref name="TAbstract" /> is resolved.
+                The specified resolver will be used for producing the instances.
+                <remarks>The resolver is registered for the active scene according to <see cref="M:UnityEngine.SceneManagement.SceneManager.GetActiveScene" />.</remarks>
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete transient type to return when <typeparamref name="TAbstract" /> is resolved.</typeparam>
+            <param name="factory">The factory that will be used for creating instances.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransientForScene``2(System.Func{``1},UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Registers a scene-specific concrete transient type to return new instances of when the abstract type
+                <typeparamref name="TAbstract" /> is resolved.
+                The specified resolver will be used for producing the instances.
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete" />.</typeparam>
+            <typeparam name="TConcrete">The concrete transient type to return when <typeparamref name="TAbstract" /> is resolved.</typeparam>
+            <param name="factory">The factory that will be used for creating instances.</param>
+            <param name="scene">The scene to register the transient type for.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.Resolve``1(System.Boolean)">
+            <summary>
+                Locates and returns a transient object or singleton of the specified type.
+                Searches for a global object first, if nothing is found and <paramref name="includeActiveScene" /> is true then it
+                searches for a scene specific resolver.
+                Make sure the type is registered first.
+                <seealso cref="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingleton``1(``0)" />
+                <seealso cref="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransient``1" />
+                <seealso cref="M:Archon.SwissArmyLib.Utils.ServiceLocator.ResolveForScene``1" />
+            </summary>
+            <typeparam name="T">The type to locate an implementation for.</typeparam>
+            <param name="includeActiveScene">Whether to search for a scene specific resolver if a global one isn't found.</param>
+            <returns>
+                The transient object or singleton that is mapped to the specified type.
+                If nothing is registered for <typeparamref name="T" /> the default value for the type is returned.
+            </returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.ResolveForScene``1">
+            <summary>
+                Locates and returns a transient object or singleton of the specified type for the currently active scene.
+                Make sure the type is registered first.
+                <seealso cref="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``1(``0)" />
+                <seealso cref="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransientForScene``1" />
+            </summary>
+            <typeparam name="T">The type to locate an implementation for.</typeparam>
+            <returns>
+                The transient object or singleton that is mapped to the specified type.
+                If nothing is registered for <typeparamref name="T" /> the default value for the type is returned.
+            </returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.ResolveForScene``1(UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Locates and returns a transient object or singleton of the specified type for the given scene.
+                Make sure the type is registered first.
+                <seealso cref="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``1(``0)" />
+                <seealso cref="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransientForScene``1" />
+            </summary>
+            <typeparam name="T">The type to locate an implementation for.</typeparam>
+            <returns>
+                The transient object or singleton that is mapped to the specified type.
+                If nothing is registered for <typeparamref name="T" /> the default value for the type is returned.
+            </returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.IsRegistered``1(System.Boolean)">
+            <summary>
+            Checks whether there's registered a resolver for a specific type.
+            </summary>
+            <typeparam name="T">The type to check if registered.</typeparam>
+            <param name="includeActiveScene">Whether to search for a scene specific resolver if a global one isn't found.</param>
+            <returns>True if registered, false otherwise.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.IsRegisteredInScene``1">
+            <summary>
+            Checks whether there's registered a scene-specific resolver for a specific type in the currently active scene.
+            </summary>
+            <typeparam name="T">The type to check if registered.</typeparam>
+            <returns>True if registered, false otherwise.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.IsRegisteredInScene``1(UnityEngine.SceneManagement.Scene)">
+            <summary>
+            Checks whether there's registered a scene-specific resolver for a specific type in the specified scene.
+            </summary>
+            <typeparam name="T">The type to check if registered.</typeparam>
+            <returns>True if registered, false otherwise.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.Reset">
+            <summary>
+                Clears all resolvers.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.ResetGlobal">
+            <summary>
+                Clears global resolvers.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.ResetScene">
+            <summary>
+                Clears the currently active scene's resolvers.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.ResetScene(UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Clears a specific scene's resolvers.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.ResetScenes">
+            <summary>
+                Clears all scene specific resolvers for all scenes.
+            </summary>
         </member>
         <member name="T:Archon.SwissArmyLib.Utils.ColorUtils">
             <summary>

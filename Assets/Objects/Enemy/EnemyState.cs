@@ -30,7 +30,7 @@ namespace Enemy
         {
         }
 
-        public virtual void Think(float deltaTime)
+        public virtual void Act(float deltaTime)
         {
         }
 
