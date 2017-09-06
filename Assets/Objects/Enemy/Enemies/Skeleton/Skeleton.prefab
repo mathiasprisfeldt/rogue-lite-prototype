@@ -952,7 +952,7 @@ MonoBehaviour:
   - {fileID: 61432612969536036}
   _collisionLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 512
   _tolerance: 0
   _character: {fileID: 114070941598918422}
 --- !u!114 &114888443972715940

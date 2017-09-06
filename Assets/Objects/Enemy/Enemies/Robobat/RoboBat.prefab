@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 4374408028387464}
   - component: {fileID: 114173433870374606}
   - component: {fileID: 114454672658061792}
+  - component: {fileID: 114756186713424770}
   m_Layer: 12
   m_Name: AI
   m_TagString: Untagged
@@ -248,7 +249,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1872977180287926}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.96, y: -0.055, z: 0}
+  m_LocalPosition: {x: -11.96, y: 2.26, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4671530382136436}
@@ -736,10 +737,10 @@ MonoBehaviour:
   _attackIndicator: {fileID: 114403488158740806}
   _staggerIndicator: {fileID: 114875717383722650}
   _viewBox: {fileID: 114420248984715792}
-  _attackCooldown: 0.5
+  _attackCooldown: 0
   _indicatorDuration: 0
   _targetBehind: 1
-  _turnSpeed: 0.1
+  _turnSpeed: 0
   _canBackPaddle: 0
   _turnOnBackstab: 1
   _engageSpeed: 50
@@ -760,6 +761,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _application: {fileID: 114131460394400532}
+--- !u!114 &114756186713424770
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1464397412292338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86ed3c021bf55834abe8869c1c660cce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isEnabled: 0
+  _homeDistance: 5
+  _giveUpThreshhold: 0.5
 --- !u!114 &114875717383722650
 MonoBehaviour:
   m_ObjectHideFlags: 1

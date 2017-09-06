@@ -3227,25 +3227,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4052246ce7645ba4cafddf1a4ca138eb, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &904073401 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1464397412292338, guid: cd82d834c29db1a4083bead46f63c39f,
-    type: 2}
-  m_PrefabInternal: {fileID: 1273013222}
---- !u!114 &904073405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 904073401}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86ed3c021bf55834abe8869c1c660cce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isEnabled: 0
-  _homeDistance: 5
-  _giveUpThreshhold: 0.5
 --- !u!4 &910593766 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4273749052745280, guid: 4052246ce7645ba4cafddf1a4ca138eb,
@@ -4564,16 +4545,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1872977180287926, guid: cd82d834c29db1a4083bead46f63c39f, type: 2}
       propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114562797456618854, guid: cd82d834c29db1a4083bead46f63c39f,
-        type: 2}
-      propertyPath: _attackCooldown
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114562797456618854, guid: cd82d834c29db1a4083bead46f63c39f,
-        type: 2}
-      propertyPath: _turnSpeed
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
