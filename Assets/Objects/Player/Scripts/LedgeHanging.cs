@@ -80,7 +80,7 @@ namespace CharacterController
 
                         PlatformBehavior platform = col.gameObject.GetComponent<PlatformBehavior>();
                         if (platform && (!platform.Istop || left && platform.Right || right && platform.Left)
-                            || !platform.IsGrabable)
+                            || platform && !platform.IsGrabable)
                             return false;
 
                         if (col.gameObject.tag == "Ladder")
