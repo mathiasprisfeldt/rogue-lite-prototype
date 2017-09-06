@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset name="ProjectRogueLike" tilewidth="357" tileheight="464" tilecount="14" columns="0">
+<tileset name="ProjectRogueLike" tilewidth="357" tileheight="464" tilecount="15" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="100" height="100" source="../Sprites/Kaj.jpg"/>
@@ -42,5 +42,8 @@
  </tile>
  <tile id="19">
   <image width="256" height="256" source="../../SpawnIcons/Mana.png"/>
+ </tile>
+ <tile id="20">
+  <image width="256" height="256" source="../../SpawnIcons/FlingerSpawner.png"/>
  </tile>
 </tileset>

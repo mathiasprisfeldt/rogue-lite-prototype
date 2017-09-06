@@ -151,6 +151,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4546770527152274}
   - component: {fileID: 61801451968406756}
+  - component: {fileID: 114015417194031834}
   m_Layer: 13
   m_Name: Physical
   m_TagString: Untagged
@@ -277,7 +278,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1941947165937198}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.74, y: -0.62, z: 0}
+  m_LocalPosition: {x: 2.38, y: -5.58, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_Children:
   - {fileID: 4989661901461520}
@@ -557,6 +558,24 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114015417194031834
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1767100582098998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 970b6b43673120047a1a0cdf9eb36de3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _collidersToCheck:
+  - {fileID: 61801451968406756}
+  _collisionLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  _tolerance: 0
+  _character: {fileID: 114220297533216582}
 --- !u!114 &114067714325993086
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -622,7 +641,7 @@ MonoBehaviour:
   _rigidbody: {fileID: 50570406512973978}
   _model: {fileID: 1083456859351200}
   _groundCollisionCheck: {fileID: 0}
-  _physicialCollisionCheck: {fileID: 0}
+  _physicialCollisionCheck: {fileID: 114015417194031834}
   _hitbox: {fileID: 114472118098780292}
   _knockbackHandler: {fileID: 114577707980337684}
   _abilityHandler: {fileID: 0}
@@ -754,7 +773,7 @@ MonoBehaviour:
   _attackBoxOffset: {x: 0, y: 0}
   _projectile: {fileID: 114159514260344410, guid: 71c0bbfd6c6997f46846a257db3bf676,
     type: 2}
-  _spawnPos: {x: -0.385, y: 1.421}
+  _spawnPos: {x: -0.11, y: 1.421}
 --- !u!114 &114577707980337684
 MonoBehaviour:
   m_ObjectHideFlags: 1
