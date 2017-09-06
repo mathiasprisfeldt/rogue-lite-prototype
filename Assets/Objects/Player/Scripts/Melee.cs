@@ -30,9 +30,11 @@ namespace Combat
         {
             get
             {
-                if (_actionsController.App.C.PlayerActions.ProxyInputActions.Attack.WasPressed && !_active &&
-                    _cooldownTimer <= 0 && _actionsController.LastUsedVerticalMoveAbility != MoveAbility.LedgeHanging
-                    && _actionsController.LastUsedCombatAbility == CombatAbility.None)
+                if (_actionsController.App.C.PlayerActions.ProxyInputActions.Attack.WasPressed && 
+                    !_active &&
+                    _cooldownTimer <= 0 && 
+                    _actionsController.LastUsedVerticalMoveAbility != MoveAbility.LedgeHanging && 
+                    _actionsController.LastUsedCombatAbility == CombatAbility.None)
                 {
                     _active = true;
                     _actionsController.StartMelee.Value = true;
@@ -56,7 +58,7 @@ namespace Combat
 
                         CollisionCheck cc = c.gameObject.GetComponent<CollisionCheck>();
                         if (cc && cc.Character.HealthController != null && !cc.Character.HealthController.IsDead)
-                            cc.Character.HealthController.Damage(_actionsController.Damage, from: _actionsController);
+                            cc.Character.HealthController.Damage(_actionsController.Damage, from: _actionsController, pos: _actionsController.Rigidbody.position);
                     }
                 }
             }

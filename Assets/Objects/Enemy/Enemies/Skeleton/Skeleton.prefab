@@ -481,7 +481,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1115539378932434}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.97, y: 3.27, z: 0}
+  m_LocalPosition: {x: -7.11, y: -0.76, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4698073521509112}
@@ -610,8 +610,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.3, y: 0.8815898}
-  m_Size: {x: 0.903653, y: 1.5901728}
+  m_Offset: {x: 0.28965497, y: 0.8815898}
+  m_Size: {x: 0.5887027, y: 1.5901728}
   m_Direction: 0
 --- !u!70 &70571497256470544
 CapsuleCollider2D:
@@ -829,7 +829,7 @@ MonoBehaviour:
   _invurnabilityDuration: 0
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 3
+  _healthAmount: 10000
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 600
   _knockbackDuration: 0.1
