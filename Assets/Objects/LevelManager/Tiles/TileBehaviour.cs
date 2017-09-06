@@ -29,9 +29,16 @@ public class TileBehaviour : MonoBehaviour
     [SerializeField]
     private bool _trap;
 
+    [SerializeField]
+    private bool _isGrabable = true;
+
+    [SerializeField]
+    private bool _isSlideable = true;
+
     private Queue<TileBehaviour> _queue = new Queue<TileBehaviour>();
 
     private bool _isTop;
+
 
     public bool Touched { get; set; }
     [SerializeField]
@@ -75,6 +82,16 @@ public class TileBehaviour : MonoBehaviour
     public bool Trap
     {
         get { return _trap; }
+    }
+
+    public bool IsGrabable
+    {
+        get { return _isGrabable; }
+    }
+
+    public bool IsSlideable
+    {
+        get { return _isSlideable; }
     }
 
     [SerializeField]
@@ -163,16 +180,29 @@ public class TileBehaviour : MonoBehaviour
             pb.Istop = gameObject.tag != "Ladder";
             pb.Left = true;
             pb.Right = true;
+            pb.IsGrabable = true;
+            pb.IsSlideable = true;
 
             foreach (var target in targets)
             {
                 TileBehaviour tb = target.GetComponent<TileBehaviour>();
-                if (tb && !tb.LeftCollision)
-                    pb.Left = false;
-                if (tb && !tb.RightCollision)
-                    pb.Right = false;
-                if (tb && tb.TopCollision)
-                    pb.Istop = false;
+
+                if (tb)
+                {
+                    if (!tb.LeftCollision)
+                        pb.Left = false;
+                    if (!tb.RightCollision)
+                        pb.Right = false;
+                    if (tb.TopCollision)
+                        pb.Istop = false;
+                    if (!tb.IsGrabable)
+                        pb.IsGrabable = false;
+                    if (!tb.IsSlideable)
+                        pb.IsSlideable = false;
+
+                }
+                
+
 
                 pb.Tiles.Add(this);
                 target.transform.SetParent(parent.transform, true);
@@ -260,12 +290,29 @@ public class TileBehaviour : MonoBehaviour
             parent.name = parent.name + amountOfPlatforms;
             amountOfPlatforms++;
             PlatformBehavior pb = parent.AddComponent<PlatformBehavior>();
+            pb.IsGrabable = true;
+            pb.IsSlideable = true;
+            pb.Left = true;
+            pb.Right = true;
 
             foreach (var target in targets)
             {
                 if (target == gameObject)
                 {
                     pb.Istop = _isTop;
+                }
+
+                TileBehaviour tb = target.GetComponent<TileBehaviour>();
+                if (tb)
+                {
+                    if (!tb.LeftCollision)
+                        pb.Left = false;
+                    if (!tb.RightCollision)
+                        pb.Right = false;
+                    if (!tb.IsGrabable)
+                        pb.IsGrabable = false;
+                    if (!tb.IsSlideable)
+                        pb.IsSlideable = false;
                 }
 
                 pb.Tiles.Add(this);

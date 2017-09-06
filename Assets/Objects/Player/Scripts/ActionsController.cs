@@ -200,7 +200,6 @@ namespace CharacterController
         {
             base.Awake();
             LastHorizontalDirection = LookDirection;
-
             ClimbEnd = true;
             StartThrow = new Trigger();
             StartCombat = new Trigger();
@@ -215,7 +214,7 @@ namespace CharacterController
         void FixedUpdate()
         {
             _velocity = new Vector2(0, 0);
-
+              
             HandleCombat();
             HandleHorizontalMovement(ref _velocity);
             HandleVerticalMovement(ref _velocity);

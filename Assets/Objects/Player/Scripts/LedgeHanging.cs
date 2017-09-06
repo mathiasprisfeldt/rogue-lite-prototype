@@ -74,11 +74,13 @@ namespace CharacterController
                     if (Mathf.Abs(temp.y - hangPosition.y) <= _sensitivity)
                     {
                         TileBehaviour tile = col.gameObject.GetComponent<TileBehaviour>();
-                        if (tile && tile.TopCollision || tile && (left && tile.RightCollision || right && tile.LeftCollision))
+                        if (tile && tile.TopCollision || tile && (left && tile.RightCollision || right && tile.LeftCollision) 
+                            || tile && !tile.IsGrabable)
                             return false;
 
                         PlatformBehavior platform = col.gameObject.GetComponent<PlatformBehavior>();
-                        if (platform && (!platform.Istop || left && platform.Right || right && platform.Left))
+                        if (platform && (!platform.Istop || left && platform.Right || right && platform.Left)
+                            || !platform.IsGrabable)
                             return false;
 
                         if (col.gameObject.tag == "Ladder")

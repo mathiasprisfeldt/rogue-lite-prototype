@@ -119,7 +119,7 @@ namespace Knockbacks
             return velocity;
         }
 
-        public void AddForce(Vector2 force, float duration, bool overrideDefault = false, bool useCurve = true)
+        public void AddForce(Vector2 force, float duration, bool overrideDefault = false, bool useCurve = true, string name = "")
         {
             if (_forceDefaultValues && !overrideDefault)
             {
@@ -144,7 +144,16 @@ namespace Knockbacks
             if (Started != null && !_knocksBacks.Any())
                 Started.Invoke();
 
-            _knocksBacks.Add(new KnockBack(force, duration, useCurve));
+            if (name != "")
+            {
+                for (int i = _knocksBacks.Count - 1; i >= 0; i--)
+                {
+                    if (_knocksBacks[i].Name == name)
+                        _knocksBacks.RemoveAt(i);
+                }
+            }
+
+            _knocksBacks.Add(new KnockBack(force, duration, useCurve,name));
         }
 
         public void AddForce()
@@ -172,13 +181,15 @@ public class KnockBack
     public float Time { get; set; }
     public float Duration { get; private set; }
     public bool UseCurve { get; private set; }
+    public string Name { get; private set; }
 
-    public KnockBack(Vector2 velocity, float time, bool useCurve)
+    public KnockBack(Vector2 velocity, float time, bool useCurve, string name)
     {
         OriginalVelocity = velocity;
         Velocity = Vector2.zero;
         Time = 1;
         Duration = time;
         UseCurve = useCurve;
+        Name = name;
     }
 }

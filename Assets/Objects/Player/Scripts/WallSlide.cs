@@ -45,8 +45,12 @@ namespace CharacterController
 
                     }
 
+                    TileBehaviour tile = col.gameObject.GetComponent<TileBehaviour>();
+                    if (!(tile && (!tile.LeftCollision || !tile.RightCollision)) || tile && !tile.IsSlideable)
+                        return false;
+
                     PlatformBehavior platform = col.gameObject.GetComponent<PlatformBehavior>();
-                    if (!(platform && (!platform.Left || !platform.Right)))
+                    if (!(platform && (!platform.Left || !platform.Right)) || platform && !platform.IsSlideable )
                         return false;
                 }
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace CharacterController
 {
@@ -43,10 +44,28 @@ namespace CharacterController
                     return false;
 
                 var collision = (_actionsController.WallSlideCheck.Sides.Left || _actionsController.WallSlideCheck.Sides.Right) && !_actionsController.GroundCollisionCheck.Bottom;
+
                 if (collision)
                 {
-                    _gracePeriodTimer = _graceperiod;
-                    _lastValidLeft = _actionsController.WallSlideCheck.Sides.Left;
+                    //Find the top collider in the list of colliders the player is colliding with
+                    List<Collider2D> colliders = _actionsController.WallSlideCheck.Sides.Left
+                        ? _actionsController.WallSlideCheck.Sides.LeftColliders
+                        : _actionsController.WallSlideCheck.Sides.RightColliders;
+
+                    Collider2D topCollider = colliders[0];
+                    foreach (var c in colliders)
+                    {
+                        if (c.bounds.max.y > topCollider.bounds.max.y)
+                            topCollider = c;
+                    }
+
+                    
+                    if (Mathf.Abs(_actionsController.Rigidbody.transform.position.y - topCollider.bounds.max.y) > 1)
+                    {
+                        _gracePeriodTimer = _graceperiod;
+                        _lastValidLeft = _actionsController.WallSlideCheck.Sides.Left;
+                    }
+                    
                 }
                     
 

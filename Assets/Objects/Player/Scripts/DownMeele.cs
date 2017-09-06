@@ -66,7 +66,7 @@ namespace Meele
                         {
                             cc.Character.HealthController.Damage(_actionsController.Damage, from: _actionsController);
                             _knockbackAdded = true;
-                            _actionsController.App.C.Character.KnockbackHandler.AddForce(new Vector2(0,_knockbackForce), _knockbackDuration,true,false);
+                            _actionsController.App.C.Character.KnockbackHandler.AddForce(new Vector2(0,_knockbackForce), _knockbackDuration,true,false,"DownMelee");
                             ResetDownMelee();
                             break;
                         }
@@ -75,8 +75,12 @@ namespace Meele
                 }
 
                 if (_active && _actionsController.OnGround)
+                {
                     ResetDownMelee();
-                    
+                    _knockbackAdded = true;
+                    _actionsController.App.C.Character.KnockbackHandler.AddForce(new Vector2(0, _knockbackForce), _knockbackDuration, true, false, "DownMelee");
+                }
+
             }
         }
 

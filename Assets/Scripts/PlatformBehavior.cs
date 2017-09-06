@@ -12,6 +12,9 @@ public class PlatformBehavior : MonoBehaviour
     public bool Istop { get; set; }
     public bool Left { get; set; }
     public bool Right { get; set; }
+    public bool IsTrap { get; set; }
+    public bool IsGrabable { get; set; }
+    public bool IsSlideable { get; set; }
 
     public void Awake()
     {
