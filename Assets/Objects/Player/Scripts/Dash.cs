@@ -47,28 +47,33 @@ namespace CharacterController
                 if ((input && _canDash|| _dashing) && _cooldownTimer <= 0 && !_actionsController.Combat)
                 {
                     if (input)
-                    {
-                        
+                    {                        
                         _direction = _actionsController.Model.transform.localScale.x > 0 ? 1 : -1;
 
-                        if (_direction > 0 && RightCooldown > 0)
-                            return false;
-                        if (_direction < 0 && LeftCooldown > 0)
-                            return false;
+                        var isNotvalid = _direction > 0 && RightCooldown > 0 || _direction < 0 && LeftCooldown > 0;
 
-                        InitialDash = true;
-                        _actionsController.StartDash.Value = true;
+                        if (_direction > 0 && _actionsController.WallSlideCheck.Right ||
+                            _direction < 0 && _actionsController.WallSlideCheck.Left)
+                            isNotvalid = true;
 
-                        if (_direction > 0 && _actionsController.WallSlideCheck.Right || _direction < 0 && _actionsController.WallSlideCheck.Left)
+                        if (isNotvalid)
+                        {
+                            _actionsController.App.C.Health.HitboxEnabled = true;
                             return false;
+                        }
 
-                        _dashing = true;
-                        _oldVelocity = _actionsController.Rigidbody.velocity;
-                        _dashingTimer = _dashDuration;
-                        _canDash = false;
+                            InitialDash = true;
+                            _actionsController.StartDash.Value = true;
+                            _dashing = true;
+                            _oldVelocity = _actionsController.Rigidbody.velocity;
+                            _dashingTimer = _dashDuration;
+                            _canDash = false;
+
                     }
+                    _actionsController.App.C.Health.HitboxEnabled = false;
                     return true;
                 }
+                _actionsController.App.C.Health.HitboxEnabled = true;
                 return false;
             }
         }
@@ -86,7 +91,6 @@ namespace CharacterController
                 _dashingTimer -= Time.deltaTime;
             if (_actionsController.LastUsedVerticalMoveAbility != MoveAbility.Dash)
             {
-                _cooldownTimer = 0;
                 _dashingTimer = 0;
             }
             if (!_canDash && !_dashing)

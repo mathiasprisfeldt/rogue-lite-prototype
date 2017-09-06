@@ -980,6 +980,11 @@ Prefab:
       propertyPath: _forcedLevelsText.Array.data[0]
       value: 
       objectReference: {fileID: 4900000, guid: 70270c42d2d462243a34604381907de7, type: 3}
+    - target: {fileID: 114195463805386292, guid: b3d93c340dc761f468f2dab771568bb4,
+        type: 2}
+      propertyPath: _randomLevelsText.Array.data[0]
+      value: 
+      objectReference: {fileID: 4900000, guid: 7bb9ad2daceb4dd4585a3536be0d7253, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b3d93c340dc761f468f2dab771568bb4, type: 2}
   m_IsPrefabParent: 0

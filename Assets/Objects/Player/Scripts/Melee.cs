@@ -21,10 +21,14 @@ namespace Combat
         [SerializeField]
         private ActionsController _actionsController;
 
+        [SerializeField]
+        private bool _faceAwayAttack;
+
         private List<GameObject> _objectsTouched = new List<GameObject>();
 
         private float _cooldownTimer;
         private bool _active;
+
 
         public bool Active
         {
@@ -59,10 +63,10 @@ namespace Combat
                         _objectsTouched.Add(c.gameObject);
 
                         CollisionCheck cc = c.gameObject.GetComponent<CollisionCheck>();
-                        bool valid = _actionsController.LookDirection > 0 &&
+                        bool valid = !_faceAwayAttack || (_actionsController.LookDirection > 0 &&
                                      cc.transform.position.x >= _actionsController.Rigidbody.transform.position.x ||
                                      _actionsController.LookDirection < 0 &&
-                                     cc.transform.position.x <= _actionsController.Rigidbody.transform.position.x;
+                                     cc.transform.position.x <= _actionsController.Rigidbody.transform.position.x);
 
                         if (valid && cc && cc.Character.HealthController != null && !cc.Character.HealthController.IsDead)
                             cc.Character.HealthController.Damage(_actionsController.Damage, from: _actionsController, pos: _actionsController.Rigidbody.position);

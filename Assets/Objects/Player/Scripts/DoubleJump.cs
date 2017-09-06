@@ -55,7 +55,8 @@ namespace CharacterController
             if (_hasJumped)
             {
                 if (_actionsController.OnGround || _actionsController.AbilityReferences.WallSlide.VerticalActive 
-                    || _actionsController.AbilityReferences.LedgeHanging.VerticalActive)
+                    || _actionsController.AbilityReferences.LedgeHanging.VerticalActive 
+                    ||_actionsController.AbilityReferences.Climing.VerticalActive)
                     _hasJumped = false;
             }
             if (!_hasJumped && _actionsController.AbilityReferences.WallJump.VerticalActive)

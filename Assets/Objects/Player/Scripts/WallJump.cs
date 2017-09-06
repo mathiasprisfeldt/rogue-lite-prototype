@@ -71,7 +71,7 @@ namespace CharacterController
 
                 var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed;
                 var valid = input && _gracePeriodTimer > 0 && _verticalTimer <= 0 && _horizontalTimer <= 0 &&
-                            _actionsController.LastUsedCombatAbility == CombatAbility.None;                
+                            _actionsController.LastUsedCombatAbility == CombatAbility.None;
 
                 if (valid && _timer <= 0)
                 {
@@ -84,12 +84,12 @@ namespace CharacterController
                     _gracePeriodTimer = 0;
                     if (Direction > 0)
                     {
-                        _actionsController.AbilityReferences.Dash.LeftCooldown = .6f;
+                        _actionsController.AbilityReferences.Dash.LeftCooldown = .8f;
                         _actionsController.AbilityReferences.Dash.RightCooldown = 0;
                     }
                     else
                     {
-                        _actionsController.AbilityReferences.Dash.RightCooldown = .6f;
+                        _actionsController.AbilityReferences.Dash.RightCooldown = .8f;
                         _actionsController.AbilityReferences.Dash.LeftCooldown = 0;
                     }
                 }

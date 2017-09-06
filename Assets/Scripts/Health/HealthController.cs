@@ -84,6 +84,9 @@ namespace Health
         [SerializeField]
         private Character _character;
 
+        [SerializeField]
+        private GameObject _hitBox;
+
         #endregion
 
         public UnityEvent OnHealEvent;
@@ -101,6 +104,16 @@ namespace Health
                 }
 
                 _isDead = value; 
+            }
+        }
+
+        public bool HitboxEnabled
+        {
+            get { return _hitBox != null && _hitBox.activeInHierarchy; }
+            set
+            {
+                if (_hitBox != null)
+                    _hitBox.SetActive(value);
             }
         }
 

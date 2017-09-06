@@ -24,7 +24,7 @@ namespace CharacterController
                     return false;
 
                 var wallJumpActive = !(_actionsController.AbilityReferences.WallJump && _actionsController.AbilityReferences.WallJump.HorizontalActive);
-                var falling = _actionsController.Rigidbody.velocity.y < -1 || _falling;
+                var falling = _actionsController.Rigidbody.velocity.y < 0 || _falling;
                 var rest = (_actionsController.WallSlideCheck.Left || _actionsController.WallSlideCheck.Right);
 
                 List<Collider2D> colliders = _actionsController.WallSlideCheck.Right ? 
@@ -50,7 +50,7 @@ namespace CharacterController
                         return false;
 
                     PlatformBehavior platform = col.gameObject.GetComponent<PlatformBehavior>();
-                    if (!(platform && (!platform.Left || !platform.Right)) || platform && !platform.IsSlideable )
+                    if ((platform && !(!platform.Left || !platform.Right)) || platform && !platform.IsSlideable )
                         return false;
                 }
 

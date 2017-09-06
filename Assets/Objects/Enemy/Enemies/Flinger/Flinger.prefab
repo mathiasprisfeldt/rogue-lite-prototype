@@ -687,7 +687,7 @@ MonoBehaviour:
   _invurnabilityDuration: 0
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 3
+  _healthAmount: 2
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 300
   _knockbackDuration: 0.2
@@ -705,6 +705,7 @@ MonoBehaviour:
     m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114220297533216582}
+  _hitBox: {fileID: 0}
   OnHealEvent:
     m_PersistentCalls:
       m_Calls: []

@@ -120,10 +120,6 @@ public class Climbing : MovementAbility
     public void LateUpdate()
     {
         _climeObject = null;
-        if (OnLadder(_actionsController.NonPlatformTriggerCheck) == null)
-        {
-            OnLadder(_actionsController.NonPlatformTriggerCheck);
-        }
         if (_climbing && (OnLadder(_actionsController.NonPlatformTriggerCheck) == null ) ||
             _actionsController.Combat)
             _climbing = false;

@@ -286,7 +286,12 @@ namespace Controllers
         public virtual void SetVelocity(Vector2 velocity, bool respectMovementSpeed = false, float movementSpeedAddtion = 0, bool fly = false)
         {
             if (_healthController.IsDead || LockMovement)
+            {
+                if(_healthController.IsDead && !Rigidbody.IsSleeping())
+                    Rigidbody.velocity = Vector2.zero;
                 return;
+            }
+                
 
             if (respectMovementSpeed)
             {               
