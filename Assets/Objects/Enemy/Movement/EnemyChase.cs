@@ -14,7 +14,9 @@ namespace Enemy
             if (!IsActive)
                 return;
 
-            if (Context.C.Target && Context.M.Character.BumpingDirection == 0)
+            if (Context.C.Target && 
+                Context.M.Character.BumpingDirection == 0 &&
+                Context.C.ToPlayer.magnitude > 1f)
             {
                 if (Context.M.Character.OnGround && !Context.M.Character.IsFlying)
                     Context.C.Move(Mathf.Round(Context.C.ToPlayer.normalized.x) * Vector2.right, forceTurn: true);
