@@ -80,6 +80,7 @@ namespace Meele
                     _knockbackAdded = true;
                     _actionsController.App.C.Character.KnockbackHandler.AddForce(new Vector2(0, _knockbackForce), _knockbackDuration, true, false, "DownMelee");
                 }
+                
 
             }
         }
