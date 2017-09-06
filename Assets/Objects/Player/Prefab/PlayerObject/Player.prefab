@@ -2880,7 +2880,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fd25099da936334fb71b4fa1a0d42b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _knockbackForce: 2500
+  _knockbackForce: 1200
   _knockbackDuration: 0.05
   _collisionCheck: {fileID: 114309314290104366}
   _hitCooldown: 1

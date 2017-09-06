@@ -73,7 +73,7 @@ namespace Knockbacks
                 _character.LockMovement = true;
         }
 
-        public void Update()
+        public void FixedUpdate()
         {
             for (int i = _knocksBacks.Count - 1; i >= 0; i--)
             {
@@ -95,14 +95,12 @@ namespace Knockbacks
                         Done.Invoke();
                 }
             }
-        }
 
-        void FixedUpdate()
-        {
             if (!Active)
                 return;
             _character.Rigidbody.velocity = _character.Rigidbody.CounterGravity(ApplyKnockback()) * Time.fixedDeltaTime;
         }
+
 
         public Vector2 ApplyKnockback()
         {
