@@ -74,7 +74,7 @@ namespace CharacterController
                     if (Mathf.Abs(temp.y - hangPosition.y) <= _sensitivity)
                     {
                         TileBehaviour tile = col.gameObject.GetComponent<TileBehaviour>();
-                        if (tile && tile.TopCollision)
+                        if (tile && tile.TopCollision || tile && (left && tile.RightCollision || right && tile.LeftCollision))
                             return false;
 
                         PlatformBehavior platform = col.gameObject.GetComponent<PlatformBehavior>();
@@ -85,12 +85,12 @@ namespace CharacterController
                             return false;
 
                         if (_actionsController.App.C.PlayerActions.Down &&
-                            _actionsController.App.C.PlayerActions.Jump.IsPressed)
+                            _actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed)
                         {
                             _downTimer = _pushDownDuration;
                             return true;
                         }
-                        else if (_actionsController.App.C.PlayerActions.Jump.IsPressed)
+                        else if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed)
                         {
                             _upTimer = _pushUpDuration;
                             return true;

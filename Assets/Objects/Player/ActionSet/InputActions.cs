@@ -137,7 +137,6 @@ namespace RogueLiteInput
 
             //Jump
             Jump.AddDefaultBinding(Key.Space);
-            Jump.AddDefaultBinding(Key.S);
             Jump.AddDefaultBinding(Key.None);
 
             //Dash
@@ -149,7 +148,7 @@ namespace RogueLiteInput
             Attack.AddDefaultBinding(Key.None);
 
             //Special
-            Special.AddDefaultBinding(Key.W);
+            Special.AddDefaultBinding(Key.S);
             Special.AddDefaultBinding(Key.None);
 
             //Sprint
