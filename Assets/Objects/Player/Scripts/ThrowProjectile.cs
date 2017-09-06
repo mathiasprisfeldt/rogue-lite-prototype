@@ -46,6 +46,8 @@ namespace Special
                     _throwActive = true;
                     _cooldownTimer = _cooldown;
                     _actionsController.StartThrow.Value = true;
+                    if (_actionsController.Horizontal != 0)
+                        _actionsController.Flip(_actionsController.Horizontal);
                 }
 
                 return _throwActive;

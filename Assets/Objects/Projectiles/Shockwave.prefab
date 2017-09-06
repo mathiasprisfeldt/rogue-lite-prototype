@@ -150,7 +150,7 @@ MonoBehaviour:
   _damage: 1
   _timeToLive: 5
   _useConstantForce: 0
-  _force: 10
+  _force: 8
   _layersToHit:
     serializedVersion: 2
     m_Bits: 16384

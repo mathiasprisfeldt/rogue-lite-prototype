@@ -20,7 +20,7 @@ namespace Enemy
 
         public override void Attack()
         {
-            if (IsActive && CheckHitbox(_attackBoxOffset, _attackBoxSize))
+            if (IsActive && CheckHitbox(_attackBoxOffset, _attackBoxSize) && !Context.M.Character.HealthController.IsDead)
                 GameManager.Instance.Player.M.ActionController.HealthController.Damage(Context.M.Character.Damage, from: Context.M.Character, pos: transform.position);
 
             base.Attack();

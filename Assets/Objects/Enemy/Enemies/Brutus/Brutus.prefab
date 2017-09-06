@@ -701,6 +701,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isEnabled: 0
+  _homeDistance: 5
+  _giveUpThreshhold: 0.5
 --- !u!114 &114041660464070336
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -730,7 +732,7 @@ MonoBehaviour:
   _attackIndicator: {fileID: 114798016652054944}
   _staggerIndicator: {fileID: 114889455597712132}
   _viewBox: {fileID: 114542735523210502}
-  _attackCooldown: 0.75
+  _attackCooldown: 3
   _indicatorDuration: 0
   _targetBehind: 0
   _turnSpeed: 0.5
@@ -876,6 +878,7 @@ MonoBehaviour:
   _knockbackDuration: 0.2
   _responsibleGameObject: {fileID: 1264012589145826}
   _destroyOnDead: 0
+  _trapImmune: 0
   _onDead:
     m_PersistentCalls:
       m_Calls: []

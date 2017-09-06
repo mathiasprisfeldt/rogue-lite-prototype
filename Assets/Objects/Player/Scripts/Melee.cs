@@ -38,6 +38,8 @@ namespace Combat
                 {
                     _active = true;
                     _actionsController.StartMelee.Value = true;
+                    if(_actionsController.Horizontal != 0)
+                        _actionsController.Flip(_actionsController.Horizontal);
                 }
                     
                 return _active;
