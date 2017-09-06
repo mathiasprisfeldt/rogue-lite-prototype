@@ -1,4 +1,5 @@
-﻿using AcrylecSkeleton.Utilities;
+﻿using AcrylecSkeleton.Extensions;
+using AcrylecSkeleton.Utilities;
 using UnityEngine;
 
 namespace Enemy
@@ -51,12 +52,14 @@ namespace Enemy
                 targetDirection.x = lookDir;
 
             //If the enemy gets too far out, change its direction.
-            if (!_homeDistance.FastApproximately(0) && 
+            if (!_homeDistance.FastApproximately(0) &&
                 Vector2.Distance(_homePoint, plyPos) > _homeDistance)
-                targetDirection = (_homePoint - plyPos).normalized;
+            {
+                targetDirection = (_homePoint - plyPos).normalized.Rounded();
+            }
 
             //Check distance from current pos to last turn pos.
-            if (_patrolDirection != targetDirection && _turnPosDistance > _giveUpThreshhold)
+            if (_patrolDirection != targetDirection)
             {
                 if (_lastTurnPosition != Vector2.zero)
                 {
@@ -67,9 +70,8 @@ namespace Enemy
                 }
 
                 _lastTurnPosition = plyPos;
+                _patrolDirection = targetDirection;
             }
-
-            _patrolDirection = targetDirection;
         }
 
         public override bool ShouldTakeover()
