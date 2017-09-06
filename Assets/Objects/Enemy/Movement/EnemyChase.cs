@@ -1,4 +1,5 @@
 ﻿using AcrylecSkeleton.Extensions;
+using AcrylecSkeleton.Utilities;
 using UnityEngine;
 
 namespace Enemy
@@ -14,12 +15,16 @@ namespace Enemy
             if (!IsActive)
                 return;
 
-            if (Context.C.Target && 
-                Context.M.Character.BumpingDirection == 0 &&
+            if (Context.C.Target &&
                 Context.C.ToPlayer.magnitude > 1f)
             {
                 if (Context.M.Character.OnGround && !Context.M.Character.IsFlying)
-                    Context.C.Move(Mathf.Round(Context.C.ToPlayer.normalized.x) * Vector2.right, forceTurn: true);
+                {
+                    float xDir = Mathf.Round(Context.C.ToPlayer.normalized.x);
+
+                    if (!xDir.FastApproximately(Context.M.Character.BumpingDirection))
+                        Context.C.Move(xDir * Vector2.right, forceTurn: true);
+                }
                 else if (Context.M.Character.IsFlying)
                     Context.C.Move(Context.C.ToPlayer.normalized, true, true);
             }
