@@ -4076,6 +4076,11 @@ MonoBehaviour:
   _dash: 1
   _ledgeHanging: 1
   _throw: 1
+  OnAbilityChange:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!114 &114850136985437648
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -121,8 +121,11 @@ public class TileBehaviour : MonoBehaviour
             }
 
         }
-            LeftCollision = LeftTile.PhysicalBlock;        
-            RightCollision = RightTile.PhysicalBlock;
+
+        LeftCollision = LeftTile.PhysicalBlock;        
+        RightCollision = RightTile.PhysicalBlock;
+
+        if(gameObject.name.Contains("BorderTile"))
         
         if (_autoTexturize)
         {
