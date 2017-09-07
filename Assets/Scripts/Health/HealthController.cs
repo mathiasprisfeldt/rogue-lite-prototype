@@ -138,10 +138,10 @@ namespace Health
 
         public bool HitboxEnabled
         {
-            get { return _hitBox != null && _hitBox.gameObject.activeInHierarchy; }
+            get { return _hitBox.gameObject != null && _hitBox.gameObject.activeInHierarchy; }
             set
             {
-                if (_hitBox != null)
+                if (_hitBox.gameObject != null)
                     _hitBox.gameObject.SetActive(value);
             }
         }
@@ -278,14 +278,14 @@ namespace Health
                 Instantiate(_hitEffectPrefab, point, Quaternion.identity);
             }
 
-            if (IsDead)
-                return;
-
             //Flash indication
             if (!_flashDuration.FastApproximately(0))
             {
                 _flashTimer = 1;
             }
+
+            if (IsDead)
+                return;
 
             //Apply knockback
             if (pos != Vector2.zero && !_isInvurnable)

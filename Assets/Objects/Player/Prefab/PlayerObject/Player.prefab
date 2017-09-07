@@ -2401,7 +2401,7 @@ PolygonCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1666883475101926}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -2929,7 +2929,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07d5b112624c5a5428e83c8f5daa39d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _origin: {fileID: 0}
+  _origin: {fileID: 4087813221417808}
   _mainSpriteRenderer: {fileID: 0}
   _mainAnimator: {fileID: 0}
   _healthController: {fileID: 114883473055053996}
@@ -4158,6 +4158,8 @@ MonoBehaviour:
     m_RotationOrder: 0
   _flashColor: {r: 1, g: 0, b: 0, a: 1}
   _flashDuration: 0.15
+  _hitEffectPrefab: {fileID: 1511636986335228, guid: f0798e1b86d476c4a9b903aad97d0b11,
+    type: 2}
   _healthType: 0
   _lateCheck: 0
   _invurnableOnDmg: 1
@@ -4182,7 +4184,7 @@ MonoBehaviour:
     m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114173897078414380}
-  _hitBox: {fileID: 1653685440681024}
+  _hitBox: {fileID: 61942798728500970}
   _entityRenderer: {fileID: 114521941305981152}
   _spriteRenderer: {fileID: 0}
   OnHealEvent:
