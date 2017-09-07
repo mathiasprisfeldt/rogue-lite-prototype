@@ -15,9 +15,14 @@ namespace Oneway
         private bool _done;
         private GameObject _startParent;
 
-        public void update()
+        public void Awake()
         {
-            if (_done && transform.parent != _startParent)
+            _startParent = transform.parent.gameObject;
+        }
+
+        public void Update()
+        {
+            if (!_done && transform.parent != _startParent)
             {
                 foreach (var c in _colliders)
                 {
