@@ -227,8 +227,6 @@ namespace Health
             {
                 _flashTimer -= Time.deltaTime / _flashDuration;
 
-                Debug.Log(_flashTimer);
-
                 var targetColor = _flashTimer <= 0
                     ? _originalColor
                     : Color.Lerp(_originalColor, _flashColor, _flashCurve.Evaluate(_flashTimer));
