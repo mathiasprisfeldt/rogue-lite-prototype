@@ -359,9 +359,9 @@ public class TileBehaviour : MonoBehaviour
 
         _isTop = !tUp;
 
-        var goDown = _isTop && (!tLeft && !tRight);
+        var goDown = _isTop && ((tLeft && tLeft.TargetTag != _targetTag) && (tRight && tRight.TargetTag != TargetTag));
 
-        if (goDown || !goDown && (!tLeft && !tRight) || nextShouldDown)
+        if (goDown || tDown && !tDown.LeftCollision && !tDown.RightCollision || nextShouldDown)
             nextShouldDown = true;
 
         if (nextShouldDown && tDown && (tDown.TargetTag == TargetTag))

@@ -131,7 +131,7 @@ MonoBehaviour:
   _damage: 1
   _timeToLive: 5
   _useConstantForce: 1
-  _force: 10
+  _force: 6
   _layersToHit:
     serializedVersion: 2
     m_Bits: 16384
@@ -146,6 +146,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  _hitEffectPrefab: {fileID: 0}
 --- !u!212 &212881652601593838
 SpriteRenderer:
   m_ObjectHideFlags: 1
