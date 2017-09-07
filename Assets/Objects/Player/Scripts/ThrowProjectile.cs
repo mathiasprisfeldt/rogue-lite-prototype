@@ -26,23 +26,20 @@ namespace Special
 
         private bool _throwActive;
         private float _cooldownTimer;
-        private bool _projectileSpawned;
-
 
         public bool KnifeActive
         {
             get {
                 if (!Active)
                     return Active;
-                var throwOnWAll = _actionsController.WallSlideCheck.Sides.Left && _actionsController.LastHorizontalDirection < 0 
-                    || _actionsController.WallSlideCheck.Sides.Right && _actionsController.LastHorizontalDirection > 0;
+                var throwOnWAll = _actionsController.TriggerCheck.Sides.Left && _actionsController.LastHorizontalDirection < 0 
+                    || _actionsController.TriggerCheck.Sides.Right && _actionsController.LastHorizontalDirection > 0;
 
                 if (_actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Special.WasPressed
                     && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None && _actionsController.ManaHandler.Mana >= _manaCost 
                     && !throwOnWAll)
                 {
                     _actionsController.ManaHandler.Mana -= _manaCost;
-                    _projectileSpawned = false;
                     _throwActive = true;
                     _cooldownTimer = _cooldown;
                     _actionsController.StartThrow.Value = true;
@@ -60,7 +57,6 @@ namespace Special
             Rigidbody2D rig = go.GetComponent<Rigidbody2D>();
             if (rig != null)
                 rig.AddForce(new Vector2(_actionsController.LastHorizontalDirection, 0) * _throwForce, ForceMode2D.Impulse);
-            _projectileSpawned = true;
         }
 
         public void Update()

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Abilitys;
+﻿using Abilitys;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using UnityEngine;
 using AcrylecSkeleton.ModificationSystem;
-using Combat;
 using Controllers;
-using Mana;
-using Special;
 
 namespace CharacterController
 {
@@ -71,8 +65,6 @@ namespace CharacterController
         private MoveAbility _lastUsedHorizontalMoveAbility;
         private CombatAbility _lastUsedCombatAbility;
         private bool _dashEnded;
-        private LastSprint _lastSprint = new LastSprint(false, false);
-
 
         public Vector2 Velocity
         {
@@ -379,10 +371,6 @@ namespace CharacterController
         {
             Vertical = App.C.PlayerActions.Vertical;
             LastUsedVerticalMoveAbility = MoveAbility.None;
-            List<Collider2D> col = new List<Collider2D>();
-            if (CollisionCheck.Sides.BottomColliders != null)
-                col = CollisionCheck.Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
-
 
             if (!HandleOnewayColliders())
             {

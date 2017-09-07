@@ -13,11 +13,19 @@ namespace AnimationEventProxy
     public class AnimationEventProxy : MonoBehaviour
     {
         [SerializeField]
+        private GameObject _this;
+
+        [SerializeField]
         private UnityEvent _event;
 
         public void Invoke()
         {
             _event.Invoke();
+        }
+
+        public void DestroyThis()
+        {
+            Destroy(_this);
         }
     }
 }

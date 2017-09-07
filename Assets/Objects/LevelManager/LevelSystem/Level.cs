@@ -10,8 +10,6 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class Level
 {
-    private int[,] _originalLayout;
-
     /// <summary>
     /// The layouts in the level
     /// </summary>
@@ -41,8 +39,6 @@ public class Level
     /// <param name="id">id</param>
     public Level(int[,] l)
     {
-        _originalLayout = l;
-
         //Create new array and fill with layouts corresponding to the ids given
         Layouts = new Layout[l.GetLength(0), l.GetLength(1)];
         for (int i = 0; i < l.GetLength(0); i++)
@@ -138,13 +134,9 @@ public class Level
         bool left = false;
         bool right = false;
 
-        List<Vector2> borderQueue = new List<Vector2>();
         List<TileBehaviour> tileList = new List<TileBehaviour>();
         List<TileBehaviour> borderTileList = new List<TileBehaviour>();
         List<GameObject> nonTilebehavior = new List<GameObject>();
-
-        //A number to name borders
-        int numberOfBorders = 0;
 
         //Go through each tile and spawn, if not null
         for (int i = 0; i < Layouts.GetLength(0); i++)

@@ -29,7 +29,6 @@ namespace Meele
 
         private float _cooldownTimer;
         private bool _active;
-        private bool _knockbackAdded;
 
         public bool Active
         {
@@ -42,7 +41,6 @@ namespace Meele
                 {
                     _active = true;
                     _actionsController.StartDownMeele.Value = true;
-                    _knockbackAdded = false;
                 }
 
                 return _active;
@@ -65,7 +63,6 @@ namespace Meele
                         if (cc && cc.Character.HealthController != null && !cc.Character.HealthController.IsDead)
                         {
                             cc.Character.HealthController.Damage(_actionsController.Damage, from: _actionsController);
-                            _knockbackAdded = true;
                             _actionsController.App.C.Character.KnockbackHandler.AddForce(new Vector2(0,_knockbackForce), _knockbackDuration,true,false,"DownMelee");
                             ResetDownMelee();
                             break;

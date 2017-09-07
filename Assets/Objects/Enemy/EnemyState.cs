@@ -1,6 +1,5 @@
-﻿using System.Reflection.Emit;
-using AcrylecSkeleton.Utilities;
-using Archon.SwissArmyLib.Automata;
+﻿using Archon.SwissArmyLib.Automata;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Enemy
@@ -11,14 +10,16 @@ namespace Enemy
     /// </summary>
     public abstract class EnemyState : MonoBehaviour, IFsmState<EnemyApplication>
     {
+#pragma warning disable 414
         [SerializeField] private bool _isEnabled;
-
+#pragma warning restore 414
+        
         public FiniteStateMachine<EnemyApplication> Machine { get; set; }
         public EnemyApplication Context { get; set; }
 
         public bool IsActive
         {
-            get { return Machine.CurrentState == this; }
+            get { return Machine.CurrentState as EnemyState == this; }
         }
 
         public virtual void Begin()
