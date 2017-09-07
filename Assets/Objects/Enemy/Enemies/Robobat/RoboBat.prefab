@@ -601,6 +601,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e495f426e81d3046aee88139c907170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _flashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  _flashColor: {r: 1, g: 0, b: 0, a: 1}
+  _flashDuration: 0.15
   _healthType: 0
   _lateCheck: 0
   _invurnableOnDmg: 0
@@ -625,6 +645,9 @@ MonoBehaviour:
     m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114347498557357304}
+  _hitBox: {fileID: 0}
+  _entityRenderer: {fileID: 0}
+  _spriteRenderer: {fileID: 212977041993505850}
   OnHealEvent:
     m_PersistentCalls:
       m_Calls: []
