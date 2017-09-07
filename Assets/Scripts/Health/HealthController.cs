@@ -280,9 +280,7 @@ namespace Health
 
             //Flash indication
             if (!_flashDuration.FastApproximately(0))
-            {
                 _flashTimer = 1;
-            }
 
             if (IsDead)
                 return;
