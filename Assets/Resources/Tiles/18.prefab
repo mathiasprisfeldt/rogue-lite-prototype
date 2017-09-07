@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 212822601863995860}
   - component: {fileID: 114524290850003832}
   - component: {fileID: 114385896046057482}
-  m_Layer: 15
+  m_Layer: 9
   m_Name: 18
   m_TagString: Ladder
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 1
-  m_UsedByComposite: 1
+  m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.47}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,6 +137,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _parent: {fileID: 1335697151304256, guid: 3e6513b0f605e634ab0f7abb1ae786af, type: 2}
   _physicalBlock: 1
+  _trap: 0
+  _isGrabable: 1
+  _isSlideable: 1
   _targetTag: Ladder
   _autoTexturize: 0
   _leftTexture: {fileID: 0}

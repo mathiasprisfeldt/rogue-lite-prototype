@@ -1602,7 +1602,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1182516208491314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.9, y: 0.41, z: 0}
+  m_LocalPosition: {x: 4.65, y: -4.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4087813221417808}
@@ -2883,7 +2883,7 @@ MonoBehaviour:
   _knockbackForce: 1200
   _knockbackDuration: 0.05
   _collisionCheck: {fileID: 114309314290104366}
-  _hitCooldown: 1
+  _hitCooldown: 0.4
   _actionsController: {fileID: 114173897078414380}
 --- !u!114 &114164657400838860
 MonoBehaviour:
@@ -4076,6 +4076,11 @@ MonoBehaviour:
   _dash: 1
   _ledgeHanging: 1
   _throw: 1
+  OnAbilityChange:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!114 &114850136985437648
 MonoBehaviour:
   m_ObjectHideFlags: 1
