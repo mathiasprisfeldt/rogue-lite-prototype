@@ -269,12 +269,12 @@ namespace Health
             HealthAmount -= amountToDmg;
 
             //Create hit effect
-            if (_hitEffectPrefab && from)
+            if (_hitEffectPrefab && (from || pos != Vector2.zero))
             {
                 Bounds hitBounds = _hitBox.bounds;
                 hitBounds.Expand(-.5f);
 
-                Vector2 point = hitBounds.ClosestPoint(from.Origin);
+                Vector2 point = hitBounds.ClosestPoint(from ? from.Origin : pos);
                 Instantiate(_hitEffectPrefab, point, Quaternion.identity);
             }
 
