@@ -701,6 +701,8 @@ MonoBehaviour:
     m_RotationOrder: 0
   _flashColor: {r: 1, g: 0, b: 0, a: 1}
   _flashDuration: 0.15
+  _hitEffectPrefab: {fileID: 1511636986335228, guid: f0798e1b86d476c4a9b903aad97d0b11,
+    type: 2}
   _healthType: 0
   _lateCheck: 0
   _invurnableOnDmg: 0
@@ -725,7 +727,7 @@ MonoBehaviour:
     m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114220297533216582}
-  _hitBox: {fileID: 0}
+  _hitBox: {fileID: 70781034492414844}
   _entityRenderer: {fileID: 0}
   _spriteRenderer: {fileID: 212138388692599258}
   OnHealEvent:

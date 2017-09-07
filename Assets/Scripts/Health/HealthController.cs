@@ -55,6 +55,9 @@ namespace Health
 
         [Header("Settings:"), Space]
         [SerializeField]
+        private GameObject _hitEffectPrefab;
+
+        [SerializeField]
         private HealthType _healthType;
 
         [SerializeField, Tooltip("If true, waits to see if you died until end of frame.")]
@@ -105,7 +108,7 @@ namespace Health
         private Character _character;
 
         [SerializeField]
-        private GameObject _hitBox;
+        private Collider2D _hitBox;
 
         [SerializeField, Tooltip("Used for flash indication.")]
         private EntityRenderer _entityRenderer;
@@ -135,11 +138,11 @@ namespace Health
 
         public bool HitboxEnabled
         {
-            get { return _hitBox != null && _hitBox.activeInHierarchy; }
+            get { return _hitBox != null && _hitBox.gameObject.activeInHierarchy; }
             set
             {
                 if (_hitBox != null)
-                    _hitBox.SetActive(value);
+                    _hitBox.gameObject.SetActive(value);
             }
         }
 
@@ -264,6 +267,16 @@ namespace Health
             }
 
             HealthAmount -= amountToDmg;
+
+            //Create hit effect
+            if (_hitEffectPrefab && from)
+            {
+                Bounds hitBounds = _hitBox.bounds;
+                hitBounds.Expand(-.5f);
+
+                Vector2 point = hitBounds.ClosestPoint(from.Origin);
+                Instantiate(_hitEffectPrefab, point, Quaternion.identity);
+            }
 
             if (IsDead)
                 return;

@@ -264,6 +264,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 1115539378932434, guid: 3717265b121eb424f9de8b5c5d5c489e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3717265b121eb424f9de8b5c5d5c489e, type: 2}
   m_IsPrefabParent: 0
@@ -419,6 +423,11 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 61862504811616390, guid: 4052246ce7645ba4cafddf1a4ca138eb,
     type: 2}
   m_PrefabInternal: {fileID: 2140486649}
+--- !u!61 &131660342 stripped
+BoxCollider2D:
+  m_PrefabParentObject: {fileID: 61942798728500970, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+    type: 2}
+  m_PrefabInternal: {fileID: 1026702892}
 --- !u!4 &197675486 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4273749052745280, guid: 4052246ce7645ba4cafddf1a4ca138eb,
@@ -3496,6 +3505,27 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 60781691209320314, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114883473055053996, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _hitBox
+      value: 
+      objectReference: {fileID: 131660342}
+    - target: {fileID: 114883473055053996, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _hitEffectPrefab
+      value: 
+      objectReference: {fileID: 1511636986335228, guid: f0798e1b86d476c4a9b903aad97d0b11,
+        type: 2}
+    - target: {fileID: 114173897078414380, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _origin
+      value: 
+      objectReference: {fileID: 1412753569}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
   m_IsPrefabParent: 0
@@ -4300,6 +4330,11 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 61862504811616390, guid: 4052246ce7645ba4cafddf1a4ca138eb,
     type: 2}
   m_PrefabInternal: {fileID: 420325066}
+--- !u!4 &1412753569 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4087813221417808, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+    type: 2}
+  m_PrefabInternal: {fileID: 1026702892}
 --- !u!1001 &1434422378
 Prefab:
   m_ObjectHideFlags: 0
