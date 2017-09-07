@@ -19,14 +19,16 @@ namespace Health
     [RequireComponent(typeof(HealthController))]
     public class FallDamage : MonoBehaviour
     {
-        private ActionsController _actionsController;
         private HealthController _healthController;
         private float _savedFlyingDistance; //Distance between last position and current to check for excetion.
         private bool _didCollideLastFrame; //Did we collide with the floor last frame?
         private Vector2 _lastPosition;
         private float _savedYVelocity;
 
-        [Header("Settings:")]
+        [Header("References:"), SerializeField]
+        private ActionsController _actionsController;
+
+        [Space, Header("Settings:")]
         [SerializeField]
         private bool _drawGizmos;
 

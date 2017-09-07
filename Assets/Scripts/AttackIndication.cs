@@ -28,6 +28,9 @@ namespace Indication
 
         public void HideIndicator(float transitionTime)
         {
+            if (!_show)
+                return;
+
             _currentTransitionDuration = transitionTime;
             _transitionTimer = transitionTime;
             _show = false;

@@ -866,6 +866,16 @@ MonoBehaviour:
   _image: {fileID: 114213984446399910}
   _damageColor: {r: 0.7490196, g: 0.20392159, b: 0.20392159, a: 0.49019608}
   _healColor: {r: 0.22188583, g: 0.7941176, b: 0.27318937, a: 0.49019608}
+  OnStartEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!114 &114527632636990634
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1511,7 +1521,7 @@ Canvas:
   m_GameObject: {fileID: 1968028938947384}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0

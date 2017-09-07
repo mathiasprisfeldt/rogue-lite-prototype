@@ -4,6 +4,7 @@ using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.Utilities;
 using Controllers;
 using Managers;
+using Spriter2UnityDX;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -29,11 +30,30 @@ namespace Health
     [RequireComponent(typeof(HealthController))]
     public class HealthController : MonoBehaviour
     {
+        //Flash indication fields
+        private Color _originalColor;
+        private float _flashTimer;
+
         private bool _isDead;
         private bool _isLateChecking; //Are we checking in end of frame if we're dead?
 
         #region Inspector Fields
 
+        #region Damage indication
+
+        [Header("Flash indication:")]
+        [SerializeField]
+        private AnimationCurve _flashCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 1));
+
+        [SerializeField]
+        private Color _flashColor = new Color(255, 39, 39, 255);
+
+        [SerializeField, Tooltip("In seconds, if 0 it doesn't flash.")]
+        private float _flashDuration = .15f;
+
+        #endregion
+
+        [Header("Settings:"), Space]
         [SerializeField]
         private HealthType _healthType;
 
@@ -86,6 +106,12 @@ namespace Health
 
         [SerializeField]
         private GameObject _hitBox;
+
+        [SerializeField, Tooltip("Used for flash indication.")]
+        private EntityRenderer _entityRenderer;
+
+        [SerializeField, Tooltip("Used for flash indication.")]
+        private SpriteRenderer _spriteRenderer;
 
         #endregion
 
@@ -186,6 +212,33 @@ namespace Health
             OnDamage = new OnDamageEvent();
         }
 
+        void Start()
+        {
+            if (_spriteRenderer)
+                _originalColor = _spriteRenderer.color;
+
+            if (_entityRenderer)
+                _originalColor = _entityRenderer.Color;
+        }
+
+        void Update()
+        {
+            if (_flashTimer > 0)
+            {
+                _flashTimer -= Time.deltaTime / _flashDuration;
+
+                var targetColor = _flashTimer <= 0
+                    ? _originalColor
+                    : Color.Lerp(_originalColor, _flashColor, _flashCurve.Evaluate(_flashTimer));
+
+                if (_entityRenderer)
+                    _entityRenderer.Color = targetColor;
+
+                if (_spriteRenderer)
+                    _spriteRenderer.color = targetColor;
+            }
+        }
+
         /// <summary>
         /// Deals amount of damage to object, if it exceeds 0 its dead.
         /// NOTE: If container its calculated in container sizes.
@@ -215,15 +268,21 @@ namespace Health
             if (IsDead)
                 return;
 
+            //Flash indication
+            if (!_flashDuration.FastApproximately(0))
+            {
+                _flashTimer = 1;
+            }
+
             //Apply knockback
-            if (pos != Vector2.zero && !_isInvurnable && HealthAmount > 0)
+            if (pos != Vector2.zero && !_isInvurnable)
             {
                 var dir = pos.DirectionTo(_character.Rigidbody.position);
                 if (Math.Abs(dir.y) < 0.01f)
                     dir.y = 1f;
                 _character.KnockbackHandler.AddForce( dir * _knockbackForce, _knockbackDuration);
             }
-                
+
             //If we take damage show hit animation.
             //But dont show if we're invurnable (Only if we take dmg while being it)
             if (Character.MainAnimator)

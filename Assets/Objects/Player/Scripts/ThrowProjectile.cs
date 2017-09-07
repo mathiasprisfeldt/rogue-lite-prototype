@@ -26,8 +26,6 @@ namespace Special
 
         private bool _throwActive;
         private float _cooldownTimer;
-        private bool _projectileSpawned;
-
 
         public bool KnifeActive
         {
@@ -42,7 +40,6 @@ namespace Special
                     && !throwOnWAll)
                 {
                     _actionsController.ManaHandler.Mana -= _manaCost;
-                    _projectileSpawned = false;
                     _throwActive = true;
                     _cooldownTimer = _cooldown;
                     _actionsController.StartThrow.Value = true;
@@ -60,7 +57,6 @@ namespace Special
             Rigidbody2D rig = go.GetComponent<Rigidbody2D>();
             if (rig != null)
                 rig.AddForce(new Vector2(_actionsController.LastHorizontalDirection, 0) * _throwForce, ForceMode2D.Impulse);
-            _projectileSpawned = true;
         }
 
         public void Update()

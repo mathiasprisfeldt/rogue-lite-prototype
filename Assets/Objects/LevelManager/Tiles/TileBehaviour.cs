@@ -99,9 +99,6 @@ public class TileBehaviour : MonoBehaviour
 
     public void SetupTile()
     {
-        var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
-        var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
-
         TopTile = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.up);
         BottomTile = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.down);
         LeftTile = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.left);

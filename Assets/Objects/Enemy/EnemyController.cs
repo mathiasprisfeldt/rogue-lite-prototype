@@ -155,7 +155,7 @@ namespace Enemy
             {
                 if (enemyState.enabled && enemyState.ShouldTakeover())
                 {
-                    if (StateMachine.CurrentState != enemyState)
+                    if (StateMachine.CurrentState as EnemyState != enemyState)
                         StateMachine.ChangeState(enemyState);
 
                     break;

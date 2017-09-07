@@ -24,6 +24,8 @@ namespace Enemy
 
                     if (!xDir.FastApproximately(Context.M.Character.BumpingDirection))
                         Context.C.Move(xDir * Vector2.right, forceTurn: true);
+                    else
+                        Context.M.Character.StandStill();
                 }
                 else if (Context.M.Character.IsFlying)
                     Context.C.Move(Context.C.ToPlayer.normalized, true, true);
