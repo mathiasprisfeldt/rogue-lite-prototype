@@ -29,7 +29,6 @@ namespace CharacterController
         [SerializeField]
         private float _pushDownDuration;
 
-        private float _hangCooldownTimer;
         private float _downTimer;
         private float _upTimer;
         private bool _startGrab;
@@ -50,8 +49,8 @@ namespace CharacterController
                                          _actionsController.App.C.PlayerActions.Left && right);
                 if (_downTimer > 0 || _upTimer > 0)
                     return true;
-                if ((right || left) && !(_actionsController.AbilityReferences.WallJump && _actionsController.AbilityReferences.WallJump.HorizontalActive) && _hangCooldownTimer <= 0 
-                    && _actionsController.LastUsedCombatAbility == CombatAbility.None && !_actionsController.OnGround)
+                if ((right || left) && !(_actionsController.AbilityReferences.WallJump && _actionsController.AbilityReferences.WallJump.HorizontalActive) && 
+                    _actionsController.LastUsedCombatAbility == CombatAbility.None && !_actionsController.OnGround)
                 {
                     List<Collider2D> colliders = right ? _actionsController.TriggerCheck.Sides.RightColliders : _actionsController.TriggerCheck.Sides.LeftColliders;
                     Collider2D col = colliders[0];
