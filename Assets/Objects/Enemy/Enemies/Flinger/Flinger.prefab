@@ -774,7 +774,7 @@ MonoBehaviour:
   _attackBoxOffset: {x: 0, y: 0}
   _projectile: {fileID: 114159514260344410, guid: 71c0bbfd6c6997f46846a257db3bf676,
     type: 2}
-  _spawnPos: {x: -0.11, y: 1.421}
+  _spawnPos: {x: -0.11, y: 0.59}
 --- !u!114 &114577707980337684
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 50541723094432816}
   - component: {fileID: 66256274171992260}
   - component: {fileID: 251101197031135220}
-  m_Layer: 9
+  m_Layer: 15
   m_Name: CompositePlatformLadder
   m_TagString: Ladder
   m_Icon: {fileID: 0}

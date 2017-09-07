@@ -29,14 +29,23 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField]
     private List<TextAsset> _forcedLevelsText;
     [SerializeField]
-    private List<TextAsset> _randomLevelsText;
+    private List<TextAsset> _randomLevelsEasyText;
+    [SerializeField]
+    private List<TextAsset> _randomLevelsMediumText;
+    [SerializeField]
+    private List<TextAsset> _randomLevelsHardText;
 
     private List<int[,]> _forcedLevels = new List<int[,]>();
-    private List<int[,]> _randomLevels = new List<int[,]>();
+    private List<int[,]> _randomLevelsEasy = new List<int[,]>();
+    private List<int[,]> _randomLevelsMedium = new List<int[,]>();
+    private List<int[,]> _randomLevelsHard = new List<int[,]>();
 
-    //Current level
+    private bool _nextLevelLoaded = false;
     public Level CurrentLevel { get; set; }
 
+    /// <summary>
+    /// Awake
+    /// </summary>
     protected override void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -46,21 +55,7 @@ public class LevelManager : Singleton<LevelManager>
 
         if (SceneManager.GetActiveScene().name != "LevelScene")
         {
-            if (_forcedLevels.Any())
-            {
-                var levelArray = _forcedLevels.FirstOrDefault();
-                CurrentLevel = new Level(levelArray);
-                _forcedLevels.Remove(levelArray);
-            }
-            else if (_randomLevels.Any())
-            {
-                CurrentLevel = new Level(_randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)]);
-            }
-            else
-            {
-                Debug.Log("There are no levels to loaded");
-                return;
-            }
+            FindNextLevel();
 
             GameObject go = new GameObject("LevelParent");
             go.AddComponent<Platforms>();
@@ -75,36 +70,80 @@ public class LevelManager : Singleton<LevelManager>
     /// </summary>
     public void LoadNextLevel()
     {
+        if (_nextLevelLoaded)
+            return;
+
         //There is already a level loaded, and we are ingame
         if (CurrentLevel != null)
             CurrentLevel.Despawn();
 
+        _nextLevelLoaded = true;
+
         SceneManager.LoadScene("LevelScene");
     }
 
-    private void OnSceneLoaded(Scene level, LoadSceneMode sceneMode)
+    /// <summary>
+    /// Finds the next level to spawn in all the lists
+    /// </summary>
+    private void FindNextLevel()
     {
-        if (level.name != "LevelScene")
-            return;
-
         if (_forcedLevels.Any())
         {
             var levelArray = _forcedLevels.FirstOrDefault();
             CurrentLevel = new Level(levelArray);
             _forcedLevels.Remove(levelArray);
         }
-        else if (_randomLevels.Any())
+        else if (_randomLevelsEasy.Any())
         {
-            CurrentLevel = new Level(_randomLevels[UnityEngine.Random.Range(0, _randomLevels.Count)]);
+            var levelArray = _randomLevelsEasy[UnityEngine.Random.Range(0, _randomLevelsEasy.Count)];
+            CurrentLevel = new Level(levelArray);
+            _randomLevelsEasy.Remove(levelArray);
+        }
+        else if (_randomLevelsMedium.Any())
+        {
+            var levelArray = _randomLevelsMedium[UnityEngine.Random.Range(0, _randomLevelsMedium.Count)];
+            CurrentLevel = new Level(levelArray);
+            _randomLevelsMedium.Remove(levelArray);
+        }
+        else if (_randomLevelsHard.Any())
+        {
+            if (_randomLevelsHard.Count > 1)
+            {
+
+                int prevId = CurrentLevel.Layouts[0, 0].ID;
+                while (prevId == CurrentLevel.Layouts[0, 0].ID)
+                    CurrentLevel = new Level(_randomLevelsHard[UnityEngine.Random.Range(0, _randomLevelsHard.Count)]);
+            }
+            else
+                CurrentLevel = new Level(_randomLevelsHard[UnityEngine.Random.Range(0, _randomLevelsHard.Count)]);
         }
         else
             Debug.Log("There are no levels to loaded");
+    }
+
+    /// <summary>
+    /// Called when the scene has been changed
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="sceneMode"></param>
+    private void OnSceneLoaded(Scene level, LoadSceneMode sceneMode)
+    {
+        if (level.name != "LevelScene")
+            return;
+
+        FindNextLevel();
 
         GameObject go = new GameObject("LevelParent");
         go.AddComponent<Platforms>();
         CurrentLevel.Spawn(go.transform);
+
+        _nextLevelLoaded = false;
     }
 
+    /// <summary>
+    /// Spawns the background
+    /// </summary>
+    /// <param name="v"></param>
     public void SpawnBackGround(Vector2 v)
     {
         Vector2 size = (v * 2);
@@ -126,7 +165,7 @@ public class LevelManager : Singleton<LevelManager>
     public void ResetGame()
     {
         _forcedLevels.Clear();
-        _randomLevels.Clear();
+        _randomLevelsHard.Clear();
 
         LoadLevels();
         LoadNextLevel();
@@ -137,17 +176,32 @@ public class LevelManager : Singleton<LevelManager>
     /// </summary>
     public void LoadLevels()
     {
-        if (_forcedLevelsText == null || _randomLevelsText == null)
-            return;
-
         foreach (var item in _forcedLevelsText)
         {
             _forcedLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
         }
 
-        foreach (var item in _randomLevelsText)
+        foreach (var item in _randomLevelsEasyText)
         {
-            _randomLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
+            _randomLevelsEasy.Add(CSVReader.SplitCsvGridToInt(item.text, false));
         }
+
+        foreach (var item in _randomLevelsMediumText)
+        {
+            _randomLevelsMedium.Add(CSVReader.SplitCsvGridToInt(item.text, false));
+        }
+
+        foreach (var item in _randomLevelsHardText)
+        {
+            _randomLevelsHard.Add(CSVReader.SplitCsvGridToInt(item.text, false));
+        }
+    }
+
+    /// <summary>
+    /// Called on destroy
+    /// </summary>
+    public void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
