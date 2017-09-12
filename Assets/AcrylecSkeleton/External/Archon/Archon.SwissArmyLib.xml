@@ -4,6 +4,12 @@
         <name>Archon.SwissArmyLib</name>
     </assembly>
     <members>
+        <member name="T:Archon.SwissArmyLib.Automata.IPdaState`1">
+            <summary>
+            Represents a state to be used in a <see cref="T:Archon.SwissArmyLib.Automata.PushdownAutomaton`1"/>.
+            </summary>
+            <typeparam name="T">The type of the context.</typeparam>
+        </member>
         <member name="M:Archon.SwissArmyLib.Automata.IPdaState`1.Pause">
             <summary>
             Called when a state is pushed ontop of this state.
@@ -13,6 +19,15 @@
             <summary>
             Called when the state above us is popped.
             </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Automata.IState`2">
+            <summary>
+            Represents a state to be used in a state machine.
+            
+            You might be looking for <see cref="T:Archon.SwissArmyLib.Automata.IFsmState`1"/> or <see cref="T:Archon.SwissArmyLib.Automata.IPdaState`1"/>.
+            </summary>
+            <typeparam name="TMachine">The type of the machine.</typeparam>
+            <typeparam name="TContext">The type of the context.</typeparam>
         </member>
         <member name="P:Archon.SwissArmyLib.Automata.IState`2.Machine">
             <summary>
@@ -45,6 +60,14 @@
             Called when the state is exited.
             </summary>
         </member>
+        <member name="T:Archon.SwissArmyLib.Automata.PdaState`1">
+            <summary>
+            A simple abstract class that implements <see cref="T:Archon.SwissArmyLib.Automata.IPdaState`1"/> and can be used in a <see cref="T:Archon.SwissArmyLib.Automata.PushdownAutomaton`1"/>
+            
+            You're not required to use this, but it's easier.
+            </summary>
+            <typeparam name="T">The type of the context.</typeparam>
+        </member>
         <member name="M:Archon.SwissArmyLib.Automata.PdaState`1.Pause">
             <summary>
             Called when a state is pushed ontop of this state.
@@ -54,6 +77,22 @@
             <summary>
             Called when the state above us is popped.
             </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Automata.PushdownAutomaton`1">
+             <summary>
+             A simple <see href="https://en.wikipedia.org/wiki/Pushdown_automaton">Pushdown Automaton</see> with states as objects.
+             
+             If your state classes have an empty constructor, the state machine can register the states automatically when needed (using <see cref="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PushStateAuto``1"/> and <see cref="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.ChangeStateAuto``1"/>).
+             If not you should register the states yourself using <see cref="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.RegisterStateType``1"/> or <see cref="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.RegisterStateType(System.Type,System.Func{Archon.SwissArmyLib.Automata.IPdaState{`0}})"/> and use the regular.
+             
+             The machine will automatically pool the states so you don't have to worry about it.
+            
+             Whether or popping the last state is valid is up to your design.
+             
+             <seealso cref="T:Archon.SwissArmyLib.Automata.IPdaState`1"/>
+             <seealso cref="T:Archon.SwissArmyLib.Automata.PdaState`1"/>
+             </summary>
+             <typeparam name="T">The type of the context.</typeparam>
         </member>
         <member name="P:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.Context">
             <summary>
@@ -82,8 +121,19 @@
             <summary>
             Replaces the active state with another state, without notifying the underlying state.
             </summary>
-            <typeparam name="TState"></typeparam>
-            <returns></returns>
+            <typeparam name="TState">The type of the state to change to.</typeparam>
+            <returns>The state instance that was changed to.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.ChangeStateAuto``1">
+            <summary>
+            Replaces the active state with another state, without notifying the underlying state.
+            
+            If the state is not registered, it will automatically be and its empty constructor will be used to create the instances.
+            
+            <seealso cref="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.ChangeState``1"/>
+            </summary>
+            <typeparam name="TState">The type of the state to change to.</typeparam>
+            <returns>The state instance that was changed to.</returns>
         </member>
         <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PopState">
             <summary>
@@ -105,39 +155,62 @@
             <summary>
             Pushes a state to the top of the stack and pauses the underlying state.
             </summary>
-            <typeparam name="TState"></typeparam>
+            <typeparam name="TState">The type of the state to change to.</typeparam>
             <returns>The new state.</returns>
         </member>
         <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PushStateSilently``1">
             <summary>
             Pushes a state to the top of the stack without notifying the underlying state.
             </summary>
-            <typeparam name="TState"></typeparam>
+            <typeparam name="TState">The type of the state to change to.</typeparam>
+            <returns>The new state.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PushStateAuto``1">
+            <summary>
+            Pushes a state to the top of the stack and pauses the underlying state.
+            
+            If the state is not registered, it will automatically be and its empty constructor will be used to create the instances.
+            
+            <seealso cref="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PushState``1"/>
+            </summary>
+            <typeparam name="TState">The type of the state to change to.</typeparam>
+            <returns>The new state.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PushStateSilentlyAuto``1">
+            <summary>
+            Pushes a state to the top of the stack without notifying the underlying state.
+            
+            If the state is not registered, it will automatically be and its empty constructor will be used to create the instances.
+            
+            <seealso cref="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.PushStateSilently``1"/>
+            </summary>
+            <typeparam name="TState">The type of the state to change to.</typeparam>
             <returns>The new state.</returns>
         </member>
         <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.ObtainState``1">
             <summary>
             Obtains a pooled instance of the given type.
             </summary>
-            <typeparam name="TState"></typeparam>
-            <returns></returns>
+            <typeparam name="TState">The type of the state to obtain.</typeparam>
+            <returns>The new or recycled state.</returns>
         </member>
         <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.FreeState(Archon.SwissArmyLib.Automata.IPdaState{`0})">
             <summary>
             Frees a state instance and makes it available for reuse.
             </summary>
-            <param name="state"></param>
+            <param name="state">The state to free.</param>
         </member>
         <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.GetPool(System.Type)">
             <summary>
             Gets a pool for the given state type.
             </summary>
-            <param name="stateType"></param>
-            <returns></returns>
+            <param name="stateType">The state type to get the pool for.</param>
+            <returns>The pool, or null if not found.</returns>
         </member>
         <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.RegisterStateType``1">
             <summary>
             Registers a state type in the machine. 
+            
             A pool for the type will be created that will use the empty constructor.
             </summary>
             <typeparam name="TState"></typeparam>
@@ -145,10 +218,46 @@
         <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.RegisterStateType(System.Type,System.Func{Archon.SwissArmyLib.Automata.IPdaState{`0}})">
             <summary>
             Registers a state type in the machine. 
+            
             A pool for the type will be created which uses the given creationMethod to create new instance when needed.
             </summary>
-            <param name="type"></param>
-            <param name="creationMethod"></param>
+            <param name="type">The state type to register.</param>
+            <param name="creationMethod">The factory method to use for creating instances.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Automata.PushdownAutomaton`1.IsRegistered``1">
+            <summary>
+            Checks whether a state type is registered in the machine.
+            </summary>
+            <typeparam name="TState">The state type to check for.</typeparam>
+            <returns>True if registered, otherwise false.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Automata.IFsmState`1">
+            <summary>
+            Represents a state to be used in a <see cref="T:Archon.SwissArmyLib.Automata.FiniteStateMachine`1"/>.
+            </summary>
+            <typeparam name="T">The type of the context.</typeparam>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Automata.FsmState`1">
+            <summary>
+            A simple abstract class that implements <see cref="T:Archon.SwissArmyLib.Automata.IFsmState`1"/> and can be used in a <see cref="T:Archon.SwissArmyLib.Automata.FiniteStateMachine`1"/>
+            
+            You're not required to use this, but it's easier.
+            </summary>
+            <typeparam name="T">The type of the context.</typeparam>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Automata.FiniteStateMachine`1">
+             <summary>
+             A simple <see href="https://en.wikipedia.org/wiki/Finite-state_machine">Finite State Machine</see> with states as objects inspired by Prime31's excellent <see href="https://github.com/prime31/StateKit">StateKit</see>.
+            
+             If your state classes have an empty constructor, the state machine can create the states automatically when needed (using <see cref="M:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.ChangeStateAuto``1"/>).
+             If not you should create the state instance yourself and register the state in the machine.
+            
+             Whether or not a null state is valid is up to your design.
+             
+             <seealso cref="T:Archon.SwissArmyLib.Automata.IFsmState`1"/>
+             <seealso cref="T:Archon.SwissArmyLib.Automata.FsmState`1"/>
+             </summary>
+             <typeparam name="T">The type of the context.</typeparam>
         </member>
         <member name="P:Archon.SwissArmyLib.Automata.FiniteStateMachine`1.Context">
             <summary>
@@ -236,34 +345,43 @@
             <param name="state"></param>
             <returns></returns>
         </member>
-        <member name="P:Archon.SwissArmyLib.Automata.State`2.Machine">
+        <member name="T:Archon.SwissArmyLib.Automata.BaseState`2">
+            <summary>
+            A simple abstract class that implements <see cref="T:Archon.SwissArmyLib.Automata.IState`2"/>.
+            
+            You might be looking for <see cref="T:Archon.SwissArmyLib.Automata.FsmState`1"/> or <see cref="T:Archon.SwissArmyLib.Automata.PdaState`1"/>.
+            </summary>
+            <typeparam name="TMachine">The type of the machine.</typeparam>
+            <typeparam name="TContext">The type of the context.</typeparam>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Automata.BaseState`2.Machine">
             <inheritdoc />
         </member>
-        <member name="P:Archon.SwissArmyLib.Automata.State`2.Context">
+        <member name="P:Archon.SwissArmyLib.Automata.BaseState`2.Context">
             <inheritdoc />
         </member>
-        <member name="P:Archon.SwissArmyLib.Automata.State`2.TimeInState">
+        <member name="P:Archon.SwissArmyLib.Automata.BaseState`2.TimeInState">
             <summary>
             Amount of (active) time spent in this state since it was entered.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Automata.State`2.Begin">
+        <member name="M:Archon.SwissArmyLib.Automata.BaseState`2.Begin">
             <summary>
             Called when the state is entered.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Automata.State`2.Reason">
+        <member name="M:Archon.SwissArmyLib.Automata.BaseState`2.Reason">
             <summary>
-            Called every frame just before <see cref="M:Archon.SwissArmyLib.Automata.State`2.Act(System.Single)"/>. 
+            Called every frame just before <see cref="M:Archon.SwissArmyLib.Automata.BaseState`2.Act(System.Single)"/>. 
             Use this to check whether you should change state.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Automata.State`2.Act(System.Single)">
+        <member name="M:Archon.SwissArmyLib.Automata.BaseState`2.Act(System.Single)">
             <summary>
-            Called every frame after <see cref="M:Archon.SwissArmyLib.Automata.State`2.Reason"/>, if the state hasn't been changed.
+            Called every frame after <see cref="M:Archon.SwissArmyLib.Automata.BaseState`2.Reason"/>, if the state hasn't been changed.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Automata.State`2.End">
+        <member name="M:Archon.SwissArmyLib.Automata.BaseState`2.End">
             <summary>
             Called when the state is exited.
             </summary>
@@ -414,6 +532,114 @@
             <param name="defaultValue"></param>
             <param name="comparer"></param>
         </member>
+        <member name="T:Archon.SwissArmyLib.Collections.Grid3D`1">
+            <summary>
+            A generic three-dimensional grid.
+            
+            <seealso cref="T:Archon.SwissArmyLib.Collections.Grid2D`1"/>
+            </summary>
+            <typeparam name="T">The type of content cells can contain.</typeparam>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.Grid3D`1.Width">
+            <summary>
+            Gets the width (number of columns) of the grid.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.Grid3D`1.Height">
+            <summary>
+            Gets the height (number of rows) of the grid.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.Grid3D`1.Depth">
+            <summary>
+            Gets the depth (number of layers) of the grid.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.Grid3D`1.DefaultValue">
+            <summary>
+            Gets or sets the default values used for clearing or initializing new cells.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.Grid3D`1.Item(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Gets or sets the value of the cell located at the specified coordinate.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="z"></param>
+            <returns>The contents of the cell.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid3D`1.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new 3D Grid with the specified width, height and depth. 
+            Cells will be initialized with their type's default value.
+            </summary>
+            <param name="width">Number of columns</param>
+            <param name="height">Number of rows</param>
+            <param name="depth">Number of layers</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid3D`1.#ctor(System.Int32,System.Int32,System.Int32,`0)">
+            <summary>
+            Creates a new 3D Grid with the specified width, height and depth. 
+            Cells will be initialized with the value of <paramref name="defaultValue"/>.
+            </summary>
+            <param name="width">Number of columns</param>
+            <param name="height">Number of rows</param>
+            <param name="depth">Number of layers</param>
+            <param name="defaultValue">The value used for initializing new cells.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid3D`1.Get(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Gets the value of the cell located at the specified coordinate.
+            
+            <seealso cref="P:Archon.SwissArmyLib.Collections.Grid3D`1.Item(System.Int32,System.Int32,System.Int32)"/>
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="z"></param>
+            <returns>The cell contents.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid3D`1.Set(System.Int32,System.Int32,System.Int32,`0)">
+            <summary>
+            Sets the value of the cell located at the specified coordinate.
+            
+            <seealso cref="P:Archon.SwissArmyLib.Collections.Grid3D`1.Item(System.Int32,System.Int32,System.Int32)"/>
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="z"></param>
+            <param name="value">The value to set the cell to.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid3D`1.Clear">
+            <summary>
+            Clears the grid, setting every cell to <see cref="P:Archon.SwissArmyLib.Collections.Grid3D`1.DefaultValue"/>.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid3D`1.Clear(`0)">
+            <summary>
+            Clears the grid, setting every cell to the given value.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid3D`1.Fill(`0,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Fills everything in the specified cube to the given value.
+            </summary>
+            <param name="value">The value to fill the cells with.</param>
+            <param name="minX">Bottom left front corner's x value.</param>
+            <param name="minY">Bottom left front corner's y value.</param>
+            <param name="minZ">Bottom left front corner's z value.</param>
+            <param name="maxX">Upper right back corner's x value.</param>
+            <param name="maxY">Upper right back corner's y value.</param>
+            <param name="maxZ">Upper right back corner's z value.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid3D`1.Resize(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Resizes the Grid to the given size, keeping data the same but any new cells will be set to <see cref="P:Archon.SwissArmyLib.Collections.Grid3D`1.DefaultValue"/>.
+            </summary>
+            <param name="width">The new width.</param>
+            <param name="height">The new height.</param>
+            <param name="depth">The new depth.</param>
+        </member>
         <member name="T:Archon.SwissArmyLib.Collections.PrioritizedItem`1">
             <summary>
             Represents an item and its priority.
@@ -548,6 +774,101 @@
             Gets an enumerator for the list items.
             </summary>
             <returns>The enumerator.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Collections.Grid2D`1">
+            <summary>
+            A generic two-dimensional grid.
+            
+            <seealso cref="T:Archon.SwissArmyLib.Collections.Grid3D`1"/>
+            </summary>
+            <typeparam name="T">The type of content cells can contain.</typeparam>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.Grid2D`1.Width">
+            <summary>
+            Gets the width (number of columns) of the grid.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.Grid2D`1.Height">
+            <summary>
+            Gets the height (number of rows) of the grid.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.Grid2D`1.DefaultValue">
+            <summary>
+            Gets or sets the default values used for clearing or initializing new cells.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Collections.Grid2D`1.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets or sets the value of the cell located at the specified coordinate.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns>The contents of the cell.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid2D`1.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new 2D Grid with the specified width and height. 
+            Cells will be initialized with their type's default value.
+            </summary>
+            <param name="width">Number of columns</param>
+            <param name="height">Number of rows</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid2D`1.#ctor(System.Int32,System.Int32,`0)">
+            <summary>
+            Creates a new 2D Grid with the specified width and height. 
+            Cells will be initialized with the value of <paramref name="defaultValue"/>.
+            </summary>
+            <param name="width">Number of columns</param>
+            <param name="height">Number of rows</param>
+            <param name="defaultValue">The value used for initializing new cells.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid2D`1.Get(System.Int32,System.Int32)">
+            <summary>
+            Gets the value of the cell located at the specified coordinate.
+            
+            <seealso cref="P:Archon.SwissArmyLib.Collections.Grid2D`1.Item(System.Int32,System.Int32)"/>
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns>The cell contents.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid2D`1.Set(System.Int32,System.Int32,`0)">
+            <summary>
+            Sets the value of the cell located at the specified coordinate.
+            
+            <seealso cref="P:Archon.SwissArmyLib.Collections.Grid2D`1.Item(System.Int32,System.Int32)"/>
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="value">The value to set the cell to.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid2D`1.Clear">
+            <summary>
+            Clears the grid, setting every cell to <see cref="P:Archon.SwissArmyLib.Collections.Grid2D`1.DefaultValue"/>.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid2D`1.Clear(`0)">
+            <summary>
+            Clears the grid, setting every cell to the given value.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid2D`1.Fill(`0,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Fills everything in the specified rectangle to the given value.
+            </summary>
+            <param name="value">The value to fill the cells with.</param>
+            <param name="minX">Bottom left corner's x value.</param>
+            <param name="minY">Bottom left corner's y value.</param>
+            <param name="maxX">Upper right corner's x value.</param>
+            <param name="maxY">Upper right corner's y value.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Collections.Grid2D`1.Resize(System.Int32,System.Int32)">
+            <summary>
+            Resizes the Grid to the given size, keeping data the same but any new cells will be set to <see cref="P:Archon.SwissArmyLib.Collections.Grid2D`1.DefaultValue"/>.
+            </summary>
+            <param name="width">The new width.</param>
+            <param name="height">The new height.</param>
         </member>
         <member name="T:Archon.SwissArmyLib.Events.Event">
             <summary>
@@ -883,7 +1204,9 @@
             </summary>
         </member>
         <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.Finalize">
-            <inheritdoc />
+            <summary>
+            Destructor
+            </summary>
         </member>
         <member name="M:Archon.SwissArmyLib.Events.TellMeWhen.Exact(System.Single,Archon.SwissArmyLib.Events.TellMeWhen.ITimerCallback,System.Int32,System.Object)">
             <summary>
@@ -1010,7 +1333,7 @@
             <summary>
             Makes this <see cref="T:UnityEngine.GameObject"/>'s <see cref="T:UnityEngine.Rigidbody"/> part of the gravitational system.
             
-            For 2D physic see <see cref="T:Archon.SwissArmyLib.Gravity.GravitationalEntity2D"/>.
+            For 2D physics see <see cref="T:Archon.SwissArmyLib.Gravity.GravitationalEntity2D"/>.
             </summary>
         </member>
         <member name="T:Archon.SwissArmyLib.Gravity.IGravitationalAffecter">
@@ -1044,6 +1367,11 @@
             <remarks>If <see cref="P:Archon.SwissArmyLib.Gravity.SphericalGravitationalPoint.IsGlobal"/> is true, then this property is ignored.</remarks>
             </summary>
         </member>
+        <member name="P:Archon.SwissArmyLib.Gravity.SphericalGravitationalPoint.DropoffCurve">
+            <summary>
+            Gets or sets the dropoff curve of the gravitational force.
+            </summary>
+        </member>
         <member name="P:Archon.SwissArmyLib.Gravity.SphericalGravitationalPoint.IsGlobal">
             <summary>
             Gets or sets whether this point should affect all entities regardless of whether they're in range.
@@ -1055,6 +1383,8 @@
         <member name="T:Archon.SwissArmyLib.Gravity.GravitationalEntity2D">
             <summary>
             Makes this <see cref="T:UnityEngine.GameObject"/>'s <see cref="T:UnityEngine.Rigidbody2D"/> part of the gravitational system.
+            
+            For 3D physics see <see cref="T:Archon.SwissArmyLib.Gravity.GravitationalEntity"/>.
             </summary>
         </member>
         <member name="T:Archon.SwissArmyLib.Gravity.GravitationalSystem">
@@ -1072,7 +1402,9 @@
             </summary>
         </member>
         <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Finalize">
-            <inheritdoc />
+            <summary>
+            Destructor
+            </summary>
         </member>
         <member name="M:Archon.SwissArmyLib.Gravity.GravitationalSystem.Register(Archon.SwissArmyLib.Gravity.IGravitationalAffecter)">
             <summary>
@@ -1117,6 +1449,397 @@
             <param name="location">The location to test.</param>
             <returns>A vector representing the sum of gravitational force at <paramref name="location"/>.</returns>
         </member>
+        <member name="T:Archon.SwissArmyLib.Partitioning.Bin2D`1">
+            <summary>
+            A simple GC-friendly two-dimensional <see href="https://en.wikipedia.org/wiki/Bin_(computational_geometry)">Bin (aka Spatial Grid)</see> implementation.
+            
+            When you're done with the Bin, you should <see cref="M:Archon.SwissArmyLib.Partitioning.Bin2D`1.Dispose"/> it so its resources can be freed in their object pool. If you forget this, no harm will be done but memory will be GC'ed.
+            
+            <seealso cref="T:Archon.SwissArmyLib.Partitioning.Bin3D`1"/>
+            </summary>
+            <typeparam name="T">The type of items this Bin will hold.</typeparam>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin2D`1.Width">
+            <summary>
+            Gets the width (number of columns) of the Bin.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin2D`1.Height">
+            <summary>
+            Gets the height (number of rows) of the Bin.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin2D`1.CellWidth">
+            <summary>
+            Gets the width of cells in the Bin.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin2D`1.CellHeight">
+            <summary>
+            Gets the height of cells in the Bin.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin2D`1.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets an <see cref="T:System.Collections.Generic.IEnumerable`1"/> for the items in the given cell.
+            </summary>
+            <param name="x">The x coordinate of the cell.</param>
+            <param name="y">The y coordinate of the cell.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin2D`1.#ctor(System.Int32,System.Int32,System.Single,System.Single)">
+            <summary>
+            Creates a new Bin.
+            </summary>
+            <param name="gridWidth">The width of the grid.</param>
+            <param name="gridHeight">The height of the grid.</param>
+            <param name="cellWidth">The width of a cell.</param>
+            <param name="cellHeight">The height of a cell.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin2D`1.Insert(`0,UnityEngine.Rect)">
+            <summary>
+            Inserts an item with the given bounds into the Bin.
+            </summary>
+            <param name="item">The item to insert.</param>
+            <param name="bounds">The bounds of the item.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin2D`1.Remove(`0,UnityEngine.Rect)">
+            <summary>
+            Removes an item which was inserted with the given bounds from the Bin.
+            </summary>
+            <param name="item">The item to remove.</param>
+            <param name="bounds">The bounds that the item was inserted with.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin2D`1.Update(`0,UnityEngine.Rect,UnityEngine.Rect)">
+            <summary>
+            Removes and reinserts an item with new bounds, essentially moving it.
+            </summary>
+            <param name="item">The item to update.</param>
+            <param name="prevBounds">The bounds that the item was inserted with earlier.</param>
+            <param name="newBounds">The new bounds to insert the item with.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin2D`1.Retrieve(UnityEngine.Rect,System.Collections.Generic.HashSet{`0})">
+            <summary>
+            Gets all items in the Bin that could potentially intersect with the given bounds.
+            </summary>
+            <param name="bounds">The bounds to check for.</param>
+            <param name="results">Where to add results to.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin2D`1.Clear">
+            <summary>
+            Removes all items from the Bin.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin2D`1.Dispose">
+            <summary>
+            Frees (clears) used resources that can be recycled. 
+            
+            Call this when you're done with the Bin.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Partitioning.Bin3D`1">
+            <summary>
+            A simple GC-friendly three-dimensional <see href="https://en.wikipedia.org/wiki/Bin_(computational_geometry)">Bin (aka Spatial Grid)</see> implementation.
+            
+            When you're done with the Bin, you should <see cref="M:Archon.SwissArmyLib.Partitioning.Bin3D`1.Dispose"/> it so its resources can be freed in their object pool. If you forget this, no harm will be done but memory will be GC'ed.
+            
+            <seealso cref="T:Archon.SwissArmyLib.Partitioning.Bin2D`1"/>
+            </summary>
+            <typeparam name="T">The type of items this Bin will hold.</typeparam>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin3D`1.Width">
+            <summary>
+            Gets the width (number of columns) of the Bin.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin3D`1.Height">
+            <summary>
+            Gets the height (number of rows) of the Bin.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin3D`1.Depth">
+            <summary>
+            Gets the depth (number of layers) of the Bin.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin3D`1.CellWidth">
+            <summary>
+            Gets the width of cells in the Bin.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin3D`1.CellHeight">
+            <summary>
+            Gets the height of cells in the Bin.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin3D`1.CellDepth">
+            <summary>
+            Gets the depth of cells in the Bin.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Bin3D`1.Item(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Gets an <see cref="T:System.Collections.Generic.IEnumerable`1"/> for the items in the given cell.
+            </summary>
+            <param name="x">The x coordinate of the cell.</param>
+            <param name="y">The y coordinate of the cell.</param>
+            <param name="z">The z coordinate of the cell.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin3D`1.#ctor(System.Int32,System.Int32,System.Int32,System.Single,System.Single,System.Single)">
+            <summary>
+            Creates a new Bin.
+            </summary>
+            <param name="gridWidth">The width of the grid.</param>
+            <param name="gridHeight">The height of the grid.</param>
+            <param name="gridDepth">The depth of the grid.</param>
+            <param name="cellWidth">The width of a cell.</param>
+            <param name="cellHeight">The height of a cell.</param>
+            <param name="cellDepth">The depth of a cell.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin3D`1.Insert(`0,UnityEngine.Bounds)">
+            <summary>
+            Inserts an item with the given bounds into the Bin.
+            </summary>
+            <param name="item">The item to insert.</param>
+            <param name="bounds">The bounds of the item.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin3D`1.Remove(`0,UnityEngine.Bounds)">
+            <summary>
+            Removes an item which was inserted with the given bounds from the Bin.
+            </summary>
+            <param name="item">The item to remove.</param>
+            <param name="bounds">The bounds that the item was inserted with.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin3D`1.Update(`0,UnityEngine.Bounds,UnityEngine.Bounds)">
+            <summary>
+            Removes and reinserts an item with new bounds, essentially moving it.
+            </summary>
+            <param name="item">The item to update.</param>
+            <param name="prevBounds">The bounds that the item was inserted with earlier.</param>
+            <param name="newBounds">The new bounds to insert the item with.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin3D`1.Retrieve(UnityEngine.Bounds,System.Collections.Generic.HashSet{`0})">
+            <summary>
+            Gets all items in the Bin that could potentially intersect with the given bounds.
+            </summary>
+            <param name="bounds">The bounds to check for.</param>
+            <param name="results">Where to add results to.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin3D`1.Clear">
+            <summary>
+            Removes all items from the Bin.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Bin3D`1.Dispose">
+            <summary>
+            Frees (clears) used resources that can be recycled. 
+            
+            Call this when you're done with the Bin.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Partitioning.Octree`1">
+            <summary>
+            A GC-friendly <see href="https://en.wikipedia.org/wiki/Octree">Octree</see> implementation.
+            
+            Use the static <see cref="M:Archon.SwissArmyLib.Partitioning.Octree`1.Create(UnityEngine.Bounds,System.Int32,System.Int32)"/> and <see cref="M:Archon.SwissArmyLib.Partitioning.Octree`1.Destroy(Archon.SwissArmyLib.Partitioning.Octree{`0})"/> methods for creating and destroying trees.
+            If you forget to <see cref="M:Archon.SwissArmyLib.Partitioning.Octree`1.Destroy(Archon.SwissArmyLib.Partitioning.Octree{`0})"/> a tree when you're done with it, it will instead be collected 
+            by the GC as normal, but the nodes will not be recycled.
+            </summary>
+            <typeparam name="T">The type of items this octree should hold.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Octree`1.Create(UnityEngine.Bounds,System.Int32,System.Int32)">
+            <summary>
+            Creates an Octree.
+            </summary>
+            <param name="bounds">The size of the tree's bounds.</param>
+            <param name="maxItems">The amount of items a node can contain before splitting.</param>
+            <param name="maxDepth">The maximum depth</param>
+            <returns>The octree.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Octree`1.Destroy(Archon.SwissArmyLib.Partitioning.Octree{`0})">
+            <summary>
+            Destroys a tree, making it available for being recycled.
+            
+            Do not use the tree again after calling this.
+            </summary>
+            <param name="tree">The tree to destroy.</param>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Octree`1.Bounds">
+            <summary>
+            Gets the bounds of this octree node.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Octree`1.Depth">
+            <summary>
+            Gets the depth of this octree node.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Octree`1.MaxDepth">
+            <summary>
+            Gets the maximum depth that the octree can go.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Octree`1.MaxItems">
+            <summary>
+            Gets the maximum amount of items this node can contain before splitting.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Octree`1.IsSplit">
+            <summary>
+            Gets whether this node has been split.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Octree`1.Count">
+            <summary>
+            Gets the total amount of items from this node and down.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Octree`1.Insert(`0,UnityEngine.Bounds)">
+            <summary>
+            Inserts an item with the specified bounds into the octree.
+            </summary>
+            <param name="item">The item to insert.</param>
+            <param name="bounds">The bounds of the item, used to place it correctly in the tree.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Octree`1.Remove(`0,UnityEngine.Bounds)">
+            <summary>
+            Removes an item with the specified bounds from the octree.
+            </summary>
+            <param name="item">The item to remove.</param>
+            <param name="bounds">The bounds used for previously inserting this item.</param>
+            <returns>True if item was found and removed, otherwise false.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Octree`1.Retrieve(UnityEngine.Bounds)">
+            <summary>
+            Retrieves all potential matches for the given <see cref="P:Archon.SwissArmyLib.Partitioning.Octree`1.Bounds"/>.
+            
+            Careful, this method creates a new <see cref="T:System.Collections.Generic.HashSet`1"/>. 
+            You might want to use <see cref="M:Archon.SwissArmyLib.Partitioning.Octree`1.Retrieve(UnityEngine.Bounds,System.Collections.Generic.HashSet{`0})"/> instead if you call this often.
+            </summary>
+            <param name="bounds"></param>
+            <returns>Potential matches.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Octree`1.Retrieve(UnityEngine.Bounds,System.Collections.Generic.HashSet{`0})">
+            <summary>
+            Retrieves all potential matches for the given <see cref="P:Archon.SwissArmyLib.Partitioning.Octree`1.Bounds"/> and adds them to <paramref name="results"/>.
+            </summary>
+            <param name="bounds"></param>
+            <param name="results">Where results will be added to.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Octree`1.Clear">
+            <summary>
+            Clears all items in this node and removes subnodes.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Octree`1.Dispose">
+            <summary>
+            Destroys the octree using <see cref="M:Archon.SwissArmyLib.Partitioning.Octree`1.Destroy(Archon.SwissArmyLib.Partitioning.Octree{`0})"/>.
+            
+            Do not use the tree after calling this!
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Partitioning.Quadtree`1">
+            <summary>
+            A GC-friendly <see href="https://en.wikipedia.org/wiki/Quadtree">Quadtree</see> implementation.
+            
+            Use the static <see cref="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Create(UnityEngine.Rect,System.Int32,System.Int32)"/> and <see cref="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Destroy(Archon.SwissArmyLib.Partitioning.Quadtree{`0})"/> methods for creating and destroying trees.
+            If you forget to <see cref="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Destroy(Archon.SwissArmyLib.Partitioning.Quadtree{`0})"/> a tree when you're done with it, it will instead be collected 
+            by the GC as normal, but the nodes will not be recycled.
+            </summary>
+            <typeparam name="T">The type of items this quadtree should hold.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Create(UnityEngine.Rect,System.Int32,System.Int32)">
+            <summary>
+            Creates a Quadtree.
+            </summary>
+            <param name="bounds">The size of the tree's bounds.</param>
+            <param name="maxItems">The amount of items a node can contain before splitting.</param>
+            <param name="maxDepth">The maximum depth</param>
+            <returns>The quadtree.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Destroy(Archon.SwissArmyLib.Partitioning.Quadtree{`0})">
+            <summary>
+            Destroys a tree, making it available for being recycled.
+            
+            Do not use the tree again after calling this.
+            </summary>
+            <param name="tree">The tree to destroy.</param>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Quadtree`1.Bounds">
+            <summary>
+            Gets the bounds of this quadtree node.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Quadtree`1.Depth">
+            <summary>
+            Gets the depth of this quadtree node.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Quadtree`1.MaxDepth">
+            <summary>
+            Gets the maximum depth that the quadtree can go.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Quadtree`1.MaxItems">
+            <summary>
+            Gets the maximum amount of items this node can contain before splitting.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Quadtree`1.IsSplit">
+            <summary>
+            Gets whether this node has been split.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Partitioning.Quadtree`1.Count">
+            <summary>
+            Gets the total amount of items from this node and down.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Insert(`0,UnityEngine.Rect)">
+            <summary>
+            Inserts an item with the specified bounds into the quadtree.
+            </summary>
+            <param name="item">The item to insert.</param>
+            <param name="bounds">The bounds of the item, used to place it correctly in the tree.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Remove(`0,UnityEngine.Rect)">
+            <summary>
+            Removes an item with the specified bounds from the quadtree.
+            </summary>
+            <param name="item">The item to remove.</param>
+            <param name="bounds">The bounds used for previously inserting this item.</param>
+            <returns>True if item was found and removed, otherwise false.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Retrieve(UnityEngine.Rect)">
+            <summary>
+            Retrieves all potential matches for the given <see cref="T:UnityEngine.Rect"/>.
+            
+            Careful, this method creates a new <see cref="T:System.Collections.Generic.HashSet`1"/>. 
+            You might want to use <see cref="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Retrieve(UnityEngine.Rect,System.Collections.Generic.HashSet{`0})"/> instead if you call this often.
+            </summary>
+            <param name="rect"></param>
+            <returns>Potential matches.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Retrieve(UnityEngine.Rect,System.Collections.Generic.HashSet{`0})">
+            <summary>
+            Retrieves all potential matches for the given <see cref="T:UnityEngine.Rect"/> and adds them to <paramref name="results"/>.
+            </summary>
+            <param name="rect"></param>
+            <param name="results">Where results will be added to.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Clear">
+            <summary>
+            Clears all items in this node and removes subnodes.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Dispose">
+            <summary>
+            Destroys the quadtree using <see cref="M:Archon.SwissArmyLib.Partitioning.Quadtree`1.Destroy(Archon.SwissArmyLib.Partitioning.Quadtree{`0})"/>.
+            
+            Do not use the tree after calling this!
+            </summary>
+        </member>
         <member name="T:Archon.SwissArmyLib.Pooling.PoolableGroup">
             <summary>
             Manages a list of IPoolable components found in the hierarchy of this GameObject and notifies them when it is spawned and despawned.
@@ -1135,6 +1858,206 @@
             Manually removes a poolable object so that it no longer is notified when this component is spawned or despawned.
             </summary>
             <param name="poolable">The poolable object that should no longer be notified.</param>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Pooling.GameObjectPool`1">
+            <summary>
+            An object pool that can recycle prefab instances.
+            </summary>
+            <typeparam name="T">The type of the component on the prefab.</typeparam>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Pooling.GameObjectPool`1.Prefab">
+            <summary>
+            Gets the prefab used to instantiate GameObjects.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.#ctor(`0)">
+            <summary>
+            Creates a new GameObject pool for the specified prefab.
+            </summary>
+            <param name="prefab">The prefab used for instantiating instances.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.#ctor(System.String,System.Func{`0})">
+            <summary>
+            Creates a new GameObject pool with a custom name and a factory method used for instantiating instances.
+            </summary>
+            <param name="name">The name of the pool.</param>
+            <param name="create">The factory method used to instantiating instances.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.Spawn">
+            <inheritdoc />
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.Spawn(UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Transform)">
+            <summary>
+            Spawns a recycled object if there's one available, otherwise creates a new instance.
+            </summary>
+            <returns>The spawned object.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.Despawn(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Archon.SwissArmyLib.Pooling.IPool`1">
+            <summary>
+            Represents an object pool that has methods for spawning and despawning objects.
+            </summary>
+            <typeparam name="T">The type of objects that this pool can be used for.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.IPool`1.Spawn">
+            <summary>
+            Spawns a recycled or new instance of the type <typeparamref name="T"/>.
+            </summary>
+            <returns>The spawned instance.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.IPool`1.Despawn(`0)">
+            <summary>
+            Despawns an instance of the type <typeparamref name="T"/> and marks it for reuse.
+            </summary>
+            <param name="target">The instance to despawn.</param>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Pooling.IPoolable">
+            <summary>
+            Represents an object that can be recycled in an <see cref="T:Archon.SwissArmyLib.Pooling.IPool`1"/> and should be notified when it's spawned and despawned.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.IPoolable.OnSpawned">
+            <summary>
+            Called when the object is spawned (either fresh or recycled).
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.IPoolable.OnDespawned">
+            <summary>
+            Called when the object is despawned and marked for recycling.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Pooling.Pool`1">
+            <summary>
+            An object pool that can recycle objects of the type <typeparamref name="T"/>.
+            
+            If the type implements <see cref="T:Archon.SwissArmyLib.Pooling.IPoolable"/> they will be notified when they're spawned and despawned.
+            </summary>
+            <typeparam name="T">The type of objects this object pool should contain.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.Pool`1.#ctor(System.Func{`0})">
+            <summary>
+            Creates a new object pool that uses the specified factory method to create object instances.
+            </summary>
+            <param name="create">Factory method to use for creating new instances.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.Pool`1.Prewarm(System.Int32)">
+            <summary>
+            Fills the pool with objects so that it contains the specified amount of objects.
+            
+            If it already contains the specified amount or more, nothing will be done.
+            </summary>
+            <param name="targetCount"></param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.Pool`1.Spawn">
+            <summary>
+            Spawns a recycled object if there's one available, otherwise creates a new instance.
+            </summary>
+            <returns>The spawned object.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.Pool`1.Despawn(`0)">
+            <summary>
+            Despawns an object, adding it back to the pool.
+            </summary>
+            <param name="target">The object to despawn.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.Pool`1.OnSpawned(`0)">
+            <summary>
+            Called when an object has been spawned and removed from the pool.
+            </summary>
+            <param name="target">The spawned object.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.Pool`1.OnDespawned(`0)">
+            <summary>
+            Called when an object has been despawned and placed back in the pool.
+            </summary>
+            <param name="target">The despawned object.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.Pool`1.Despawn(`0,System.Single,System.Boolean)">
+            <summary>
+            Despawns an object after a delay.
+            </summary>
+            <param name="target">The target to despawn.</param>
+            <param name="delay">Time in seconds to wait before despawning the target.</param>
+            <param name="unscaledTime">Should the delay be according to <see cref="P:UnityEngine.Time.time"/> or <see cref="P:UnityEngine.Time.unscaledTime"/>?</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.Pool`1.CancelDespawn(`0)">
+            <summary>
+            Cancels a pending timed despawn.
+            </summary>
+            <param name="target">The target that shouldn't despawn after all.</param>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Pooling.PoolHelper">
+            <summary>
+            Simple static helper class for pooling Unity prefab instances.
+            
+            If the pooled objects implement <see cref="T:Archon.SwissArmyLib.Pooling.IPoolable"/> they will be notified when they're spawned and despawned.
+            
+            For non-Unity objects see <see cref="T:Archon.SwissArmyLib.Pooling.PoolHelper`1"/>.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper.Spawn``1(``0)">
+            <summary>
+            Spawns a recycled object if there's one available, otherwise creates a new instance.
+            </summary>
+            <returns>The spawned object.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper.Spawn``1(``0,UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Transform)">
+            <summary>
+            Spawns a recycled object if there's one available, otherwise creates a new instance.
+            </summary>
+            <returns>The spawned object.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper.Despawn(Archon.SwissArmyLib.Pooling.IPoolable)">
+            <summary>
+            Despawns an instance and marks it for reuse.
+            </summary>
+            <param name="target">The instance to despawn.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper.GetPrefab(UnityEngine.Object)">
+            <summary>
+            Gets the prefab that was used to spawn <paramref name="instance"/>.
+            </summary>
+            <param name="instance">The instance to get the prefab for.</param>
+            <returns>The prefab for the instance, or null if not found.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper.GetPrefab``1(``0)">
+            <summary>
+            Gets the prefab that was used to spawn <paramref name="instance"/>.
+            </summary>
+            <typeparam name="T">The type of the instance.</typeparam>
+            <param name="instance">The instance to get the prefab for.</param>
+            <returns>The prefab for the instance, or null if not found.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper.GetPool(UnityEngine.Object)">
+            <summary>
+            Gets or creates the pool for the given prefab.
+            </summary>
+            <param name="prefab">The prefab to get a pool for.</param>
+            <returns>The pool for the prefab.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Pooling.PoolHelper`1">
+            <summary>
+            Simple static helper class for pooling non-Unity objects.
+            
+            If the pooled objects implement <see cref="T:Archon.SwissArmyLib.Pooling.IPoolable"/> they will be notified when they're spawned and despawned.
+            
+            For Unity GameObjects see <see cref="T:Archon.SwissArmyLib.Pooling.PoolHelper"/>.
+            </summary>
+            <typeparam name="T">The type of the object to pool.</typeparam>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper`1.Spawn">
+            <summary>
+            Spawns a recycled or new instance of the type <typeparamref name="T"/>.
+            </summary>
+            <returns>The spawned instance.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper`1.Despawn(`0)">
+            <summary>
+            Despawns an instance of the type <typeparamref name="T"/> and marks it for reuse.
+            </summary>
+            <param name="target">The instance to despawn.</param>
         </member>
         <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceEvent.OriginalDelta">
             <inheritdoc />
@@ -1466,6 +2389,102 @@
             Attempts to find a different resource pool on this GameObject.
             </summary>
             <returns>The found pool, or null if none were found.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Utils.BetterTime">
+            <summary>
+            A simple wrapper for Unity's <see cref="T:UnityEngine.Time"/> that caches values to avoid the marshal overhead of each call.
+            
+            The performance benefit is very small, but completely free.
+            
+            Only readonly <see cref="T:UnityEngine.Time"/> properties (except for <see cref="P:Archon.SwissArmyLib.Utils.BetterTime.FixedDeltaTime"/>) are cached, but everything is wrapped anyway so you don't have to use multiple time classes.
+            
+            Since this is just a wrapper just refer to Unity's documentation about what each property does.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.TimeScale">
+            <summary>
+            Gets or sets the scalar that is applied to <see cref="P:Archon.SwissArmyLib.Utils.BetterTime.Time"/>, <see cref="P:Archon.SwissArmyLib.Utils.BetterTime.DeltaTime"/> etc.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.FrameCount">
+            <summary>
+            Gets the total number of frames that have passed.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.Time">
+            <summary>
+            Gets the (scaled) time in seconds at the beginning of this frame.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.DeltaTime">
+            <summary>
+            Gets the difference in seconds since the last frame. (Scaled according to <see cref="P:Archon.SwissArmyLib.Utils.BetterTime.TimeScale"/>)
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.SmoothDeltaTime">
+            <summary>
+            Gets a smoothed out time difference in seconds since the last frame. (Scaled according to <see cref="P:Archon.SwissArmyLib.Utils.BetterTime.TimeScale"/>)
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.UnscaledDeltaTime">
+            <summary>
+            Gets the unscaled time difference in seconds since the last frame.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.UnscaledTime">
+            <summary>
+            Gets the unscaled time in seconds at the beginning of this frame.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.FixedDeltaTime">
+            <summary>
+            Gets or sets the fixed time in seconds between FixedUpdate.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.FixedTime">
+            <summary>
+            Gets the time that the latest FixedUpdate started. This is scaled according to <see cref="P:Archon.SwissArmyLib.Utils.BetterTime.TimeScale"/>.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.FixedUnscaledDeltaTime">
+            <summary>
+            Gets the unscaled time difference since the previous FixedUpdate.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.FixedUnscaledTime">
+            <summary>
+            Gets the unscaled time that the latest FixedUpdate started. 
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.InFixedTimeStep">
+            <summary>
+            Gets whether we're inside a FixedUpdate at the moment.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.RealTimeSinceStartup">
+            <summary>
+            Gets the real time in seconds since the game started.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.TimeSinceLevelLoad">
+            <summary>
+            Gets the time since the last level was loaded.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.MaximumDeltaTime">
+            <summary>
+            Gets or sets the maximum time in seconds that a fixed timestep frame can take. 
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.MaximumParticleDeltaTime">
+            <summary>
+            Gets or sets the maximum time in seconds that a frame can spend on updating particles.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.BetterTime.CaptureFramerate">
+            <summary>
+            Slows game playback time to allow screenshots to be saved between frames.
+            </summary>
         </member>
         <member name="T:Archon.SwissArmyLib.Utils.Editor.ExecutionOrderAttribute">
             <summary>
@@ -1900,6 +2919,105 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="list">The list to shuffle.</param>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Utils.Shake.BaseShake`1">
+            <summary>
+            Represents an object that can shake a value of the type <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type of value to be shaked.</typeparam>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.Shake.BaseShake`1.UnscaledTime">
+            <summary>
+            Gets or sets whether the shake should use <see cref="P:UnityEngine.Time.time"/> or <see cref="P:UnityEngine.Time.unscaledTime"/>.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.Shake.BaseShake`1.Duration">
+            <summary>
+            Gets how long the shake last.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.Shake.BaseShake`1.Frequency">
+            <summary>
+            Gets the frequency of the shake.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.Shake.BaseShake`1.Amplitude">
+            <summary>
+            Gets the amplitude of the shake.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.Shake.BaseShake`1.NormalizedTime">
+            <summary>
+            Gets the shake's current progress in the range 0 to 1.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.Shake.BaseShake`1.IsDone">
+            <summary>
+            Gets whether the shake is done.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.Shake.BaseShake`1.StartTime">
+            <summary>
+            Gets or sets the time that the shake started.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Utils.Shake.BaseShake`1.CurrentTime">
+            <summary>
+            Gets the current scaled or unscaled time.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Shake.BaseShake`1.Start(System.Single,System.Int32,System.Single)">
+            <summary>
+            Starts (or restarts) the shake with new parameters.
+            </summary>
+            <param name="amplitude">Amplitude of the new shake.</param>
+            <param name="frequency">Frequency of the new shake.</param>
+            <param name="duration">Duration of the new shake.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Shake.BaseShake`1.GetAmplitude">
+            <summary>
+            Gets the amplitude at the current time.
+            </summary>
+            <returns>The current amplitude.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Shake.BaseShake`1.GetAmplitude(System.Single)">
+            <summary>
+            Gets the amplitude at a specific (normalized) time.
+            </summary>
+            <param name="t">The normalized time to get the amplitude for (0-1)</param>
+            <returns>The amplitude at the specific time.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Utils.Shake.Shake">
+            <summary>
+            An object that can shake a float over time.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Shake.Shake.Start(System.Single,System.Int32,System.Single)">
+            <inheritdoc />
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Shake.Shake.GetAmplitude(System.Single)">
+            <inheritdoc />
+        </member>
+        <member name="T:Archon.SwissArmyLib.Utils.Shake.Shake2D">
+            <summary>
+            An object that can shake a <see cref="T:UnityEngine.Vector2"/> over time.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Utils.Shake.Shake2D.Horizontal">
+            <summary>
+            The shake used for shaking the <see cref="F:UnityEngine.Vector2.x"/> value of the <see cref="T:UnityEngine.Vector2"/>.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Utils.Shake.Shake2D.Vertical">
+            <summary>
+            The shake used for shaking the <see cref="F:UnityEngine.Vector2.y"/> value of the <see cref="T:UnityEngine.Vector2"/>.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Shake.Shake2D.Start(System.Single,System.Int32,System.Single)">
+            <inheritdoc />
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.Shake.Shake2D.GetAmplitude(System.Single)">
+            <inheritdoc />
         </member>
     </members>
 </doc>

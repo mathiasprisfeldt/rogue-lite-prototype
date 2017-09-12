@@ -36,10 +36,11 @@ namespace Abilitys
         [SerializeField]
         private bool _throw;
 
-        public UnityEvent OnAbilityChange = new UnityEvent();
+        public UnityEvent OnAbilityChange;
 
         public void Awake()
         {
+            OnAbilityChange = new UnityEvent();
             UpdateAbilities();  
         }
 
