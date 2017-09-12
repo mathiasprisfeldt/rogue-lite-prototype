@@ -98,7 +98,6 @@ namespace Projectiles
             {
                 if (_hitEffectPrefab)
                 {
-                    Debug.Log(collision.bounds.ClosestPoint(transform.position));
                     Instantiate(_hitEffectPrefab, collision.bounds.ClosestPoint(transform.position), Quaternion.identity);
                 }
 

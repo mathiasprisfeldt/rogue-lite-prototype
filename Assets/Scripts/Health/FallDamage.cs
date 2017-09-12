@@ -92,7 +92,9 @@ namespace Health
                         break;
                 }
 
-                _healthController.Damage(Mathf.Clamp(dmgAmount, 0, _maxDmg));
+                _healthController.Damage(
+                    Mathf.Clamp(dmgAmount, 0, _maxDmg),
+                    pos: transform.position);
             }
 
             //If controller is wall sliding save position when sliding.s
@@ -104,11 +106,11 @@ namespace Health
             else
             {
                 //If the distance between current position and old position is increased, update last position.
-                float currDist = Math.Abs(_lastPosition.y - _healthController.Character.Rigidbody.position.y);
+                float currDist = Vector2.Distance(_lastPosition.y * Vector2.up, _healthController.Character.Origin.y * Vector2.up);
 
                 if (_savedFlyingDistance > currDist)
                 {
-                    _lastPosition = _healthController.Character.Rigidbody.position;
+                    _lastPosition = _healthController.Character.Origin;
                 }
 
                 _savedFlyingDistance = currDist;

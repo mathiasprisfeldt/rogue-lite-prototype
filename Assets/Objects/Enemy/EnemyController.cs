@@ -30,6 +30,9 @@ namespace Enemy
         [SerializeField]
 	    private PlayerApplication _target;
 
+        [SerializeField]
+        private GameObject _aiParent;
+
 	    public Vector2 ToPlayer { get; private set; }
 	    public bool IsTurning { get; private set; }
 	    public bool IsStagging { get; set; }
@@ -66,7 +69,8 @@ namespace Enemy
 	    {
 	        StateMachine = new FiniteStateMachine<EnemyApplication>(App);
 
-	        _states = GetComponentsInChildren<EnemyState>().ToList();
+	        _states = _aiParent.GetComponents<EnemyState>().ToList();
+
             //Setup all states.
             foreach (EnemyState state in _states)
 	        {
@@ -78,7 +82,7 @@ namespace Enemy
                 StateMachine.RegisterState(state); 
             }
 
-	        EnemyIdle idleState = gameObject.AddComponent<EnemyIdle>();
+	        EnemyIdle idleState = _aiParent.AddComponent<EnemyIdle>();
 	        StateMachine.RegisterState(idleState);
 
             StateMachine.ChangeState(idleState);

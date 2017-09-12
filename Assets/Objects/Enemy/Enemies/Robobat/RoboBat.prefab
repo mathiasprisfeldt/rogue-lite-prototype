@@ -710,6 +710,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _application: {fileID: 114131460394400532}
   _target: {fileID: 0}
+  _aiParent: {fileID: 1464397412292338}
 --- !u!114 &114539416218621420
 MonoBehaviour:
   m_ObjectHideFlags: 1
