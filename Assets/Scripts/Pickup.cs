@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Archon.SwissArmyLib.Utils;
 using UnityEngine;
 
 namespace Pickups
@@ -70,7 +71,7 @@ namespace Pickups
                 _currentDirection = (_currentDirection * -1f).normalized;
             }
 
-            var currentSpeed = _speed * Time.fixedDeltaTime;
+            var currentSpeed = _speed * BetterTime.FixedDeltaTime;
 
             if ((_currentDirection * currentSpeed).magnitude + _distanceTraveled > _distanceToSwitckDirection)
                 currentSpeed -= (_currentDirection * currentSpeed).magnitude + _distanceTraveled - _distanceToSwitckDirection;

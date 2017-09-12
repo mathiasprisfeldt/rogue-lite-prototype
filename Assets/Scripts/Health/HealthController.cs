@@ -2,6 +2,8 @@
 using System.Collections;
 using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.Utilities;
+using Archon.SwissArmyLib.ResourceSystem;
+using Archon.SwissArmyLib.Utils;
 using Controllers;
 using Managers;
 using Spriter2UnityDX;
@@ -228,7 +230,7 @@ namespace Health
         {
             if (_flashTimer > 0)
             {
-                _flashTimer -= Time.deltaTime / _flashDuration;
+                _flashTimer -= BetterTime.DeltaTime / _flashDuration;
 
                 var targetColor = _flashTimer <= 0
                     ? _originalColor
@@ -251,11 +253,14 @@ namespace Health
         /// <param name="dmg">Amount of damage to deal.</param>
         /// <param name="pos">Position from where the damage came from</param>
         /// <param name="from">Did the damage come from a specific character?</param>
-        public void Damage(float dmg, bool giveInvurnability = true, Vector2 pos = default(Vector2), Character from = null)
+        /// <param name="ignoreInvurnability">Should we force damage onto health controller?</param>
+        public void Damage(float dmg, bool giveInvurnability = false, Vector2 pos = default(Vector2), Character from = null, bool ignoreInvurnability = false)
         {
             if (dmg <= 0 || IsDead)
                 return;
-            
+
+            bool giveDamage = (!_isInvurnable || _dmgWhileInvurnable) || ignoreInvurnability;
+
             var amountToDmg = dmg;
 
             switch (_healthType)
@@ -269,7 +274,7 @@ namespace Health
             HealthAmount -= amountToDmg;
 
             //Create hit effect
-            if (_hitEffectPrefab && (from || pos != Vector2.zero))
+            if (_hitEffectPrefab && (from || pos != Vector2.zero) && giveDamage)
             {
                 Bounds hitBounds = _hitBox.bounds;
                 hitBounds.Expand(-.5f);
@@ -279,35 +284,30 @@ namespace Health
             }
 
             //Flash indication
-            if (!_flashDuration.FastApproximately(0))
+            if (!_flashDuration.FastApproximately(0) && giveDamage)
                 _flashTimer = 1;
 
             if (IsDead)
                 return;
 
             //Apply knockback
-            if (pos != Vector2.zero && !_isInvurnable)
+            if (pos != Vector2.zero && giveDamage)
             {
                 var dir = pos.DirectionTo(_character.Rigidbody.position);
                 if (Math.Abs(dir.y) < 0.01f)
                     dir.y = 1f;
-                _character.KnockbackHandler.AddForce( dir * _knockbackForce, _knockbackDuration);
+                _character.KnockbackHandler.AddForce(dir * _knockbackForce, _knockbackDuration);
             }
 
             //If we take damage show hit animation.
             //But dont show if we're invurnable (Only if we take dmg while being it)
-            if (Character.MainAnimator)
+            if (Character.MainAnimator && giveDamage)
             {
-                if (_isInvurnable)
-                {
-                    if (_dmgWhileInvurnable)
-                        Character.MainAnimator.SetTrigger("Hit");
-                }
-                else
+                if (_dmgWhileInvurnable)
                     Character.MainAnimator.SetTrigger("Hit");
             }
 
-            if (!IsInvurnable)
+            if (giveDamage)
                 OnDamage.Invoke(from);
 
             if (giveInvurnability || _invurnableOnDmg)
@@ -389,9 +389,9 @@ namespace Health
                 while (timer > 0 && IsInvurnable && !IsDead)
                 {
                     yield return new WaitForEndOfFrame();
-                    timer -= Time.unscaledDeltaTime / duration;
+                    timer -= BetterTime.UnscaledDeltaTime / duration;
                 }
-
+                
                 IsInvurnable = false;
             }
         }

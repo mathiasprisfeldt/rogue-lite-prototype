@@ -1,4 +1,5 @@
-﻿using CharacterController;
+﻿using Archon.SwissArmyLib.Utils;
+using CharacterController;
 using UnityEngine;
 
 namespace Special
@@ -62,7 +63,7 @@ namespace Special
         public void Update()
         {
             if (_cooldownTimer > 0)
-                _cooldownTimer -= Time.deltaTime;
+                _cooldownTimer -= BetterTime.DeltaTime;
         }
 
         public void ResetThrow()

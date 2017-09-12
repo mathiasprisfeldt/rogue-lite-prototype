@@ -17,8 +17,42 @@
         <member name="M:Archon.SwissArmyLib.Editor.Utils.ReadOnlyDrawer.OnGUI(UnityEngine.Rect,UnityEditor.SerializedProperty,UnityEngine.GUIContent)">
             <inheritdoc />
         </member>
+        <member name="T:Archon.SwissArmyLib.Editor.ResourceSystem.ResourcePoolEditor">
+            <summary>
+            Custom editor for <see cref="T:Archon.SwissArmyLib.ResourceSystem.ResourcePool"/> components.
+            
+            Shows a health bar and debugging buttons.
+            </summary>
+        </member>
         <member name="M:Archon.SwissArmyLib.Editor.ResourceSystem.ResourcePoolEditor.OnInspectorGUI">
             <inheritdoc />
+        </member>
+        <member name="M:Archon.SwissArmyLib.Editor.ResourceSystem.ResourcePoolEditor.Add(System.Single)">
+            <summary>
+            Adds a resource amount to all targeted components.
+            </summary>
+            <param name="amount">Amount to add</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Editor.ResourceSystem.ResourcePoolEditor.Remove(System.Single)">
+            <summary>
+            Removes a resource amount from all targeted components.
+            </summary>
+            <param name="amount">Amount to remove</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Editor.ResourceSystem.ResourcePoolEditor.Empty">
+            <summary>
+            Empties all targeted components.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Editor.ResourceSystem.ResourcePoolEditor.Fill">
+            <summary>
+            Fills all targeted components.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Editor.ResourceSystem.ResourcePoolEditor.Renew">
+            <summary>
+            Renews all targeted components.
+            </summary>
         </member>
     </members>
 </doc>

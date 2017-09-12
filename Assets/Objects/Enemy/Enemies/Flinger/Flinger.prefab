@@ -203,6 +203,7 @@ GameObject:
   - component: {fileID: 114220297533216582}
   - component: {fileID: 114381869662297512}
   - component: {fileID: 114577707980337684}
+  - component: {fileID: 114989214893827364}
   m_Layer: 12
   m_Name: Controller
   m_TagString: Enemy
@@ -706,7 +707,7 @@ MonoBehaviour:
   _healthType: 0
   _lateCheck: 0
   _invurnableOnDmg: 0
-  _invurnabilityDuration: 0
+  _invurnabilityDuration: 1
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
   _healthAmount: 2
@@ -870,6 +871,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _application: {fileID: 114470561503779720}
   _target: {fileID: 0}
+  _aiParent: {fileID: 1248708349617810}
+--- !u!114 &114989214893827364
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1816082139719966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a45ad3003841ef4ab395dccb38f3f29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actionsController: {fileID: 0}
+  _drawGizmos: 1
+  _damageType: 0
+  _distanceBeforeDmg: 4
+  _isDistanceBeforeDmgInclusive: 0
+  _fallSegments: 2
+  _dmgPerFallUnit: 1
+  _maxDmg: Infinity
 --- !u!212 &212138388692599258
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Archon.SwissArmyLib.Utils;
 using UnityEngine;
 
 namespace CharacterController
@@ -125,10 +126,10 @@ namespace CharacterController
         public override void HandleVertical(ref Vector2 velocity)
         {
             if (_upTimer > 0)
-                _upTimer -= Time.fixedDeltaTime;
+                _upTimer -= BetterTime.FixedDeltaTime;
 
             if (_downTimer > 0)
-                _downTimer -= Time.fixedDeltaTime;  
+                _downTimer -= BetterTime.FixedDeltaTime;  
 
             if (_upTimer > 0 || _downTimer > 0)
                 _actionsController.LastUsedVerticalMoveAbility = MoveAbility.None;

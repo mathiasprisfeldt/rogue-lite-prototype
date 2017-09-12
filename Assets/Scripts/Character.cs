@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Abilitys;
+using Archon.SwissArmyLib.Utils;
 using Health;
 using UnityEngine;
 using Knockbacks;
@@ -326,7 +327,7 @@ namespace Controllers
 
             Bounds bounds = _bumpingCollider2D.bounds;
             
-            Vector2 offset = BUMPING_ORIGIN_OFFSET + new Vector2(Mathf.Abs(Rigidbody.velocity.x), 0) * Time.fixedDeltaTime;
+            Vector2 offset = BUMPING_ORIGIN_OFFSET + new Vector2(Mathf.Abs(Rigidbody.velocity.x), 0) * BetterTime.FixedDeltaTime;
 
             //Calculating needed direction + length & left and right origins.
             Vector2 direction = Vector2.down;

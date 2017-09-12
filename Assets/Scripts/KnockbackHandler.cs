@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AcrylecSkeleton.Extensions;
 using Archon.SwissArmyLib.Events;
+using Archon.SwissArmyLib.Utils;
 using Controllers;
 using UnityEditor;
 using UnityEngine;
@@ -79,10 +80,10 @@ namespace Knockbacks
             {
                 if (_knocksBacks[i].Time > 0)
                 {
-                    _knocksBacks[i].Time = Mathf.Clamp01(_knocksBacks[i].Time - Time.deltaTime / _knocksBacks[i].Duration);
+                    _knocksBacks[i].Time = Mathf.Clamp01(_knocksBacks[i].Time - BetterTime.DeltaTime / _knocksBacks[i].Duration);
 
                     float time = _knocksBacks[i].Time;
-                    Vector2 targetVel = _knocksBacks[i].OriginalVelocity / _knocksBacks[i].Duration * Time.deltaTime;
+                    Vector2 targetVel = _knocksBacks[i].OriginalVelocity / _knocksBacks[i].Duration * BetterTime.DeltaTime;
                     if (_knocksBacks[i].UseCurve)
                         targetVel = _knocksBacks[i].OriginalVelocity.Vector2Multiply(new Vector2(time, _velCurve.Evaluate(1 - time)));
                     _knocksBacks[i].Velocity = targetVel;
@@ -98,7 +99,7 @@ namespace Knockbacks
 
             if (!Active)
                 return;
-            _character.Rigidbody.velocity = _character.Rigidbody.CounterGravity(ApplyKnockback()) * Time.fixedDeltaTime;
+            _character.Rigidbody.velocity = _character.Rigidbody.CounterGravity(ApplyKnockback()) * BetterTime.FixedDeltaTime;
         }
 
 

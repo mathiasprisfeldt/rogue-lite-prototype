@@ -17,11 +17,12 @@ namespace Controls
         [SerializeField]
         private GameObject _special;
 
-        private AbilityHandler _abilityHandler = new AbilityHandler();
-
+        private AbilityHandler _abilityHandler;
 
         public void Start()
         {
+            _abilityHandler = new AbilityHandler();
+
             _abilityHandler = GameObject.FindObjectOfType<AbilityHandler>();
             if (_abilityHandler != null)
             {
