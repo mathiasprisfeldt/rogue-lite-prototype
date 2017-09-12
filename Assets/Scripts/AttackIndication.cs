@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Archon.SwissArmyLib.Utils;
+using UnityEngine;
 
 namespace Indication
 {
@@ -40,7 +41,7 @@ namespace Indication
         {
             if (_transitionTimer > 0)
             {
-                _transitionTimer -= Time.deltaTime;
+                _transitionTimer -= BetterTime.DeltaTime;
 
                 float transitionValue;
                 if (_show)

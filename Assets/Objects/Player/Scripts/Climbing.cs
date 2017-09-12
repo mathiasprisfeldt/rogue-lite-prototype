@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Archon.SwissArmyLib.Utils;
 using CharacterController;
 using Controllers;
 using UnityEngine;
@@ -128,9 +129,9 @@ public class Climbing : MovementAbility
         }
 
         if (_fallTimer > 0)
-            _fallTimer -= Time.deltaTime;
+            _fallTimer -= BetterTime.DeltaTime;
         if (_cooldown > 0)
-            _cooldown -= Time.deltaTime;
+            _cooldown -= BetterTime.DeltaTime;
 
         if (_fallTimer <= 0 && _fall)
         {

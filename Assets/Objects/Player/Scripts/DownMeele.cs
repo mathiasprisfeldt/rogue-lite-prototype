@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Archon.SwissArmyLib.Utils;
 using CharacterController;
 using UnityEngine;
 
@@ -50,7 +51,7 @@ namespace Meele
         public void Update()
         {
             if (_cooldownTimer > 0)
-                _cooldownTimer -= Time.deltaTime;
+                _cooldownTimer -= BetterTime.DeltaTime;
             if (_active)
             {
                 foreach (var c in _collisionCheck.Sides.TargetColliders)

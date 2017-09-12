@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using AcrylecSkeleton.ModificationSystem;
+using Archon.SwissArmyLib.Utils;
 using InControl;
 using RogueLiteInput;
 using UnityEngine;
@@ -32,13 +33,13 @@ public class Jump : MovementAbility {
         if (_actionsController.OnGround && _jumpTimer <= 0)
             _gracePeriodTimer = _gracePeriod;
         else if (_gracePeriodTimer > 0)
-            _gracePeriodTimer -= Time.deltaTime;
+            _gracePeriodTimer -= BetterTime.DeltaTime;
 
 
         if (_jumpTimer > 0 && _initialJumpTimer <= 0)
-            _jumpTimer -= Time.deltaTime;
+            _jumpTimer -= BetterTime.DeltaTime;
         if (_initialJumpTimer > 0)
-            _initialJumpTimer -= Time.deltaTime;
+            _initialJumpTimer -= BetterTime.DeltaTime;
     }
 
     public override bool VerticalActive

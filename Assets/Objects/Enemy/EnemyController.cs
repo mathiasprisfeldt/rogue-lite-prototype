@@ -4,6 +4,7 @@ using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.MVC;
 using Archon.SwissArmyLib.Automata;
 using Archon.SwissArmyLib.Events;
+using Archon.SwissArmyLib.Utils;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using Controllers;
 using Managers;
@@ -162,7 +163,7 @@ namespace Enemy
                 }
             }
 
-	        StateMachine.Update(Time.deltaTime);
+	        StateMachine.Update(BetterTime.DeltaTime);
         }
 
 
@@ -230,7 +231,7 @@ namespace Enemy
                 if (!overrideYVel)
                     vel = new Vector2(dir.x, App.M.Character.Rigidbody.velocity.y);
 
-	            App.M.Character.SetVelocity(vel * Time.fixedDeltaTime, true, Target ? App.M.EngageSpeed : 0, overrideYVel);
+	            App.M.Character.SetVelocity(vel * BetterTime.FixedDeltaTime, true, Target ? App.M.EngageSpeed : 0, overrideYVel);
 
 	            int xDir = Mathf.RoundToInt(dir.x);
                 if (!App.M.CanBackPaddle || forceTurn)

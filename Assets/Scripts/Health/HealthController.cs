@@ -2,6 +2,7 @@
 using System.Collections;
 using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.Utilities;
+using Archon.SwissArmyLib.Utils;
 using Controllers;
 using Managers;
 using Spriter2UnityDX;
@@ -228,7 +229,7 @@ namespace Health
         {
             if (_flashTimer > 0)
             {
-                _flashTimer -= Time.deltaTime / _flashDuration;
+                _flashTimer -= BetterTime.DeltaTime / _flashDuration;
 
                 var targetColor = _flashTimer <= 0
                     ? _originalColor
@@ -389,7 +390,7 @@ namespace Health
                 while (timer > 0 && IsInvurnable && !IsDead)
                 {
                     yield return new WaitForEndOfFrame();
-                    timer -= Time.unscaledDeltaTime / duration;
+                    timer -= BetterTime.UnscaledDeltaTime / duration;
                 }
 
                 IsInvurnable = false;

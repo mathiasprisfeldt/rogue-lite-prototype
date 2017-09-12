@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using Archon.SwissArmyLib.Utils;
 using UnityEngine;
 
 namespace CharacterController
@@ -59,7 +60,7 @@ namespace CharacterController
                     dir = _actionsController.TriggerCheck.Sides.Left ? 1 : -1;
                     if (_slideTimer > 0)
                     {
-                        _slideTimer -= Time.fixedDeltaTime;
+                        _slideTimer -= BetterTime.FixedDeltaTime;
                         return false;
                     }                       
                     return true;

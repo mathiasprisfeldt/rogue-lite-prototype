@@ -1,4 +1,5 @@
 ﻿using System;
+using Archon.SwissArmyLib.Utils;
 using CharacterController;
 using Controllers;
 using UnityEngine;
@@ -60,7 +61,7 @@ public class CameraPoint : MonoBehaviour
              _actionsController.App.C.PlayerActions.DeadZoneDown(_peekDeadZone)))
         {
             if (_peekTImer > 0)
-                _peekTImer -= Time.fixedDeltaTime;
+                _peekTImer -= BetterTime.FixedDeltaTime;
             else
             {
                 var dir = _actionsController.App.C.PlayerActions.DeadZoneUp(_peekDeadZone) ? 1 : -1;

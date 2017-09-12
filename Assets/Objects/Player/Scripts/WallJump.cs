@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Archon.SwissArmyLib.Utils;
 using UnityEngine;
 
 namespace CharacterController
@@ -94,7 +95,7 @@ namespace CharacterController
                     }
                 }
                 else if (valid && _timer > 0)
-                    _timer -= Time.deltaTime;
+                    _timer -= BetterTime.DeltaTime;
                 return _verticalTimer > 0;
             }
         }
@@ -111,7 +112,7 @@ namespace CharacterController
 
         public override void HandleVertical(ref Vector2 velocity)
         {
-            velocity = new Vector2(velocity.x, _actionsController.Rigidbody.CalculateVerticalSpeed((_verticalForce / _verticalDuration)*Time.deltaTime));
+            velocity = new Vector2(velocity.x, _actionsController.Rigidbody.CalculateVerticalSpeed((_verticalForce / _verticalDuration)*BetterTime.DeltaTime));
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)
@@ -134,7 +135,7 @@ namespace CharacterController
                 _horizontalTimer = 0;
                 return;
             }
-            velocity = new Vector2(((_horizontalForce / _horizontalDuration) * Time.deltaTime) * Direction, velocity.y);
+            velocity = new Vector2(((_horizontalForce / _horizontalDuration) * BetterTime.DeltaTime) * Direction, velocity.y);
         }
 
         public void FixedUpdate()
@@ -144,15 +145,15 @@ namespace CharacterController
                 _horizontalTimer = 0;
 
             if (_horizontalTimer > 0)
-                _horizontalTimer -= Time.fixedDeltaTime;
+                _horizontalTimer -= BetterTime.FixedDeltaTime;
 
             //If vertical is active and a collision is detected in the current direction, then cancel vertical
             if (_verticalTimer > 0 && (_actionsController.WallSlideCheck.Sides.Left && Direction < 0 || _actionsController.WallSlideCheck.Sides.Right && Direction > 0))
                 _verticalTimer = 0;
             if (_verticalTimer > 0)
-                _verticalTimer -= Time.fixedDeltaTime;
+                _verticalTimer -= BetterTime.FixedDeltaTime;
             if (_gracePeriodTimer > 0)
-                _gracePeriodTimer -= Time.deltaTime;
+                _gracePeriodTimer -= BetterTime.DeltaTime;
         }
     }
 }
