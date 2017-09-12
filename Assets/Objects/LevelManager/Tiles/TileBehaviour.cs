@@ -70,7 +70,7 @@ public class TileBehaviour : MonoBehaviour
 
     public bool PhsyicalBlock
     {
-        get { return _physicalBlock; }        
+        get { return _physicalBlock; }
     }
 
     public string TargetTag
@@ -122,29 +122,29 @@ public class TileBehaviour : MonoBehaviour
 
         }
 
-        LeftCollision = LeftTile.PhysicalBlock;        
+        LeftCollision = LeftTile.PhysicalBlock;
         RightCollision = RightTile.PhysicalBlock;
 
-        if(gameObject.name.Contains("BorderTile"))
-        
-        if (_autoTexturize)
-        {
-            var spr = GetComponent<SpriteRenderer>();
-            Sprite newSprite = spr.sprite;
+        if (gameObject.name.Contains("BorderTile"))
 
-            if (LeftCollision && !RightCollision)
-                newSprite = _rightTexture;
+            if (_autoTexturize)
+            {
+                var spr = GetComponent<SpriteRenderer>();
+                Sprite newSprite = spr.sprite;
 
-            if (!LeftCollision && RightCollision)
-                newSprite = _leftTexture;
+                if (LeftCollision && !RightCollision)
+                    newSprite = _rightTexture;
 
-            if (BottomCollision || (LeftCollision && RightCollision))
-                newSprite = _middleTexture;
+                if (!LeftCollision && RightCollision)
+                    newSprite = _leftTexture;
 
-            if (TopCollision)
-                newSprite = _centerTexture;
-            spr.sprite = newSprite;           
-        }
+                if (BottomCollision || (LeftCollision && RightCollision))
+                    newSprite = _middleTexture;
+
+                if (TopCollision)
+                    newSprite = _centerTexture;
+                spr.sprite = newSprite;
+            }
         SetupDone = true;
     }
 
@@ -201,7 +201,7 @@ public class TileBehaviour : MonoBehaviour
                         pb.IsSlideable = false;
 
                 }
-                
+
 
 
                 pb.Tiles.Add(this);
@@ -222,8 +222,8 @@ public class TileBehaviour : MonoBehaviour
             {
                 tileBehaviour.Touched = false;
             }
-        }    
-        
+        }
+
     }
 
     public void CheckHorizontalComposite(ref List<GameObject> targets, bool isTop, ref List<TileBehaviour> tiles)
@@ -265,7 +265,7 @@ public class TileBehaviour : MonoBehaviour
     public void StartVerticalComposite(ref int amountOfPlatforms)
     {
         List<GameObject> targets = new List<GameObject>();
-        List<TileBehaviour> tiles = new List<TileBehaviour>(); 
+        List<TileBehaviour> tiles = new List<TileBehaviour>();
         Touched = true;
 
         CheckVerticalCompisite(ref targets, false, ref tiles);
@@ -329,11 +329,11 @@ public class TileBehaviour : MonoBehaviour
                 tileBehaviour.Touched = false;
             }
         }
-        
+
 
     }
 
-    public void CheckVerticalCompisite(ref List<GameObject> targets, bool continueDown, ref List<TileBehaviour> tiles )
+    public void CheckVerticalCompisite(ref List<GameObject> targets, bool continueDown, ref List<TileBehaviour> tiles)
     {
         bool nextShouldDown = continueDown;
 
@@ -376,7 +376,7 @@ public class TileBehaviour : MonoBehaviour
         {
             var temp = _queue.Dequeue();
             temp.Touched = true;
-            temp.CheckVerticalCompisite(ref targets, nextShouldDown,ref tiles);
+            temp.CheckVerticalCompisite(ref targets, nextShouldDown, ref tiles);
         }
     }
 }
