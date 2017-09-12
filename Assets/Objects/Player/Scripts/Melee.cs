@@ -70,7 +70,11 @@ namespace Combat
                                      cc.transform.position.x <= _actionsController.Rigidbody.transform.position.x);
 
                         if (valid && cc && cc.Character.HealthController != null && !cc.Character.HealthController.IsDead)
-                            cc.Character.HealthController.Damage(_actionsController.Damage, from: _actionsController, pos: _actionsController.Rigidbody.position);
+                            cc.Character.HealthController.Damage(
+                                _actionsController.Damage, 
+                                from: _actionsController, 
+                                pos: _actionsController.Rigidbody.position, 
+                                ignoreInvurnability: true);
                     }
                 }
             }

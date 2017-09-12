@@ -59,7 +59,9 @@ public class LevelManager : Singleton<LevelManager>
 
             GameObject go = new GameObject("LevelParent");
             go.AddComponent<Platforms>();
-            CurrentLevel.Spawn(go.transform);
+
+            if (CurrentLevel != null)
+                CurrentLevel.Spawn(go.transform);
         }
         else
             LoadNextLevel();
@@ -176,25 +178,33 @@ public class LevelManager : Singleton<LevelManager>
     /// </summary>
     public void LoadLevels()
     {
-        foreach (var item in _forcedLevelsText)
-        {
-            _forcedLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
-        }
+        if (_forcedLevelsText != null)
+            foreach (var item in _forcedLevelsText)
+            {
+                if (item != null)
+                    _forcedLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
+            }
 
-        foreach (var item in _randomLevelsEasyText)
-        {
-            _randomLevelsEasy.Add(CSVReader.SplitCsvGridToInt(item.text, false));
-        }
+        if (_randomLevelsEasyText != null)
+            foreach (var item in _randomLevelsEasyText)
+            {
+                if (item != null)
+                    _randomLevelsEasy.Add(CSVReader.SplitCsvGridToInt(item.text, false));
+            }
 
-        foreach (var item in _randomLevelsMediumText)
-        {
-            _randomLevelsMedium.Add(CSVReader.SplitCsvGridToInt(item.text, false));
-        }
+        if (_randomLevelsMediumText != null)
+            foreach (var item in _randomLevelsMediumText)
+            {
+                if (item != null)
+                    _randomLevelsMedium.Add(CSVReader.SplitCsvGridToInt(item.text, false));
+            }
 
-        foreach (var item in _randomLevelsHardText)
-        {
-            _randomLevelsHard.Add(CSVReader.SplitCsvGridToInt(item.text, false));
-        }
+        if (_randomLevelsHardText != null)
+            foreach (var item in _randomLevelsHardText)
+            {
+                if (item != null)
+                    _randomLevelsHard.Add(CSVReader.SplitCsvGridToInt(item.text, false));
+            }
     }
 
     /// <summary>

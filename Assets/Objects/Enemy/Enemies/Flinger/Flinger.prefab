@@ -706,7 +706,7 @@ MonoBehaviour:
   _healthType: 0
   _lateCheck: 0
   _invurnableOnDmg: 0
-  _invurnabilityDuration: 0
+  _invurnabilityDuration: 1
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
   _healthAmount: 2

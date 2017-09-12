@@ -1,6 +1,7 @@
 ﻿using Controllers;
 using System.Collections;
 using System.Collections.Generic;
+using AcrylecSkeleton.Utilities;
 using UnityEngine;
 
 public class GiveDamage : MonoBehaviour
@@ -46,7 +47,7 @@ public class GiveDamage : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (_tags.Contains(collision.gameObject.tag) && _layersMask == (_layersMask | (1 << collision.gameObject.layer)))
+        if (_tags.Contains(collision.gameObject.tag) && _layersMask.Contains(collision.gameObject.layer))
         {
             var h = collision.GetComponent<CollisionCheck>();
             if (h)
