@@ -1,8 +1,6 @@
 ﻿using Archon.SwissArmyLib.Utils;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
-using Controllers;
 using Managers;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
