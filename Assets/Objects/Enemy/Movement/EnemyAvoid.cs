@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using AcrylecSkeleton.Utilities;
+using UnityEngine;
 using Archon.SwissArmyLib.Automata;
 
 namespace Enemy
@@ -21,8 +22,10 @@ namespace Enemy
                 if (Context.C.ToPlayer.magnitude < _avoidDistance)
                     dir = -Mathf.Round(Context.C.ToPlayer.normalized.x);
 
-                if (Context.M.Character.BumpingDirection != dir)
+                if (!dir.FastApproximately(Context.M.Character.BumpingDirection))
                     Context.C.Move(dir * Vector2.right);
+                else
+                    Context.M.Character.StandStill();
 
                 if (Context.M.CanBackPaddle && Context.C.IsTargetBehind)
                     Context.C.Turn();
