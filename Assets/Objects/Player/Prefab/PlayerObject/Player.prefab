@@ -4070,10 +4070,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _abilityReferences: {fileID: 114321217263922428}
-  _doubleJump: 1
+  _doubleJump: 0
   _wallSlide: 1
   _wallJump: 1
-  _dash: 1
+  _dash: 0
   _ledgeHanging: 1
   _throw: 1
   OnAbilityChange:
