@@ -40,6 +40,17 @@ namespace AcrylecSkeleton.Utilities
         }
 
         /// <summary>
+        /// Used to see if a bit mask contains a specific index/bit number.
+        /// </summary>
+        /// <param name="this">Bit Mask representated as an integer.</param>
+        /// <param name="other">Bit number for comparision.</param>
+        /// <returns></returns>
+        public static bool Contains(this int @this, int other)
+        {
+            return @this == (@this | (1 << other));
+        }
+
+        /// <summary>
         /// Searches after a specific component in its parents until is finds a match or dead end.
         /// </summary>
         /// <typeparam name="T">Type of component</typeparam>

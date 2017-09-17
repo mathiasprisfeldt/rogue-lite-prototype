@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using AcrylecSkeleton.Utilities;
+using AcrylecSkeleton.Utilities.Collections;
 using UnityEngine;
 
 namespace Pickups
@@ -12,16 +15,14 @@ namespace Pickups
         [SerializeField]
         private bool _active;
 
-        [SerializeField]
-        private List<string> _targetTags = new List<string>();
+        [SerializeField] private Tags _targetTags;
 
         [SerializeField]
         private LayerMask _targetLayers;
 
         [SerializeField]
         private Rigidbody2D _rigigbody;
-
-
+        
         [SerializeField]
         private Vector2 _travelDirection;
 
@@ -41,7 +42,7 @@ namespace Pickups
             set { _active = value; }
         }
 
-        public List<string> TargetTags
+        public Tags TargetTags
         {
             get { return _targetTags; }
             set { _targetTags = value; }
@@ -49,13 +50,12 @@ namespace Pickups
 
         public virtual void Check(GameObject go)
         {
-            if (!(_targetTags.Count > 0 && _targetTags.Contains(go.tag)) || _targetLayers == (_targetLayers | (1 << gameObject.layer)) || !_active)
+            if (!_targetTags.Contains(go) || _targetLayers.Contains(go.layer) || !_active)
                 return;
             Apply(go);
         }
 
         public abstract void Apply(GameObject go);
-
 
         public void Awake()
         {

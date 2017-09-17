@@ -120,7 +120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _targetTags:
-  - Player
+    TagList: 32
   _targetLayers:
     serializedVersion: 2
     m_Bits: 0

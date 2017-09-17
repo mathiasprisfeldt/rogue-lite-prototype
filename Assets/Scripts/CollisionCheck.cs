@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class CollisionCheck : MonoBehaviour
 {
+    private List<Collider2D> _tempList = new List<Collider2D>();
+
     [SerializeField]
     private List<Collider2D> _collidersToCheck = new List<Collider2D>();
 
@@ -119,8 +121,7 @@ public class CollisionCheck : MonoBehaviour
 
     public bool IsColliding(CollisionSides sides)
     {
-        var temp = new List<Collider2D>();
-        return IsColliding(CollisionLayers, out temp, sides);
+        return IsColliding(CollisionLayers, out _tempList, sides);
     }
 
     public bool IsColliding(out List<Collider2D> colliders, CollisionSides sides)
@@ -130,8 +131,7 @@ public class CollisionCheck : MonoBehaviour
 
     public bool IsColliding(LayerMask layer)
     {
-        var temp = new List<Collider2D>();
-        return IsColliding(layer, out temp);
+        return IsColliding(layer, out _tempList);
     }
 
     public bool IsColliding(LayerMask layer, out List<Collider2D> colliders)

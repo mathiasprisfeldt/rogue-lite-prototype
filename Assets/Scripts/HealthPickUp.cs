@@ -10,8 +10,6 @@ namespace Pickups
     [RequireComponent(typeof(Collider2D))]
     public class HealthPickUp : Pickup
     {
-        
-
         [Header("Health Properties"), SerializeField]
         private float _healthAmount;
 

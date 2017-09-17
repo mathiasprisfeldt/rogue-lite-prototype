@@ -115,10 +115,10 @@ namespace Enemy
             if (_isAttacking)
                 return true;
 
-            if (CheckHitbox() && 
-                Context.C.Target &&
+            if (Context.C.Target &&
                 !Context.C.IsTurning && 
-                _canAttack)
+                _canAttack &&
+                CheckHitbox())
                 return true;
 
             return false;
