@@ -82,6 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3320898ec3bf3d74ca9380b13996ef72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _dontKill: 1
   _damage: 1
   _DamageOverTime: 0
   _autoRotate: 1
@@ -90,8 +91,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16384
   _tags:
-  - Player
-  - Enemy
+    TagList: 0
   _safetyRespawn: 1
 --- !u!114 &114625380300017496
 MonoBehaviour:
@@ -107,6 +107,8 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _physicalBlock: 1
   _trap: 1
+  _isGrabable: 1
+  _isSlideable: 1
   _targetTag: 
   _autoTexturize: 0
   _leftTexture: {fileID: 0}

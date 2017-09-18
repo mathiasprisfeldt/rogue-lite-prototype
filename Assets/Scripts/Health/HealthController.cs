@@ -402,5 +402,13 @@ namespace Health
             OnDead.RemoveAllListeners();
             OnHealEvent.RemoveAllListeners();
         }
+
+        /// <summary>
+        /// Checks to see if specific amount of damage would kill the health controller.
+        /// </summary>
+        public bool WouldKill(float damage)
+        {
+            return HealthAmount - damage <= _healthInterval.x;
+        }
     }
 }

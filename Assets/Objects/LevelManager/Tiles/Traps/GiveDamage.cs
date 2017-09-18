@@ -5,10 +5,14 @@ using System.Linq;
 using AcrylecSkeleton.Utilities;
 using AcrylecSkeleton.Utilities.Collections;
 using AcrylecSkeleton.Utilities;
+using Health;
 using UnityEngine;
 
 public class GiveDamage : MonoBehaviour
 {
+    [SerializeField]
+    private bool _dontKill;
+
     [SerializeField]
     private float _damage;
 
@@ -52,15 +56,23 @@ public class GiveDamage : MonoBehaviour
     {
         if (_tags.Contains(collision.gameObject) || _layersMask.Contains(collision.gameObject.layer))
         {
-            var h = collision.GetComponent<CollisionCheck>();
-            if (h)
+            var collisionCheck = collision.GetComponent<CollisionCheck>();
+            if (collisionCheck)
             {
-                if (h.Character.HealthController && !h.Character.HealthController.TrapImmune)
+                HealthController healthController = collisionCheck.Character.HealthController;
+
+                if (healthController && !healthController.TrapImmune)
                 {
-                    h.Character.HealthController.Damage(_damage, true, transform.position);
-                    if (_safetyRespawn && h.Character.SafetyRespawn)
+                    float dmgToDeal = _damage;
+
+                    if (_dontKill && healthController.WouldKill(_damage))
+                        dmgToDeal = 0;
+
+                    healthController.Damage(dmgToDeal, true, transform.position);
+
+                    if (_safetyRespawn && collisionCheck.Character.SafetyRespawn)
                     {
-                        h.Character.SafetyRespawn.Respawn();
+                        collisionCheck.Character.SafetyRespawn.Respawn();
                     }
                 }
             }
