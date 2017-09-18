@@ -148,7 +148,7 @@ namespace AcrylecSkeleton.Utilities
 
         public static bool FastApproximately(this float a, float b, float tolerance = 0)
         {
-            return Math.Abs(a - b) < tolerance;
+            return Math.Abs(a - b) <= tolerance;
         }
     }
 }

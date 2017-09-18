@@ -1,4 +1,5 @@
 ﻿using System;
+using Archon.SwissArmyLib.Utils;
 using Controllers;
 using UnityEngine;
 
@@ -51,7 +52,7 @@ namespace CharacterController
         public void FixedUpdate()
         {
             if(_jumpTimer > 0)
-                _jumpTimer -= Time.fixedDeltaTime;
+                _jumpTimer -= BetterTime.FixedDeltaTime;
             if (_hasJumped)
             {
                 if (_actionsController.OnGround || _actionsController.AbilityReferences.WallSlide.VerticalActive 

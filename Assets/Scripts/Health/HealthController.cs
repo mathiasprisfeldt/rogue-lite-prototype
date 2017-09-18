@@ -2,8 +2,11 @@
 using System.Collections;
 using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.Utilities;
+using Archon.SwissArmyLib.ResourceSystem;
+using Archon.SwissArmyLib.Utils;
 using Controllers;
 using Managers;
+using Spriter2UnityDX;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -29,10 +32,32 @@ namespace Health
     [RequireComponent(typeof(HealthController))]
     public class HealthController : MonoBehaviour
     {
+        //Flash indication fields
+        private Color _originalColor;
+        private float _flashTimer;
+
         private bool _isDead;
         private bool _isLateChecking; //Are we checking in end of frame if we're dead?
 
         #region Inspector Fields
+
+        #region Damage indication
+
+        [Header("Flash indication:")]
+        [SerializeField]
+        private AnimationCurve _flashCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 1));
+
+        [SerializeField]
+        private Color _flashColor = new Color(255, 39, 39, 255);
+
+        [SerializeField, Tooltip("In seconds, if 0 it doesn't flash.")]
+        private float _flashDuration = .15f;
+
+        #endregion
+
+        [Header("Settings:"), Space]
+        [SerializeField]
+        private GameObject _hitEffectPrefab;
 
         [SerializeField]
         private HealthType _healthType;
@@ -85,7 +110,13 @@ namespace Health
         private Character _character;
 
         [SerializeField]
-        private GameObject _hitBox;
+        private Collider2D _hitBox;
+
+        [SerializeField, Tooltip("Used for flash indication.")]
+        private EntityRenderer _entityRenderer;
+
+        [SerializeField, Tooltip("Used for flash indication.")]
+        private SpriteRenderer _spriteRenderer;
 
         #endregion
 
@@ -109,11 +140,11 @@ namespace Health
 
         public bool HitboxEnabled
         {
-            get { return _hitBox != null && _hitBox.activeInHierarchy; }
+            get { return _hitBox.gameObject != null && _hitBox.gameObject.activeInHierarchy; }
             set
             {
-                if (_hitBox != null)
-                    _hitBox.SetActive(value);
+                if (_hitBox.gameObject != null)
+                    _hitBox.gameObject.SetActive(value);
             }
         }
 
@@ -186,6 +217,33 @@ namespace Health
             OnDamage = new OnDamageEvent();
         }
 
+        void Start()
+        {
+            if (_spriteRenderer)
+                _originalColor = _spriteRenderer.color;
+
+            if (_entityRenderer)
+                _originalColor = _entityRenderer.Color;
+        }
+
+        void Update()
+        {
+            if (_flashTimer > 0)
+            {
+                _flashTimer -= BetterTime.DeltaTime / _flashDuration;
+
+                var targetColor = _flashTimer <= 0
+                    ? _originalColor
+                    : Color.Lerp(_originalColor, _flashColor, _flashCurve.Evaluate(_flashTimer));
+
+                if (_entityRenderer)
+                    _entityRenderer.Color = targetColor;
+
+                if (_spriteRenderer)
+                    _spriteRenderer.color = targetColor;
+            }
+        }
+
         /// <summary>
         /// Deals amount of damage to object, if it exceeds 0 its dead.
         /// NOTE: If container its calculated in container sizes.
@@ -195,11 +253,14 @@ namespace Health
         /// <param name="dmg">Amount of damage to deal.</param>
         /// <param name="pos">Position from where the damage came from</param>
         /// <param name="from">Did the damage come from a specific character?</param>
-        public void Damage(float dmg, bool giveInvurnability = true, Vector2 pos = default(Vector2), Character from = null)
+        /// <param name="ignoreInvurnability">Should we force damage onto health controller?</param>
+        public void Damage(float dmg, bool giveInvurnability = false, Vector2 pos = default(Vector2), Character from = null, bool ignoreInvurnability = false)
         {
             if (dmg <= 0 || IsDead)
                 return;
-            
+
+            bool giveDamage = (!_isInvurnable || _dmgWhileInvurnable) || ignoreInvurnability;
+
             var amountToDmg = dmg;
 
             switch (_healthType)
@@ -212,32 +273,41 @@ namespace Health
 
             HealthAmount -= amountToDmg;
 
+            //Create hit effect
+            if (_hitEffectPrefab && (from || pos != Vector2.zero) && giveDamage)
+            {
+                Bounds hitBounds = _hitBox.bounds;
+                hitBounds.Expand(-.5f);
+
+                Vector2 point = hitBounds.ClosestPoint(from ? from.Origin : pos);
+                Instantiate(_hitEffectPrefab, point, Quaternion.identity);
+            }
+
+            //Flash indication
+            if (!_flashDuration.FastApproximately(0) && giveDamage)
+                _flashTimer = 1;
+
             if (IsDead)
                 return;
 
             //Apply knockback
-            if (pos != Vector2.zero && !_isInvurnable && HealthAmount > 0)
+            if (pos != Vector2.zero && giveDamage)
             {
                 var dir = pos.DirectionTo(_character.Rigidbody.position);
                 if (Math.Abs(dir.y) < 0.01f)
                     dir.y = 1f;
-                _character.KnockbackHandler.AddForce( dir * _knockbackForce, _knockbackDuration);
+                _character.KnockbackHandler.AddForce(dir * _knockbackForce, _knockbackDuration);
             }
-                
+
             //If we take damage show hit animation.
             //But dont show if we're invurnable (Only if we take dmg while being it)
-            if (Character.MainAnimator)
+            if (Character.MainAnimator && giveDamage)
             {
-                if (_isInvurnable)
-                {
-                    if (_dmgWhileInvurnable)
-                        Character.MainAnimator.SetTrigger("Hit");
-                }
-                else
+                if (_dmgWhileInvurnable)
                     Character.MainAnimator.SetTrigger("Hit");
             }
 
-            if (!IsInvurnable)
+            if (giveDamage)
                 OnDamage.Invoke(from);
 
             if (giveInvurnability || _invurnableOnDmg)
@@ -319,9 +389,9 @@ namespace Health
                 while (timer > 0 && IsInvurnable && !IsDead)
                 {
                     yield return new WaitForEndOfFrame();
-                    timer -= Time.unscaledDeltaTime / duration;
+                    timer -= BetterTime.UnscaledDeltaTime / duration;
                 }
-
+                
                 IsInvurnable = false;
             }
         }

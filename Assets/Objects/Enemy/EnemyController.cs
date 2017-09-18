@@ -4,6 +4,7 @@ using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.MVC;
 using Archon.SwissArmyLib.Automata;
 using Archon.SwissArmyLib.Events;
+using Archon.SwissArmyLib.Utils;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using Controllers;
 using Managers;
@@ -28,6 +29,9 @@ namespace Enemy
 
         [SerializeField]
 	    private PlayerApplication _target;
+
+        [SerializeField]
+        private GameObject _aiParent;
 
 	    public Vector2 ToPlayer { get; private set; }
 	    public bool IsTurning { get; private set; }
@@ -65,7 +69,8 @@ namespace Enemy
 	    {
 	        StateMachine = new FiniteStateMachine<EnemyApplication>(App);
 
-	        _states = GetComponentsInChildren<EnemyState>().ToList();
+	        _states = _aiParent.GetComponents<EnemyState>().ToList();
+
             //Setup all states.
             foreach (EnemyState state in _states)
 	        {
@@ -77,7 +82,7 @@ namespace Enemy
                 StateMachine.RegisterState(state); 
             }
 
-	        EnemyIdle idleState = gameObject.AddComponent<EnemyIdle>();
+	        EnemyIdle idleState = _aiParent.AddComponent<EnemyIdle>();
 	        StateMachine.RegisterState(idleState);
 
             StateMachine.ChangeState(idleState);
@@ -162,7 +167,7 @@ namespace Enemy
                 }
             }
 
-	        StateMachine.Update(Time.deltaTime);
+	        StateMachine.Update(BetterTime.DeltaTime);
         }
 
 
@@ -230,7 +235,7 @@ namespace Enemy
                 if (!overrideYVel)
                     vel = new Vector2(dir.x, App.M.Character.Rigidbody.velocity.y);
 
-	            App.M.Character.SetVelocity(vel * Time.fixedDeltaTime, true, Target ? App.M.EngageSpeed : 0, overrideYVel);
+	            App.M.Character.SetVelocity(vel * BetterTime.FixedDeltaTime, true, Target ? App.M.EngageSpeed : 0, overrideYVel);
 
 	            int xDir = Mathf.RoundToInt(dir.x);
                 if (!App.M.CanBackPaddle || forceTurn)

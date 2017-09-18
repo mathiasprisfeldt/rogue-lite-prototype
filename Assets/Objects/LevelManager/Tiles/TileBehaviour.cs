@@ -70,7 +70,7 @@ public class TileBehaviour : MonoBehaviour
 
     public bool PhsyicalBlock
     {
-        get { return _physicalBlock; }        
+        get { return _physicalBlock; }
     }
 
     public string TargetTag
@@ -99,9 +99,6 @@ public class TileBehaviour : MonoBehaviour
 
     public void SetupTile()
     {
-        var halfHeight = GetComponent<SpriteRenderer>().bounds.size.y / 2 + .1f;
-        var halfWidth = GetComponent<SpriteRenderer>().bounds.size.x / 2 + .1f;
-
         TopTile = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.up);
         BottomTile = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.down);
         LeftTile = LevelManager.Instance.CurrentLevel.GetTile(TilePos, Vector2.left);
@@ -124,27 +121,30 @@ public class TileBehaviour : MonoBehaviour
             }
 
         }
-            LeftCollision = LeftTile.PhysicalBlock;        
-            RightCollision = RightTile.PhysicalBlock;
-        
-        if (_autoTexturize)
-        {
-            var spr = GetComponent<SpriteRenderer>();
-            Sprite newSprite = spr.sprite;
 
-            if (LeftCollision && !RightCollision)
-                newSprite = _rightTexture;
+        LeftCollision = LeftTile.PhysicalBlock;
+        RightCollision = RightTile.PhysicalBlock;
 
-            if (!LeftCollision && RightCollision)
-                newSprite = _leftTexture;
+        if (gameObject.name.Contains("BorderTile"))
 
-            if (BottomCollision || (LeftCollision && RightCollision))
-                newSprite = _middleTexture;
+            if (_autoTexturize)
+            {
+                var spr = GetComponent<SpriteRenderer>();
+                Sprite newSprite = spr.sprite;
 
-            if (TopCollision)
-                newSprite = _centerTexture;
-            spr.sprite = newSprite;           
-        }
+                if (LeftCollision && !RightCollision)
+                    newSprite = _rightTexture;
+
+                if (!LeftCollision && RightCollision)
+                    newSprite = _leftTexture;
+
+                if (BottomCollision || (LeftCollision && RightCollision))
+                    newSprite = _middleTexture;
+
+                if (TopCollision)
+                    newSprite = _centerTexture;
+                spr.sprite = newSprite;
+            }
         SetupDone = true;
     }
 
@@ -201,7 +201,7 @@ public class TileBehaviour : MonoBehaviour
                         pb.IsSlideable = false;
 
                 }
-                
+
 
 
                 pb.Tiles.Add(this);
@@ -222,8 +222,8 @@ public class TileBehaviour : MonoBehaviour
             {
                 tileBehaviour.Touched = false;
             }
-        }    
-        
+        }
+
     }
 
     public void CheckHorizontalComposite(ref List<GameObject> targets, bool isTop, ref List<TileBehaviour> tiles)
@@ -265,7 +265,7 @@ public class TileBehaviour : MonoBehaviour
     public void StartVerticalComposite(ref int amountOfPlatforms)
     {
         List<GameObject> targets = new List<GameObject>();
-        List<TileBehaviour> tiles = new List<TileBehaviour>(); 
+        List<TileBehaviour> tiles = new List<TileBehaviour>();
         Touched = true;
 
         CheckVerticalCompisite(ref targets, false, ref tiles);
@@ -329,11 +329,11 @@ public class TileBehaviour : MonoBehaviour
                 tileBehaviour.Touched = false;
             }
         }
-        
+
 
     }
 
-    public void CheckVerticalCompisite(ref List<GameObject> targets, bool continueDown, ref List<TileBehaviour> tiles )
+    public void CheckVerticalCompisite(ref List<GameObject> targets, bool continueDown, ref List<TileBehaviour> tiles)
     {
         bool nextShouldDown = continueDown;
 
@@ -359,9 +359,9 @@ public class TileBehaviour : MonoBehaviour
 
         _isTop = !tUp;
 
-        var goDown = _isTop && (!tLeft && !tRight);
+        var goDown = _isTop && ((tLeft && tLeft.TargetTag != _targetTag) && (tRight && tRight.TargetTag != TargetTag));
 
-        if (goDown || !goDown && (!tLeft && !tRight) || nextShouldDown)
+        if (goDown || tDown && !tDown.LeftCollision && !tDown.RightCollision || nextShouldDown)
             nextShouldDown = true;
 
         if (nextShouldDown && tDown && (tDown.TargetTag == TargetTag))
@@ -376,7 +376,7 @@ public class TileBehaviour : MonoBehaviour
         {
             var temp = _queue.Dequeue();
             temp.Touched = true;
-            temp.CheckVerticalCompisite(ref targets, nextShouldDown,ref tiles);
+            temp.CheckVerticalCompisite(ref targets, nextShouldDown, ref tiles);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using AcrylecSkeleton.Extensions;
+using Archon.SwissArmyLib.Utils;
 using Controllers;
 using Managers;
 using UnityEngine;
@@ -46,7 +47,7 @@ namespace Enemy
             //Make sure theres a cooldown on attack.
             if (!_canAttack)
             {
-                _cooldownTimer -= Time.deltaTime;
+                _cooldownTimer -= BetterTime.DeltaTime;
 
                 if (_cooldownTimer <= 0)
                 {

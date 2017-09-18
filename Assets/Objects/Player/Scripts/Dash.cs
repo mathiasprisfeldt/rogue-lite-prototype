@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Archon.SwissArmyLib.Utils;
+using UnityEngine;
 
 namespace CharacterController
 {
@@ -86,9 +87,9 @@ namespace CharacterController
         public void FixedUpdate()
         {
             if (_cooldownTimer > 0)
-                _cooldownTimer -= Time.deltaTime;
+                _cooldownTimer -= BetterTime.DeltaTime;
             if (_dashingTimer > 0)
-                _dashingTimer -= Time.deltaTime;
+                _dashingTimer -= BetterTime.DeltaTime;
             if (_actionsController.LastUsedVerticalMoveAbility != MoveAbility.Dash)
             {
                 _dashingTimer = 0;
@@ -100,9 +101,9 @@ namespace CharacterController
                     _canDash = true;
             }
             if (LeftCooldown > 0)
-                LeftCooldown -= Time.deltaTime;
+                LeftCooldown -= BetterTime.DeltaTime;
             if (RightCooldown > 0)
-                RightCooldown -= Time.deltaTime;
+                RightCooldown -= BetterTime.DeltaTime;
         }
 
         public override void HandleHorizontal(ref Vector2 velocity)

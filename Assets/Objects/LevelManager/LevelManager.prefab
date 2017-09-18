@@ -60,9 +60,18 @@ MonoBehaviour:
   _backGround: {fileID: 1964096409743636, guid: 247b7415f2c656547b7f9f9a15bcad1e,
     type: 2}
   _forcedLevelsText:
+  - {fileID: 4900000, guid: 7bb9ad2daceb4dd4585a3536be0d7253, type: 3}
   - {fileID: 4900000, guid: bd5daeb825e5274449afbcdc42a13e06, type: 3}
-  _randomLevelsText:
+  _randomLevelsEasyText:
+  - {fileID: 4900000, guid: 6da42211e9b96bf4e8539f7f894d1b30, type: 3}
+  _randomLevelsMediumText: []
+  _randomLevelsHardText:
   - {fileID: 4900000, guid: dee97b64b968ce54e8c2611a66129894, type: 3}
+  - {fileID: 4900000, guid: 8f54e9d5935b6d34da942b0bce8720dd, type: 3}
+  - {fileID: 4900000, guid: 13d6df572aafc3240af5df091646c39f, type: 3}
+  - {fileID: 4900000, guid: 70270c42d2d462243a34604381907de7, type: 3}
+  - {fileID: 4900000, guid: c8cf55e572ae1424fb6cad2b219ecfd4, type: 3}
+  - {fileID: 4900000, guid: 9db9c9d3873ebd0498926fac6ac5e40f, type: 3}
 --- !u!114 &114584274024809242
 MonoBehaviour:
   m_ObjectHideFlags: 1

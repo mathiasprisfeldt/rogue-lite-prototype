@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Abilitys
 {
@@ -35,14 +36,17 @@ namespace Abilitys
         [SerializeField]
         private bool _throw;
 
+        public UnityEvent OnAbilityChange;
+
         public void Awake()
         {
+            OnAbilityChange = new UnityEvent();
             UpdateAbilities();  
         }
 
         public void Update()
         {
-            UpdateAbilities();
+            
         }
 
         private void UpdateAbilities()
@@ -78,6 +82,8 @@ namespace Abilitys
                     _throw = unlock;
                     break;
             }
+            UpdateAbilities();
+            OnAbilityChange.Invoke();
         }
 
         public Ability GetAbility(HandledAbility ab)

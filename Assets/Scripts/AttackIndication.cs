@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Archon.SwissArmyLib.Utils;
+using UnityEngine;
 
 namespace Indication
 {
@@ -28,6 +29,9 @@ namespace Indication
 
         public void HideIndicator(float transitionTime)
         {
+            if (!_show)
+                return;
+
             _currentTransitionDuration = transitionTime;
             _transitionTimer = transitionTime;
             _show = false;
@@ -37,7 +41,7 @@ namespace Indication
         {
             if (_transitionTimer > 0)
             {
-                _transitionTimer -= Time.deltaTime;
+                _transitionTimer -= BetterTime.DeltaTime;
 
                 float transitionValue;
                 if (_show)

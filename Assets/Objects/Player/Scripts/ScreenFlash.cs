@@ -1,7 +1,6 @@
-﻿using Assets.Objects.PlayerMovement.Player.Prefab.Player;
-using Controllers;
+﻿using Archon.SwissArmyLib.Utils;
+using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using Managers;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -71,14 +70,14 @@ namespace Flash
                     Color color = _targetColor;
                     color.a = Mathf.Abs(_fadeInTimer/_fadeInDuration - 1)*_targetColor.a;
                     _image.color = color;
-                    _fadeInTimer -= Time.deltaTime;
+                    _fadeInTimer -= BetterTime.DeltaTime;
                 }
                 else if (_fadeOutTimer > 0)
                 {
                     Color color = _targetColor;
                     color.a = _fadeOutTimer / _fadeOutDuration * _targetColor.a;
                     _image.color = color;
-                    _fadeOutTimer -= Time.deltaTime;
+                    _fadeOutTimer -= BetterTime.DeltaTime;
                 }                  
             }
         }

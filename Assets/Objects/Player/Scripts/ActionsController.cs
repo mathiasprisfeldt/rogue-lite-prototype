@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Abilitys;
+﻿using Abilitys;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using UnityEngine;
 using AcrylecSkeleton.ModificationSystem;
-using Combat;
+using Archon.SwissArmyLib.Utils;
 using Controllers;
-using Mana;
-using Special;
 
 namespace CharacterController
 {
@@ -71,8 +66,6 @@ namespace CharacterController
         private MoveAbility _lastUsedHorizontalMoveAbility;
         private CombatAbility _lastUsedCombatAbility;
         private bool _dashEnded;
-        private LastSprint _lastSprint = new LastSprint(false, false);
-
 
         public Vector2 Velocity
         {
@@ -223,13 +216,13 @@ namespace CharacterController
             float y = 0;
             float x = 0;
 
-            x = _velocity.x * Time.fixedDeltaTime;
-            y = Velocity.y != 0 || _knockbackHandler.Active ? _velocity.y * Time.fixedDeltaTime : Rigidbody.velocity.y;
+            x = _velocity.x * BetterTime.FixedDeltaTime;
+            y = Velocity.y != 0 || _knockbackHandler.Active ? _velocity.y * BetterTime.FixedDeltaTime : Rigidbody.velocity.y;
 
             SetVelocity(new Vector2(x, y));
 
             if (_dashTimer > 0)
-                _dashTimer -= Time.fixedDeltaTime;
+                _dashTimer -= BetterTime.FixedDeltaTime;
 
             HandleMaxSpeed();
             if (App.C.PlayerActions != null)
@@ -263,7 +256,7 @@ namespace CharacterController
             var predictGravity = Rigidbody.velocity.y + Physics2D.gravity.y * Rigidbody.gravityScale;
             if (predictGravity <= -_maxFallSpeed)
             {
-                Rigidbody.velocity -= new Vector2(0, Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed)) * Time.fixedDeltaTime);
+                Rigidbody.velocity -= new Vector2(0, Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed)) * BetterTime.FixedDeltaTime);
             }
         }
 
@@ -277,7 +270,7 @@ namespace CharacterController
                 State = CharacterState.InAir;
 
             if (State == CharacterState.InAir)
-                InAirTImer += Time.deltaTime;
+                InAirTImer += BetterTime.DeltaTime;
             else if (InAirTImer > 0)
                 InAirTImer = 0;
         }
@@ -379,10 +372,6 @@ namespace CharacterController
         {
             Vertical = App.C.PlayerActions.Vertical;
             LastUsedVerticalMoveAbility = MoveAbility.None;
-            List<Collider2D> col = new List<Collider2D>();
-            if (CollisionCheck.Sides.BottomColliders != null)
-                col = CollisionCheck.Sides.BottomColliders.FindAll(x => x.gameObject.tag == "OneWayCollider").ToList();
-
 
             if (!HandleOnewayColliders())
             {
@@ -535,7 +524,7 @@ namespace CharacterController
         public override void UpdateModificaiton()
         {
             if (_timer > 0)
-                _timer -= UnityEngine.Time.deltaTime;
+                _timer -= BetterTime.DeltaTime;
             if (!_collisonCheck.Sides.TargetColliders.Contains(_targetCollider) && _timer <= 0)
                 ModificationHandler.RemoveModification(this);
         }

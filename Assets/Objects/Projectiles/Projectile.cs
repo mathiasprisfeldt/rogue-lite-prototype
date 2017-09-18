@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.Utilities;
 using Archon.SwissArmyLib.Events;
 using TMPro;
@@ -42,6 +43,10 @@ namespace Projectiles
 
         [SerializeField]
         private UnityEvent _onDestroy;
+
+        [Header("References:")]
+        [SerializeField]
+        private GameObject _hitEffectPrefab;
 
         private bool _used;
 
@@ -90,7 +95,14 @@ namespace Projectiles
             }
 
             if (_layerToDestoryOn.Contains(collision.gameObject.layer))
+            {
+                if (_hitEffectPrefab)
+                {
+                    Instantiate(_hitEffectPrefab, collision.bounds.ClosestPoint(transform.position), Quaternion.identity);
+                }
+
                 Kill();
+            }
         }
 
         public void OnCollisionEnter2D(Collision2D collision)

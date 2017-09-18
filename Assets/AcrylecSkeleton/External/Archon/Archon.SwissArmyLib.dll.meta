@@ -1,11 +1,12 @@
 fileFormatVersion: 2
-guid: d578942bf1cee5e449b401e409aa915d
-timeCreated: 1504609400
+guid: d0f855728550ac845b2fe12654c8a40b
+timeCreated: 1505215344
 licenseType: Free
 PluginImporter:
   serializedVersion: 2
   iconMap: {}
-  executionOrder: {}
+  executionOrder:
+    Archon.SwissArmyLib.Utils.BetterTimeUpdater: -2147483648
   isPreloaded: 0
   isOverridable: 0
   platformData:

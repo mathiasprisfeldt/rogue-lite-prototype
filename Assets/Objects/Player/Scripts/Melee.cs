@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Archon.SwissArmyLib.Utils;
 using BindingsExample;
 using CharacterController;
 using Health;
@@ -53,7 +54,7 @@ namespace Combat
         public void Update()
         {
             if (_cooldownTimer > 0)
-                _cooldownTimer -= Time.deltaTime;
+                _cooldownTimer -= BetterTime.DeltaTime;
             if (_active)
             {
                 foreach (var c in _collisionCheck.Sides.TargetColliders)
@@ -69,7 +70,11 @@ namespace Combat
                                      cc.transform.position.x <= _actionsController.Rigidbody.transform.position.x);
 
                         if (valid && cc && cc.Character.HealthController != null && !cc.Character.HealthController.IsDead)
-                            cc.Character.HealthController.Damage(_actionsController.Damage, from: _actionsController, pos: _actionsController.Rigidbody.position);
+                            cc.Character.HealthController.Damage(
+                                _actionsController.Damage, 
+                                from: _actionsController, 
+                                pos: _actionsController.Rigidbody.position, 
+                                ignoreInvurnability: true);
                     }
                 }
             }

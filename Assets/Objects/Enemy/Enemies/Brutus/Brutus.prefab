@@ -275,6 +275,7 @@ GameObject:
   - component: {fileID: 114948007235721488}
   - component: {fileID: 114445785189084748}
   - component: {fileID: 114314925495774288}
+  - component: {fileID: 114255239194763678}
   m_Layer: 12
   m_Name: Controller
   m_TagString: Enemy
@@ -782,6 +783,25 @@ MonoBehaviour:
   _projectile: {fileID: 114159514260344410, guid: f6f2a202e1deaf64c8613c8fcea309cc,
     type: 2}
   _spawnPos: {x: 1.72, y: 1.13}
+--- !u!114 &114255239194763678
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1982223440194088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a45ad3003841ef4ab395dccb38f3f29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actionsController: {fileID: 0}
+  _drawGizmos: 1
+  _damageType: 0
+  _distanceBeforeDmg: 4
+  _isDistanceBeforeDmgInclusive: 0
+  _fallSegments: 2
+  _dmgPerFallUnit: 1
+  _maxDmg: Infinity
 --- !u!114 &114257252212500054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -842,6 +862,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _application: {fileID: 114486502349469750}
   _target: {fileID: 0}
+  _aiParent: {fileID: 1673192044539222}
 --- !u!114 &114428741575656018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -866,10 +887,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e495f426e81d3046aee88139c907170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _flashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  _flashColor: {r: 1, g: 0.15294118, b: 0.15294118, a: 1}
+  _flashDuration: 0.15
+  _hitEffectPrefab: {fileID: 1511636986335228, guid: f0798e1b86d476c4a9b903aad97d0b11,
+    type: 2}
   _healthType: 0
   _lateCheck: 0
   _invurnableOnDmg: 0
-  _invurnabilityDuration: 0
+  _invurnabilityDuration: 1
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
   _healthAmount: 3
@@ -890,6 +933,9 @@ MonoBehaviour:
     m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114948007235721488}
+  _hitBox: {fileID: 70314800014184222}
+  _entityRenderer: {fileID: 0}
+  _spriteRenderer: {fileID: 212211871764394414}
   OnHealEvent:
     m_PersistentCalls:
       m_Calls: []

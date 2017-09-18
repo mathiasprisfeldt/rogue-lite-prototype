@@ -601,10 +601,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e495f426e81d3046aee88139c907170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _flashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  _flashColor: {r: 1, g: 0, b: 0, a: 1}
+  _flashDuration: 0.15
+  _hitEffectPrefab: {fileID: 1511636986335228, guid: f0798e1b86d476c4a9b903aad97d0b11,
+    type: 2}
   _healthType: 0
   _lateCheck: 0
   _invurnableOnDmg: 0
-  _invurnabilityDuration: 0
+  _invurnabilityDuration: 1
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
   _healthAmount: 1
@@ -625,6 +647,9 @@ MonoBehaviour:
     m_TypeName: Health.OnDamageEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   _character: {fileID: 114347498557357304}
+  _hitBox: {fileID: 70441072656651198}
+  _entityRenderer: {fileID: 0}
+  _spriteRenderer: {fileID: 212977041993505850}
   OnHealEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -685,6 +710,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _application: {fileID: 114131460394400532}
   _target: {fileID: 0}
+  _aiParent: {fileID: 1464397412292338}
 --- !u!114 &114539416218621420
 MonoBehaviour:
   m_ObjectHideFlags: 1
