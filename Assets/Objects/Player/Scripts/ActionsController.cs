@@ -207,7 +207,7 @@ namespace CharacterController
         void FixedUpdate()
         {
             _velocity = new Vector2(0, 0);
-              
+             
             HandleCombat();
             HandleHorizontalMovement(ref _velocity);
             HandleVerticalMovement(ref _velocity);
@@ -229,6 +229,7 @@ namespace CharacterController
                 App.C.PlayerActions.ResetProxy();
             _animator.SetBool("MovingUp", Rigidbody.velocity.y > 0);
             _animator.SetFloat("Speed", Mathf.Clamp01(new Vector2(Horizontal, Vertical).magnitude));
+
         }
 
         private bool HandleOnewayColliders()

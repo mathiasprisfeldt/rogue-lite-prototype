@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -125,26 +126,24 @@ public class TileBehaviour : MonoBehaviour
         LeftCollision = LeftTile.PhysicalBlock;
         RightCollision = RightTile.PhysicalBlock;
 
-        if (gameObject.name.Contains("BorderTile"))
+        if (_autoTexturize)
+        {
+            var spr = GetComponent<SpriteRenderer>();
+            Sprite newSprite = spr.sprite;
 
-            if (_autoTexturize)
-            {
-                var spr = GetComponent<SpriteRenderer>();
-                Sprite newSprite = spr.sprite;
+            if (LeftCollision && !RightCollision)
+                newSprite = _rightTexture;
 
-                if (LeftCollision && !RightCollision)
-                    newSprite = _rightTexture;
+            if (!LeftCollision && RightCollision)
+                newSprite = _leftTexture;
 
-                if (!LeftCollision && RightCollision)
-                    newSprite = _leftTexture;
+            if (BottomCollision || (LeftCollision && RightCollision))
+                newSprite = _middleTexture;
 
-                if (BottomCollision || (LeftCollision && RightCollision))
-                    newSprite = _middleTexture;
-
-                if (TopCollision)
-                    newSprite = _centerTexture;
-                spr.sprite = newSprite;
-            }
+            if (TopCollision)
+                newSprite = _centerTexture;
+            spr.sprite = newSprite;
+        }
         SetupDone = true;
     }
 
@@ -277,7 +276,7 @@ public class TileBehaviour : MonoBehaviour
 
         if (_parent != null)
         {
-            var parent = Instantiate(_parent, Vector2.zero, Quaternion.identity, transform.root);
+            GameObject parent = Instantiate(_parent, Vector2.zero, Quaternion.identity, transform.root);
 
             GameObject superParent = GameObject.FindObjectOfType<Platforms>().gameObject;
 
@@ -315,12 +314,14 @@ public class TileBehaviour : MonoBehaviour
                         pb.IsSlideable = false;
                 }
 
+                Platforms p = superParent.GetComponent<Platforms>();
+                p.ParentToThis(parent.transform, pb.Tiles.Count, true);
+
                 pb.Tiles.Add(this);
-                target.transform.SetParent(parent.transform, true);
+                target.transform.SetParent(parent.transform);
             }
 
-            Platforms p = superParent.GetComponent<Platforms>();
-            p.ParentToThis(parent.transform, pb.Tiles.Count, true);
+
         }
         else
         {
