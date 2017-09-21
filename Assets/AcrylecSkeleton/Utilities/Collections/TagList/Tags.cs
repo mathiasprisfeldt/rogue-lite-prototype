@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AcrylecSkeleton.Utilities.Collections
@@ -10,9 +12,24 @@ namespace AcrylecSkeleton.Utilities.Collections
     [Serializable]
     public struct Tags
     {
-        private static readonly string[] PossibleTags = UnityEditorInternal.InternalEditorUtility.tags;
+        private List<string> _tagList;
 
-        public int TagList; //Tags representated by a bit mask.
+        public List<string> TagList
+        {
+            get
+            {
+                if (_tagList == null && TagListUnSplitted != null)
+                {
+                    _tagList = TagListUnSplitted.Split('@').ToList();
+                    _tagList.RemoveAt(_tagList.Count - 1);
+                }
+
+                return _tagList;
+            }
+        }
+
+        public string TagListUnSplitted; //Tags represented by a string splitted on @
+        public int TagMask; //Tags representated by a bit mask.
 
         /// <summary>
         /// Checks if this tag collection contains a specific tag.
@@ -20,26 +37,12 @@ namespace AcrylecSkeleton.Utilities.Collections
         /// </summary>
         public bool Contains(string tag)
         {
-            int value = 0;
-
-            for (var index = 0; index < PossibleTags.Length; index++)
-            {
-                string possibleTag = PossibleTags[index];
-
-                if (tag == possibleTag)
-                    value = index;
-            }
-
-            return TagList.Contains(value);
+            return TagList.Contains(tag);
         }
 
         public bool Contains(GameObject go)
         {
-            foreach (string possibleTag in PossibleTags)
-                if (Contains(possibleTag))
-                    return go.CompareTag(possibleTag);
-
-            return false;
+            return TagList != null && TagList.Any(go.CompareTag);
         }
     }
 }
