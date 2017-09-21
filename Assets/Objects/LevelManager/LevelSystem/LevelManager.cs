@@ -67,6 +67,12 @@ public class LevelManager : Singleton<LevelManager>
             LoadNextLevel();
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            ResetGame();
+    }
+
     /// <summary>
     /// Loads the next level
     /// </summary>

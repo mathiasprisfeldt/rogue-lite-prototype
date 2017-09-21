@@ -482,7 +482,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1115539378932434}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.98, y: 3.9810002, z: 0}
+  m_LocalPosition: {x: -8.42, y: -0.79, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4698073521509112}
@@ -790,10 +790,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isEnabled: 0
   _drawGizmos: 1
-  _hitBoxSize: {x: 1.09, y: 1.5}
-  _hitBoxOffset: {x: 0.58, y: 0.85}
-  _attackBoxSize: {x: 1.09, y: 1.5}
-  _attackBoxOffset: {x: 0.58, y: 0.85}
+  _hitBoxSize: {x: 1.6, y: 1.5}
+  _hitBoxOffset: {x: 0.8, y: 0.85}
+  _attackBoxSize: {x: 1.6, y: 1.5}
+  _attackBoxOffset: {x: 0.8, y: 0.85}
 --- !u!114 &114466314149153096
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -929,8 +929,8 @@ MonoBehaviour:
   _attackIndicator: {fileID: 114195926670245762}
   _staggerIndicator: {fileID: 114466314149153096}
   _viewBox: {fileID: 114000060024915830}
-  _attackCooldown: 1
-  _indicatorDuration: 0.05
+  _attackCooldown: 0
+  _indicatorDuration: 0
   _targetBehind: 1
   _turnSpeed: 0.25
   _canBackPaddle: 0
@@ -939,7 +939,7 @@ MonoBehaviour:
   _hasWallHack: 0
   _isFlying: 0
   _neverForget: 0
-  _staggerDuration: 0.5
+  _staggerDuration: 0
   _memoryDuration: 2
 --- !u!114 &114716576231743168
 MonoBehaviour:
@@ -1030,7 +1030,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cbd00e50cc37944ba0ec9840c4d6c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lockMovement: 1
+  _lockMovement: 0
   _flipDefaultDir: 1
   _forceDefaultValues: 1
   _defaultForce: 400

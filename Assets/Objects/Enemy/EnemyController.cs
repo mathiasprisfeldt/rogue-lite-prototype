@@ -158,11 +158,11 @@ namespace Enemy
              */
             foreach (EnemyState enemyState in _states)
             {
-                if (!ReferenceEquals(StateMachine.CurrentState, enemyState) &&
-                    enemyState.enabled && 
-                    enemyState.ShouldTakeover())
+                if (enemyState.enabled && enemyState.ShouldTakeover())
                 {
-                    StateMachine.ChangeState(enemyState);
+                    if (!ReferenceEquals(StateMachine.CurrentState, enemyState))
+                        StateMachine.ChangeState(enemyState);
+
                     break;
                 }
             }

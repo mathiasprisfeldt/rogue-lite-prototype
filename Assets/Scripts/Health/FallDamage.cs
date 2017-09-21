@@ -122,8 +122,8 @@ namespace Health
 
         private void OnDrawGizmosSelected()
         {
-            if (_drawGizmos)
-                Gizmos.DrawSphere(_lastPosition, 0.5f);
+            if (_drawGizmos && Application.isPlaying)
+                Gizmos.DrawSphere(_lastPosition, 0.25f);
         }
     }
 }

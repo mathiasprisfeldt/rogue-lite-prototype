@@ -89,7 +89,9 @@ namespace Enemy
                 {
                     _isAttacking = true;
 
-                    if (Context.M.AttackIndicator && !Context.M.AttackIndicator.Show)
+                    if (Context.M.AttackIndicator && 
+                        !Context.M.AttackIndicator.Show && 
+                        _indicatorTimer > 0)
                         Context.M.AttackIndicator.ShowIndicator(INDICATOR_IN_TIME);
                 }
 
