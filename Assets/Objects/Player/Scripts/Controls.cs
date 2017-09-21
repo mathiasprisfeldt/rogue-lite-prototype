@@ -21,9 +21,8 @@ namespace Controls
 
         public void Start()
         {
-            _abilityHandler = new AbilityHandler();
+            _abilityHandler = FindObjectOfType<AbilityHandler>();
 
-            _abilityHandler = GameObject.FindObjectOfType<AbilityHandler>();
             if (_abilityHandler != null)
             {
                 _abilityHandler.OnAbilityChange.AddListener(OnAbilityChange);
