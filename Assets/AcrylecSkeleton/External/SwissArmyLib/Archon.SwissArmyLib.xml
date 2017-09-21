@@ -870,6 +870,220 @@
             <param name="width">The new width.</param>
             <param name="height">The new height.</param>
         </member>
+        <member name="T:Archon.SwissArmyLib.Coroutines.BetterCoroutines">
+            <summary>
+            A very similar but more performant alternative to Unity's coroutines.
+            
+            A coroutine do not belong to any gameobject and therefore doesn't depend on their life cycle. 
+            You can however optionally link the coroutines to a gameobject or component.
+            
+            Which update loop they're part of can be specified when they're started.
+            
+            They also allocate less garbage (especially with the yield instructions).
+            
+            Just as with Unity's coroutines you can yield a <see cref="T:UnityEngine.WWW"/> and <see cref="T:UnityEngine.AsyncOperation"/> to wait for them to finish.
+            
+            Instead of using Unity's YieldInstructions you should use the pooled replacements:
+            <list type="bullet">
+                <item><description><see cref="F:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForOneFrame"/></description></item>
+                <item><description><see cref="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForSeconds(System.Single,System.Boolean)"/></description></item>
+                <item><description><see cref="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForSecondsRealtime(System.Single)"/></description></item>
+                <item><description><see cref="F:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForEndOfFrame"/></description></item>
+                <item><description><see cref="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitUntil(System.Func{System.Boolean})"/></description></item>
+                <item><description><see cref="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitWhile(System.Func{System.Boolean})"/></description></item>
+                <item><description><see cref="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForWWW(UnityEngine.WWW)"/></description></item>
+                <item><description><see cref="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForAsyncOperation(UnityEngine.AsyncOperation)"/></description></item>
+            </list>
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForOneFrame">
+            <summary>
+            Suspends a coroutine for one frame.
+            </summary>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForEndOfFrame">
+            <summary>
+            Suspends a coroutine until the very end of the current frame.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.Finalize">
+            <summary>
+            Destructor.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.Start(System.Collections.IEnumerator,Archon.SwissArmyLib.Coroutines.UpdateLoop)">
+            <summary>
+            Starts a new coroutine.
+            </summary>
+            <param name="enumerator"></param>
+            <param name="updateLoop">Which update loop should the coroutine be part of?</param>
+            <returns>The id of the coroutine.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.Start(System.Collections.IEnumerator,UnityEngine.GameObject,Archon.SwissArmyLib.Coroutines.UpdateLoop)">
+            <summary>
+            Starts a new coroutine and links its lifetime to a gameobject.
+            The coroutine will be stopped when the linked gameobject is disabled or destroyed.
+            </summary>
+            <param name="enumerator"></param>
+            <param name="linkedObject">Which gameobject to link the coroutine's lifetime with.</param>
+            <param name="updateLoop">Which update loop should the coroutine be part of?</param>
+            <returns>The id of the coroutine.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.Start(System.Collections.IEnumerator,UnityEngine.MonoBehaviour,Archon.SwissArmyLib.Coroutines.UpdateLoop)">
+            <summary>
+            Starts a new coroutine and links its lifetime to a component.
+            The coroutine will be stopped when the linked component is disabled or destroyed.
+            </summary>
+            <param name="enumerator"></param>
+            <param name="linkedComponent">Which component to link the coroutine's lifetime with.</param>
+            <param name="updateLoop">Which update loop should the coroutine be part of?</param>
+            <returns>The id of the coroutine.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.IsRunning(System.Int32)">
+            <summary>
+            Checks whether a coroutine with the given ID is running.
+            </summary>
+            <param name="id">The id of the coroutine to check.</param>
+            <returns>True if running, otherwise false.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.Stop(System.Int32)">
+            <summary>
+            Stops a running coroutine prematurely. 
+            
+            This will stop any child coroutines as well.
+            </summary>
+            <param name="id">The id of the coroutine to stop.</param>
+            <returns>True if the coroutine was found and stopped, otherwise false.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.StopAll">
+            <summary>
+            Stops all coroutines.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.StopAll(Archon.SwissArmyLib.Coroutines.UpdateLoop)">
+            <summary>
+            Stops all coroutines that are running in the specified update loop.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForSeconds(System.Single,System.Boolean)">
+            <summary>
+            Waits for the specified amount of seconds, either in scaled time (just as Unity's <see cref="T:UnityEngine.WaitForSeconds"/>) or in unscaled time.
+            </summary>
+            <param name="seconds">Duration in seconds to wait before continuing.</param>
+            <param name="unscaled">Should the wait time ignore <see cref="P:UnityEngine.Time.timeScale"/>?</param>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForSecondsRealtime(System.Single)">
+            <summary>
+            Waits for the specified amount of seconds in real time.
+            
+            Lighter replacement for <see cref="T:UnityEngine.WaitForSecondsRealtime"/>.
+            </summary>
+            <param name="seconds">The amount of seconds to wait for.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForAsyncOperation(UnityEngine.AsyncOperation)">
+            <summary>
+            Waits until the specified <see cref="T:UnityEngine.AsyncOperation"/> is done.
+            </summary>
+            <param name="operation">The async operation to wait for.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitForWWW(UnityEngine.WWW)">
+            <summary>
+            Waits until the specified <see cref="T:UnityEngine.WWW"/> object has finished.
+            </summary>
+            <param name="www">The WWW object to wait for.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitUntil(System.Func{System.Boolean})">
+            <summary>
+            Waits until the given predicate returns true.
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutines.WaitWhile(System.Func{System.Boolean})">
+            <summary>
+            Waits until the given predicate returns false.
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Coroutines.BetterCoroutinesExtensions">
+            <summary>
+            A bunch of helpful extensions for starting and stopping coroutines.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutinesExtensions.StartBetterCoroutine(UnityEngine.Object,System.Collections.IEnumerator,Archon.SwissArmyLib.Coroutines.UpdateLoop)">
+            <summary>
+            Starts a new coroutine.
+            </summary>
+            <param name="unityObject"></param>
+            <param name="enumerator"></param>
+            <param name="updateLoop">Which update loop should the coroutine be part of?</param>
+            <returns>The id of the coroutine.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutinesExtensions.StartBetterCoroutineLinked(UnityEngine.MonoBehaviour,System.Collections.IEnumerator,Archon.SwissArmyLib.Coroutines.UpdateLoop)">
+            <summary>
+            Starts a new coroutine with its lifetime linked to this component.
+            The coroutine will be stopped when the linked component is disabled or destroyed.
+            </summary>
+            <param name="monoBehaviour">The component to link the coroutine to.</param>
+            <param name="enumerator"></param>
+            <param name="updateLoop">Which update loop should the coroutine be part of?</param>
+            <returns>The id of the coroutine.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutinesExtensions.StartBetterCoroutineLinked(UnityEngine.GameObject,System.Collections.IEnumerator,Archon.SwissArmyLib.Coroutines.UpdateLoop)">
+            <summary>
+            Starts a new coroutine with its lifetime linked to this gameobject.
+            The coroutine will be stopped when the linked gameobject is disabled or destroyed.
+            </summary>
+            <param name="gameObject">The gameobject to link the coroutine to.</param>
+            <param name="enumerator"></param>
+            <param name="updateLoop">Which update loop should the coroutine be part of?</param>
+            <returns>The id of the coroutine.</returns>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.BetterCoroutinesExtensions.StopBetterCoroutine(UnityEngine.Object,System.Int32)">
+            <summary>
+            Stops a running coroutine prematurely. 
+            
+            This will stop any child coroutines as well.
+            </summary>
+            <param name="unityObject"></param>
+            <param name="coroutineId">The id of the coroutine to stop.</param>
+            <returns>True if the coroutine was found and stopped, otherwise false.</returns>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Coroutines.IPoolableYieldInstruction">
+            <summary>
+            Represents a yield instruction that can be freed when the coroutine they're running in is despawned.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Coroutines.IPoolableYieldInstruction.Despawn">
+            <summary>
+            Frees the yield instruction placing them back in its pool.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Coroutines.UpdateLoop">
+            <summary>
+            Unity's update loops.
+            </summary>
+        </member>
+        <member name="P:Archon.SwissArmyLib.Coroutines.WaitForAsyncOperation.keepWaiting">
+            <inheritdoc />
+        </member>
+        <member name="P:Archon.SwissArmyLib.Coroutines.WaitForSecondsRealtimeLite.keepWaiting">
+            <inheritdoc />
+        </member>
+        <member name="P:Archon.SwissArmyLib.Coroutines.WaitForWWW.keepWaiting">
+            <inheritdoc />
+        </member>
+        <member name="P:Archon.SwissArmyLib.Coroutines.WaitUntilLite.keepWaiting">
+            <inheritdoc />
+        </member>
+        <member name="P:Archon.SwissArmyLib.Coroutines.WaitWhileLite.keepWaiting">
+            <inheritdoc />
+        </member>
         <member name="T:Archon.SwissArmyLib.Events.Event">
             <summary>
             A simple event handler that uses interfaces instead of delegates to avoid the garbage generated by them.
@@ -1105,9 +1319,11 @@
             Also useful for non-MonoBehaviours that needs to be part of the update loop as well.
             
             Events your can subscribe to:
-                <see cref="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnUpdate"/>
-                <see cref="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnLateUpdate"/>
-                <see cref="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnFixedUpdate"/>
+            <list type="bullet">
+                <item><description><see cref="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnUpdate"/></description></item>
+                <item><description><see cref="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnLateUpdate"/></description></item>
+                <item><description><see cref="F:Archon.SwissArmyLib.Events.ManagedUpdate.OnFixedUpdate"/></description></item>
+            </list>
             
             <seealso cref="T:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour"/>
             </summary>
@@ -1133,6 +1349,36 @@
             Relayed event ids.
             </summary>
         </member>
+        <member name="T:Archon.SwissArmyLib.Events.IUpdateable">
+            <summary>
+            Makes a <see cref="T:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour"/> subclass get notified on an update.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.IUpdateable.OnUpdate">
+            <summary>
+            Called every frame.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.ILateUpdateable">
+            <summary>
+            Makes a <see cref="T:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour"/> subclass get notified on a late update.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.ILateUpdateable.OnLateUpdate">
+            <summary>
+            Called every frame, after the regular update loop.
+            </summary>
+        </member>
+        <member name="T:Archon.SwissArmyLib.Events.IFixedUpdateable">
+            <summary>
+            Makes a <see cref="T:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour"/> subclass get notified on a fixed update.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Events.IFixedUpdateable.OnFixedUpdate">
+            <summary>
+            Called every fixed update.
+            </summary>
+        </member>
         <member name="T:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour">
             <summary>
             A subclass of MonoBehaviour that uses <see cref="T:Archon.SwissArmyLib.Events.ManagedUpdate"/> for update events.
@@ -1143,21 +1389,6 @@
             Affects whether this components' events will be called before or after others'.
             
             Basically a reimplementation of Unity's ScriptExecutionOrder.
-            </summary>
-        </member>
-        <member name="P:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.UsesUpdate">
-            <summary>
-            Whether you want to use <see cref="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnUpdate"/>.
-            </summary>
-        </member>
-        <member name="P:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.UsesLateUpdate">
-            <summary>
-            Whether you want to use <see cref="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnLateUpdate"/>.
-            </summary>
-        </member>
-        <member name="P:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.UsesFixedUpdate">
-            <summary>
-            Whether you want to use <see cref="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnFixedUpdate"/>.
             </summary>
         </member>
         <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.Start">
@@ -1177,21 +1408,6 @@
         </member>
         <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnEvent(System.Int32)">
             <inheritdoc />
-        </member>
-        <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnUpdate">
-            <summary>
-            Called every frame if <see cref="P:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.UsesUpdate"/> is true and the component is enabled.
-            </summary>
-        </member>
-        <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnLateUpdate">
-            <summary>
-            Called every frame just after <see cref="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnUpdate"/> if <see cref="P:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.UsesLateUpdate"/> is true and the component is enabled.
-            </summary>
-        </member>
-        <member name="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnFixedUpdate">
-            <summary>
-            This function is called every fixed framerate frame if <see cref="M:Archon.SwissArmyLib.Events.ManagedUpdateBehaviour.OnFixedUpdate"/> is true and the component is enabled.
-            </summary>
         </member>
         <member name="T:Archon.SwissArmyLib.Events.TellMeWhen">
             <summary>
@@ -1845,7 +2061,7 @@
             Manages a list of IPoolable components found in the hierarchy of this GameObject and notifies them when it is spawned and despawned.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Pooling.PoolableGroup.AddManually(Archon.SwissArmyLib.Pooling.IPoolable)">
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolableGroup.AddManually``1(``0)">
             <summary>
             Manually add a poolable object to be notified when this component is spawned or despawned.
             
@@ -1853,7 +2069,7 @@
             </summary>
             <param name="poolable">The poolable object that should be notified.</param>
         </member>
-        <member name="M:Archon.SwissArmyLib.Pooling.PoolableGroup.RemoveManually(Archon.SwissArmyLib.Pooling.IPoolable)">
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolableGroup.RemoveManually``1(``0)">
             <summary>
             Manually removes a poolable object so that it no longer is notified when this component is spawned or despawned.
             </summary>
@@ -1870,18 +2086,30 @@
             Gets the prefab used to instantiate GameObjects.
             </summary>
         </member>
-        <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.#ctor(`0)">
+        <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.#ctor(`0,System.Boolean)">
             <summary>
             Creates a new GameObject pool for the specified prefab.
             </summary>
             <param name="prefab">The prefab used for instantiating instances.</param>
+            <param name="multiScene">Should the pool and its contents survive a scene change?</param>
         </member>
-        <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.#ctor(System.String,System.Func{`0})">
+        <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.#ctor(System.String,System.Func{`0},System.Boolean)">
             <summary>
             Creates a new GameObject pool with a custom name and a factory method used for instantiating instances.
             </summary>
             <param name="name">The name of the pool.</param>
             <param name="create">The factory method used to instantiating instances.</param>
+            <param name="multiScene">Should the pool and its contents survive a scene change?</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.Finalize">
+            <summary>
+            Destructor.
+            </summary>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.Dispose">
+            <summary>
+            Destroys the pool and any despawned objects in it.
+            </summary>
         </member>
         <member name="M:Archon.SwissArmyLib.Pooling.GameObjectPool`1.Spawn">
             <inheritdoc />
@@ -1935,6 +2163,11 @@
             If the type implements <see cref="T:Archon.SwissArmyLib.Pooling.IPoolable"/> they will be notified when they're spawned and despawned.
             </summary>
             <typeparam name="T">The type of objects this object pool should contain.</typeparam>
+        </member>
+        <member name="F:Archon.SwissArmyLib.Pooling.Pool`1.Free">
+            <summary>
+            Contains the items ready to be reused.
+            </summary>
         </member>
         <member name="M:Archon.SwissArmyLib.Pooling.Pool`1.#ctor(System.Func{`0})">
             <summary>
@@ -2009,11 +2242,19 @@
             </summary>
             <returns>The spawned object.</returns>
         </member>
-        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper.Despawn(Archon.SwissArmyLib.Pooling.IPoolable)">
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper.Despawn(UnityEngine.Object)">
             <summary>
             Despawns an instance and marks it for reuse.
             </summary>
             <param name="target">The instance to despawn.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper.Despawn(UnityEngine.Object,System.Single,System.Boolean)">
+            <summary>
+            Despawns an instance after a delay.
+            </summary>
+            <param name="target">The instance to despawn.</param>
+            <param name="delay">Time in seconds to wait before despawning the target.</param>
+            <param name="unscaledTime">Should the delay be according to <see cref="P:UnityEngine.Time.time"/> or <see cref="P:UnityEngine.Time.unscaledTime"/>?</param>
         </member>
         <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper.GetPrefab(UnityEngine.Object)">
             <summary>
@@ -2058,6 +2299,14 @@
             Despawns an instance of the type <typeparamref name="T"/> and marks it for reuse.
             </summary>
             <param name="target">The instance to despawn.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Pooling.PoolHelper`1.Despawn(`0,System.Single,System.Boolean)">
+            <summary>
+            Despawns an object after a delay.
+            </summary>
+            <param name="target">The target to despawn.</param>
+            <param name="delay">Time in seconds to wait before despawning the target.</param>
+            <param name="unscaledTime">Should the delay be according to <see cref="P:UnityEngine.Time.time"/> or <see cref="P:UnityEngine.Time.unscaledTime"/>?</param>
         </member>
         <member name="P:Archon.SwissArmyLib.ResourceSystem.ResourceEvent.OriginalDelta">
             <inheritdoc />
@@ -2568,6 +2817,16 @@
                 </remarks>
             </summary>
         </member>
+        <member name="E:Archon.SwissArmyLib.Utils.ServiceLocator.GlobalReset">
+            <summary>
+                Called when the global resolvers are reset.
+            </summary>
+        </member>
+        <member name="E:Archon.SwissArmyLib.Utils.ServiceLocator.SceneReset">
+            <summary>
+                Called when a scene's resolvers are reset.
+            </summary>
+        </member>
         <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingleton``1">
             <summary>
                 Registers a concrete singleton of the given type.
@@ -2673,6 +2932,14 @@
             <typeparam name="T">The type of the singleton.</typeparam>
             <param name="instance">The instance to register as a singleton.</param>
         </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingleton``2(``1)">
+            <summary>
+                Registers a specific instance to be a singleton for the abstract type.
+            </summary>
+            <typeparam name="TAbstract">The abstract ype that will be mapped to <typeparamref name="TConcrete"/>.</typeparam>
+            <typeparam name="TConcrete">The concrete singleton implementation.</typeparam>
+            <param name="instance">The instance to register as a singleton.</param>
+        </member>
         <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``1(``0)">
             <summary>
                 Registers a specific instance to be a scene-specific singleton for its concrete type.
@@ -2681,13 +2948,31 @@
             <typeparam name="T">The type of the singleton.</typeparam>
             <param name="instance">The instance to register as a singleton.</param>
         </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``2(``1)">
+            <summary>
+                Registers a specific instance to be a scene-specific singleton for the abstract type.
+                <remarks>The resolver is registered for the active scene according to <see cref="M:UnityEngine.SceneManagement.SceneManager.GetActiveScene" />.</remarks>
+            </summary>
+            <typeparam name="TAbstract">The abstract type that will be mapped to <typeparamref name="TConcrete"/>.</typeparam>
+            <typeparam name="TConcrete">The concrete singleton implementation.</typeparam>
+            <param name="instance">The instance to register as a singleton.</param>
+        </member>
         <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``1(``0,UnityEngine.SceneManagement.Scene)">
             <summary>
                 Registers a specific instance to be a scene-specific singleton for its concrete type.
             </summary>
             <typeparam name="T">The type of the singleton.</typeparam>
             <param name="instance">The instance to register as a singleton.</param>
-            <param name="scene">The scene to register the transient type for.</param>
+            <param name="scene">The scene to register the singleton type for.</param>
+        </member>
+        <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterSingletonForScene``2(``1,UnityEngine.SceneManagement.Scene)">
+            <summary>
+                Registers a specific instance to be a scene-specific singleton for the abstract type.
+            </summary>
+            <typeparam name="TAbstract">The abstract ype that will be mapped to <typeparamref name="TConcrete"/>.</typeparam>
+            <typeparam name="TConcrete">The concrete singleton implementation.</typeparam>
+            <param name="instance">The instance to register as a singleton.</param>
+            <param name="scene">The scene to register the singleton type for.</param>
         </member>
         <member name="M:Archon.SwissArmyLib.Utils.ServiceLocator.RegisterTransient``1">
             <summary>

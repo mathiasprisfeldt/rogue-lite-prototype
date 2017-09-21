@@ -34,6 +34,9 @@ namespace CharacterController
         private float _timer;
         private float _gracePeriodTimer;
         private bool _lastValidLeft;
+        private bool _jumping;
+        private bool _isDitry;
+        private bool _dirtyValue;
 
         public float Direction { get; private set; }
 
@@ -41,8 +44,13 @@ namespace CharacterController
         {
             get
             {
+                if (_isDitry)
+                    return _dirtyValue;
                 if (!base.VerticalActive || _actionsController.AbilityReferences.LedgeHanging.VerticalActive)
+                {
                     return false;
+                }
+                    
 
                 var collision = (_actionsController.WallSlideCheck.Sides.Left || _actionsController.WallSlideCheck.Sides.Right) && !_actionsController.GroundCollisionCheck.Bottom;
 
@@ -66,7 +74,11 @@ namespace CharacterController
                         _gracePeriodTimer = _graceperiod;
                         _lastValidLeft = _actionsController.WallSlideCheck.Sides.Left;
                     }
-                    
+
+                    if (_jumping && Direction < 0 && _actionsController.WallSlideCheck.Sides.Left ||
+                        _jumping && Direction > 0 && _actionsController.WallSlideCheck.Sides.Right)
+                        _jumping = false;
+
                 }
                     
 
@@ -74,7 +86,7 @@ namespace CharacterController
                 var valid = input && _gracePeriodTimer > 0 && _verticalTimer <= 0 && _horizontalTimer <= 0 &&
                             _actionsController.LastUsedCombatAbility == CombatAbility.None;
 
-                if (valid && _timer <= 0)
+                if (valid && _timer <= 0 && !_jumping)
                 {
                     _horizontalTimer = _horizontalDuration;
                     _verticalTimer = _verticalDuration;
@@ -82,7 +94,9 @@ namespace CharacterController
                     _directionSwitched = false;
                     _actionsController.StartJump.Value = true;
                     _timer = 0.00f;
+                    _jumping = true;
                     _gracePeriodTimer = 0;
+                    _actionsController.AbilityReferences.DoubleJump.HasJumped = true;
                     if (Direction > 0)
                     {
                         _actionsController.AbilityReferences.Dash.LeftCooldown = .8f;
@@ -96,6 +110,10 @@ namespace CharacterController
                 }
                 else if (valid && _timer > 0)
                     _timer -= BetterTime.DeltaTime;
+                if (_verticalTimer <= 0)
+                    _jumping = false;
+                _isDitry = true;
+                _dirtyValue = _verticalTimer > 0;
                 return _verticalTimer > 0;
             }
         }
@@ -154,6 +172,11 @@ namespace CharacterController
                 _verticalTimer -= BetterTime.FixedDeltaTime;
             if (_gracePeriodTimer > 0)
                 _gracePeriodTimer -= BetterTime.DeltaTime;
+        }
+
+        public void LateUpdate()
+        {
+            _isDitry = false;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using AcrylecSkeleton.Utilities.Collections;
+﻿using System;
+using AcrylecSkeleton.Utilities;
+using AcrylecSkeleton.Utilities.Collections;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,10 +17,20 @@ namespace AcrylecSkeleton.Editor.Utilities.Collections
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            SerializedProperty tags = property.FindPropertyRelative("TagList");
-            
-            if (tags != null)
-                tags.intValue = EditorGUI.MaskField(position, property.displayName, tags.intValue, PossibleTags);
+            SerializedProperty tagsUnsplitted = property.FindPropertyRelative("TagListUnSplitted");
+            SerializedProperty tagMask = property.FindPropertyRelative("TagMask");
+
+            if (tagsUnsplitted != null && tagMask != null)
+            {
+                tagsUnsplitted.stringValue = String.Empty;
+                tagMask.intValue = EditorGUI.MaskField(position, property.displayName, tagMask.intValue, PossibleTags);
+
+                for (var i = 0; i < PossibleTags.Length; i++)
+                {
+                    if (tagMask.intValue.Contains(i))
+                        tagsUnsplitted.stringValue += PossibleTags[i] + "@";
+                }
+            }
         }
     }
 }

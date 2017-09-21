@@ -29,14 +29,20 @@ namespace CharacterController
                     return false;
 
                 if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed && _actionsController.State == CharacterState.InAir
-                    && _jumpTimer <= 0 && !_hasJumped && _actionsController.LastUsedVerticalMoveAbility == MoveAbility.None)
+                    && _jumpTimer <= 0 && !HasJumped && _actionsController.LastUsedVerticalMoveAbility == MoveAbility.None)
                 {
                     _jumpTimer = _jumpDuration;
-                    _hasJumped = true;
+                    HasJumped = true;
                 }
-                    
+
                 return _jumpTimer > 0;
             }
+        }
+
+        public bool HasJumped
+        {
+            get { return _hasJumped; }
+            set { _hasJumped = value; }
         }
 
         public override void HandleVertical(ref Vector2 velocity)
@@ -46,22 +52,18 @@ namespace CharacterController
 
         public override void HandleHorizontal(ref Vector2 velocity)
         {
-            
+
         }
 
         public void FixedUpdate()
         {
-            if(_jumpTimer > 0)
+            if (_jumpTimer > 0)
                 _jumpTimer -= BetterTime.FixedDeltaTime;
-            if (_hasJumped)
+            if (HasJumped)
             {
-                if (_actionsController.OnGround || _actionsController.AbilityReferences.WallSlide.VerticalActive 
-                    || _actionsController.AbilityReferences.LedgeHanging.VerticalActive 
-                    ||_actionsController.AbilityReferences.Climing.VerticalActive)
-                    _hasJumped = false;
+                if (_actionsController.OnGround && !_actionsController.AbilityReferences.WallJump.VerticalActive)
+                    HasJumped = false;
             }
-            if (!_hasJumped && _actionsController.AbilityReferences.WallJump.VerticalActive)
-                _hasJumped = true;
         }
 
     }
