@@ -96,7 +96,6 @@ namespace CharacterController
                     _timer = 0.00f;
                     _jumping = true;
                     _gracePeriodTimer = 0;
-                    _actionsController.AbilityReferences.DoubleJump.HasJumped = true;
                     if (Direction > 0)
                     {
                         _actionsController.AbilityReferences.Dash.LeftCooldown = .8f;
@@ -114,6 +113,8 @@ namespace CharacterController
                     _jumping = false;
                 _isDitry = true;
                 _dirtyValue = _verticalTimer > 0;
+                if(_verticalTimer > 0)
+                    _actionsController.AbilityReferences.DoubleJump.HasJumped = true;
                 return _verticalTimer > 0;
             }
         }

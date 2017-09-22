@@ -46,7 +46,7 @@ namespace Abilitys
 
         public void Update()
         {
-            
+            UpdateAbilities();
         }
 
         private void UpdateAbilities()
