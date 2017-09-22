@@ -113,8 +113,12 @@ namespace CharacterController
                     _jumping = false;
                 _isDitry = true;
                 _dirtyValue = _verticalTimer > 0;
-                if(_verticalTimer > 0)
+                if (_verticalTimer > 0)
+                {
                     _actionsController.AbilityReferences.DoubleJump.HasJumped = true;
+                    _actionsController.AbilityReferences.DoubleJump.Cooldown = .3f;
+                }
+                    
                 return _verticalTimer > 0;
             }
         }

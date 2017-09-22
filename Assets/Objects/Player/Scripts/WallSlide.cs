@@ -16,19 +16,29 @@ namespace CharacterController
         private bool _falling;
         private float dir;
         private float _slideTimer;
+        private bool _isDirty;
+        private bool _dirtyValue;
 
         public override bool VerticalActive
         {
             get
             {
+                if (_isDirty)
+                    return _dirtyValue;
+
                 if (!base.VerticalActive)
+                {
+                    _isDirty = true;
+                    _dirtyValue = false;
                     return false;
+                }
+
 
                 var wallJumpActive = !(_actionsController.AbilityReferences.WallJump && _actionsController.AbilityReferences.WallJump.HorizontalActive);
                 var falling = _actionsController.Rigidbody.velocity.y < 0 || _falling;
                 var rest = (_actionsController.WallSlideCheck.Left || _actionsController.WallSlideCheck.Right);
 
-                List<Collider2D> colliders = _actionsController.WallSlideCheck.Right ? 
+                List<Collider2D> colliders = _actionsController.WallSlideCheck.Right ?
                     _actionsController.WallSlideCheck.Sides.RightColliders : _actionsController.WallSlideCheck.Sides.LeftColliders;
                 Collider2D col = colliders.Count > 0 ? colliders[0] : null;
 
@@ -48,11 +58,19 @@ namespace CharacterController
 
                     TileBehaviour tile = col.gameObject.GetComponent<TileBehaviour>();
                     if ((tile && !(!tile.LeftCollision || !tile.RightCollision)) || tile && !tile.IsSlideable)
+                    {
+                        _isDirty = true;
+                        _dirtyValue = false;
                         return false;
+                    }
 
                     PlatformBehavior platform = col.gameObject.GetComponent<PlatformBehavior>();
-                    if ((platform && !(!platform.Left || !platform.Right)) || platform && !platform.IsSlideable )
+                    if ((platform && !(!platform.Left || !platform.Right)) || platform && !platform.IsSlideable)
+                    {
+                        _isDirty = true;
+                        _dirtyValue = false;
                         return false;
+                    }
                 }
 
                 if (wallJumpActive && falling && rest && _actionsController.LastUsedCombatAbility == CombatAbility.None)
@@ -61,13 +79,26 @@ namespace CharacterController
                     if (_slideTimer > 0)
                     {
                         _slideTimer -= BetterTime.FixedDeltaTime;
+                        _isDirty = true;
+                        _dirtyValue = false;
                         return false;
-                    }                       
-                    return true;
+
+                    }
+                    else
+                    {
+                        if (!_actionsController.AbilityReferences.WallJump.VerticalActive)
+                        {
+                            _isDirty = true;
+                            _dirtyValue = true;
+                            return true;
+                        }
+                    }
                 }
                 else
                     _slideTimer = _timeUntilSlide;
 
+                _isDirty = true;
+                _dirtyValue = false;
                 return false;
             }
         }
@@ -90,6 +121,11 @@ namespace CharacterController
                 _falling = false;
         }
 
+        public void LateUpdate()
+        {
+            _isDirty = false;
+        }
+
         public override void HandleVertical(ref Vector2 velocity)
         {
             _falling = true;
@@ -101,7 +137,7 @@ namespace CharacterController
 
         public override void HandleHorizontal(ref Vector2 velocity)
         {
-            velocity = new Vector2(0,velocity.y);
+            velocity = new Vector2(0, velocity.y);
         }
     }
 }

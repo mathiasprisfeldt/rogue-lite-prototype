@@ -21,6 +21,8 @@ namespace CharacterController
         private bool _hasJumped;
         private float _jumpTimer;
 
+        public float Cooldown { get; set; }
+
         public override bool VerticalActive
         {
             get
@@ -29,7 +31,8 @@ namespace CharacterController
                     return false;
 
                 if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed && _actionsController.State == CharacterState.InAir
-                    && _jumpTimer <= 0 && !HasJumped && _actionsController.LastUsedVerticalMoveAbility == MoveAbility.None)
+                    && _jumpTimer <= 0 && !HasJumped && _actionsController.LastUsedVerticalMoveAbility == MoveAbility.None && Cooldown <= 0 && 
+                  !_actionsController.AbilityReferences.WallSlide.VerticalActive)
                 {
                     _jumpTimer = _jumpDuration;
                     HasJumped = true;
@@ -58,8 +61,10 @@ namespace CharacterController
         {
             if (_jumpTimer > 0)
                 _jumpTimer -= BetterTime.FixedDeltaTime;
-            if (_actionsController.OnGround)
+            if ((_actionsController.OnGround || _actionsController.AbilityReferences.WallSlide.VerticalActive) && !_actionsController.AbilityReferences.WallJump.VerticalActive)
                 HasJumped = false;
+            if (Cooldown > 0)
+                Cooldown -= Time.deltaTime;
         }
 
     }
