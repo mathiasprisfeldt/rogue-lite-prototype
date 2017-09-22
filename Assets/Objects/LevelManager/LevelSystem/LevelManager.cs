@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
+using Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -172,6 +173,8 @@ public class LevelManager : Singleton<LevelManager>
 
     public void ResetGame()
     {
+        if (GameManager.Instance)
+            Destroy(GameManager.Instance.Player.gameObject);
         _forcedLevels.Clear();
         _randomLevelsHard.Clear();
 

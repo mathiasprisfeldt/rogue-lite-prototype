@@ -59,11 +59,10 @@ namespace CharacterController
         {
             if (_jumpTimer > 0)
                 _jumpTimer -= BetterTime.FixedDeltaTime;
-            if (HasJumped)
-            {
-                if (_actionsController.OnGround && !_actionsController.AbilityReferences.WallJump.VerticalActive)
-                    HasJumped = false;
-            }
+            if (_actionsController.OnGround && !_actionsController.AbilityReferences.WallJump.VerticalActive)
+                HasJumped = false;
+            if (_actionsController.WallSlideCheck.Left || _actionsController.WallSlideCheck.Right)
+                HasJumped = false;
         }
 
     }
