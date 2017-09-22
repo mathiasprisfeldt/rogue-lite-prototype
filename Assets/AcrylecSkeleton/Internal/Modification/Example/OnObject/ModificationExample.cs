@@ -6,11 +6,11 @@ namespace AcrylecSkeleton.ModificationSystem.Examples
     /// A modification example.
     /// </summary>
     public class ModificationExample : Modification {
-        public ModificationExample(float time, float value, ModificationTypeEnum modificationType) : base(time, value, modificationType)
+        public ModificationExample(float time, float value, ModificationTypeEnum modificationType) : base(time)
         {
         }
 
-        public ModificationExample(float time, float value, ModificationTypeEnum modificationType, string name) : base(time, value, modificationType, name)
+        public ModificationExample(float time, string name) : base(time, name)
         {
         }
 

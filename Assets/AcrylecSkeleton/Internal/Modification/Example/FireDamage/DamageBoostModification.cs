@@ -8,11 +8,11 @@ namespace AcrylecSkeleton.ModificationSystem.Examples
 
         private float _timer;
 
-        public DamageBoostModification(float time, float value, Modification.ModificationTypeEnum modificationType, StatsExample stats) : base(time, value, modificationType, stats)
+        public DamageBoostModification(float time, StatsExample stats) : base(time, stats)
         {
         }
 
-        public DamageBoostModification(float time, float value, Modification.ModificationTypeEnum modificationType, string name, StatsExample stats) : base(time, value, modificationType, name, stats)
+        public DamageBoostModification(float time, string name, StatsExample stats) : base(time, name, stats)
         {
         }
 

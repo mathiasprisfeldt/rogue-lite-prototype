@@ -129,6 +129,26 @@ namespace AcrylecSkeleton.Utilities
             return DegreesToVector(direction);
         }
 
+        /// <summary>
+        /// Rounds to nearest ratio
+        /// Ex. if nearest is 2 its each halfs.
+        ///     1.6 = 1.5
+        ///     1.7 = 1.5
+        ///     1.8 = 2
+        ///     1.9 = 2
+        ///     Etc
+        /// </summary>
+        /// <param name="number">Number to round</param>
+        /// <param name="nearest">Number to round to</param>
+        /// <returns></returns>
+        public static float RoundToNearest(float number, float nearest)
+        {
+            return Mathf.Round(number * nearest) / nearest;
+        }
 
+        public static bool FastApproximately(this float a, float b, float tolerance = 0)
+        {
+            return Math.Abs(a - b) <= tolerance;
+        }
     }
 }

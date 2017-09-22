@@ -8,11 +8,11 @@
 
         public DataStorageExample DataStorageExample { get; set; }
 
-        public OverrideModificationExample(float time, float value, ModificationTypeEnum modificationType) : base(time, value, modificationType)
+        public OverrideModificationExample(float time) : base(time)
         {
         }
 
-        public OverrideModificationExample(float time, float value, ModificationTypeEnum modificationType, string name) : base(time, value, modificationType, name)
+        public OverrideModificationExample(float time, string name) : base(time, name)
         {
         }
 

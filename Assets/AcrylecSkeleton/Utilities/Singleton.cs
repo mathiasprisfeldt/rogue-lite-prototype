@@ -5,17 +5,22 @@ namespace AcrylecSkeleton.Utilities
 {
     public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
+        private static bool _isQuitting;
+
         public bool DontDestroyOnLoadConfig;
 
         private static T instance;
 
         /**
        Returns the instance of this singleton.
-    */
+        */
         public static T Instance
         {
             get
             {
+                if (_isQuitting)
+                    return null;
+
                 if (instance == null)
                 {
                     instance = (T)FindObjectOfType(typeof(T));
@@ -26,6 +31,9 @@ namespace AcrylecSkeleton.Utilities
                         instance = newInstance.AddComponent<T>();
 
                         Debug.LogWarning(String.Format("[SINGLETON] An instance of {0} is needed, instantiating {1} to compensate.", typeof(T), newInstance));
+
+                        DontDestroyOnLoad(newInstance);
+
                         return instance;
                     }
                 }
@@ -51,6 +59,11 @@ namespace AcrylecSkeleton.Utilities
         {
             if (DontDestroyOnLoadConfig)
                 DontDestroyOnLoad(gameObject);
+        }
+
+        private void OnApplicationQuit()
+        {
+            _isQuitting = true;
         }
     }
 }

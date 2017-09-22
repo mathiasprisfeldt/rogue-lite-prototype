@@ -1,5 +1,6 @@
 namespace InControl
 {
+	using System;
 	using System.IO;
 
 
@@ -122,11 +123,11 @@ namespace InControl
 		}
 
 
-		internal override void Load( BinaryReader reader )
+		internal override void Load( BinaryReader reader, UInt16 dataFormatVersion )
 		{
 			// Have to do this because it's a struct property? Weird.
 			var temp = new KeyCombo();
-			temp.Load( reader );
+			temp.Load( reader, dataFormatVersion );
 			Control = temp;
 		}
 

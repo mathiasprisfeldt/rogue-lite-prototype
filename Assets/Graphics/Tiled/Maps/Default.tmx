@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="2017.07.25" orientation="orthogonal" renderorder="right-down" width="11" height="11" tilewidth="255" tileheight="256" nextobjectid="1">
+ <tileset firstgid="1" source="../Tileset/RogueLike.tsx"/>
+ <layer name="Tile Layer 1" width="11" height="11">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,
+0,2,2,2,0,0,0,2,2,2,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,2,0,0,0,0,0,
+0,0,0,0,2,2,2,0,0,0,0,
+0,0,0,2,2,2,2,2,0,0,0,
+0,0,2,2,2,2,2,2,2,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,16,17,18,0,0,0,14,15,14,0,
+0,2,2,2,0,0,0,2,2,2,0,
+0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

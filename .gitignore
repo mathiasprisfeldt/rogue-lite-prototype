@@ -24,6 +24,7 @@ sysinfo.txt
 /*.booproj
 /.idea*/
 .vscode/
+bin/
  
 # ============ #
 # OS generated #

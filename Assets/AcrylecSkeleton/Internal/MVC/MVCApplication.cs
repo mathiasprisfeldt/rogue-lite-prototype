@@ -36,23 +36,12 @@ namespace AcrylecSkeleton.MVC
         
     }
 
-    /// <summary>
-    /// Base class for all generic MVC application objects.
-    /// </summary>
     [SelectionBase]
-    public class Application<MType, VType, CType, S> : Application 
-        where MType : Model 
+    public class Application<MType, VType, CType> : Application
+        where MType : Model
         where VType : View
         where CType : Controller
-        where S : struct
     {
-        /// <summary>
-        /// Event invoked when changing state.
-        /// <para>1 Arg: Old State</para>
-        /// <para>2 Arg: New State</para>
-        /// </summary>
-        public event Action<S, S> StateChanged;
-
         #region MVC Properties
         /// <summary>
         /// Setting up MVC Application properties with serialized backing fields.
@@ -69,7 +58,7 @@ namespace AcrylecSkeleton.MVC
             private set { _model = value; }
         }
         //
-        
+
         //MVC View Property
         [SerializeField]
         private VType _view;
@@ -80,10 +69,11 @@ namespace AcrylecSkeleton.MVC
             private set { _view = value; }
         }
         //
-        
+
         //MVC Controller Property
         [SerializeField]
         private CType _controller;
+
 
         public CType C
         {
@@ -92,8 +82,34 @@ namespace AcrylecSkeleton.MVC
         }
         //
         #endregion
+    }
 
-        public S CurrentState { get; set; }
+    /// <summary>
+    /// Base class for all generic MVC application objects.
+    /// </summary>
+    [SelectionBase]
+    public class Application<MType, VType, CType, S> : Application<MType, VType, CType> 
+        where MType : Model 
+        where VType : View
+        where CType : Controller
+        where S : struct
+    {
+        [SerializeField, Tooltip("If changed, StateChanged will not be invoked!")]
+        private S _currentState;
+
+        /// <summary>
+        /// Event invoked when changing state.
+        /// <para>1 Arg: Old State</para>
+        /// <para>2 Arg: New State</para>
+        /// </summary>
+        public event Action<S, S> StateChanged;
+
+        public S CurrentState
+        {
+            get { return _currentState; }
+            set { ChangeState(value); }
+        }
+
         public S LastState { get; set; }
 
         protected virtual void Awake()
@@ -109,7 +125,7 @@ namespace AcrylecSkeleton.MVC
         public virtual void ChangeState(S newState)
         {
             LastState = CurrentState;
-            CurrentState = newState; //Set current state to the new state
+            _currentState = newState; //Set current state to the new state
 
             var handler = StateChanged;
             if (handler != null) handler(LastState, CurrentState); //Check if StateChanged has any listeners, then invoke with prev and current state.

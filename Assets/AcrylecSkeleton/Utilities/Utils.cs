@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using AcrylecSkeleton.Managers;
 using UnityEngine;
 
@@ -25,6 +26,51 @@ namespace AcrylecSkeleton.Utilities
             }
 
             action();
+        }
+
+        /// <summary>
+        /// Checks if a layer mask contains another layer mask.
+        /// </summary>
+        /// <param name="this">The mask that contains</param>
+        /// <param name="other">The mask to check against</param>
+        /// <returns></returns>
+        public static bool Contains(this LayerMask @this, LayerMask other)
+        {
+            return @this == (@this | (1 << other.value));
+        }
+
+        /// <summary>
+        /// Used to see if a bit mask contains a specific index/bit number.
+        /// </summary>
+        /// <param name="this">Bit Mask representated as an integer.</param>
+        /// <param name="other">Bit number for comparision.</param>
+        /// <returns></returns>
+        public static bool Contains(this int @this, int other)
+        {
+            return @this == (@this | (1 << other));
+        }
+
+        /// <summary>
+        /// Searches after a specific component in its parents until is finds a match or dead end.
+        /// </summary>
+        /// <typeparam name="T">Type of component</typeparam>
+        /// <param name="go">Gameobject to start the search on</param>
+        public static T GetComponentUp<T>(this GameObject go) where T : MonoBehaviour
+        {
+            Transform parent = go.transform;
+            T foundComp = null;
+
+            while (parent)
+            {
+                foundComp = parent.GetComponentInChildren<T>();
+
+                if (!foundComp)
+                    parent = parent.parent;
+                else
+                    break;
+            }
+
+            return foundComp;
         }
     }
 }

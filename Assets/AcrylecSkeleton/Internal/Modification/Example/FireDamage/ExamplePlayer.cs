@@ -19,9 +19,9 @@ namespace AcrylecSkeleton.ModificationSystem.Examples
             _stats.Health = 100;
             _stats.Speed = 20;
 
-            _modificationHandler.AddModification(new FireDamageModification(4, 10, Modification.ModificationTypeEnum.Timed, _stats));
-            _modificationHandler.AddModification(new MovementSpeedModification(5, 30, Modification.ModificationTypeEnum.Timed, _stats));
-            _modificationHandler.AddModification(new DamageBoostModification(0, 40, Modification.ModificationTypeEnum.Infinite, _stats));
+            _modificationHandler.AddModification(new FireDamageModification(4, _stats));
+            _modificationHandler.AddModification(new MovementSpeedModification(5, _stats));
+            _modificationHandler.AddModification(new DamageBoostModification(0, _stats));
         }
     }
 }

@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - OneWayCollider
+  - Enemy
+  - Ladder
   layers:
   - Default
   - TransparentFX
@@ -13,16 +16,16 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Platform
+  - NonPlayerCollision
+  - BorderTile
+  - Enemy
+  - NoCollide
+  - Hitbox
+  - Climbable
+  - Trap
+  - NoCollidePlayer
   - 
   - 
   - 
@@ -38,6 +41,21 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 860786657
+    locked: 0
+  - name: Environment
+    uniqueID: 3279750759
+    locked: 0
+  - name: Corpses
+    uniqueID: 3268670229
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Enemies
+    uniqueID: 1433826057
+    locked: 0
+  - name: Foreground
+    uniqueID: 1816447683
     locked: 0
