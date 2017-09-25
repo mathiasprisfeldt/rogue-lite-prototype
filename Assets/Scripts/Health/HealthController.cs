@@ -22,7 +22,7 @@ namespace Health
     [Serializable]
     public class OnDamageEvent : UnityEvent<Character>
     {
-        
+
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ namespace Health
                     Character.MainAnimator.SetTrigger("Die");
                 }
 
-                _isDead = value; 
+                _isDead = value;
             }
         }
 
@@ -167,7 +167,7 @@ namespace Health
             get { return _isInvurnable; }
             set
             {
-                _isInvurnable = value; 
+                _isInvurnable = value;
                 CheckHealth();
             }
         }
@@ -399,7 +399,7 @@ namespace Health
                     yield return new WaitForEndOfFrame();
                     timer -= BetterTime.UnscaledDeltaTime / duration;
                 }
-                
+
                 IsInvurnable = false;
             }
         }

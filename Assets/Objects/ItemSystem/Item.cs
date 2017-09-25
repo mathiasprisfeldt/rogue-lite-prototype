@@ -1,4 +1,5 @@
-﻿using Health;
+﻿using Controllers;
+using Health;
 using UnityEngine;
 
 namespace ItemSystem
@@ -7,7 +8,7 @@ namespace ItemSystem
     /// Purpose: Base class for all items.
     /// Creator: MP
     /// </summary>
-    public abstract class Item : MonoBehaviour 
+    public abstract class Item : MonoBehaviour
     {
         public ItemHandler ItemHandler { get; set; }
 
