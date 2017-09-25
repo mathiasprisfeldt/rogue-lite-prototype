@@ -2,6 +2,7 @@
 using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.Utilities;
 using Archon.SwissArmyLib.Events;
+using Controllers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -53,6 +54,8 @@ namespace Projectiles
         public Rigidbody2D RigidBody { get; set; }
 
         public Vector2 Direction { get; set; }
+
+        public Character Owner { get; set; }
 
         public void Awake()
         {
@@ -143,7 +146,7 @@ namespace Projectiles
                 {
                     if (!cc.Character.HealthController.IsDead && !_used)
                     {
-                        cc.Character.HealthController.Damage(_damage, pos: transform.position);
+                        cc.Character.HealthController.Damage(_damage, pos: transform.position, from: Owner);
                         _used = true;
                     }                    
                     else

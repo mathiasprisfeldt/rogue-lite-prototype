@@ -26,9 +26,6 @@ namespace CharacterController
         private AbilityReferences _abilityReferences;
 
         [SerializeField]
-        private ModificationHandler _modificationHandler;
-
-        [SerializeField]
         private CollisionCheck _triggerCheck;
 
         [SerializeField]
@@ -115,12 +112,6 @@ namespace CharacterController
             set { _lastUsedCombatAbility = value; }
         }
 
-        public ModificationHandler ModificationHandler
-        {
-            get { return _modificationHandler; }
-            set { _modificationHandler = value; }
-        }
-
         public CollisionCheck CollisionCheck
         {
             get { return _collisionCheck; }
@@ -188,8 +179,7 @@ namespace CharacterController
 
             if (App.C.PlayerActions != null)
                 App.C.PlayerActions.UpdateProxy();
-            if(LastUsedVerticalMoveAbility != _savedValue)
-                Debug.Log(LastUsedVerticalMoveAbility);
+
             _savedValue = LastUsedVerticalMoveAbility;
             
         }

@@ -1,5 +1,6 @@
 ﻿using Archon.SwissArmyLib.Utils;
 using CharacterController;
+using Projectiles;
 using UnityEngine;
 
 namespace Special
@@ -11,7 +12,7 @@ namespace Special
     public class ThrowProjectile : Ability
     {
         [SerializeField]
-        private GameObject _projectilePrefab;
+        private Projectile _projectilePrefab;
 
         [SerializeField]
         private float _throwForce;
@@ -54,7 +55,9 @@ namespace Special
 
         public void Throw()
         {
-            GameObject go = Instantiate(_projectilePrefab, _actionsController.ThrowPoint.position, Quaternion.identity);
+            Projectile go = Instantiate(_projectilePrefab, _actionsController.ThrowPoint.position, Quaternion.identity);
+            go.Owner = _actionsController;
+
             Rigidbody2D rig = go.GetComponent<Rigidbody2D>();
             if (rig != null)
                 rig.AddForce(new Vector2(_actionsController.LastHorizontalDirection, 0) * _throwForce, ForceMode2D.Impulse);

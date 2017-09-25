@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using Abilitys;
+using AcrylecSkeleton.ModificationSystem;
 using Archon.SwissArmyLib.Utils;
 using Health;
+using ItemSystem;
 using UnityEngine;
 using Knockbacks;
 using Mana;
@@ -70,6 +72,12 @@ namespace Controllers
         [SerializeField]
         private SafetyRespawn _safetyRespawn;
 
+        [SerializeField]
+        private ModificationHandler _modificationHandler;
+
+        [SerializeField]
+        private ItemHandler _itemHandler;
+
         [Header("Settings:")]
         [SerializeField, Tooltip("Which way is it facing at start?")]
         private int _startDirection = -1;
@@ -85,7 +93,6 @@ namespace Controllers
 
         [SerializeField]
         private bool _flipWithVelocity;
-
 
         [SerializeField, Tooltip("If on it will flip with rotation instead of scaling.")]
         private bool _doFlipWithRotation = true;
@@ -202,6 +209,18 @@ namespace Controllers
         public SafetyRespawn SafetyRespawn
         {
             get { return _safetyRespawn; }
+        }
+
+        public ModificationHandler ModificationHandler
+        {
+            get { return _modificationHandler; }
+            set { _modificationHandler = value; }
+        }
+
+        public ItemHandler ItemHandler
+        {
+            get { return _itemHandler; }
+            set { _itemHandler = value; }
         }
 
         protected virtual void Awake()
