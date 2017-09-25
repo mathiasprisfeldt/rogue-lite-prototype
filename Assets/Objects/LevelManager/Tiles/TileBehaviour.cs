@@ -362,7 +362,7 @@ public class TileBehaviour : MonoBehaviour
 
         var goDown = _isTop && ((tLeft && tLeft.TargetTag != _targetTag) && (tRight && tRight.TargetTag != TargetTag));
 
-        if (goDown || tDown && !tDown.LeftCollision && !tDown.RightCollision || nextShouldDown)
+        if (goDown || /*tDown && !tDown.LeftCollision && !tDown.RightCollision ||*/ nextShouldDown)
             nextShouldDown = true;
 
         if (nextShouldDown && tDown && (tDown.TargetTag == TargetTag))

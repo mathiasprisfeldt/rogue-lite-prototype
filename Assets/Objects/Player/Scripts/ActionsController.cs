@@ -188,8 +188,6 @@ namespace CharacterController
 
             if (App.C.PlayerActions != null)
                 App.C.PlayerActions.UpdateProxy();
-            if(LastUsedVerticalMoveAbility != _savedValue)
-                Debug.Log(LastUsedVerticalMoveAbility);
             _savedValue = LastUsedVerticalMoveAbility;
             
         }
@@ -260,9 +258,10 @@ namespace CharacterController
         private void HandleMaxSpeed()
         {
             var predictGravity = Rigidbody.velocity.y + Physics2D.gravity.y * Rigidbody.gravityScale;
-            if (predictGravity <= -_maxFallSpeed)
+            if (predictGravity <= -_maxFallSpeed && !OnGround)
             {
                 Rigidbody.velocity -= new Vector2(0, Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed)) * BetterTime.FixedDeltaTime);
+                Debug.Log("Ost");
             }
         }
 

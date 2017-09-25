@@ -33,16 +33,17 @@ namespace CharacterController
         private float _downTimer;
         private float _upTimer;
         private bool _startGrab;
+        private bool _hanging;
 
         public override bool VerticalActive
         {
             get
             {
-                if (_actionsController == null)
+                if (_actionsController == null || !base.VerticalActive)
+                {
+                    _hanging = false;
                     return false;
-
-                if (!base.VerticalActive)
-                    return false;
+                }
 
                 var left = _actionsController.TriggerCheck.Sides.Left;
                 var right = _actionsController.TriggerCheck.Sides.Right;
@@ -71,40 +72,44 @@ namespace CharacterController
                     var hangPosition = new Vector2(hangPosX, col.bounds.max.y - _hangDistance);
                     var thisColX = right ? _actionsController.TriggerCheck.CollidersToCheck[0].bounds.max.x : _actionsController.TriggerCheck.CollidersToCheck[0].bounds.min.x;
                     Vector2 temp = new Vector2(thisColX, _actionsController.CollisionCheck.CollidersToCheck[0].bounds.center.y);
-                    if (Mathf.Abs(temp.y - hangPosition.y) <= _sensitivity)
+                    if (Mathf.Abs(temp.y - hangPosition.y) <= _sensitivity && (_actionsController.Rigidbody.velocity.y < 0 || _hanging))
                     {
                         TileBehaviour tile = col.gameObject.GetComponent<TileBehaviour>();
-                        if (tile && tile.TopCollision || tile && (left && tile.RightCollision || right && tile.LeftCollision) 
-                            || tile && !tile.IsGrabable)
-                            return false;
+
+                        var tileGrabable = tile && tile.TopCollision || tile &&
+                                    (left && tile.RightCollision || right && tile.LeftCollision)
+                                    || tile && !tile.IsGrabable;
 
                         PlatformBehavior platform = col.gameObject.GetComponent<PlatformBehavior>();
-                        if (platform && (!platform.Istop || left && platform.Right || right && platform.Left)
-                            || platform && !platform.IsGrabable)
-                            return false;
+                        var platformGrabable =
+                            platform && (!platform.Istop || left && platform.Right ||
+                                        right && platform.Left) || platform && !platform.IsGrabable;
 
-                        if (col.gameObject.tag == "Ladder")
-                            return false;
+                        var isLadder = col.gameObject.tag == "Ladder";
 
-                        if (_actionsController.App.C.PlayerActions.Down &&
+                        if (horizontalMovement || tileGrabable || platformGrabable || isLadder)
+                        {
+                            _hanging = false;
+                            return false;
+                        }
+
+                        if (_actionsController.App.C.PlayerActions.Down && _hanging &&
                             _actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed)
                         {
                             _downTimer = _pushDownDuration;
                             return true;
                         }
-                        else if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed)
+                        else if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed && _hanging)
                         {
                             _upTimer = _pushUpDuration;
                             return true;
                         }
                         
-                        if (horizontalMovement)
-                            return false;
-
                         var extend = right ? -_actionsController.CollisionCheck.CollidersToCheck[0].bounds.extents.x : _actionsController.CollisionCheck.CollidersToCheck[0].bounds.extents.x;
                         _actionsController.Rigidbody.position = Vector2.Lerp(_actionsController.Rigidbody.position, new Vector2(hangPosition.x + extend, hangPosition.y), .6f);
                         var dir = left ? -1 : 1;
                         _actionsController.Flip(dir);
+                        _hanging = true;
 
                         if (!_startGrab)
                         {
@@ -114,6 +119,7 @@ namespace CharacterController
                         return true;
                     }
                 }
+                _hanging = false;
                 return false;
             }
         }
