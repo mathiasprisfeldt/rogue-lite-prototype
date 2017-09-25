@@ -1,5 +1,6 @@
 using System;
 using AcrylecSkeleton.MVC;
+using CharacterController;
 using Controllers;
 using Flash;
 using UnityEngine;
@@ -13,6 +14,9 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 	/// </summary>
 	public class PlayerView : View<PlayerApplication>
 	{
+        [SerializeField]
+	    private ActionsController _actionController;
+
         public ScreenFlash ScreenFlash { get; set; }
 
         public void Start()
@@ -29,8 +33,12 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 
 	    private void OnSafetyRespawn()
 	    {
-            if (ScreenFlash != null)
+	        if (ScreenFlash != null)
+	        {
                 ScreenFlash.StartFlash(Color.black, 1f, 0);
+	            _actionController.WaitForInputHorizontal = true;
+	        }
+                
         }
 
 	    private void OnDamage(Character arg0)

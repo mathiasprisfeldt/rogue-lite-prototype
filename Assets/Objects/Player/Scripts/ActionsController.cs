@@ -55,9 +55,7 @@ namespace CharacterController
         [SerializeField]
         private Transform _throwPoint;
 
-
         private Vector2 _velocity;
-
         private bool _shouldDash;
         private float _dashTimer;
         private Vector2 _savedVelocity;
@@ -140,6 +138,7 @@ namespace CharacterController
 
         public bool Combat { get; set; }
         public bool ClimbEnd { get; set; }
+        public bool WaitForInputHorizontal { get; set; }
         public Trigger StartJump { get; set; }
         public Trigger StartDash { get; set; }
         public Trigger StartGrab { get; set; }
@@ -267,7 +266,7 @@ namespace CharacterController
 
         protected override void UpdateState()
         {
-            if (OnGround && (App.C.PlayerActions != null && App.C.PlayerActions.Horizontal != 0))
+            if (OnGround && !WaitForInputHorizontal && (App.C.PlayerActions != null && App.C.PlayerActions.Horizontal != 0))
                 State = CharacterState.Moving;
             else if (OnGround)
                 State = CharacterState.Idle;
@@ -283,6 +282,8 @@ namespace CharacterController
 
         private void HandleAnimationParameters()
         {
+            Debug.Log(State);
+
             //Running
             Animator.SetBool("Running", State == CharacterState.Moving);
 
@@ -446,7 +447,13 @@ namespace CharacterController
             if (CollisionCheck.Sides.Right && Horizontal > 0)
                 Horizontal = 0;
 
-            velocity += new Vector2(MovementSpeed * Horizontal, 0);
+            if (WaitForInputHorizontal &&
+                (App.C.PlayerActions.ProxyInputActions.Left.WasPressed
+                 || App.C.PlayerActions.ProxyInputActions.Right.WasPressed))
+                WaitForInputHorizontal = false;
+
+            if (!WaitForInputHorizontal)
+                velocity += new Vector2(MovementSpeed * Horizontal, 0);
 
             if (_abilityReferences.Dash && _abilityReferences.Dash.HorizontalActive)
             {

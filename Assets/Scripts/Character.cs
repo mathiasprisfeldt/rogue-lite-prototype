@@ -218,7 +218,6 @@ namespace Controllers
         public virtual void Update()
         {
             UpdateState();
-
             if (_flipWithVelocity && _rigidbody)
                 Flip(Mathf.Round(_rigidbody.velocity.x));
 
