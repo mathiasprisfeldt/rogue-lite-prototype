@@ -313,7 +313,7 @@ namespace Health
             {
                 OnDamage.Invoke(from);
 
-                //If damage dealer has a OnHit items, find them and give them a call.
+                //If damage dealer has a Hit items, find them and give them a call.
                 if (from != null && from.ItemHandler && triggerItemhandler)
                     from.ItemHandler.OnHit(this);
             }
