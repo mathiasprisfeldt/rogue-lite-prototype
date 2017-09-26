@@ -17,6 +17,9 @@ namespace Controls
         [SerializeField]
         private GameObject _special;
 
+        [SerializeField]
+        private GameObject _doubleJump;
+
         private AbilityHandler _abilityHandler;
 
         public void Start()
@@ -34,6 +37,7 @@ namespace Controls
         {
             _dash.SetActive(_abilityHandler.GetAbility(HandledAbility.Dash).Active);
             _special.SetActive(_abilityHandler.GetAbility(HandledAbility.Throw).Active);
+            _doubleJump.SetActive(_abilityHandler.GetAbility(HandledAbility.DoubleJump).Active);
         }
 
         public void OnDestroy()

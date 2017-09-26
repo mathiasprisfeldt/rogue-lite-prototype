@@ -672,16 +672,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114839822949810884, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-        type: 2}
-      propertyPath: _doubleJump
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114839822949810884, guid: 841d69d824d4a674bb5ca8ff0f99432c,
-        type: 2}
-      propertyPath: _throw
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
   m_IsPrefabParent: 0
@@ -765,7 +755,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -999,7 +989,7 @@ Prefab:
         type: 2}
       propertyPath: _forcedLevelsText.Array.data[0]
       value: 
-      objectReference: {fileID: 4900000, guid: 61aa76687d6efb041b6655613ecb49a2, type: 3}
+      objectReference: {fileID: 4900000, guid: d3d8339feb597fe4d8d0bb700e3d1418, type: 3}
     - target: {fileID: 114195463805386292, guid: b3d93c340dc761f468f2dab771568bb4,
         type: 2}
       propertyPath: _randomLevelsEasyText.Array.data[0]
