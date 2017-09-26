@@ -16,14 +16,15 @@ namespace Pickups
         [SerializeField]
         private bool _active;
 
-        [SerializeField] private Tags _targetTags;
+        [SerializeField]
+        private Tags _targetTags;
 
         [SerializeField]
         private LayerMask _targetLayers;
 
         [SerializeField]
         private Rigidbody2D _rigigbody;
-        
+
         [SerializeField]
         private Vector2 _travelDirection;
 

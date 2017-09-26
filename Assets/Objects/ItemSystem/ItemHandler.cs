@@ -18,6 +18,8 @@ namespace ItemSystem
         [SerializeField]
         private List<Item> _items;
 
+        
+
         public Character Owner
         {
             get { return _owner; }
@@ -63,6 +65,25 @@ namespace ItemSystem
             {
                 item.OnHit(healthController);
             }
+        }
+
+        /// <summary>
+        /// Steal and item from another item handler
+        /// </summary>
+        /// <param name="victim">The item handler to steal from</param>
+        public void Steal(ItemHandler victim)
+        {
+            //REset parent and update item handler
+            
+            // man har 2 items allerede
+            //Kalder man item ui 
+
+            foreach (var item in Items)
+            {
+                //Setup
+            }
+
+            //remove victim
         }
     }
 }

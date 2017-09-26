@@ -1,4 +1,5 @@
-﻿using Health;
+﻿using Controllers;
+using Health;
 
 namespace ItemSystem.Items
 {
@@ -6,7 +7,7 @@ namespace ItemSystem.Items
     /// Purpose:
     /// Creator: MP
     /// </summary>
-    public class Poison : Item 
+    public class Poison : Item
     {
         public override void OnHit(HealthController victim)
         {
