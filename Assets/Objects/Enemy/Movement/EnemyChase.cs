@@ -15,8 +15,7 @@ namespace Enemy
             if (!IsActive)
                 return;
 
-            if (Context.C.Target &&
-                Context.C.ToPlayer.magnitude > 1f)
+            if (Context.C.Target && Context.C.ToPlayer.magnitude > 1f)
             {
                 if (Context.M.Character.OnGround && !Context.M.Character.IsFlying)
                 {
@@ -44,7 +43,7 @@ namespace Enemy
 
         public override bool ShouldTakeover()
         {
-            if (Context.C.Target && 
+            if (Context.C.Target &&
                 !IsState<EnemyAttack>() &&
                 !IsState<EnemyAvoid>())
                 return true;

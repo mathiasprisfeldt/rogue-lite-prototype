@@ -13,11 +13,5 @@ namespace ItemSystem
         {
             victim.Damage(10);
         }
-
-        public override void OnEquipped()
-        {
-            //Check if picked up by enemy or player, if player enable player dash, otherwise
-            //do dash code yourself.
-        }
     }
 }
