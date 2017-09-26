@@ -108,7 +108,7 @@ public class Level
             if (BorderTiles.Keys.Contains(t))
             {
                 TileBehaviour tileBehaviour = BorderTiles[t].gameObject.GetComponent<TileBehaviour>();
-                return new Tile(1, BorderTiles[t].gameObject, tileBehaviour.PhsyicalBlock,tileBehaviour.Trap);
+                return new Tile(1, BorderTiles[t].gameObject, tileBehaviour.PhsyicalBlock, tileBehaviour.Trap);
             }
             else
                 return new Tile(null, -1);
@@ -221,6 +221,7 @@ public class Level
             }
         }
 
+        borderTileList.ForEach(x => x.SetupTile());
         foreach (var item in tileList)
         {
             item.SetupTile();
