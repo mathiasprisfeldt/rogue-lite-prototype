@@ -14,9 +14,9 @@ namespace ItemSystem
             victim.Damage(10);
         }
 
-        public void OnPickup(Character character)
+        public void Setup()
         {
-            //Check if picked up by enemy or player, if player enable player dash, otherwise 
+            //Check if picked up by enemy or player, if player enable player dash, otherwise
             //do dash code yourself.
         }
 
@@ -27,7 +27,7 @@ namespace ItemSystem
 
         public void Update()
         {
-            
+
         }
     }
 }
