@@ -260,7 +260,6 @@ namespace CharacterController
             if (predictGravity <= -_maxFallSpeed && !OnGround)
             {
                 Rigidbody.velocity -= new Vector2(0, Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed)) * BetterTime.FixedDeltaTime);
-                Debug.Log("Ost");
             }
         }
 
@@ -282,8 +281,6 @@ namespace CharacterController
 
         private void HandleAnimationParameters()
         {
-            Debug.Log(State);
-
             //Running
             Animator.SetBool("Running", State == CharacterState.Moving);
 
