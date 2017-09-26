@@ -1,5 +1,6 @@
 ﻿using Controllers;
 using Health;
+using UnityEngine;
 
 namespace ItemSystem.Items
 {
@@ -9,9 +10,10 @@ namespace ItemSystem.Items
     /// </summary>
     public class Poison : Item
     {
-        public override void OnHit(HealthController victim)
+        public override void OnEquipped()
         {
-            victim.Damage(5, from: ItemHandler.Owner, triggerItemhandler: false);
+            base.OnEquipped();
+            Debug.Log("Poison Equipped!");
         }
     }
 }

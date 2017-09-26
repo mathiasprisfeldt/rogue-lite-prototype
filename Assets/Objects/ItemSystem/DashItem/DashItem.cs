@@ -7,27 +7,17 @@ using Enemy;
 
 namespace ItemSystem
 {
-    public class DashItem : Active
+    public class DashItem : Item
     {
-        public override void OnHit(HealthController victim)
+        public override void Hit(HealthController victim)
         {
             victim.Damage(10);
         }
 
-        public void Setup()
+        public override void OnEquipped()
         {
             //Check if picked up by enemy or player, if player enable player dash, otherwise
             //do dash code yourself.
-        }
-
-        public override void OnTrigger()
-        {
-
-        }
-
-        public void Update()
-        {
-
         }
     }
 }
