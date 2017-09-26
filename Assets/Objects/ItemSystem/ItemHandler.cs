@@ -57,7 +57,7 @@ namespace ItemSystem
         public void OnHit(HealthController healthController)
         {
             foreach (Item item in Items)
-                item.Hit(healthController);
+                item.OnHit(healthController);
         }
 
         /// <summary>

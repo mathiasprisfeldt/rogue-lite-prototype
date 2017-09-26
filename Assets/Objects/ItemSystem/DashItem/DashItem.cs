@@ -9,7 +9,7 @@ namespace ItemSystem
 {
     public class DashItem : Item
     {
-        public override void Hit(HealthController victim)
+        public override void OnHit(HealthController victim)
         {
             victim.Damage(10);
         }
