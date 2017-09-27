@@ -10,10 +10,5 @@ namespace ItemSystem.Items
     /// </summary>
     public class Poison : Item
     {
-        public override void OnEquipped()
-        {
-            base.OnEquipped();
-            Debug.Log("Poison Equipped!");
-        }
     }
 }

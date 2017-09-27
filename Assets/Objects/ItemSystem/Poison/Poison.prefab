@@ -19,7 +19,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4088086656118328}
-  - component: {fileID: 114584187203910844}
+  - component: {fileID: 114655605774163738}
+  - component: {fileID: 114973623483714890}
   m_Layer: 0
   m_Name: Poison
   m_TagString: Untagged
@@ -40,7 +41,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114584187203910844
+--- !u!114 &114655605774163738
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -51,3 +52,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7e401a468f11f44c839cfad7955b3b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _type: 1
+--- !u!114 &114973623483714890
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1031210197908012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a12cd5e97f3e1f14d8f5190afe3c6396, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isScaled: 1
+  _duration: 3
+  _interval: 1
+  _elapsedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  _finishedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null

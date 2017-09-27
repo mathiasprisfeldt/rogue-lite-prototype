@@ -1,5 +1,4 @@
-﻿using Archon.SwissArmyLib.Events;
-using Health;
+﻿using Health;
 using UnityEngine;
 using Timer = AcrylecSkeleton.Utilities.Timer;
 
@@ -15,15 +14,13 @@ namespace ItemSystem
     /// Purpose: Base class for all items.
     /// Creator: MP
     /// </summary>
+    [RequireComponent(typeof(Timer))]
     public abstract class Item : MonoBehaviour
     {
-        [SerializeField, Tooltip("Timer for cooldown on activation.")]
         private Timer _timer;
 
         [SerializeField]
         private ItemType _type;
-
-        public bool IsActivationReady { get; private set; }
 
         public ItemHandler ItemHandler { get; set; }
         public string Name { get; set; }
@@ -36,12 +33,14 @@ namespace ItemSystem
             set { _type = value; }
         }
 
+        public bool IsActivationReady
+        {
+            get { return !_timer.IsRunning; }
+        }
+
         void Start()
         {
-            _timer.FinishedEvent.AddListener(() =>
-            {
-                IsActivationReady = true;
-            });
+            _timer = GetComponent<Timer>();
         }
 
         /// <summary>
@@ -52,7 +51,6 @@ namespace ItemSystem
             if (IsActivationReady)
             {
                 OnActivated();
-                IsActivationReady = false;
                 _timer.StartTimer();
             }
         }

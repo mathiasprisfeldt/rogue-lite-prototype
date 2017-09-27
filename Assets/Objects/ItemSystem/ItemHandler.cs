@@ -43,6 +43,9 @@ namespace ItemSystem
 
             foreach (Item starterItem in _itemsAtStart)
             {
+                if (!starterItem)
+                    continue;
+
                 Item newItem = Instantiate(starterItem, transform);
                 newItem.ItemHandler = this;
 
