@@ -14,10 +14,10 @@ namespace ItemSystem
     /// Purpose: Base class for all items.
     /// Creator: MP
     /// </summary>
-    [RequireComponent(typeof(Timer))]
     public abstract class Item : MonoBehaviour
     {
-        private Timer _timer;
+        [SerializeField]
+        private Timer _cooldownTimer;
 
         [SerializeField]
         private ItemType _type;
@@ -35,12 +35,12 @@ namespace ItemSystem
 
         public bool IsActivationReady
         {
-            get { return !_timer.IsRunning; }
+            get { return !_cooldownTimer.IsRunning; }
         }
 
         void Start()
         {
-            _timer = GetComponent<Timer>();
+            _cooldownTimer = GetComponent<Timer>();
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace ItemSystem
             if (IsActivationReady)
             {
                 OnActivated();
-                _timer.StartTimer();
+                _cooldownTimer.StartTimer();
             }
         }
 
