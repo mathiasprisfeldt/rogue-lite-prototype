@@ -26,6 +26,7 @@ public class CameraPoint : MonoBehaviour
         _xPosition = transform.localPosition.x;
         GetCamera();
         SceneManager.sceneLoaded += OnSceneLoaded;
+
     }
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode loadSceneMode)
@@ -40,6 +41,7 @@ public class CameraPoint : MonoBehaviour
         {
             FollowTransform ft = mainCam.GetComponent<FollowTransform>();
             ft.Target = gameObject.transform;
+            ft.transform.position = transform.position;
         }
     }
 

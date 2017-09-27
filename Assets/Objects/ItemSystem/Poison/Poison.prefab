@@ -51,5 +51,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7e401a468f11f44c839cfad7955b3b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cooldownTimer: {fileID: 0}
+  _cooldownTimer:
+    _canOverride: 0
+    _duration: 3
+    _interval: 1
+    _deltaDeltaTimeType: 0
+    _elapsed:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    _started:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    _finished:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
   _type: 0

@@ -1,4 +1,6 @@
-﻿using Health;
+﻿using System;
+using Archon.SwissArmyLib.Events;
+using Health;
 using UnityEngine;
 using Timer = AcrylecSkeleton.Utilities.Timer;
 
@@ -40,7 +42,12 @@ namespace ItemSystem
 
         void Start()
         {
-            _cooldownTimer = GetComponent<Timer>();
+            if (_cooldownTimer != null)
+            {
+                _cooldownTimer.Initialize();
+                _cooldownTimer.Finished.AddListener(OnCooldownFinished);
+                _cooldownTimer.Elapsed.AddListener(OnCooldownElapsed);
+            }
         }
 
         /// <summary>
@@ -60,6 +67,8 @@ namespace ItemSystem
             //If we havent removed this Item from its ItemHandler do so.
             if (ItemHandler.Items.Contains(this))
                 ItemHandler.Items.Remove(this);
+
+            _cooldownTimer.Destroy();
         }
 
         /// <summary>
@@ -81,6 +90,16 @@ namespace ItemSystem
         /// Called when Item is activated.
         /// </summary>
         public virtual void OnActivated() { }
+
+        /// <summary>
+        /// Called when cooldown timer is finished.
+        /// </summary>
+        protected virtual void OnCooldownFinished() { }
+
+        /// <summary>
+        /// Called when cooldown timer has its elapsed triggered.
+        /// </summary>
+        protected virtual void OnCooldownElapsed() { }
 
         protected virtual void OnDestroy()
         {
