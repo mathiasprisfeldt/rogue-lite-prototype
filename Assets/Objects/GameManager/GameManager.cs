@@ -59,6 +59,7 @@ namespace Managers
         private void SceneManagerOnSceneUnloaded(Scene arg0)
         {
             Enemies.Clear();
+            LevelManager.Instance.SavedPlayerHealth = Player.C.Health.HealthAmount;
         }
     }
 }

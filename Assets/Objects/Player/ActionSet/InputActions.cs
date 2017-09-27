@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using InControl;
 
 namespace RogueLiteInput
@@ -248,6 +250,12 @@ namespace RogueLiteInput
         public ProxyPlayerAction Right { get; set; }
         public ProxyPlayerAction Sprint { get; set; }
 
+        private List<ProxyPlayerAction> _proxyActions;
+
+        public bool AnyWasPressed
+        {
+            get{ return _proxyActions.Any(proxyPlayerAction => proxyPlayerAction.WasPressed); }
+        }
 
         public ProxyInputActions()
         {
@@ -260,6 +268,8 @@ namespace RogueLiteInput
             Left = new ProxyPlayerAction();
             Right = new ProxyPlayerAction();
             Sprint = new ProxyPlayerAction();
+
+            _proxyActions = new List<ProxyPlayerAction>() {Jump,Dash,Attack,Special,Up,Down,Left,Right,Sprint};
         }
 
         public void UpdateData(InputActions actions)

@@ -16,6 +16,9 @@ using Object = UnityEngine.Object;
 public class LevelManager : Singleton<LevelManager>
 {
     [SerializeField]
+    private bool _resetMapOnDeath;
+
+    [SerializeField]
     private Vector2 _tileSpawnOffset = Vector2.one / 2;
 
     [SerializeField]
@@ -42,7 +45,12 @@ public class LevelManager : Singleton<LevelManager>
     private List<int[,]> _randomLevelsHard = new List<int[,]>();
 
     private bool _nextLevelLoaded = false;
+    private bool _setup;
+    private bool _loadNextLevel;
+
     public Level CurrentLevel { get; set; }
+    public float SavedPlayerHealth { get; set; }
+
 
     /// <summary>
     /// Awake
@@ -66,12 +74,13 @@ public class LevelManager : Singleton<LevelManager>
         }
         else
             LoadNextLevel();
+        _setup = true;
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
-            ResetGame();
+            ResetGame(true);
     }
 
     /// <summary>
@@ -87,6 +96,7 @@ public class LevelManager : Singleton<LevelManager>
             CurrentLevel.Despawn();
 
         _nextLevelLoaded = true;
+        _loadNextLevel = true;
 
         SceneManager.LoadScene("LevelScene");
     }
@@ -96,6 +106,14 @@ public class LevelManager : Singleton<LevelManager>
     /// </summary>
     private void FindNextLevel()
     {
+        if (_resetMapOnDeath && _setup && !_loadNextLevel)
+        {
+            CurrentLevel = new Level(CurrentLevel.LayoutsData);
+            return;
+        }
+
+        _loadNextLevel = false;
+
         if (_forcedLevels.Any())
         {
             var levelArray = _forcedLevels.FirstOrDefault();
@@ -127,7 +145,7 @@ public class LevelManager : Singleton<LevelManager>
                 CurrentLevel = new Level(_randomLevelsHard[UnityEngine.Random.Range(0, _randomLevelsHard.Count)]);
         }
         else
-            Debug.Log("There are no levels to loaded");
+            Debug.Log("There are no levels to load");
     }
 
     /// <summary>
@@ -173,12 +191,26 @@ public class LevelManager : Singleton<LevelManager>
 
     public void ResetGame()
     {
-        if (GameManager.Instance)
-            Destroy(GameManager.Instance.Player.gameObject);
-        _forcedLevels.Clear();
-        _randomLevelsHard.Clear();
+        ResetGame(false);
+    }
 
-        LoadLevels();
+    public void ResetGame(bool overloadMapReset)
+    {
+        if (!_resetMapOnDeath || overloadMapReset)
+        {
+            if (GameManager.Instance)
+                Destroy(GameManager.Instance.Player.gameObject);
+            _forcedLevels.Clear();
+            _randomLevelsHard.Clear();
+
+            if (overloadMapReset)
+                _setup = true;
+
+            LoadLevels();
+        }
+        else
+            GameManager.Instance.Player.C.Health.HealthAmount = SavedPlayerHealth;
+        
         LoadNextLevel();
     }
 

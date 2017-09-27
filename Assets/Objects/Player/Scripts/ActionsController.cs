@@ -231,7 +231,6 @@ namespace CharacterController
                 App.C.PlayerActions.ResetProxy();
             _animator.SetBool("MovingUp", Rigidbody.velocity.y > 0);
             _animator.SetFloat("Speed", Mathf.Clamp01(new Vector2(Horizontal, Vertical).magnitude));
-
         }
 
         private bool HandleOnewayColliders()
@@ -419,6 +418,7 @@ namespace CharacterController
                 else
                     velocity = new Vector2(velocity.x, 0);
             }
+            
         }
 
         public override void Flip(float dir)
@@ -435,18 +435,16 @@ namespace CharacterController
 
             LastUsedHorizontalMoveAbility = MoveAbility.None;
             Horizontal = App.C.PlayerActions.Horizontal;
+
             if (!Combat)
                 Flip(Horizontal);
 
-            if (CollisionCheck.Sides.Left && Horizontal < 0)
-                Horizontal = 0;
-
-            if (CollisionCheck.Sides.Right && Horizontal > 0)
+            if (CollisionCheck.Sides.Left && Horizontal < 0 ||
+                CollisionCheck.Sides.Right && Horizontal > 0)
                 Horizontal = 0;
 
             if (WaitForInputHorizontal &&
-                (App.C.PlayerActions.ProxyInputActions.Left.WasPressed
-                 || App.C.PlayerActions.ProxyInputActions.Right.WasPressed))
+                App.C.PlayerActions.ProxyInputActions.AnyWasPressed)
                 WaitForInputHorizontal = false;
 
             if (!WaitForInputHorizontal)
