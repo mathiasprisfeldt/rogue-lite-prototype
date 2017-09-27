@@ -225,6 +225,8 @@ namespace Health
 
             if (_entityRenderer)
                 _originalColor = _entityRenderer.Color;
+
+            CheckHealth();
         }
 
         void Update()

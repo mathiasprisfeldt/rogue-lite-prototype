@@ -41,14 +41,14 @@ namespace AcrylecSkeleton.Utilities
                 return instance;
             }
         }
-
+        
         /// <summary>
         /// Check if the instance has been instantiated.
         /// </summary>
         /// <returns>True if instance is not null</returns>
         public static bool CheckSanity()
         {
-            if (Instance != null)
+            if (instance != null)
                 return true;
 
             return false;

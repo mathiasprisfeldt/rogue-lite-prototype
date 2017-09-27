@@ -10,5 +10,18 @@ namespace ItemSystem.Items
     /// </summary>
     public class Poison : Item
     {
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                Activate();
+            }
+        }
+
+        protected override void OnCooldownFinished()
+        {
+            base.OnCooldownFinished();
+            Debug.Log("ASD");
+        }
     }
 }
