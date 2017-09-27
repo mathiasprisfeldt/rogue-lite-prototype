@@ -17,11 +17,5 @@ namespace ItemSystem.Items
                 Activate();
             }
         }
-
-        protected override void OnCooldownFinished()
-        {
-            base.OnCooldownFinished();
-            Debug.Log("ASD");
-        }
     }
 }

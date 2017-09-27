@@ -8,7 +8,9 @@ using UnityEngine;
 
 public class CollisionCheck : MonoBehaviour
 {
+#pragma warning disable 0414
     private List<Collider2D> _tempList = new List<Collider2D>();
+#pragma warning restore 0414
 
     [SerializeField]
     private List<Collider2D> _collidersToCheck = new List<Collider2D>();

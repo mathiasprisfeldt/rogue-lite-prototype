@@ -44,7 +44,6 @@ namespace ItemSystem
         {
             if (_cooldownTimer != null)
             {
-                _cooldownTimer.Initialize();
                 _cooldownTimer.Finished.AddListener(OnCooldownFinished);
                 _cooldownTimer.Elapsed.AddListener(OnCooldownElapsed);
             }

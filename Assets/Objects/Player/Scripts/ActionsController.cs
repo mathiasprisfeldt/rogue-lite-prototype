@@ -62,7 +62,6 @@ namespace CharacterController
         private MoveAbility _lastUsedVerticalMoveAbility;
         private MoveAbility _lastUsedHorizontalMoveAbility;
         private CombatAbility _lastUsedCombatAbility;
-        private MoveAbility _savedValue;
         private bool _dashEnded;
 
         public Vector2 Velocity
@@ -179,9 +178,6 @@ namespace CharacterController
 
             if (App.C.PlayerActions != null)
                 App.C.PlayerActions.UpdateProxy();
-
-            _savedValue = LastUsedVerticalMoveAbility;
-            
         }
 
         protected override void Awake()
