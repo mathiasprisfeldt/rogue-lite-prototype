@@ -1,30 +1,26 @@
-﻿using Archon.SwissArmyLib.Events;
-using Controllers;
-using Health;
+﻿using Health;
 using UnityEngine;
-using UnityEngine.UI;
+using Timer = AcrylecSkeleton.Utilities.Timer;
 
 namespace ItemSystem
 {
     public enum ItemType
     {
         Passive,
-        Ability
+        Active
     }
 
     /// <summary>
     /// Purpose: Base class for all items.
     /// Creator: MP
     /// </summary>
-    public abstract class Item : MonoBehaviour, TellMeWhen.ITimerCallback
+    public abstract class Item : MonoBehaviour
     {
-        [SerializeField, Tooltip("Cooldown duration when activating the item.")]
-        private float _activationCdDuration;
+        [SerializeField]
+        private Timer _cooldownTimer;
 
         [SerializeField]
         private ItemType _type;
-
-        public bool IsActivationReady { get; private set; }
 
         public ItemHandler ItemHandler { get; set; }
         public string Name { get; set; }
@@ -37,6 +33,28 @@ namespace ItemSystem
             set { _type = value; }
         }
 
+        public bool IsActivationReady
+        {
+            get { return !_cooldownTimer.IsRunning; }
+        }
+
+        void Start()
+        {
+            _cooldownTimer = GetComponent<Timer>();
+        }
+
+        /// <summary>
+        /// Triggers item activation, and sets the item on cooldown.
+        /// </summary>
+        public void Activate()
+        {
+            if (IsActivationReady)
+            {
+                OnActivated();
+                _cooldownTimer.StartTimer();
+            }
+        }
+
         public void Remove()
         {
             //If we havent removed this Item from its ItemHandler do so.
@@ -47,7 +65,7 @@ namespace ItemSystem
         /// <summary>
         /// Called when this character deals damage to another character.
         /// </summary>
-        public virtual void Hit(HealthController victim) { }
+        public virtual void OnHit(HealthController victim) { }
 
         /// <summary>
         /// Called when an item gets equipped.
@@ -64,28 +82,9 @@ namespace ItemSystem
         /// </summary>
         public virtual void OnActivated() { }
 
-        /// <summary>
-        /// Triggers item activation, and sets the item on cooldown.
-        /// </summary>
-        public void Activate()
-        {
-            if (IsActivationReady)
-            {
-                OnActivated();
-                TellMeWhen.Seconds(_activationCdDuration, this);
-                IsActivationReady = false;
-            }
-        }
-
         protected virtual void OnDestroy()
         {
             Remove();
-        }
-
-        public void OnTimesUp(int id, object args)
-        {
-            //We're no longer on cooldown.
-            IsActivationReady = true;
         }
     }
 }
