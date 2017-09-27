@@ -41,7 +41,7 @@ namespace Abilitys
         public void Awake()
         {
             OnAbilityChange = new UnityEvent();
-            UpdateAbilities();  
+            UpdateAbilities();
         }
 
         public void Update()
