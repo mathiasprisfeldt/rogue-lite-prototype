@@ -89,8 +89,8 @@ namespace Enemy
                 {
                     _isAttacking = true;
 
-                    if (Context.M.AttackIndicator && 
-                        !Context.M.AttackIndicator.Show && 
+                    if (Context.M.AttackIndicator &&
+                        !Context.M.AttackIndicator.Show &&
                         _indicatorTimer > 0)
                         Context.M.AttackIndicator.ShowIndicator(INDICATOR_IN_TIME);
                 }
@@ -119,9 +119,9 @@ namespace Enemy
                 return true;
 
             if (Context.C.Target &&
-                !Context.C.IsTurning && 
+                !Context.C.IsTurning &&
                 _canAttack &&
-                CheckHitbox())
+                CheckHitbox() && !IsState<EnemyDash>())
                 return true;
 
             return false;
@@ -155,7 +155,7 @@ namespace Enemy
             if (Context.M.Character.MainAnimator && Context.M.AttackAnim)
             {
                 Context.M.Character.MainAnimator.SetTrigger("Attack");
-                
+
             }
             else
                 Attack();

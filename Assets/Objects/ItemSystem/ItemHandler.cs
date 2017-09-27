@@ -50,7 +50,7 @@ namespace ItemSystem
                 newItem.ItemHandler = this;
 
                 Items.AddFirst(newItem);
-                starterItem.OnEquipped();
+                newItem.OnEquipped();
             }
         }
 
@@ -108,7 +108,7 @@ namespace ItemSystem
         /// <param name="b"></param>
         public void Swap(Item a, Item b)
         {
-            
+
         }
 
         void Update()

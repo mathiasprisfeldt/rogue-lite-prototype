@@ -76,13 +76,13 @@ namespace AcrylecSkeleton.Utilities
         private DeltaTimeType _deltaDeltaTimeType = DeltaTimeType.Scaled;
 
         [Space, SerializeField]
-        private UnityEvent _elapsed;
+        private UnityEvent _elapsed = new UnityEvent();
 
         [SerializeField]
-        private UnityEvent _started;
+        private UnityEvent _started = new UnityEvent();
 
         [SerializeField]
-        private UnityEvent _finished;
+        private UnityEvent _finished = new UnityEvent();
         // ReSharper restore FieldCanBeMadeReadOnly.Local
 
         public TimeSpan Clock { get; private set; }
@@ -184,7 +184,7 @@ namespace AcrylecSkeleton.Utilities
 
         public void StartTimer()
         {
-            StartTimer(_duration, _interval);   
+            StartTimer(_duration, _interval);
         }
 
         public void Destroy()

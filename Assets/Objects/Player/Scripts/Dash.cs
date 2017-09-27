@@ -37,7 +37,7 @@ namespace CharacterController
         {
             get
             {
-                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Dash.WasPressed 
+                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Dash.WasPressed
                     && _cooldownTimer <= 0 && !_dashing;
 
                 InitialDash = false;
@@ -45,10 +45,10 @@ namespace CharacterController
                 if (!base.HorizontalActive)
                     return false;
 
-                if ((input && _canDash|| _dashing) && _cooldownTimer <= 0 && !_actionsController.Combat)
+                if ((input && _canDash || _dashing) && _cooldownTimer <= 0 && !_actionsController.Combat)
                 {
                     if (input)
-                    {                        
+                    {
                         _direction = _actionsController.Model.transform.localScale.x > 0 ? 1 : -1;
 
                         var isNotvalid = _direction > 0 && RightCooldown > 0 || _direction < 0 && LeftCooldown > 0;
@@ -63,12 +63,12 @@ namespace CharacterController
                             return false;
                         }
 
-                            InitialDash = true;
-                            _actionsController.StartDash.Value = true;
-                            _dashing = true;
-                            _oldVelocity = _actionsController.Rigidbody.velocity;
-                            _dashingTimer = _dashDuration;
-                            _canDash = false;
+                        InitialDash = true;
+                        _actionsController.StartDash.Value = true;
+                        _dashing = true;
+                        _oldVelocity = _actionsController.Rigidbody.velocity;
+                        _dashingTimer = _dashDuration;
+                        _canDash = false;
 
                     }
                     _actionsController.App.C.Health.HitboxEnabled = false;
