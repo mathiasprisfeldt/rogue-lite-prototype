@@ -1,9 +1,11 @@
+using System;
 using AcrylecSkeleton.MVC;
 using CharacterController;
 using Controllers;
 using Health;
 using RogueLiteInput;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
 {
@@ -31,6 +33,15 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
             Health = GetComponentInChildren<HealthController>();
             PlayerActions = new InputActions();
            _character.HealthController.OnDead.AddListener(LevelManager.Instance.ResetGame);
+           SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
+            if (LevelManager.Instance && LevelManager.Instance.SavedPlayerHealth != 0)
+                Health.HealthAmount = LevelManager.Instance.SavedPlayerHealth;
+        }
+
+        private void SceneManagerOnSceneLoaded(Scene arg0, LoadSceneMode loadSceneMode)
+        {
+            if (LevelManager.Instance)
+                LevelManager.Instance.SavedPlayerHealth = Health.HealthAmount;
         }
 
         public void Update()

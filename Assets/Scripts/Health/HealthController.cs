@@ -334,10 +334,11 @@ namespace Health
             if (!IsDead && gotKilled)
             {
                 IsDead = true;
-                OnDead.Invoke();
 
                 if (_destroyOnDead)
-                    Kill();
+                        Kill();
+                OnDead.Invoke();
+
             }
 
             IsDead = gotKilled;

@@ -672,6 +672,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114883473055053996, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _destroyOnDead
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
   m_IsPrefabParent: 0
@@ -999,7 +1004,7 @@ Prefab:
         type: 2}
       propertyPath: _forcedLevelsText.Array.data[0]
       value: 
-      objectReference: {fileID: 4900000, guid: 5cbc379a48f837449917f94ee993aaa2, type: 3}
+      objectReference: {fileID: 4900000, guid: f78c1da8b46aa924ba0b8ebf9b5ddc3d, type: 3}
     - target: {fileID: 114195463805386292, guid: b3d93c340dc761f468f2dab771568bb4,
         type: 2}
       propertyPath: _randomLevelsEasyText.Array.data[0]

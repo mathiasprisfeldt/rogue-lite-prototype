@@ -86,7 +86,7 @@ public class LevelManager : Singleton<LevelManager>
     /// <summary>
     /// Loads the next level
     /// </summary>
-    public void LoadNextLevel()
+    public void LoadNextLevel(bool resetMap = false)
     {
         if (_nextLevelLoaded)
             return;
@@ -96,7 +96,7 @@ public class LevelManager : Singleton<LevelManager>
             CurrentLevel.Despawn();
 
         _nextLevelLoaded = true;
-        _loadNextLevel = true;
+        _loadNextLevel = !resetMap;
 
         SceneManager.LoadScene("LevelScene");
     }
@@ -208,10 +208,10 @@ public class LevelManager : Singleton<LevelManager>
 
             LoadLevels();
         }
-        else
+        else if(_resetMapOnDeath)
             GameManager.Instance.Player.C.Health.HealthAmount = SavedPlayerHealth;
         
-        LoadNextLevel();
+        LoadNextLevel(true);
     }
 
     /// <summary>
