@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Archon.SwissArmyLib.Events;
 using System;
+using System.Linq;
+using Controllers;
 
 public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
 {
@@ -15,14 +17,21 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
     [SerializeField]
     private float _dashSpeed;
     [SerializeField]
+    private float _ydashSpeed;
+    [SerializeField]
     private Timer _dashTimer;
     [SerializeField]
     private AnimationCurve _dashCurve;
     [SerializeField]
+    private AnimationCurve _ydashCurve;
+    [SerializeField]
     private float _chargeUp;
+    [SerializeField]
+    private float _damage;
 
     private bool _isDashing;
     private Vector2 _dashDirection;
+    private List<Character> _dirtyCols;
 
     public DashItem DashItem { get; set; }
 
@@ -32,25 +41,49 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
 
         if (_dashTimer.IsRunning)
         {
-            Vector2 vel = new Vector2(_dashCurve.Evaluate((float)_dashTimer.Duration.TotalSeconds - Mathf.Abs((float)_dashTimer.Clock.TotalSeconds) / (float)_dashTimer.Duration.TotalSeconds) * (_dashSpeed / (float)_dashTimer.Duration.TotalSeconds) * _dashDirection.x, 0);
 
-            vel *= deltaTime;
+            float x = _dashCurve.Evaluate(
+                (float)_dashTimer.Duration.TotalSeconds -
+                Mathf.Abs((float)_dashTimer.Clock.TotalSeconds) /
+                (float)_dashTimer.Duration.TotalSeconds) *
+                (_dashSpeed / (float)_dashTimer.Duration.TotalSeconds) * _dashDirection.x;
 
-            Context.M.Character.SetVelocity(vel);
+            float y = _ydashCurve.Evaluate(
+                (float)_dashTimer.Duration.TotalSeconds -
+                Mathf.Abs((float)_dashTimer.Clock.TotalSeconds) /
+                (float)_dashTimer.Duration.TotalSeconds) *
+                (_ydashSpeed / (float)_dashTimer.Duration.TotalSeconds);
+
+            Context.M.Character.SetVelocity(new Vector2(x, y * -1) * deltaTime);
         }
         else
         {
             Context.M.Character.StandStill(); ;
+        }
+
+        var colls = Context.M.Character.Hitbox.Sides.TargetColliders.Where(x => x.tag.Equals("Player"));
+
+        if (colls.Any())
+        {
+            Character character = colls.FirstOrDefault().GetComponent<CollisionCheck>().Character;
+
+            if (!_dirtyCols.Contains(character))
+            {
+                character.HealthController.Damage(_damage, from: Context.M.Character, pos: transform.position);
+
+                _dirtyCols.Add(character);
+            }
         }
     }
 
     public override void Begin()
     {
         base.Begin();
-        _dashDirection = new Vector2(Context.C.ToPlayer.normalized.x, 0);
+        _dashDirection = Context.C.ToPlayer.normalized;
         _isDashing = true;
         DashItem.Activate();
         TellMeWhen.Seconds(_chargeUp, this);
+        _dirtyCols = new List<Character>();
     }
 
     public void OnDashEnded()

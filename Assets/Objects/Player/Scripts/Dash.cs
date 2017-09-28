@@ -1,4 +1,7 @@
 ﻿using Archon.SwissArmyLib.Utils;
+using Controllers;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CharacterController
@@ -21,6 +24,9 @@ namespace CharacterController
         [SerializeField]
         private AnimationCurve _dashCurve;
 
+        [SerializeField]
+        private float _damage;
+
         public bool InitialDash { get; set; }
 
         private bool _dashing;
@@ -29,6 +35,7 @@ namespace CharacterController
         private Vector2 _oldVelocity;
         private float _direction;
         private bool _canDash;
+        List<Character> _dirtyColls = new List<Character>();
 
         public float LeftCooldown { get; set; }
         public float RightCooldown { get; set; }
@@ -59,7 +66,7 @@ namespace CharacterController
 
                         if (isNotvalid)
                         {
-                            _actionsController.App.C.Health.HitboxEnabled = true;
+                            _actionsController.HealthController.IsInvurnable = false;
                             return false;
                         }
 
@@ -71,10 +78,10 @@ namespace CharacterController
                         _canDash = false;
 
                     }
-                    _actionsController.App.C.Health.HitboxEnabled = false;
+                    _actionsController.HealthController.IsInvurnable = true;
                     return true;
                 }
-                _actionsController.App.C.Health.HitboxEnabled = true;
+                _actionsController.HealthController.IsInvurnable = false;
                 return false;
             }
         }
@@ -106,25 +113,44 @@ namespace CharacterController
                 RightCooldown -= BetterTime.DeltaTime;
         }
 
+        private void Update()
+        {
+            if (_dashing)
+            {
+                var colls = _actionsController.Hitbox.Sides.TargetColliders.Where(x => x.tag.Equals("Enemy"));
+
+                if (colls.Any())
+                {
+                    foreach (var item in colls)
+                    {
+                        Character character = item.GetComponent<CollisionCheck>().Character;
+                        if (!_dirtyColls.Contains(character))
+                        {
+                            _dirtyColls.Add(character);
+
+                            character.HealthController.Damage(_damage, from: _actionsController, pos: transform.position);
+                        }
+                    }
+                }
+            }
+        }
+
         public override void HandleHorizontal(ref Vector2 velocity)
         {
             if (_dashing && _direction > 0 && _actionsController.WallSlideCheck.Right
-                || _dashing && _direction < 0 && _actionsController.WallSlideCheck.Left)
+                || _dashing && _direction < 0 && _actionsController.WallSlideCheck.Left
+                || _dashingTimer <= 0)
             {
                 _dashingTimer = 0;
-                _dashing = false;
-            }
-
-            _actionsController.Flip(_direction);
-            if (_dashingTimer <= 0)
-            {
-                _dashing = false;
                 velocity = _oldVelocity;
+                _dashing = false;
                 _cooldownTimer = _dashCooldown;
+                _dirtyColls = new List<Character>();
             }
             else
                 velocity = new Vector2(_dashCurve.Evaluate((_dashDuration - Mathf.Abs(_dashingTimer)) / _dashDuration) * _dashForce * _direction,
                     velocity.y);
+            _actionsController.Flip(_direction);
         }
 
         public override void HandleVertical(ref Vector2 velocity)
