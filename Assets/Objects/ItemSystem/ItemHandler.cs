@@ -111,11 +111,9 @@ namespace ItemSystem
 
         }
 
-        void Update()
+        public bool CanStealFrom()
         {
-            if (Input.GetKeyDown(KeyCode.U) && Owner is ActionsController)
-                foreach (Collider2D targetCollider in Owner.Hitbox.Sides.TargetColliders)
-                    Steal(targetCollider.GetComponent<CollisionCheck>().Character.ItemHandler);
+            return Owner.HealthController.IsDead && Items.Any();
         }
     }
 }

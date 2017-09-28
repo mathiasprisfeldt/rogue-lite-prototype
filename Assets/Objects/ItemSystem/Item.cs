@@ -1,6 +1,4 @@
-﻿using System;
-using Archon.SwissArmyLib.Events;
-using Health;
+﻿using Health;
 using UnityEngine;
 using Timer = AcrylecSkeleton.Utilities.Timer;
 

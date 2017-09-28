@@ -31,7 +31,6 @@ public class CollisionCheck : MonoBehaviour
     private Collider2D[] _contacts = new Collider2D[30];
     private ContactFilter2D _contactFilter = new ContactFilter2D();
 
-
     public List<Collider2D> CollidersToCheck
     {
         get { return _collidersToCheck; }
@@ -102,6 +101,8 @@ public class CollisionCheck : MonoBehaviour
         }
 
     }
+
+    public event Action<Collider2D> OnTriggerEnter;
 
     void Awake()
     {
@@ -263,6 +264,17 @@ public class CollisionCheck : MonoBehaviour
     public void LateUpdate()
     {
         _isDirty = false;
+    }
+    
+    /// <summary>
+    /// Used for proxy invoke tunnel.
+    /// See <see cref="OnTriggerEnter"/>
+    /// </summary>
+    /// <param name="collision"></param>
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (OnTriggerEnter != null)
+            OnTriggerEnter.Invoke(collision);
     }
 }
 
