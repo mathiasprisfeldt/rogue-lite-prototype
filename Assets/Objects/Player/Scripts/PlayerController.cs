@@ -32,21 +32,21 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
         {
             Health = GetComponentInChildren<HealthController>();
             PlayerActions = new InputActions();
-           _character.HealthController.OnDead.AddListener(LevelManager.Instance.ResetGame);
-           SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
-            if (LevelManager.Instance && LevelManager.Instance.SavedPlayerHealth != 0)
+            _character.HealthController.OnDead.AddListener(LevelManager.Instance.ResetGame);
+            SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
+            if (LevelManager.Instance && LevelManager.Instance.SavedPlayerHealth != 0 && LevelManager.Instance.SetPlayerHealth)
                 Health.HealthAmount = LevelManager.Instance.SavedPlayerHealth;
         }
 
         private void SceneManagerOnSceneLoaded(Scene arg0, LoadSceneMode loadSceneMode)
         {
-            if (LevelManager.Instance)
+            if (LevelManager.Instance && Health.HealthAmount != 0)
                 LevelManager.Instance.SavedPlayerHealth = Health.HealthAmount;
         }
 
         public void Update()
         {
-            if(PlayerActions == null)
+            if (PlayerActions == null)
                 PlayerActions = new InputActions();
         }
     }

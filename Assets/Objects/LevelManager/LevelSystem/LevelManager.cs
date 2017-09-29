@@ -50,6 +50,7 @@ public class LevelManager : Singleton<LevelManager>
 
     public Level CurrentLevel { get; set; }
     public float SavedPlayerHealth { get; set; }
+    public bool SetPlayerHealth { get; set; }
 
 
     /// <summary>
@@ -208,10 +209,9 @@ public class LevelManager : Singleton<LevelManager>
 
             LoadLevels();
         }
-        else if(_resetMapOnDeath)
-            GameManager.Instance.Player.C.Health.HealthAmount = SavedPlayerHealth;
-        
-        LoadNextLevel(true);
+        SetPlayerHealth = !overloadMapReset;
+
+        LoadNextLevel(!overloadMapReset);
     }
 
     /// <summary>
