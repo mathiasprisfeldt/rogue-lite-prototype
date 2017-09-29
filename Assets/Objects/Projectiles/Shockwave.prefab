@@ -149,8 +149,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 1
   _timeToLive: 5
-  _useConstantForce: 0
+  _useConstantForce: 1
   _force: 8
+  _additionalYDirection: 0
   _layersToHit:
     serializedVersion: 2
     m_Bits: 16384
@@ -176,6 +177,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  _hitEffectPrefab: {fileID: 0}
 --- !u!114 &114944464431861846
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -187,6 +189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d210670ef42e544489c1eb61d452f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _this: {fileID: 0}
   _event:
     m_PersistentCalls:
       m_Calls:

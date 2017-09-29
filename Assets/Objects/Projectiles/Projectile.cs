@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Video;
+using CharacterController;
 
 namespace Projectiles
 {
@@ -15,7 +16,6 @@ namespace Projectiles
     /// Creator: MB
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
-    [RequireComponent(typeof(Collider2D))]
     public class Projectile : MonoBehaviour, TellMeWhen.ITimerCallback
     {
         [Header("Settings:"), SerializeField]
@@ -29,6 +29,9 @@ namespace Projectiles
 
         [SerializeField, Tooltip("Amount of force to add.")]
         private float _force;
+
+        [SerializeField]
+        private float _additionalYDirection;
 
         [SerializeField]
         private LayerMask _layersToHit;
@@ -49,11 +52,24 @@ namespace Projectiles
         [SerializeField]
         private GameObject _hitEffectPrefab;
 
+        private Vector2 _direction;
         private bool _used;
 
         public Rigidbody2D RigidBody { get; set; }
 
-        public Vector2 Direction { get; set; }
+        public Vector2 Direction
+        {
+            get { return _direction; }
+            set
+            {
+                if (value.y == 0)
+                {
+                    _direction = new Vector2(value.x, _additionalYDirection);
+                }
+                else
+                    _direction = value;
+            }
+        }
 
         public Character Owner { get; set; }
 
@@ -67,16 +83,22 @@ namespace Projectiles
 
         public void Shoot()
         {
+            if (Owner is ActionsController)
+            {
+                _tagsToHit = new List<string>() { "Enemy" };
+            }
+            else
+            {
+                _tagsToHit = new List<string>() { "Player" };
+            }
+
             if (!_useConstantForce)
                 RigidBody.AddForce(Direction * _force, ForceMode2D.Impulse);
         }
 
         public void Update()
         {
-            if (Direction * _force != Vector2.zero)
-                RigidBody.velocity = Direction * _force;
-
-            if(RigidBody.velocity.x > 0 && transform.localScale.x < 0)
+            if (RigidBody.velocity.x > 0 && transform.localScale.x < 0)
                 transform.localScale = new Vector3(1, transform.localScale.y);
 
             if (RigidBody.velocity.x < 0 && transform.localScale.x > 0)
@@ -110,8 +132,8 @@ namespace Projectiles
 
         public void OnCollisionEnter2D(Collision2D collision)
         {
-            TargetCheck(collision.gameObject);
-            Kill();
+            if (TargetCheck(collision.gameObject))
+                Kill();
         }
 
         /// <summary>
@@ -138,7 +160,7 @@ namespace Projectiles
         {
             var targetHit = _layersToHit.Contains(target.layer)
                 && !(_tagsToHit.Count > 0 && !_tagsToHit.Contains(target.tag));
-            
+
             if (targetHit)
             {
                 CollisionCheck cc = target.GetComponent<CollisionCheck>();
@@ -148,7 +170,7 @@ namespace Projectiles
                     {
                         cc.Character.HealthController.Damage(_damage, pos: transform.position, from: Owner);
                         _used = true;
-                    }                    
+                    }
                     else
                         targetHit = false;
                 }

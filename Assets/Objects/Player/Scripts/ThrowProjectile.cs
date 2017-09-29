@@ -31,20 +31,21 @@ namespace Special
 
         public bool KnifeActive
         {
-            get {
+            get
+            {
                 if (!Active)
                     return Active;
-                var throwOnWAll = _actionsController.TriggerCheck.Sides.Left && _actionsController.LastHorizontalDirection < 0 
+                var throwOnWAll = _actionsController.TriggerCheck.Sides.Left && _actionsController.LastHorizontalDirection < 0
                     || _actionsController.TriggerCheck.Sides.Right && _actionsController.LastHorizontalDirection > 0;
 
-                if (_actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Special.WasPressed
-                    && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None && _actionsController.ManaHandler.Mana >= _manaCost 
+                if (_actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Special1.WasPressed
+                    && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None
                     && !throwOnWAll)
                 {
-                    _actionsController.ManaHandler.Mana -= _manaCost;
                     _throwActive = true;
                     _cooldownTimer = _cooldown;
                     _actionsController.StartThrow.Value = true;
+                    Throw();
                     if (_actionsController.Horizontal != 0)
                         _actionsController.Flip(_actionsController.Horizontal);
                 }
@@ -55,12 +56,10 @@ namespace Special
 
         public void Throw()
         {
-            Projectile go = Instantiate(_projectilePrefab, _actionsController.ThrowPoint.position, Quaternion.identity);
-            go.Owner = _actionsController;
-
-            Rigidbody2D rig = go.GetComponent<Rigidbody2D>();
-            if (rig != null)
-                rig.AddForce(new Vector2(_actionsController.LastHorizontalDirection, 0) * _throwForce, ForceMode2D.Impulse);
+            Projectile projectile = Instantiate(_projectilePrefab, _actionsController.ThrowPoint.position, Quaternion.identity);
+            projectile.Owner = _actionsController;
+            projectile.Direction = new Vector2(_actionsController.LastHorizontalDirection, 0);
+            projectile.Shoot();
         }
 
         public void Update()
