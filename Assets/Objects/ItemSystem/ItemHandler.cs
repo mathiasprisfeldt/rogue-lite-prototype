@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using CharacterController;
+using Archon.SwissArmyLib.Events;
 using Controllers;
-using Enemy;
 using Health;
 using UnityEngine;
 
@@ -15,11 +13,18 @@ namespace ItemSystem
     /// </summary>
     public class ItemHandler : MonoBehaviour
     {
+        public const int
+            ON_ITEM_UNEQUIPPED = 0,
+            ON_ITEM_EQUIPPED   = 1;
+
         [SerializeField]
         private Character _owner;
 
         [SerializeField]
         private List<Item> _itemsAtStart;
+
+        [SerializeField]
+        private Vector2 _popupOffset;
 
         public LinkedList<Item> Items { get; set; }
 
@@ -28,6 +33,15 @@ namespace ItemSystem
             get { return _owner; }
             set { _owner = value; }
         }
+
+        public Vector2 PopupOffset
+        {
+            get { return _popupOffset; }
+            set { _popupOffset = value; }
+        }
+
+        public readonly Event<Item> ItemEquipped = new Event<Item>(ON_ITEM_EQUIPPED);
+        public readonly Event<Item> ItemUnEquipped = new Event<Item>(ON_ITEM_UNEQUIPPED);
 
         void Start()
         {

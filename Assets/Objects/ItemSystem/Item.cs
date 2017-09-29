@@ -35,15 +35,20 @@ namespace ItemSystem
 
         public bool IsActivationReady
         {
-            get { return !_cooldownTimer.IsRunning; }
+            get { return !CooldownTimer.IsRunning; }
+        }
+
+        public Timer CooldownTimer
+        {
+            get { return _cooldownTimer; }
         }
 
         void Start()
         {
-            if (_cooldownTimer != null)
+            if (CooldownTimer != null)
             {
-                _cooldownTimer.Finished.AddListener(OnCooldownFinished);
-                _cooldownTimer.Elapsed.AddListener(OnCooldownElapsed);
+                CooldownTimer.Finished.AddListener(OnCooldownFinished);
+                CooldownTimer.Elapsed.AddListener(OnCooldownElapsed);
             }
         }
 
@@ -55,7 +60,7 @@ namespace ItemSystem
             if (IsActivationReady)
             {
                 OnActivated();
-                _cooldownTimer.StartTimer();
+                CooldownTimer.StartTimer();
             }
         }
 
@@ -65,7 +70,7 @@ namespace ItemSystem
             if (ItemHandler.Items.Contains(this))
                 ItemHandler.Items.Remove(this);
 
-            _cooldownTimer.Destroy();
+            CooldownTimer.Destroy();
         }
 
         /// <summary>
@@ -76,12 +81,18 @@ namespace ItemSystem
         /// <summary>
         /// Called when an item gets equipped.
         /// </summary>
-        public virtual void OnEquipped() { }
+        public virtual void OnEquipped()
+        {
+            ItemHandler.ItemEquipped.Invoke(this);
+        }
 
         /// <summary>
         /// Called when an item gets unequipped.
         /// </summary>
-        public virtual void OnUnEquipped() { }
+        public virtual void OnUnEquipped()
+        {
+            ItemHandler.ItemUnEquipped.Invoke(this);
+        }
 
         /// <summary>
         /// Called when Item is activated.

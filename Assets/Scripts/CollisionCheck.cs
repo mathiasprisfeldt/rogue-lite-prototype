@@ -1,13 +1,17 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+using Archon.SwissArmyLib.Events;
 using Controllers;
 using UnityEngine;
 
 public class CollisionCheck : MonoBehaviour
 {
+    public const int 
+        ON_TRIGGER_ENTER = 0,
+        ON_TRIGGER_EXIT  = 1,
+        ON_TRIGGER_STAY  = 2;
+
 #pragma warning disable 0414
     private List<Collider2D> _tempList = new List<Collider2D>();
 #pragma warning restore 0414
@@ -102,7 +106,9 @@ public class CollisionCheck : MonoBehaviour
 
     }
 
-    public event Action<Collider2D> OnTriggerEnter;
+    public readonly Event<Collider2D> TriggerEnter = new Event<Collider2D>(ON_TRIGGER_ENTER);
+    public readonly Event<Collider2D> TriggerExit = new Event<Collider2D>(ON_TRIGGER_EXIT);
+    public readonly Event<Collider2D> TriggerStay = new Event<Collider2D>(ON_TRIGGER_STAY);
 
     void Awake()
     {
@@ -240,9 +246,7 @@ public class CollisionCheck : MonoBehaviour
                             sides.ApproxVertical = CollisionSides.ColVertical.Bottom;
                     }
 
-                    collision = sides.Top || sides.Bottom || sides.Right || sides.Left;
-                    if (collision)
-                        sides.TargetColliders.Add(_contacts[i]);
+                    sides.TargetColliders.Add(_contacts[i]);
                 }
             }
         }
@@ -273,8 +277,17 @@ public class CollisionCheck : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (OnTriggerEnter != null)
-            OnTriggerEnter.Invoke(collision);
+        TriggerEnter.Invoke(collision);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        TriggerExit.Invoke(collision);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        TriggerStay.Invoke(collision);
     }
 }
 
