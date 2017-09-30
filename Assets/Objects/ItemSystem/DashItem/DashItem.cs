@@ -21,7 +21,7 @@ namespace ItemSystem
 
             if (ItemHandler.Owner is ActionsController)
             {
-                //The new owner is a player
+                (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(Abilitys.HandledAbility.Dash);
             }
             else
             {
@@ -45,6 +45,7 @@ namespace ItemSystem
             switch (state)
             {
                 case DashState.player:
+                    (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(Abilitys.HandledAbility.Dash);
                     break;
                 case DashState.enemy:
                     _enemyDash.DashItem = null;
@@ -52,11 +53,6 @@ namespace ItemSystem
                 default:
                     break;
             }
-        }
-
-        public override void OnHit(HealthController victim)
-        {
-            victim.Damage(10);
         }
     }
 }

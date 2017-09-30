@@ -3339,6 +3339,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  _damage: 1
 --- !u!114 &114309314290104366
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3690,8 +3691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _owner: {fileID: 114173897078414380}
-  _items:
-  - {fileID: 114584187203910844, guid: d088551c386684f4b807674140e43335, type: 2}
+  _itemsAtStart: []
 --- !u!114 &114566207632669164
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4118,7 +4118,7 @@ MonoBehaviour:
   _doubleJump: 0
   _wallSlide: 1
   _wallJump: 1
-  _dash: 0
+  _dash: 1
   _ledgeHanging: 1
   _throw: 1
   OnAbilityChange:
@@ -4216,7 +4216,7 @@ MonoBehaviour:
   _invurnabilityDuration: 1
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 3
+  _healthAmount: 999999
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 600
   _knockbackDuration: 0.1

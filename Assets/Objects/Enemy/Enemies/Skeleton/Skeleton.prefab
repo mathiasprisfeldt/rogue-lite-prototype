@@ -839,7 +839,84 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isEnabled: 0
-  _range: 2
+  _range: 5
+  _dashSpeed: 400
+  _ydashSpeed: 400
+  _dashTimer:
+    _canOverride: 0
+    _duration: 0.7
+    _interval: 0
+    _deltaDeltaTimeType: 0
+    _elapsed:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    _started:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    _finished:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114433637406253572}
+          m_MethodName: OnDashEnded
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+  _dashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 5.5306697
+      outSlope: 5.5306697
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: -0.4749438
+      outSlope: -0.4749438
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  _ydashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0.028037224
+      outSlope: 0.028037224
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.47862294
+      value: -0.014570355
+      inSlope: -4.5990314
+      outSlope: -10.029593
+      tangentMode: 1
+    - serializedVersion: 2
+      time: 1
+      value: -1
+      inSlope: -2.6071415
+      outSlope: -2.6071415
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  _chargeUp: 0.7
+  _damage: 1
 --- !u!114 &114466314149153096
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -989,7 +1066,7 @@ MonoBehaviour:
   _attackIndicator: {fileID: 114195926670245762}
   _staggerIndicator: {fileID: 114466314149153096}
   _viewBox: {fileID: 114000060024915830}
-  _attackCooldown: 0
+  _attackCooldown: 2
   _indicatorDuration: 0
   _targetBehind: 1
   _turnSpeed: 0.25

@@ -45,7 +45,8 @@ namespace Enemy
         {
             if (Context.C.Target &&
                 !IsState<EnemyAttack>() &&
-                !IsState<EnemyAvoid>())
+                !IsState<EnemyAvoid>() &&
+                !IsState<EnemyDash>())
                 return true;
 
             return false;
