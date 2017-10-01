@@ -95,6 +95,9 @@ namespace ItemSystem
         /// <param name="victim">The item handler to steal from</param>
         public bool Steal(ItemHandler victim)
         {
+            if (!victim.Items.Any())
+                return false;
+
             bool success = true;
 
             foreach (Item victimItem in victim.Items.ToList())
