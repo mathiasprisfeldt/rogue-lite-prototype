@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Archon.SwissArmyLib.Events;
 using Controllers;
@@ -26,6 +27,12 @@ namespace ItemSystem
         [SerializeField]
         private Vector2 _popupOffset;
 
+        [SerializeField]
+        private int _maxPassives = 2;
+
+        [SerializeField]
+        private int _maxActives = 2;
+
         public LinkedList<Item> Items { get; set; }
 
         public Character Owner
@@ -42,6 +49,14 @@ namespace ItemSystem
 
         public readonly Event<Item> ItemEquipped = new Event<Item>(ON_ITEM_EQUIPPED);
         public readonly Event<Item> ItemUnEquipped = new Event<Item>(ON_ITEM_UNEQUIPPED);
+
+        public bool CanStealFrom
+        {
+            get
+            {
+                return Owner.HealthController.IsDead && Items.Any();
+            }
+        }
 
         void Start()
         {
@@ -60,11 +75,8 @@ namespace ItemSystem
                 if (!starterItem)
                     continue;
 
-                Item newItem = Instantiate(starterItem, transform);
-                newItem.ItemHandler = this;
-
-                Items.AddFirst(newItem);
-                newItem.OnEquipped();
+                Item newItem = Instantiate(starterItem);
+                AddItem(newItem);
             }
         }
 
@@ -81,20 +93,22 @@ namespace ItemSystem
         /// Steals all items from another item handler
         /// </summary>
         /// <param name="victim">The item handler to steal from</param>
-        public void Steal(ItemHandler victim)
+        public bool Steal(ItemHandler victim)
         {
+            bool success = true;
+
             foreach (Item victimItem in victim.Items.ToList())
             {
-                Steal(null, victimItem);
+                success &= Steal(null, victimItem);
             }
+
+            return success;
         }
 
         /// <summary>
         /// Steals specific item from an ItemHandler and replaces it.
         /// </summary>
-        /// <param name="current"></param>
-        /// <param name="new"></param>
-        public void Steal(Item current, Item @new)
+        public bool Steal(Item current, Item newItem)
         {
             if (current)
             {
@@ -105,29 +119,55 @@ namespace ItemSystem
                 Destroy(current);
             }
 
-            if (@new)
-            {
-                @new.Remove();
-
-                @new.ItemHandler = this;
-                @new.OnEquipped();
-                @new.transform.SetParent(transform);
-            }
+            return AddItem(newItem);
         }
 
         /// <summary>
         /// Swaps an item on itself with another one.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
         public void Swap(Item a, Item b)
         {
 
         }
 
-        public bool CanStealFrom()
+        /// <summary>
+        /// Adds a new item to this itemhandler.
+        /// </summary>
+        public bool AddItem(Item newItem)
         {
-            return Owner.HealthController.IsDead && Items.Any();
+            if (!newItem)
+                return false;
+
+            if (!CanCarry(newItem.Type))
+                return false;
+
+            newItem.Remove();
+            Items.AddFirst(newItem);
+
+            newItem.ItemHandler = this;
+            newItem.OnEquipped();
+            newItem.transform.SetParent(transform);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks ifthis item handler can carry anymore of target item type.
+        /// It uses the condition fields for checking.
+        /// </summary>
+        public bool CanCarry(ItemType type)
+        {
+            int matchingItemCount = Items.Count(item => item.Type == type);
+
+            switch (type)
+            {
+                case ItemType.Passive:
+                    return matchingItemCount < _maxPassives;
+                case ItemType.Active:
+                    return matchingItemCount < _maxActives;
+                default:
+                    return false;
+            }
         }
     }
 }

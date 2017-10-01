@@ -67,10 +67,8 @@ namespace ItemSystem
         public void Remove()
         {
             //If we havent removed this Item from its ItemHandler do so.
-            if (ItemHandler.Items.Contains(this))
+            if (ItemHandler && ItemHandler.Items.Contains(this))
                 ItemHandler.Items.Remove(this);
-
-            CooldownTimer.Destroy();
         }
 
         /// <summary>
@@ -112,6 +110,7 @@ namespace ItemSystem
         protected virtual void OnDestroy()
         {
             Remove();
+            CooldownTimer.Destroy();
         }
     }
 }
