@@ -1,4 +1,5 @@
 ﻿using System;
+using InControl;
 using ItemSystem;
 using TMPro;
 using UnityEngine;
@@ -31,7 +32,7 @@ public class PlayerUIItem : MonoBehaviour
 
     void Update()
     {
-        if (Item.Type == ItemType.Active && !Item.IsActivationReady)
+        if (!Item.IsActivationReady)
         {
             _cooldownImage.fillAmount = 1 - (float) Item.CooldownTimer.Normalized;
             _cooldownText.text = Item.CooldownTimer.ReversedClock.TotalSeconds.ToString("N0");
