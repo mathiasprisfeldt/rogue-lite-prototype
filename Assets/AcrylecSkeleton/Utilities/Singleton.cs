@@ -30,8 +30,6 @@ namespace AcrylecSkeleton.Utilities
                         GameObject newInstance = new GameObject(typeof(T).ToString());
                         instance = newInstance.AddComponent<T>();
 
-                        Debug.LogWarning(String.Format("[SINGLETON] An instance of {0} is needed, instantiating {1} to compensate.", typeof(T), newInstance));
-
                         DontDestroyOnLoad(newInstance);
 
                         return instance;

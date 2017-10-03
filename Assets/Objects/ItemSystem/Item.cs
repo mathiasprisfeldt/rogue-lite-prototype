@@ -1,7 +1,9 @@
-﻿using System;
-using Archon.SwissArmyLib.Events;
-using Health;
+﻿using Health;
+using InControl;
+using Managers;
+using RogueLiteInput;
 using UnityEngine;
+using Zios;
 using Timer = AcrylecSkeleton.Utilities.Timer;
 
 namespace ItemSystem
@@ -24,6 +26,7 @@ namespace ItemSystem
         [SerializeField]
         private ItemType _type;
 
+        public PlayerAction ActivationAction { get; set; }
         public ItemHandler ItemHandler { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -37,16 +40,20 @@ namespace ItemSystem
 
         public bool IsActivationReady
         {
-            get { return !_cooldownTimer.IsRunning; }
+            get { return !CooldownTimer.IsRunning; }
+        }
+
+        public Timer CooldownTimer
+        {
+            get { return _cooldownTimer; }
         }
 
         void Start()
         {
-            if (_cooldownTimer != null)
+            if (CooldownTimer != null)
             {
-                _cooldownTimer.Initialize();
-                _cooldownTimer.Finished.AddListener(OnCooldownFinished);
-                _cooldownTimer.Elapsed.AddListener(OnCooldownElapsed);
+                CooldownTimer.Finished.AddListener(OnCooldownFinished);
+                CooldownTimer.Elapsed.AddListener(OnCooldownElapsed);
             }
         }
 
@@ -58,17 +65,15 @@ namespace ItemSystem
             if (IsActivationReady)
             {
                 OnActivated();
-                _cooldownTimer.StartTimer();
+                CooldownTimer.StartTimer();
             }
         }
 
         public void Remove()
         {
             //If we havent removed this Item from its ItemHandler do so.
-            if (ItemHandler.Items.Contains(this))
+            if (ItemHandler && ItemHandler.Items.Contains(this))
                 ItemHandler.Items.Remove(this);
-
-            _cooldownTimer.Destroy();
         }
 
         /// <summary>
@@ -79,12 +84,18 @@ namespace ItemSystem
         /// <summary>
         /// Called when an item gets equipped.
         /// </summary>
-        public virtual void OnEquipped() { }
+        public virtual void OnEquipped()
+        {
+            ItemHandler.ItemEquipped.Invoke(this);
+        }
 
         /// <summary>
         /// Called when an item gets unequipped.
         /// </summary>
-        public virtual void OnUnEquipped() { }
+        public virtual void OnUnEquipped()
+        {
+            ItemHandler.ItemUnEquipped.Invoke(this);
+        }
 
         /// <summary>
         /// Called when Item is activated.
@@ -104,6 +115,7 @@ namespace ItemSystem
         protected virtual void OnDestroy()
         {
             Remove();
+            CooldownTimer.Destroy();
         }
     }
 }

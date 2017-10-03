@@ -87,6 +87,7 @@ namespace AcrylecSkeleton.Utilities
 
         public TimeSpan Clock { get; private set; }
         public bool IsRunning { get; private set; }
+        public double Normalized { get; set; }
 
         public DeltaTimeType DeltaDeltaTimeType
         {
@@ -99,6 +100,11 @@ namespace AcrylecSkeleton.Utilities
             {
                 return TimeSpan.FromSeconds(_duration);
             }
+        }
+
+        public TimeSpan ReversedClock
+        {
+            get { return Duration.Subtract(Clock); }
         }
 
         public UnityEvent Elapsed
@@ -146,6 +152,7 @@ namespace AcrylecSkeleton.Utilities
                 return;
 
             Clock += TimeSpan.FromSeconds(deltaTime);
+            Normalized = Clock.TotalSeconds / _duration;
             _intervalTimer += deltaTime;
 
             if (!_interval.FastApproximately(0) && _intervalTimer >= _interval)

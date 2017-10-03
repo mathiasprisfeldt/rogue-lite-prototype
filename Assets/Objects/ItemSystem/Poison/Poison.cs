@@ -12,16 +12,6 @@ namespace ItemSystem.Items
     {
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                Activate();
-            }
-        }
-
-        protected override void OnCooldownFinished()
-        {
-            base.OnCooldownFinished();
-            Debug.Log("ASD");
         }
     }
 }
