@@ -179,7 +179,7 @@ namespace Health
             {
                 float newHealth = Mathf.Clamp(value, _healthInterval.x, _healthInterval.y);
 
-                if (IsInvurnable)
+                if (IsInvurnable && newHealth < value)
                 {
                     if (_dmgWhileInvurnable)
                         _healthAmount = newHealth;

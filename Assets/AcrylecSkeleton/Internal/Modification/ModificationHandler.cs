@@ -48,15 +48,12 @@ namespace AcrylecSkeleton.ModificationSystem
             {
                 //If the modification type is timed, then check if the modification should be removed
                 if (ActiveModifiers[i].ModificationType == Modification.ModificationTypeEnum.Timed)
-                    if (ActiveModifiers[i].Time <= 0)
+                    if (!ActiveModifiers[i].Timer.IsRunning)
                     {
                         ActiveModifiers[i].RemoveModificaiton();
                         ActiveModifiers.RemoveAt(i);
                         continue;
                     }
-                //If the modification type is timed, time down it's timer
-                if (ActiveModifiers[i].ModificationType == Modification.ModificationTypeEnum.Timed)
-                    ActiveModifiers[i].Time -= Time.deltaTime;
 
                 //Calls the modifications update
                 ActiveModifiers[i].UpdateModificaiton();
@@ -72,7 +69,7 @@ namespace AcrylecSkeleton.ModificationSystem
             for (int i = ActiveModifiers.Count - 1; i >= 0; i--)
             {
                 //If the modification timer is over 0, then calls it's fixed update
-                if (ActiveModifiers[i].Time > 0)
+                if (ActiveModifiers[i].Timer.IsRunning)
                     ActiveModifiers[i].FixedUpdateModificaiton();
             }
         }
@@ -84,7 +81,6 @@ namespace AcrylecSkeleton.ModificationSystem
         {
             for (int i = ActiveModifiers.Count - 1; i >= 0; i--)
             {
-                ActiveModifiers[i].Time = 0;
                 ActiveModifiers[i].RemoveModificaiton();
                 ModificationRemoved(ActiveModifiers[i]);
                 ActiveModifiers.RemoveAt(i);
@@ -99,7 +95,7 @@ namespace AcrylecSkeleton.ModificationSystem
         {
             if (!ActiveModifiers.Contains(modification))
                 throw new Exception("Modification is not in the active list");
-        
+
             //Removes the modification    
             ActiveModifiers.Remove(modification);
             ModificationRemoved(modification);
