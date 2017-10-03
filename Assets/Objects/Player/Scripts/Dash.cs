@@ -1,5 +1,6 @@
 ﻿using Archon.SwissArmyLib.Utils;
 using Controllers;
+using ItemSystem;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,9 +14,6 @@ namespace CharacterController
     public class Dash : MovementAbility
     {
         [SerializeField]
-        private float _dashCooldown;
-
-        [SerializeField]
         private float _dashDuration;
 
         [SerializeField]
@@ -28,10 +26,10 @@ namespace CharacterController
         private float _damage;
 
         public bool InitialDash { get; set; }
+        public DashItem Item { get; set; }
 
         private bool _dashing;
         private float _dashingTimer;
-        private float _cooldownTimer;
         private Vector2 _oldVelocity;
         private float _direction;
         private bool _canDash;
@@ -44,15 +42,18 @@ namespace CharacterController
         {
             get
             {
-                var input = _actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Dash.WasPressed
-                    && _cooldownTimer <= 0 && !_dashing;
+                var input = Item &&
+                    Item.ActivationAction != null &&
+                    Item.ActivationAction.WasPressed &&
+                    !Item.CooldownTimer.IsRunning &&
+                    !_dashing;
 
                 InitialDash = false;
 
                 if (!base.HorizontalActive)
                     return false;
 
-                if ((input && _canDash || _dashing) && _cooldownTimer <= 0 && !_actionsController.Combat)
+                if ((input && _canDash || _dashing) && !Item.CooldownTimer.IsRunning && !_actionsController.Combat)
                 {
                     if (input)
                     {
@@ -93,8 +94,6 @@ namespace CharacterController
 
         public void FixedUpdate()
         {
-            if (_cooldownTimer > 0)
-                _cooldownTimer -= BetterTime.DeltaTime;
             if (_dashingTimer > 0)
                 _dashingTimer -= BetterTime.DeltaTime;
             if (_actionsController.LastUsedVerticalMoveAbility != MoveAbility.Dash)
@@ -144,7 +143,7 @@ namespace CharacterController
                 _dashingTimer = 0;
                 velocity = _oldVelocity;
                 _dashing = false;
-                _cooldownTimer = _dashCooldown;
+                Item.CooldownTimer.StartTimer();
                 _dirtyColls = new List<Character>();
             }
             else

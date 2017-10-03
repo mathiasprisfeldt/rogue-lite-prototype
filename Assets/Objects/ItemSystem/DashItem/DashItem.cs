@@ -5,13 +5,13 @@ using Health;
 using UnityEngine;
 using Enemy;
 using CharacterController;
+using Abilitys;
 
 namespace ItemSystem
 {
     public enum ItemState { player, enemy }
     public class DashItem : Item
     {
-
         EnemyDash _enemyDash;
         ItemState state;
 
@@ -19,9 +19,14 @@ namespace ItemSystem
         {
             base.OnEquipped();
 
-            if (ItemHandler.Owner is ActionsController)
+            ActionsController ac = ItemHandler.Owner as ActionsController;
+
+            ActivationAction = ac.App.C.PlayerActions.ProxyInputActions.Special1;
+
+            if (ac)
             {
-                (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(Abilitys.HandledAbility.Dash);
+                ac.AbilityHandler.UnlockAbility(HandledAbility.Dash);
+                (ac.AbilityHandler.GetAbility(HandledAbility.Dash) as Dash).Item = this;
             }
             else
             {
@@ -45,7 +50,7 @@ namespace ItemSystem
             switch (state)
             {
                 case ItemState.player:
-                    (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(Abilitys.HandledAbility.Dash);
+                    (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(HandledAbility.Dash, false);
                     break;
                 case ItemState.enemy:
                     _enemyDash.DashItem = null;

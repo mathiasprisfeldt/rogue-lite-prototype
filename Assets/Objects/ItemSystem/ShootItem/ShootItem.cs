@@ -2,9 +2,11 @@
 using Enemy;
 using ItemSystem;
 using Projectiles;
+using Special;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Abilitys;
 
 namespace ItemSystem
 {
@@ -25,12 +27,21 @@ namespace ItemSystem
         {
             base.OnEquipped();
 
-            if (ItemHandler.Owner is ActionsController)
+            ActionsController ac = ItemHandler.Owner as ActionsController;
+
+            ActivationAction = ac.App.C.PlayerActions.ProxyInputActions.Special2;
+
+            if (ac)
             {
                 (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(
-                    _throwType == ThrowType.Throw ?
-                     Abilitys.HandledAbility.Throw :
-                     Abilitys.HandledAbility.Grenade);
+                       _throwType == ThrowType.Throw ?
+                        HandledAbility.Throw :
+                        HandledAbility.Grenade);
+
+                if (_throwType == ThrowType.Throw)
+                    (ac.AbilityHandler.GetAbility(HandledAbility.Throw) as ThrowProjectile).Item = this;
+                else
+                    (ac.AbilityHandler.GetAbility(HandledAbility.Grenade) as ThrowGrenade).Item = this;
             }
             else
             {
@@ -57,8 +68,8 @@ namespace ItemSystem
                 case ItemState.player:
                     (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(
                     _throwType == ThrowType.Throw ?
-                     Abilitys.HandledAbility.Throw :
-                     Abilitys.HandledAbility.Grenade);
+                     HandledAbility.Throw :
+                     HandledAbility.Grenade, false);
                     break;
                 case ItemState.enemy:
                     _enemyShoot.ShootItem = null;

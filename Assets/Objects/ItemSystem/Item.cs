@@ -3,7 +3,6 @@ using InControl;
 using Managers;
 using RogueLiteInput;
 using UnityEngine;
-using Zios;
 using Timer = AcrylecSkeleton.Utilities.Timer;
 
 namespace ItemSystem
@@ -26,7 +25,7 @@ namespace ItemSystem
         [SerializeField]
         private ItemType _type;
 
-        public PlayerAction ActivationAction { get; set; }
+        public ProxyPlayerAction ActivationAction { get; set; }
         public ItemHandler ItemHandler { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
