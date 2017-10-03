@@ -41,6 +41,7 @@ namespace RogueLiteInput
         public PlayerAction Special1 { get; set; }
         public PlayerAction Special2 { get; set; }
         public PlayerAction Sprint { get; set; }
+        public PlayerAction Interact { get; set; }
 
         public PlayerOneAxisAction RawHorizontal { get; set; }
         public PlayerOneAxisAction RawVertical { get; set; }
@@ -115,6 +116,7 @@ namespace RogueLiteInput
             Special1 = CreatePlayerAction("Special1");
             Special2 = CreatePlayerAction("Special2");
             Sprint = CreatePlayerAction("Sprint");
+            Interact = CreatePlayerAction("Interact");
 
             RawHorizontal = CreateOneAxisPlayerAction(LeftInput, RightInput);
             RawVertical = CreateOneAxisPlayerAction(DownInput, UpInput);
@@ -161,6 +163,10 @@ namespace RogueLiteInput
             Sprint.AddDefaultBinding(Key.None);
             Sprint.AddDefaultBinding(Key.None);
 
+            //Interact
+            Interact.AddDefaultBinding(Key.W);
+            Interact.AddDefaultBinding(Key.None);
+
             //Gamepad inputs
             //Left
             LeftInput.AddDefaultBinding(InputControlType.LeftStickLeft);
@@ -201,6 +207,10 @@ namespace RogueLiteInput
             //Sprint
             Sprint.AddDefaultBinding(InputControlType.None);
             Sprint.AddDefaultBinding(InputControlType.None);
+
+            //Interact
+            Interact.AddDefaultBinding(InputControlType.Action4);
+            Interact.AddDefaultBinding(InputControlType.None);
 
         }
 
@@ -258,6 +268,7 @@ namespace RogueLiteInput
         public ProxyPlayerAction Left { get; set; }
         public ProxyPlayerAction Right { get; set; }
         public ProxyPlayerAction Sprint { get; set; }
+        public ProxyPlayerAction Interact { get; set; }
 
 
         public ProxyInputActions()
@@ -272,6 +283,7 @@ namespace RogueLiteInput
             Left = new ProxyPlayerAction();
             Right = new ProxyPlayerAction();
             Sprint = new ProxyPlayerAction();
+            Interact = new ProxyPlayerAction();
         }
 
         public void UpdateData(InputActions actions)
@@ -286,6 +298,7 @@ namespace RogueLiteInput
             Left.UpdateData(actions.LeftInput);
             Right.UpdateData(actions.RightInput);
             Sprint.UpdateData(actions.Sprint);
+            Interact.UpdateData(actions.Interact);
         }
 
         public void Reset()
@@ -300,6 +313,7 @@ namespace RogueLiteInput
             Left.Reset();
             Right.Reset();
             Sprint.Reset();
+            Interact.Reset();
         }
     }
 }

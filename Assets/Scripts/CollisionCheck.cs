@@ -276,17 +276,20 @@ public class CollisionCheck : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        TriggerEnter.Invoke(collision);
+        if (TriggerEnter != null)
+            TriggerEnter.Invoke(collision);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        TriggerExit.Invoke(collision);
+        if (TriggerExit != null)
+            TriggerExit.Invoke(collision);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        TriggerStay.Invoke(collision);
+        if (TriggerStay != null)
+            TriggerStay.Invoke(collision);
     }
 }
 

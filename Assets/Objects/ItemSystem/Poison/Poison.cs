@@ -12,10 +12,6 @@ namespace ItemSystem.Items
     {
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                Activate();
-            }
         }
     }
 }
