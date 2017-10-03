@@ -65,19 +65,23 @@ namespace Pickups
 
         public void FixedUpdate()
         {
-            if (_distanceTraveled >= _distanceToSwitckDirection)
+            if (_speed > 0)
             {
-                _distanceTraveled = 0;
-                _currentDirection = (_currentDirection * -1f).normalized;
+                if (_distanceTraveled >= _distanceToSwitckDirection)
+                {
+                    _distanceTraveled = 0;
+                    _currentDirection = (_currentDirection * -1f).normalized;
+                }
+
+                var currentSpeed = _speed * BetterTime.FixedDeltaTime;
+
+                if ((_currentDirection * currentSpeed).magnitude + _distanceTraveled > _distanceToSwitckDirection)
+                    currentSpeed -= (_currentDirection * currentSpeed).magnitude + _distanceTraveled - _distanceToSwitckDirection;
+
+                _distanceTraveled += currentSpeed;
+                _rigigbody.velocity = _currentDirection * currentSpeed;
             }
-
-            var currentSpeed = _speed * BetterTime.FixedDeltaTime;
-
-            if ((_currentDirection * currentSpeed).magnitude + _distanceTraveled > _distanceToSwitckDirection)
-                currentSpeed -= (_currentDirection * currentSpeed).magnitude + _distanceTraveled - _distanceToSwitckDirection;
-
-            _distanceTraveled += currentSpeed;
-            _rigigbody.velocity = _currentDirection * currentSpeed;
+            
         }
     }
 }
