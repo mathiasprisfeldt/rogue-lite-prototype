@@ -1409,6 +1409,7 @@ GameObject:
   - component: {fileID: 114164657400838860}
   - component: {fileID: 114159830119299668}
   - component: {fileID: 114547475327218236}
+  - component: {fileID: 114118127066961178}
   m_Layer: 8
   m_Name: View
   m_TagString: Player
@@ -2961,6 +2962,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a179c16de604057bc1902978187da5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114118127066961178
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1960660052491594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23f3cb6bdfb6d324e9e655c387a6714a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _active: 0
+  _projectilePrefab: {fileID: 114159514260344410, guid: 71c0bbfd6c6997f46846a257db3bf676,
+    type: 2}
+  _throwForce: 0.002
+  _actionsController: {fileID: 114173897078414380}
+  _manaCost: 1
+  Item: {fileID: 0}
 --- !u!114 &114124136535018772
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3442,7 +3461,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _actionsController: {fileID: 114173897078414380}
-  _dashCooldown: 0.4
   _dashDuration: 0.4
   _dashForce: 650
   _dashCurve:
@@ -3521,7 +3539,7 @@ MonoBehaviour:
   Dash: {fileID: 114303647452529036}
   LedgeHanging: {fileID: 114323172994149904}
   Throw: {fileID: 114826802134503442}
-  Grenade: {fileID: 114547475327218236}
+  Grenade: {fileID: 114118127066961178}
   Melee: {fileID: 114696191872934630}
   Jump: {fileID: 114090219148833560}
   Climing: {fileID: 114164657400838860}
@@ -3890,9 +3908,9 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 114159514260344410, guid: 71c0bbfd6c6997f46846a257db3bf676,
     type: 2}
   _throwForce: 0.002
-  _cooldown: 0.4
   _actionsController: {fileID: 114173897078414380}
   _manaCost: 1
+  Item: {fileID: 0}
 --- !u!114 &114559391345834806
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3905,7 +3923,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _owner: {fileID: 114173897078414380}
-  _itemsAtStart: []
+  _itemsAtStart:
+  - {fileID: 114687679948778786, guid: de8016fe69a7a614b9e5c510f8643dcf, type: 2}
+  - {fileID: 114221420086673964, guid: 587bd346537c72743a5a64f07e3738bf, type: 2}
   _popupOffset: {x: 0, y: 0}
   _maxPassives: 2
   _maxActives: 2
@@ -4486,7 +4506,6 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 114159514260344410, guid: f6f2a202e1deaf64c8613c8fcea309cc,
     type: 2}
   _throwForce: 0.002
-  _cooldown: 0.4
   _actionsController: {fileID: 114173897078414380}
   _manaCost: 1
 --- !u!114 &114839822949810884

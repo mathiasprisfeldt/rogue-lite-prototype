@@ -1,5 +1,6 @@
 ﻿using Archon.SwissArmyLib.Utils;
 using CharacterController;
+using ItemSystem;
 using Projectiles;
 using UnityEngine;
 
@@ -18,16 +19,14 @@ namespace Special
         private float _throwForce;
 
         [SerializeField]
-        private float _cooldown;
-
-        [SerializeField]
         private ActionsController _actionsController;
 
         [SerializeField]
         private int _manaCost;
 
         private bool _throwActive;
-        private float _cooldownTimer;
+
+        public ShootItem Item { get; set; }
 
         public bool KnifeActive
         {
@@ -38,12 +37,12 @@ namespace Special
                 var throwOnWAll = _actionsController.TriggerCheck.Sides.Left && _actionsController.LastHorizontalDirection < 0
                     || _actionsController.TriggerCheck.Sides.Right && _actionsController.LastHorizontalDirection > 0;
 
-                if (_actionsController.App.C.PlayerActions != null && _actionsController.App.C.PlayerActions.ProxyInputActions.Special1.WasPressed
-                    && _cooldownTimer <= 0 && _actionsController.LastUsedCombatAbility == CombatAbility.None
+                if (Item && Item.ActivationAction != null && Item.ActivationAction.WasPressed
+                    && !Item.CooldownTimer.IsRunning && _actionsController.LastUsedCombatAbility == CombatAbility.None
                     && !throwOnWAll)
                 {
                     _throwActive = true;
-                    _cooldownTimer = _cooldown;
+                    Item.CooldownTimer.StartTimer();
                     _actionsController.StartThrow.Value = true;
                     Throw();
                     if (_actionsController.Horizontal != 0)
@@ -60,12 +59,6 @@ namespace Special
             projectile.Owner = _actionsController;
             projectile.Direction = new Vector2(_actionsController.LastHorizontalDirection, 0);
             projectile.Shoot();
-        }
-
-        public void Update()
-        {
-            if (_cooldownTimer > 0)
-                _cooldownTimer -= BetterTime.DeltaTime;
         }
 
         public void ResetThrow()
