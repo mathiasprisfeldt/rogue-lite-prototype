@@ -21,10 +21,9 @@ namespace ItemSystem
 
             ActionsController ac = ItemHandler.Owner as ActionsController;
 
-            ActivationAction = ac.App.C.PlayerActions.ProxyInputActions.Special1;
-
             if (ac)
             {
+                ActivationAction = ac.App.C.PlayerActions.ProxyInputActions.Special1;
                 ac.AbilityHandler.UnlockAbility(HandledAbility.Dash);
                 (ac.AbilityHandler.GetAbility(HandledAbility.Dash) as Dash).Item = this;
             }

@@ -53,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cooldownTimer:
     _canOverride: 0
-    _duration: 3
+    _duration: 0.5
     _interval: 1
     _deltaDeltaTimeType: 0
     _elapsed:

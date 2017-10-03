@@ -29,10 +29,9 @@ namespace ItemSystem
 
             ActionsController ac = ItemHandler.Owner as ActionsController;
 
-            ActivationAction = ac.App.C.PlayerActions.ProxyInputActions.Special2;
-
             if (ac)
             {
+                ActivationAction = ac.App.C.PlayerActions.ProxyInputActions.Special2;
                 (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(
                        _throwType == ThrowType.Throw ?
                         HandledAbility.Throw :
