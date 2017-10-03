@@ -14,7 +14,7 @@ namespace CharacterController
 
     public enum CombatAbility
     {
-        None, Melee, Throw, DownMelee
+        None, Melee, Throw, DownMelee, Grenade
     }
 
     public class ActionsController : Character
@@ -24,9 +24,6 @@ namespace CharacterController
 
         [SerializeField]
         private AbilityReferences _abilityReferences;
-
-        [SerializeField]
-        private ModificationHandler _modificationHandler;
 
         [SerializeField]
         private CollisionCheck _triggerCheck;
@@ -65,7 +62,6 @@ namespace CharacterController
         private MoveAbility _lastUsedVerticalMoveAbility;
         private MoveAbility _lastUsedHorizontalMoveAbility;
         private CombatAbility _lastUsedCombatAbility;
-        private MoveAbility _savedValue;
         private bool _dashEnded;
 
         public Vector2 Velocity
@@ -115,12 +111,6 @@ namespace CharacterController
             set { _lastUsedCombatAbility = value; }
         }
 
-        public ModificationHandler ModificationHandler
-        {
-            get { return _modificationHandler; }
-            set { _modificationHandler = value; }
-        }
-
         public CollisionCheck CollisionCheck
         {
             get { return _collisionCheck; }
@@ -145,6 +135,7 @@ namespace CharacterController
         public Trigger StartGrab { get; set; }
         public Trigger StartCombat { get; set; }
         public Trigger StartThrow { get; set; }
+        public Trigger StartGrenade { get; set; }
         public Trigger StartMelee { get; set; }
         public Trigger StartClimbing { get; set; }
         public Trigger StartDownMeele { get; set; }
@@ -178,7 +169,6 @@ namespace CharacterController
             set { _downCheck = value; }
         }
 
-
         // Update is called once per frame
         public override void Update()
         {
@@ -188,10 +178,6 @@ namespace CharacterController
 
             if (App.C.PlayerActions != null)
                 App.C.PlayerActions.UpdateProxy();
-            if(LastUsedVerticalMoveAbility != _savedValue)
-                Debug.Log(LastUsedVerticalMoveAbility);
-            _savedValue = LastUsedVerticalMoveAbility;
-            
         }
 
         protected override void Awake()
@@ -200,6 +186,7 @@ namespace CharacterController
             LastHorizontalDirection = LookDirection;
             ClimbEnd = true;
             StartThrow = new Trigger();
+            StartGrenade = new Trigger();
             StartCombat = new Trigger();
             StartDash = new Trigger();
             StartGrab = new Trigger();
@@ -212,7 +199,7 @@ namespace CharacterController
         void FixedUpdate()
         {
             _velocity = new Vector2(0, 0);
-             
+
             HandleCombat();
             HandleHorizontalMovement(ref _velocity);
             HandleVerticalMovement(ref _velocity);
@@ -306,11 +293,13 @@ namespace CharacterController
             if (LastUsedHorizontalMoveAbility == MoveAbility.Dash && StartDash.Value && !Combat)
                 Animator.SetTrigger("Dash");
 
-
             //Melee
             if (StartMelee.Value)
                 Animator.SetTrigger("Melee");
 
+            //Grenade
+            if (StartGrenade.Value)
+                Animator.SetTrigger("Grenade");
 
             //Throw
             if (StartThrow.Value)
@@ -344,6 +333,10 @@ namespace CharacterController
             {
                 BeginCombat(CombatAbility.Throw);
             }
+            else if (_abilityReferences.Grenade && _abilityReferences.Grenade.KnifeActive)
+            {
+                BeginCombat(CombatAbility.Grenade);
+            }
             else if (_abilityReferences.DownMeele && _abilityReferences.DownMeele.Active)
             {
                 BeginCombat(CombatAbility.DownMelee);
@@ -367,7 +360,6 @@ namespace CharacterController
             {
                 StartCombat.Value = true;
                 LastUsedCombatAbility = combatAbility;
-
             }
 
             Combat = true;

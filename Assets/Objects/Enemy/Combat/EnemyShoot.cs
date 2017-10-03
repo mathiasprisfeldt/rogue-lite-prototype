@@ -1,4 +1,5 @@
 ﻿using AcrylecSkeleton.Extensions;
+using ItemSystem;
 using Projectiles;
 using UnityEngine;
 
@@ -16,6 +17,9 @@ namespace Enemy
         [SerializeField, Tooltip("Spawn position of the projectile, relative to itself.")]
         private Vector2 _spawnPos;
 
+        public ShootItem ShootItem { get; set; }
+        public Projectile Projectile { get { return _projectile; } set { _projectile = value; } }
+
         public override void Attack()
         {
             int dir = Context.M.Character.LookDirection;
@@ -24,7 +28,7 @@ namespace Enemy
             Projectile projectile = Instantiate(_projectile, transform.position.ToVector2() + spawnPos, Quaternion.identity);
             projectile.Direction = new Vector2(dir, 0);
             projectile.Shoot();
-             
+
             base.Attack();
         }
 

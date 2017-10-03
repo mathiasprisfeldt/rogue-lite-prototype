@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using Abilitys;
+using AcrylecSkeleton.ModificationSystem;
 using Archon.SwissArmyLib.Utils;
 using Health;
+using ItemSystem;
 using UnityEngine;
 using Knockbacks;
 using Mana;
@@ -70,6 +72,12 @@ namespace Controllers
         [SerializeField]
         private SafetyRespawn _safetyRespawn;
 
+        [SerializeField]
+        private ModificationHandler _modificationHandler;
+
+        [SerializeField]
+        private ItemHandler _itemHandler;
+
         [Header("Settings:")]
         [SerializeField, Tooltip("Which way is it facing at start?")]
         private int _startDirection = -1;
@@ -85,7 +93,6 @@ namespace Controllers
 
         [SerializeField]
         private bool _flipWithVelocity;
-
 
         [SerializeField, Tooltip("If on it will flip with rotation instead of scaling.")]
         private bool _doFlipWithRotation = true;
@@ -147,7 +154,7 @@ namespace Controllers
         }
 
         public CollisionCheck PhysicialCollisionCheck
-        { 
+        {
             get { return _physicialCollisionCheck; }
             set { _physicialCollisionCheck = value; }
         }
@@ -202,6 +209,18 @@ namespace Controllers
         public SafetyRespawn SafetyRespawn
         {
             get { return _safetyRespawn; }
+        }
+
+        public ModificationHandler ModificationHandler
+        {
+            get { return _modificationHandler; }
+            set { _modificationHandler = value; }
+        }
+
+        public ItemHandler ItemHandler
+        {
+            get { return _itemHandler; }
+            set { _itemHandler = value; }
         }
 
         protected virtual void Awake()
@@ -277,7 +296,7 @@ namespace Controllers
             }
             else
                 _model.transform.localScale = new Vector2(dir < 0 ? -1 : 1, transform.localScale.y);
-            
+
             LookDirection = Mathf.RoundToInt(dir);
         }
 
@@ -285,14 +304,14 @@ namespace Controllers
         {
             if (_healthController.IsDead || LockMovement)
             {
-                if(_healthController.IsDead && !Rigidbody.IsSleeping())
+                if (_healthController.IsDead && !Rigidbody.IsSleeping())
                     Rigidbody.velocity = Vector2.zero;
                 return;
             }
-                
+
 
             if (respectMovementSpeed)
-            {               
+            {
                 velocity.x *= MovementSpeed + movementSpeedAddtion;
 
                 if (fly)
@@ -326,15 +345,15 @@ namespace Controllers
             }
 
             Bounds bounds = _bumpingCollider2D.bounds;
-            
+
             Vector2 offset = BUMPING_ORIGIN_OFFSET + new Vector2(Mathf.Abs(Rigidbody.velocity.x), 0) * BetterTime.FixedDeltaTime;
 
             //Calculating needed direction + length & left and right origins.
             Vector2 direction = Vector2.down;
             float length = BUMPING_RAY_LENGTH;
-            Vector2 leftOrigin = (Vector2) bounds.min - offset;
-            Vector2 rightOrigin = (Vector2) bounds.min + offset + new Vector2(bounds.size.x, 0);
-            
+            Vector2 leftOrigin = (Vector2)bounds.min - offset;
+            Vector2 rightOrigin = (Vector2)bounds.min + offset + new Vector2(bounds.size.x, 0);
+
             //Raycasting to check if we're near end of platform.
             bool leftHit = Physics2D.RaycastNonAlloc(leftOrigin, direction * length, _bumpingResults, length, LayerMask.GetMask("Platform")) != 0;
             bool rightHit = Physics2D.RaycastNonAlloc(rightOrigin, direction * length, _bumpingResults, length, LayerMask.GetMask("Platform")) != 0;
@@ -342,7 +361,7 @@ namespace Controllers
             //If we cant find physical collider checker we log it and move on.
             bool leftBump = _bumberCollisionCheck.Sides.ApproxHorizontal == CollisionSides.ColHorizontal.Left;
             bool rightBump = _bumberCollisionCheck.Sides.ApproxHorizontal == CollisionSides.ColHorizontal.Right;
-            
+
             if (!leftHit || leftBump)
                 BumpingDirection = -1;
             else if (!rightHit || rightBump)

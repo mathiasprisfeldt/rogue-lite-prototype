@@ -1,14 +1,20 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+using Archon.SwissArmyLib.Events;
 using Controllers;
 using UnityEngine;
 
 public class CollisionCheck : MonoBehaviour
 {
+    public const int 
+        ON_TRIGGER_ENTER = 0,
+        ON_TRIGGER_EXIT  = 1,
+        ON_TRIGGER_STAY  = 2;
+
+#pragma warning disable 0414
     private List<Collider2D> _tempList = new List<Collider2D>();
+#pragma warning restore 0414
 
     [SerializeField]
     private List<Collider2D> _collidersToCheck = new List<Collider2D>();
@@ -28,7 +34,6 @@ public class CollisionCheck : MonoBehaviour
     private List<Collider2D> _collisionColliders = new List<Collider2D>();
     private Collider2D[] _contacts = new Collider2D[30];
     private ContactFilter2D _contactFilter = new ContactFilter2D();
-
 
     public List<Collider2D> CollidersToCheck
     {
@@ -101,6 +106,10 @@ public class CollisionCheck : MonoBehaviour
 
     }
 
+    public readonly Event<Collider2D> TriggerEnter = new Event<Collider2D>(ON_TRIGGER_ENTER);
+    public readonly Event<Collider2D> TriggerExit = new Event<Collider2D>(ON_TRIGGER_EXIT);
+    public readonly Event<Collider2D> TriggerStay = new Event<Collider2D>(ON_TRIGGER_STAY);
+
     void Awake()
     {
         if (!CollidersToCheck.Any())
@@ -141,8 +150,6 @@ public class CollisionCheck : MonoBehaviour
 
     public bool IsColliding(LayerMask layer, out List<Collider2D> colliders, CollisionSides sides)
     {
-        bool collision = false;
-
         if (_isDirty && layer == _collisionLayers)
         {
             colliders = _collisionColliders;
@@ -237,9 +244,7 @@ public class CollisionCheck : MonoBehaviour
                             sides.ApproxVertical = CollisionSides.ColVertical.Bottom;
                     }
 
-                    collision = sides.Top || sides.Bottom || sides.Right || sides.Left;
-                    if (collision)
-                        sides.TargetColliders.Add(_contacts[i]);
+                    sides.TargetColliders.Add(_contacts[i]);
                 }
             }
         }
@@ -247,7 +252,8 @@ public class CollisionCheck : MonoBehaviour
 
         if (layer == _collisionLayers)
             SetDirty(sides);
-        return collision;
+
+        return sides.TargetColliders.Any();
     }
 
     private void SetDirty(CollisionSides sides)
@@ -261,6 +267,29 @@ public class CollisionCheck : MonoBehaviour
     public void LateUpdate()
     {
         _isDirty = false;
+    }
+    
+    /// <summary>
+    /// Used for proxy invoke tunnel.
+    /// See <see cref="OnTriggerEnter"/>
+    /// </summary>
+    /// <param name="collision"></param>
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (TriggerEnter != null)
+            TriggerEnter.Invoke(collision);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (TriggerExit != null)
+            TriggerExit.Invoke(collision);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (TriggerStay != null)
+            TriggerStay.Invoke(collision);
     }
 }
 

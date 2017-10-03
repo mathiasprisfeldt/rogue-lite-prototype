@@ -36,3 +36,9 @@ bin/
 ehthumbs.db
 [Tt]humbs.db
 [Dd]esktop.ini
+
+# =========== #
+# Other Stuff #
+# =========== #
+# For ignoring special files not meant for version control
+\@*

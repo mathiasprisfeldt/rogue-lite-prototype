@@ -5,6 +5,7 @@ using AcrylecSkeleton.Utilities;
 using Archon.SwissArmyLib.ResourceSystem;
 using Archon.SwissArmyLib.Utils;
 using Controllers;
+using ItemSystem;
 using Managers;
 using Spriter2UnityDX;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace Health
     [Serializable]
     public class OnDamageEvent : UnityEvent<Character>
     {
-        
+
     }
 
     /// <summary>
@@ -134,7 +135,7 @@ namespace Health
                     Character.MainAnimator.SetTrigger("Die");
                 }
 
-                _isDead = value; 
+                _isDead = value;
             }
         }
 
@@ -166,7 +167,7 @@ namespace Health
             get { return _isInvurnable; }
             set
             {
-                _isInvurnable = value; 
+                _isInvurnable = value;
                 CheckHealth();
             }
         }
@@ -224,6 +225,8 @@ namespace Health
 
             if (_entityRenderer)
                 _originalColor = _entityRenderer.Color;
+
+            CheckHealth();
         }
 
         void Update()
@@ -254,7 +257,8 @@ namespace Health
         /// <param name="pos">Position from where the damage came from</param>
         /// <param name="from">Did the damage come from a specific character?</param>
         /// <param name="ignoreInvurnability">Should we force damage onto health controller?</param>
-        public void Damage(float dmg, bool giveInvurnability = false, Vector2 pos = default(Vector2), Character from = null, bool ignoreInvurnability = false)
+        /// <param name="triggerItemhandler">Used to make direct damage that shouldn't call item handlers' <see cref="ItemHandler.OnHit"/></param>
+        public void Damage(float dmg, bool giveInvurnability = false, Vector2 pos = default(Vector2), Character from = null, bool ignoreInvurnability = false, bool triggerItemhandler = true)
         {
             if (dmg <= 0 || IsDead)
                 return;
@@ -308,7 +312,13 @@ namespace Health
             }
 
             if (giveDamage)
+            {
                 OnDamage.Invoke(from);
+
+                //If damage dealer has a Hit items, find them and give them a call.
+                if (from != null && from.ItemHandler && triggerItemhandler)
+                    from.ItemHandler.OnHit(this);
+            }
 
             if (giveInvurnability || _invurnableOnDmg)
                 StartCoroutine(StartInvurnability(_invurnabilityDuration));
@@ -391,7 +401,7 @@ namespace Health
                     yield return new WaitForEndOfFrame();
                     timer -= BetterTime.UnscaledDeltaTime / duration;
                 }
-                
+
                 IsInvurnable = false;
             }
         }
