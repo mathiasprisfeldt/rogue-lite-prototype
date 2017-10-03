@@ -1,5 +1,5 @@
 ﻿using Health;
-using InControl;
+using RogueLiteInput;
 using UnityEngine;
 using Timer = AcrylecSkeleton.Utilities.Timer;
 
@@ -7,6 +7,7 @@ namespace ItemSystem
 {
     public enum ItemType
     {
+        None,
         Passive,
         Active
     }
@@ -23,11 +24,19 @@ namespace ItemSystem
         [SerializeField]
         private ItemType _type;
 
+        [SerializeField]
+        private Sprite _icon;
+
         public ProxyPlayerAction ActivationAction { get; set; }
         public ItemHandler ItemHandler { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public Sprite Icon { get; set; }
+
+        public Sprite Icon
+        {
+            get { return _icon; }
+            set { _icon = value; }
+        }
 
         public ItemType Type
         {
@@ -83,7 +92,8 @@ namespace ItemSystem
         /// </summary>
         public virtual void OnEquipped()
         {
-            ItemHandler.ItemEquipped.Invoke(this);
+            if (ItemHandler && ItemHandler.ItemEquipped != null)
+                ItemHandler.ItemEquipped.Invoke(this);
         }
 
         /// <summary>
@@ -91,7 +101,8 @@ namespace ItemSystem
         /// </summary>
         public virtual void OnUnEquipped()
         {
-            ItemHandler.ItemUnEquipped.Invoke(this);
+            if (ItemHandler && ItemHandler.ItemUnEquipped != null)
+                ItemHandler.ItemUnEquipped.Invoke(this);
         }
 
         /// <summary>

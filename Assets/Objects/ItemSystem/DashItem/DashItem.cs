@@ -20,9 +20,7 @@ namespace ItemSystem
             base.OnEquipped();
 
             ActionsController ac = ItemHandler.Owner as ActionsController;
-
-            ActivationAction = ac.App.C.PlayerActions.ProxyInputActions.Special1;
-
+            
             if (ac)
             {
                 ac.AbilityHandler.UnlockAbility(HandledAbility.Dash);

@@ -4,6 +4,8 @@ using System.Linq;
 using Archon.SwissArmyLib.Events;
 using Controllers;
 using Health;
+using Managers;
+using RogueLiteInput;
 using UnityEngine;
 
 namespace ItemSystem
@@ -56,6 +58,16 @@ namespace ItemSystem
             {
                 return Owner.HealthController.IsDead && Items.Any();
             }
+        }
+
+        public int MaxPassives
+        {
+            get { return _maxPassives; }
+        }
+
+        public int MaxActives
+        {
+            get { return _maxActives; }
         }
 
         void Start()
@@ -147,6 +159,11 @@ namespace ItemSystem
             newItem.Remove();
             Items.AddFirst(newItem);
 
+            //Find a activationaction for the new item.
+            ProxyInputActions inputActions = GameManager.Instance.Player.C.PlayerActions.ProxyInputActions;
+            bool isSpecial1Occupied = Items.Any(item => item.ActivationAction == inputActions.Special1);
+            newItem.ActivationAction = isSpecial1Occupied ? inputActions.Special2 : inputActions.Special1;
+
             newItem.ItemHandler = this;
             newItem.OnEquipped();
             newItem.transform.SetParent(transform);
@@ -165,9 +182,9 @@ namespace ItemSystem
             switch (type)
             {
                 case ItemType.Passive:
-                    return matchingItemCount < _maxPassives;
+                    return matchingItemCount < MaxPassives;
                 case ItemType.Active:
-                    return matchingItemCount < _maxActives;
+                    return matchingItemCount < MaxActives;
                 default:
                     return false;
             }
