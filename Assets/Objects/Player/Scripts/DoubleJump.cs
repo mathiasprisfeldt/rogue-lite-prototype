@@ -30,7 +30,10 @@ namespace CharacterController
                 if (!base.VerticalActive)
                     return false;
 
-                if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed && _actionsController.State == CharacterState.InAir
+                var input = _actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed &&
+                    !_actionsController.App.C.PlayerActions.Down;
+
+                if ( input && _actionsController.State == CharacterState.InAir
                     && _jumpTimer <= 0 && !HasJumped && _actionsController.LastUsedVerticalMoveAbility == MoveAbility.None && Cooldown <= 0 &&
                   !_actionsController.AbilityReferences.WallSlide.VerticalActive)
                 {

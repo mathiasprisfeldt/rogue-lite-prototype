@@ -43,6 +43,7 @@ public class LevelManager : Singleton<LevelManager>
     private List<int[,]> _randomLevelsEasy = new List<int[,]>();
     private List<int[,]> _randomLevelsMedium = new List<int[,]>();
     private List<int[,]> _randomLevelsHard = new List<int[,]>();
+    private List<int[,]> _originalHardLevels = new List<int[,]>();
 
     private bool _nextLevelLoaded = false;
     private bool _setup;
@@ -135,124 +136,129 @@ public class LevelManager : Singleton<LevelManager>
         }
         else if (_randomLevelsHard.Any())
         {
+            if (_originalHardLevels.Count <= 0)
+                _originalHardLevels = _randomLevelsHard.ToList();
             if (_randomLevelsHard.Count > 1)
             {
-
-                int prevId = CurrentLevel.Layouts[0, 0].ID;
-                while (prevId == CurrentLevel.Layouts[0, 0].ID)
-                    CurrentLevel = new Level(_randomLevelsHard[UnityEngine.Random.Range(0, _randomLevelsHard.Count)]);
+                var levelArray =
+                    _randomLevelsHard[UnityEngine.Random.Range(0, _randomLevelsHard.Count)];
+                CurrentLevel = new Level(levelArray);
+                _randomLevelsHard.Remove(levelArray);
             }
             else
-                CurrentLevel = new Level(_randomLevelsHard[UnityEngine.Random.Range(0, _randomLevelsHard.Count)]);
+            {
+                CurrentLevel = new Level(_randomLevelsHard.FirstOrDefault());
+                _randomLevelsHard = _originalHardLevels.ToList();
+            }
         }
         else
             Debug.Log("There are no levels to load");
     }
 
-    /// <summary>
-    /// Called when the scene has been changed
-    /// </summary>
-    /// <param name="level"></param>
-    /// <param name="sceneMode"></param>
-    private void OnSceneLoaded(Scene level, LoadSceneMode sceneMode)
-    {
-        if (level.name != "LevelScene")
-            return;
-
-        FindNextLevel();
-
-        GameObject go = new GameObject("LevelParent");
-        go.AddComponent<Platforms>();
-        CurrentLevel.Spawn(go.transform);
-
-        _nextLevelLoaded = false;
-    }
-
-    /// <summary>
-    /// Spawns the background
-    /// </summary>
-    /// <param name="v"></param>
-    public void SpawnBackGround(Vector2 v)
-    {
-        Vector2 size = (v * 2);
-
-        var bg = Instantiate(BackGround, new Vector2(v.x - .5f, v.y + .5f) + _tileSpawnOffset, Quaternion.identity);
-        bg.GetComponent<SpriteRenderer>().size = size;
-    }
-
-    /// <summary>
-    /// Used for spawning a tile in a level.
-    /// It accounts for positional offset described in LevelManager.
-    /// </summary>
-    /// <returns>GameObject of the instantiated tile.</returns>
-    public GameObject SpawnTile(Vector2 pos, GameObject tileRecipe = null, Quaternion rot = default(Quaternion), Transform parent = null)
-    {
-        return Instantiate(tileRecipe ?? BorderTile, pos + _tileSpawnOffset, rot, parent);
-    }
-
-    public void ResetGame()
-    {
-        ResetGame(false);
-    }
-
-    public void ResetGame(bool overloadMapReset)
-    {
-        if (!_resetMapOnDeath || overloadMapReset)
+        /// <summary>
+        /// Called when the scene has been changed
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="sceneMode"></param>
+        private void OnSceneLoaded(Scene level, LoadSceneMode sceneMode)
         {
-            if (GameManager.Instance)
-                Destroy(GameManager.Instance.Player.gameObject);
-            _forcedLevels.Clear();
-            _randomLevelsHard.Clear();
+            if (level.name != "LevelScene")
+                return;
 
-            if (overloadMapReset)
-                _setup = true;
+            FindNextLevel();
 
-            LoadLevels();
+            GameObject go = new GameObject("LevelParent");
+            go.AddComponent<Platforms>();
+            CurrentLevel.Spawn(go.transform);
+
+            _nextLevelLoaded = false;
         }
-        SetPlayerHealth = !overloadMapReset;
 
-        LoadNextLevel(!overloadMapReset);
+        /// <summary>
+        /// Spawns the background
+        /// </summary>
+        /// <param name="v"></param>
+        public void SpawnBackGround(Vector2 v)
+        {
+            Vector2 size = (v * 2);
+
+            var bg = Instantiate(BackGround, new Vector2(v.x - .5f, v.y + .5f) + _tileSpawnOffset, Quaternion.identity);
+            bg.GetComponent<SpriteRenderer>().size = size;
+        }
+
+        /// <summary>
+        /// Used for spawning a tile in a level.
+        /// It accounts for positional offset described in LevelManager.
+        /// </summary>
+        /// <returns>GameObject of the instantiated tile.</returns>
+        public GameObject SpawnTile(Vector2 pos, GameObject tileRecipe = null, Quaternion rot = default(Quaternion), Transform parent = null)
+        {
+            return Instantiate(tileRecipe ?? BorderTile, pos + _tileSpawnOffset, rot, parent);
+        }
+
+        public void ResetGame()
+        {
+            ResetGame(false);
+        }
+
+        public void ResetGame(bool overloadMapReset)
+        {
+            if (!_resetMapOnDeath || overloadMapReset)
+            {
+                if (GameManager.Instance)
+                    Destroy(GameManager.Instance.Player.gameObject);
+                _forcedLevels.Clear();
+                _randomLevelsHard.Clear();
+
+                if (overloadMapReset)
+                    _setup = true;
+
+                LoadLevels();
+            }
+            SetPlayerHealth = !overloadMapReset;
+
+            LoadNextLevel(!overloadMapReset);
+        }
+
+        /// <summary>
+        /// levels form given level files
+        /// </summary>
+        public void LoadLevels()
+        {
+            if (_forcedLevelsText != null)
+                foreach (var item in _forcedLevelsText)
+                {
+                    if (item != null)
+                        _forcedLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
+                }
+
+            if (_randomLevelsEasyText != null)
+                foreach (var item in _randomLevelsEasyText)
+                {
+                    if (item != null)
+                        _randomLevelsEasy.Add(CSVReader.SplitCsvGridToInt(item.text, false));
+                }
+
+            if (_randomLevelsMediumText != null)
+                foreach (var item in _randomLevelsMediumText)
+                {
+                    if (item != null)
+                        _randomLevelsMedium.Add(CSVReader.SplitCsvGridToInt(item.text, false));
+                }
+
+            if (_randomLevelsHardText != null)
+                foreach (var item in _randomLevelsHardText)
+                {
+                    if (item != null)
+                        _randomLevelsHard.Add(CSVReader.SplitCsvGridToInt(item.text, false));
+                }
+        }
+
+        /// <summary>
+        /// Called on destroy
+        /// </summary>
+        public void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
     }
-
-    /// <summary>
-    /// levels form given level files
-    /// </summary>
-    public void LoadLevels()
-    {
-        if (_forcedLevelsText != null)
-            foreach (var item in _forcedLevelsText)
-            {
-                if (item != null)
-                    _forcedLevels.Add(CSVReader.SplitCsvGridToInt(item.text, false));
-            }
-
-        if (_randomLevelsEasyText != null)
-            foreach (var item in _randomLevelsEasyText)
-            {
-                if (item != null)
-                    _randomLevelsEasy.Add(CSVReader.SplitCsvGridToInt(item.text, false));
-            }
-
-        if (_randomLevelsMediumText != null)
-            foreach (var item in _randomLevelsMediumText)
-            {
-                if (item != null)
-                    _randomLevelsMedium.Add(CSVReader.SplitCsvGridToInt(item.text, false));
-            }
-
-        if (_randomLevelsHardText != null)
-            foreach (var item in _randomLevelsHardText)
-            {
-                if (item != null)
-                    _randomLevelsHard.Add(CSVReader.SplitCsvGridToInt(item.text, false));
-            }
-    }
-
-    /// <summary>
-    /// Called on destroy
-    /// </summary>
-    public void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-}
