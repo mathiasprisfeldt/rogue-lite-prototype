@@ -55,12 +55,12 @@ public class ItemStealer : MonoBehaviour, IEventListener<Collider2D>
 
                 Collider2D bestCandidate = closests.FirstOrDefault(d => d.GetComponent<CollisionCheck>().Character.ItemHandler.CanStealFrom);
 
-                if (closests.Any() && bestCandidate != _victimCol)
+                if (closests.Any() && (bestCandidate && bestCandidate != _victimCol))
                 {
                     NewVictim(col);
                     _victimCol = col;
                 }
-
+                
                 break;
         }
     }
