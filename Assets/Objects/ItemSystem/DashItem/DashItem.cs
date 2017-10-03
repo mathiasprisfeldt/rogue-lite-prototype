@@ -8,12 +8,12 @@ using CharacterController;
 
 namespace ItemSystem
 {
+    public enum ItemState { player, enemy }
     public class DashItem : Item
     {
-        private enum DashState { player, enemy }
 
         EnemyDash _enemyDash;
-        DashState state;
+        ItemState state;
 
         public override void OnEquipped()
         {
@@ -32,7 +32,7 @@ namespace ItemSystem
 
                 if (_enemyDash)
                 {
-                    state = DashState.enemy;
+                    state = ItemState.enemy;
                     _enemyDash.DashItem = this;
                 }
             }
@@ -44,10 +44,10 @@ namespace ItemSystem
 
             switch (state)
             {
-                case DashState.player:
+                case ItemState.player:
                     (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(Abilitys.HandledAbility.Dash);
                     break;
-                case DashState.enemy:
+                case ItemState.enemy:
                     _enemyDash.DashItem = null;
                     break;
                 default:
