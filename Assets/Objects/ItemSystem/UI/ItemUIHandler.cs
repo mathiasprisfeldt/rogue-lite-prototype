@@ -22,7 +22,7 @@ public class ItemUIHandler : MonoBehaviour, IEventListener<Item>
     private Transform _playerUiItemParent;
 #pragma warning restore 649
 
-    void Start()
+    void Awake()
     {
         _itemHandler.ItemEquipped.AddListener(this);
         _itemHandler.ItemUnEquipped.AddListener(this);

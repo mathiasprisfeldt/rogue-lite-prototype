@@ -1,9 +1,6 @@
 ﻿using Health;
 using InControl;
-using Managers;
-using RogueLiteInput;
 using UnityEngine;
-using Zios;
 using Timer = AcrylecSkeleton.Utilities.Timer;
 
 namespace ItemSystem

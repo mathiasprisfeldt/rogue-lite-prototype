@@ -31,7 +31,7 @@ public class ItemStealer : MonoBehaviour, IEventListener<Collider2D>
     {
         //If we're the player, we pressed attack and we got a victim.
         if (_itemHandler.Owner is ActionsController &&
-            GameManager.Instance.Player.C.PlayerActions.Interact.WasPressed && 
+            GameManager.Instance.Player.C.PlayerActions.ProxyInputActions.Interact.WasPressed && 
             _currentVictim)
         {
             if (_itemHandler.Steal(_currentVictim.ItemHandler))
