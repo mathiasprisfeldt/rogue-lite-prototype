@@ -49,7 +49,7 @@
  <tile id="21">
   <image width="256" height="256" source="../../SpawnIcons/ControlsSpawner.png"/>
  </tile>
- <tile id="22">
-  <image width="351" height="337" source="../../Sprites/SpikedLadder.png"/>
+ <tile id="23">
+  <image width="194" height="256" source="../../SpawnIcons/HealthMachine.png"/>
  </tile>
 </tileset>

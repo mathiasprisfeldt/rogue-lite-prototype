@@ -4,7 +4,7 @@ using Controllers;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace PrefabDropper
+namespace PrefabDrops
 {
     /// <summary>
     /// Purpose:
@@ -21,7 +21,7 @@ namespace PrefabDropper
                  "randomly, then the object that will be spawned " +
                  "will go down in the list until the last object")]
         [SerializeField, Range(0, 1)]
-        private float _raityValue;
+        private float _rarityValue;
 
         [SerializeField, Range(0, 360)]
         private float _dropAngle;
@@ -41,27 +41,15 @@ namespace PrefabDropper
         private float _maxForce;
 
         [SerializeField, Range(0, 1)]
-        private float _changeToDrop;
+        private float _chanceToDrop;
 
         [SerializeField]
         private Character _character;
-
-        [SerializeField]
-        private bool _try;
 
         public void Awake()
         {
             if (_character && _character.HealthController)
                 _character.HealthController.OnDead.AddListener(OnDeath);
-        }
-
-        public void Update()
-        {
-            if (_try)
-            {
-                Drop();
-                _try = false;
-            }
         }
 
         private void OnDeath()
@@ -72,7 +60,7 @@ namespace PrefabDropper
         public void Drop()
         {
             float randomValue = Random.Range(0f, 1f);
-            if (randomValue > _changeToDrop)
+            if (randomValue > _chanceToDrop)
                 return;
 
             int amountOfDrops = Random.Range(_minDropAmount, _maxDropAmount);
@@ -84,7 +72,7 @@ namespace PrefabDropper
                 for (var j = 0; j < _prefabs.Count; j++)
                 {
                     randomValue = Random.Range(0f, 1f);
-                    if (j == _prefabs.Count - 1 || randomValue <= _raityValue)
+                    if (j == _prefabs.Count - 1 || randomValue <= _rarityValue)
                     {
                         prefab = _prefabs[j];
                         break;
