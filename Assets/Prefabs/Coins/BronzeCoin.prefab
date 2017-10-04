@@ -24,8 +24,9 @@ GameObject:
   - component: {fileID: 114746629435151444}
   - component: {fileID: 50681566581851932}
   - component: {fileID: 58794107503541324}
+  - component: {fileID: 114922482160951148}
   m_Layer: 0
-  m_Name: Coin
+  m_Name: BronzeCoin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -163,7 +164,20 @@ MonoBehaviour:
   _travelDirection: {x: 0, y: 0}
   _speed: 0
   _distanceToSwitckDirection: 0
-  goldValue: 10
+  goldValue: 5
+--- !u!114 &114922482160951148
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1337813008820028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c8ef5e09c0f18a45a4c55db9b7ec774, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _coinType: 2
+  _animator: {fileID: 95254603958823916}
 --- !u!212 &212368257163187214
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -196,7 +210,7 @@ SpriteRenderer:
   m_SortingLayerID: -1015216537
   m_SortingLayer: -2
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: ba939099cfc2fea46a824f41969cbede, type: 3}
+  m_Sprite: {fileID: 21300008, guid: cfbd425bc25f21d4892e310286d500e7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
