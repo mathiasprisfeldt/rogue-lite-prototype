@@ -166,7 +166,7 @@ namespace ItemSystem
 
             newItem.ItemHandler = this;
             newItem.OnEquipped();
-            newItem.transform.SetParent(transform);
+            newItem.transform.SetParent(transform, false);
 
             return true;
         }
