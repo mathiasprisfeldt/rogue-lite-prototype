@@ -9,11 +9,8 @@ using UnityEngine.UI;
 /// <summary>
 /// UI handler for each Item holded by <see cref="ItemUIHandler"/>
 /// </summary>
-[RequireComponent(typeof(CanvasGroup))]
 public class PlayerUIItem : MonoBehaviour
 {
-    private CanvasGroup _canvasGroup;
-
     [SerializeField]
     private Image _icon;
 
@@ -32,7 +29,6 @@ public class PlayerUIItem : MonoBehaviour
 
     void Awake()
     {
-        _canvasGroup = GetComponent<CanvasGroup>();
         SetItem(null);
     }
 

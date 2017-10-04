@@ -39,7 +39,6 @@ GameObject:
   - component: {fileID: 224456027547505260}
   - component: {fileID: 222340539923269622}
   - component: {fileID: 114622006331652564}
-  - component: {fileID: 225912836631703894}
   m_Layer: 5
   m_Name: PlayerUIItemTemplate
   m_TagString: Untagged
@@ -6868,14 +6867,3 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -4.8}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &225912836631703894
-CanvasGroup:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1014168423345858}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
