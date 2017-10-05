@@ -36,7 +36,7 @@ public class HealthContainers : MonoBehaviour
     }
 
     // Update is called once per frame
-	void Update ()
+    void Update()
     {
         if (_playerApplication == null && GameManager.Instance && GameManager.Instance.Player)
         {
@@ -48,8 +48,8 @@ public class HealthContainers : MonoBehaviour
                 _healthController.OnDamage.AddListener(OnDamage);
                 _healthController.OnHealEvent.AddListener(UpdateHealthbar);
             }
-                
-        }	    
+
+        }
     }
 
     private void UpdateHealthbar()
@@ -71,7 +71,7 @@ public class HealthContainers : MonoBehaviour
             {
                 _healthContainers[i].enabled = false;
             }
-            
+
         }
         _overflowText.text = _healthController.HealthAmount > _healthContainers.Count ? "+" + (Mathf.Floor(_healthController.HealthAmount - _healthContainers.Count)) : "";
     }

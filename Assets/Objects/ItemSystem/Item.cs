@@ -89,11 +89,11 @@ namespace ItemSystem
         {
             ItemHandler.ItemEquipped.Invoke(this);
 
-
             foreach (var item in ItemHandler.Items)
             {
                 if (item != this && item.GetType() == GetType())
                 {
+                    Debug.Log("There is another");
                     item.Other = this;
                     item._slaveState = ItemSlave.Master;
                     _slaveState = ItemSlave.Slave;

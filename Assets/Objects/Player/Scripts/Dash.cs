@@ -82,7 +82,6 @@ namespace CharacterController
                     _actionsController.HealthController.IsInvurnable = true;
                     return true;
                 }
-                _actionsController.HealthController.IsInvurnable = false;
                 return false;
             }
         }
