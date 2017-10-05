@@ -208,6 +208,8 @@ namespace Health
             set { _character = value; }
         }
 
+        public float LastDamageRcieved { get; set; }
+
         public bool TrapImmune
         {
             get { return _trapImmune; }
@@ -275,6 +277,18 @@ namespace Health
                     break;
             }
 
+            if (giveDamage)
+            {
+                OnDamage.Invoke(from);
+
+                //If damage dealer has a Hit items, find them and give them a call.
+                if (from != null && from.ItemHandler && triggerItemhandler)
+                {
+                    LastDamageRcieved = amountToDmg;
+                    from.ItemHandler.OnHit(this);
+                }
+            }
+
             HealthAmount -= amountToDmg;
 
             //Create hit effect
@@ -309,15 +323,6 @@ namespace Health
             {
                 if (_dmgWhileInvurnable)
                     Character.MainAnimator.SetTrigger("Hit");
-            }
-
-            if (giveDamage)
-            {
-                OnDamage.Invoke(from);
-
-                //If damage dealer has a Hit items, find them and give them a call.
-                if (from != null && from.ItemHandler && triggerItemhandler)
-                    from.ItemHandler.OnHit(this);
             }
 
             if (giveInvurnability || _invurnableOnDmg)

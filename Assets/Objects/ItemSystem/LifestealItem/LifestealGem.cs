@@ -39,17 +39,12 @@ public class LifestealGem : Projectile
         transform.Rotate(new Vector3(0, 0, _rotSpeed * BetterTime.DeltaTime));
     }
 
-    protected override void HandleDamage(CollisionCheck cc)
-    {
-        cc.Character.HealthController.Damage(_damage, pos: transform.position, from: Owner, triggerItemhandler: false);
-        Owner.HealthController.Heal(_damage);
-    }
-
     protected override void Kill()
     {
         TellMeWhen.Seconds(_respawnTime, this);
         _collider.enabled = false;
         _renderer.enabled = false;
+        _used = false;
     }
 
     public override void OnTimesUp(int id, object args)
@@ -60,6 +55,4 @@ public class LifestealGem : Projectile
             _renderer.enabled = true;
         }
     }
-
-
 }

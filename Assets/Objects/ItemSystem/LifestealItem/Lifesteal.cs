@@ -29,10 +29,9 @@ public class Lifesteal : Item
 
     public override void OnHit(HealthController victim)
     {
-        base.OnHit(victim);
+        base.OnHit(victim);        
 
-        victim.Damage(_stealAmount, triggerItemhandler: false);
-        ItemHandler.Owner.HealthController.Heal(_stealAmount);
+        ItemHandler.Owner.HealthController.Heal(victim.LastDamageRcieved);
 
     }
 

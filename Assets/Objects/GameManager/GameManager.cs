@@ -47,7 +47,7 @@ namespace Managers
 
             set
             {
-               _enemies = value;
+                _enemies = value;
             }
         }
 

@@ -1410,6 +1410,7 @@ GameObject:
   - component: {fileID: 114159830119299668}
   - component: {fileID: 114547475327218236}
   - component: {fileID: 114118127066961178}
+  - component: {fileID: 114309234381367930}
   m_Layer: 8
   m_Name: View
   m_TagString: Player
@@ -3482,6 +3483,24 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   _damage: 1
+--- !u!114 &114309234381367930
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1960660052491594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23f3cb6bdfb6d324e9e655c387a6714a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _active: 0
+  _projectilePrefab: {fileID: 114159514260344410, guid: 71c0bbfd6c6997f46846a257db3bf676,
+    type: 2}
+  _throwForce: 0.002
+  _actionsController: {fileID: 114173897078414380}
+  _manaCost: 1
+  Item: {fileID: 0}
 --- !u!114 &114309314290104366
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3539,7 +3558,7 @@ MonoBehaviour:
   Dash: {fileID: 114303647452529036}
   LedgeHanging: {fileID: 114323172994149904}
   Throw: {fileID: 114826802134503442}
-  Grenade: {fileID: 114118127066961178}
+  Grenade: {fileID: 114309234381367930}
   Melee: {fileID: 114696191872934630}
   Jump: {fileID: 114090219148833560}
   Climing: {fileID: 114164657400838860}
@@ -3923,9 +3942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _owner: {fileID: 114173897078414380}
-  _itemsAtStart:
-  - {fileID: 114687679948778786, guid: de8016fe69a7a614b9e5c510f8643dcf, type: 2}
-  - {fileID: 114221420086673964, guid: 587bd346537c72743a5a64f07e3738bf, type: 2}
+  _itemsAtStart: []
   _popupOffset: {x: 0, y: 0}
   _maxPassives: 2
   _maxActives: 2
@@ -4525,8 +4542,8 @@ MonoBehaviour:
   _wallJump: 0
   _dash: 0
   _ledgeHanging: 1
-  _throw: 0
-  _grenade: 0
+  _throw: 1
+  _grenade: 1
   OnAbilityChange:
     m_PersistentCalls:
       m_Calls: []
@@ -4622,7 +4639,7 @@ MonoBehaviour:
   _invurnabilityDuration: 1
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
-  _healthAmount: 999999
+  _healthAmount: 3
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 600
   _knockbackDuration: 0.1
