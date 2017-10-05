@@ -22,13 +22,13 @@ namespace Pickups
 
         public override void Apply(GameObject go)
         {
+            base.Apply(go);
             CollisionCheck cc = go.GetComponent<CollisionCheck>();
             HealthController hc = null;
             if (cc != null)
                 hc = cc.Character.HealthController;
-            if (hc != null && !_used)
+            if (hc != null )
             {
-                _used = true;
                 hc.Heal(_healthAmount);
                 Destroy(gameObject);
             }
@@ -36,3 +36,8 @@ namespace Pickups
         }
     }
 }
+
+        public void OnTriggerStay2D(Collider2D collision)
+        {
+            Check(collision.gameObject);
+        }

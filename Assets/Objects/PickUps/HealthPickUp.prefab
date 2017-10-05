@@ -129,6 +129,7 @@ MonoBehaviour:
   _travelDirection: {x: 0, y: 1}
   _speed: 20
   _distanceToSwitckDirection: 10
+  _timeUntilActive: 0
   _healthAmount: 1
 --- !u!212 &212194195016362160
 SpriteRenderer:

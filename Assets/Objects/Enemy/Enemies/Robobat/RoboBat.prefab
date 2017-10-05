@@ -159,6 +159,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1534963454543378
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4252416527993482}
+  - component: {fileID: 114367512792071908}
+  m_Layer: 12
+  m_Name: CoinSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1713220800187640
 GameObject:
   m_ObjectHideFlags: 1
@@ -270,6 +286,7 @@ Transform:
   m_Children:
   - {fileID: 4671530382136436}
   - {fileID: 4652410128872046}
+  - {fileID: 4252416527993482}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -298,6 +315,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4652410128872046}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4252416527993482
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1534963454543378}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4155377170205612}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4374408028387464
 Transform:
@@ -628,6 +658,29 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+--- !u!114 &114367512792071908
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1534963454543378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd2a6072a1d7cee42903f57685baea93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefabs:
+  - {fileID: 1337813008820028, guid: 4554cc847908fbd4abe471b94a3f7347, type: 2}
+  - {fileID: 1337813008820028, guid: 39c2d519cbc0d224889b2889a3086996, type: 2}
+  - {fileID: 1337813008820028, guid: 3583bc38b9ba58940bb559e10c646f25, type: 2}
+  _rarityValue: 0.05
+  _dropAngle: 60
+  _minDropAmount: 1
+  _maxDropAmount: 1
+  _minForce: 8
+  _maxForce: 10
+  _chanceToDrop: 1
+  _character: {fileID: 114347498557357304}
 --- !u!114 &114403488158740806
 MonoBehaviour:
   m_ObjectHideFlags: 1

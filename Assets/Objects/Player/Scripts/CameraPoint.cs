@@ -7,15 +7,20 @@ using UnityEngine.SceneManagement;
 
 public class CameraPoint : MonoBehaviour
 {
-    [SerializeField] private ActionsController _actionsController;
+    [SerializeField]
+    private ActionsController _actionsController;
 
-    [SerializeField] private Transform _target;
+    [SerializeField]
+    private Transform _target;
 
-    [SerializeField] private float _peekAmount;
+    [SerializeField]
+    private float _peekAmount;
 
-    [SerializeField] private float _durationUntilPeek;
+    [SerializeField]
+    private float _durationUntilPeek;
 
-    [SerializeField] private float _peekDeadZone;
+    [SerializeField]
+    private float _peekDeadZone;
 
     private float _xPosition;
     private float _peekTImer;

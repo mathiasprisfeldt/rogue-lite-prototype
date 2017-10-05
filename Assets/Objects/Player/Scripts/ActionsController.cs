@@ -52,9 +52,7 @@ namespace CharacterController
         [SerializeField]
         private Transform _throwPoint;
 
-
         private Vector2 _velocity;
-
         private bool _shouldDash;
         private float _dashTimer;
         private Vector2 _savedVelocity;
@@ -130,6 +128,7 @@ namespace CharacterController
 
         public bool Combat { get; set; }
         public bool ClimbEnd { get; set; }
+        public bool WaitForInputHorizontal { get; set; }
         public Trigger StartJump { get; set; }
         public Trigger StartDash { get; set; }
         public Trigger StartGrab { get; set; }
@@ -221,7 +220,6 @@ namespace CharacterController
                 App.C.PlayerActions.ResetProxy();
             _animator.SetBool("MovingUp", Rigidbody.velocity.y > 0);
             _animator.SetFloat("Speed", Mathf.Clamp01(new Vector2(Horizontal, Vertical).magnitude));
-
         }
 
         private bool HandleOnewayColliders()
@@ -247,7 +245,7 @@ namespace CharacterController
         private void HandleMaxSpeed()
         {
             var predictGravity = Rigidbody.velocity.y + Physics2D.gravity.y * Rigidbody.gravityScale;
-            if (predictGravity <= -_maxFallSpeed)
+            if (predictGravity <= -_maxFallSpeed && !OnGround)
             {
                 Rigidbody.velocity -= new Vector2(0, Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed)) * BetterTime.FixedDeltaTime);
             }
@@ -255,7 +253,7 @@ namespace CharacterController
 
         protected override void UpdateState()
         {
-            if (OnGround && (App.C.PlayerActions != null && App.C.PlayerActions.Horizontal != 0))
+            if (OnGround && !WaitForInputHorizontal && (App.C.PlayerActions != null && App.C.PlayerActions.Horizontal != 0))
                 State = CharacterState.Moving;
             else if (OnGround)
                 State = CharacterState.Idle;
@@ -414,6 +412,7 @@ namespace CharacterController
                 else
                     velocity = new Vector2(velocity.x, 0);
             }
+            
         }
 
         public override void Flip(float dir)
@@ -430,16 +429,20 @@ namespace CharacterController
 
             LastUsedHorizontalMoveAbility = MoveAbility.None;
             Horizontal = App.C.PlayerActions.Horizontal;
+
             if (!Combat)
                 Flip(Horizontal);
 
-            if (CollisionCheck.Sides.Left && Horizontal < 0)
+            if (CollisionCheck.Sides.Left && Horizontal < 0 ||
+                CollisionCheck.Sides.Right && Horizontal > 0)
                 Horizontal = 0;
 
-            if (CollisionCheck.Sides.Right && Horizontal > 0)
-                Horizontal = 0;
+            if (WaitForInputHorizontal &&
+                App.C.PlayerActions.ProxyInputActions.AnyWasPressed)
+                WaitForInputHorizontal = false;
 
-            velocity += new Vector2(MovementSpeed * Horizontal, 0);
+            if (!WaitForInputHorizontal)
+                velocity += new Vector2(MovementSpeed * Horizontal, 0);
 
             if (_abilityReferences.Dash && _abilityReferences.Dash.HorizontalActive)
             {

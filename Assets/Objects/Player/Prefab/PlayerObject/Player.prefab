@@ -818,6 +818,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1563328889415390
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4339671998924958}
+  - component: {fileID: 70104511852978668}
+  m_Layer: 17
+  m_Name: Bottom
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1580855839344502
 GameObject:
   m_ObjectHideFlags: 1
@@ -1884,6 +1900,19 @@ Transform:
   m_Father: {fileID: 4003660412506762}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4339671998924958
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1563328889415390}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4428166418914022}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4356642772495062
 Transform:
   m_ObjectHideFlags: 1
@@ -1978,7 +2007,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4339671998924958}
   m_Father: {fileID: 4572083337588172}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2545,7 +2575,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0
-  m_GravityScale: 3
+  m_GravityScale: 4
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -2733,6 +2763,21 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.15}
   m_Size: {x: 0.7, y: 1.4}
   m_Direction: 0
+--- !u!70 &70104511852978668
+CapsuleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1563328889415390}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.65}
+  m_Size: {x: 0.5, y: 0.2}
+  m_Direction: 1
 --- !u!70 &70134984201781516
 CapsuleCollider2D:
   m_ObjectHideFlags: 1
@@ -2865,6 +2910,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _collidersToCheck:
   - {fileID: 70628733760220806}
+  - {fileID: 70104511852978668}
   _collisionLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -2947,10 +2993,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _actionsController: {fileID: 114173897078414380}
-  _jumpForce: 500
-  _initialJumpForce: 50
-  _initialJumpDuration: 0.05
-  _jumpDuration: 0.15
+  _jumpForce: 1100
+  _initialJumpForce: 0
+  _initialJumpDuration: 0
+  _jumpDuration: 0.25
   _gracePeriod: 0.2
 --- !u!114 &114105065633640464
 MonoBehaviour:
@@ -3072,8 +3118,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _actionsController: {fileID: 114173897078414380}
-  _verticalSpeed: 180
-  _horizontalSpeed: 180
+  _verticalSpeed: 250
+  _horizontalSpeed: 250
 --- !u!114 &114169174117339438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3121,7 +3167,7 @@ MonoBehaviour:
   _itemHandler: {fileID: 114559391345834806}
   _startDirection: -1
   _damage: 1
-  _movementSpeed: 250
+  _movementSpeed: 350
   _flySpeed: 0
   _flipWithVelocity: 0
   _doFlipWithRotation: 0
@@ -3139,7 +3185,7 @@ MonoBehaviour:
   _onewayCheck: {fileID: 114286498854671988}
   _downCheck: {fileID: 114309314290104366}
   _animator: {fileID: 95977964218066546}
-  _maxFallSpeed: 40
+  _maxFallSpeed: 55
   _throwPoint: {fileID: 4787569244547952}
 --- !u!114 &114180735855815312
 MonoBehaviour:
@@ -3591,8 +3637,6 @@ MonoBehaviour:
   _sensitivity: 0.2
   _pushUpForce: 80
   _pushUpDuration: 0.3
-  _pushDownForce: 80
-  _pushDownDuration: 0.3
 --- !u!114 &114327364014281900
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3869,8 +3913,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _actionsController: {fileID: 114173897078414380}
-  _jumpForce: 200
-  _jumpDuration: 0.05
+  _jumpForce: 400
+  _jumpDuration: 0.1
 --- !u!114 &114519754364544034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4061,6 +4105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _application: {fileID: 114008459180862610}
+  _actionController: {fileID: 114173897078414380}
 --- !u!114 &114623797188693894
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4238,7 +4283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e44a4dcfad2e4794abd3c214a068647c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mana: 3
+  _mana: 0
   OnManaChange:
     m_PersistentCalls:
       m_Calls: []

@@ -27,6 +27,7 @@ TagManager:
   - Trap
   - NoCollidePlayer
   - Granades
+  - OnlyPlatform
   - 
   - 
   - 

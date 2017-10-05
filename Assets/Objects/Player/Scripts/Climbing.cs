@@ -18,9 +18,8 @@ public class Climbing : MovementAbility
 
     private Climbable _climeObject;
     private bool _climbing;
-    private bool _fall;
-    private float _fallTimer;
     private float _cooldown;
+    private bool _waitForJumpRelease;
 
     public void Start()
     {
@@ -30,8 +29,6 @@ public class Climbing : MovementAbility
 
     private void OnDamage(Character arg0)
     {
-        _fall = true;
-        _fallTimer = .01f;
         _cooldown = 0.2f;
     }
 
@@ -50,13 +47,27 @@ public class Climbing : MovementAbility
             if (_climeObject == null)
                 _climeObject = GetClosestClimable();
 
-            var isActive = _climeObject != null && (_actionsController.App.C.PlayerActions.Up || (_actionsController.App.C.PlayerActions.Down && !_actionsController.OnGround)) 
-                && !_actionsController.Combat|| OnLadder(_actionsController.GroundCollisionCheck) != null && _actionsController.App.C.PlayerActions.Down && !_actionsController.Combat;
+            var input = _climeObject != null &&
+                        (_actionsController.App.C.PlayerActions.Up ||
+                         (_actionsController.App.C.PlayerActions.Down &&
+                          !_actionsController.OnGround));
+
+            var isActive =  input && !_waitForJumpRelease
+                && !_actionsController.Combat|| OnLadder(_actionsController.GroundCollisionCheck) != null 
+                && _actionsController.App.C.PlayerActions.Down 
+                && !_actionsController.Combat;
 
             if (!_climbing && isActive && _cooldown <= 0)
             {
                 _actionsController.StartClimbing.Value = true;
                 _climbing = true;
+            }
+
+            if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed && (isActive || _climbing))
+            {
+                _climbing = false;
+                isActive = false;
+                _waitForJumpRelease = true;
             }
 
             return (isActive || _climbing) && _cooldown <= 0;
@@ -66,7 +77,7 @@ public class Climbing : MovementAbility
     public override void HandleVertical(ref Vector2 velocity)
     {
         
-        if (_climeObject && _fallTimer <= 0)
+        if (_climeObject)
             velocity = new Vector2(velocity.x, velocity.y + _actionsController.Rigidbody.CounterGravity(_verticalSpeed * _actionsController.Vertical + _climeObject.Resistance));
 
         Collider2D col = OnLadder(_actionsController.GroundCollisionCheck);
@@ -75,7 +86,6 @@ public class Climbing : MovementAbility
             if(_actionsController.ModificationHandler.ActiveModifiers.FirstOrDefault(x => x.Name == "ChangeLayerOf" + col.gameObject.name) == null)
                 _actionsController.ModificationHandler.AddModification(
                     new TemporaryLayerChange("ChangeLayerOf" + col.gameObject.name, "NonPlayerCollision", col, _actionsController.NonPlatformTriggerCheck, 0.5f));
-            velocity = new Vector2(velocity.x, velocity.y -= 1000f);
         }
     }
 
@@ -115,6 +125,12 @@ public class Climbing : MovementAbility
         return ca;
     }
 
+    public void Update()
+    {
+        if (_actionsController.App.C.PlayerActions.ProxyInputActions.Down.WasReleased &&
+            _waitForJumpRelease || _actionsController.OnGround)
+            _waitForJumpRelease = false;
+    }
 
     public void LateUpdate()
     {
@@ -122,22 +138,9 @@ public class Climbing : MovementAbility
         if (_climbing && (OnLadder(_actionsController.NonPlatformTriggerCheck) == null ) ||
             _actionsController.Combat)
             _climbing = false;
-        if (_actionsController.App.C.PlayerActions.ProxyInputActions.Jump.WasPressed && _climbing)
-        {
-            _fall = true;
-            _fallTimer = .01f;
-        }
-
-        if (_fallTimer > 0)
-            _fallTimer -= BetterTime.DeltaTime;
         if (_cooldown > 0)
             _cooldown -= BetterTime.DeltaTime;
 
-        if (_fallTimer <= 0 && _fall)
-        {
-            _fall = false;
-            _climbing = false;
-        }
             
     }
 
