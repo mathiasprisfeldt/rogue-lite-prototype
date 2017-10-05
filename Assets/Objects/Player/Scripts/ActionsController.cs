@@ -272,7 +272,7 @@ namespace CharacterController
         private void HandleAnimationParameters()
         {
             //Running
-            Animator.SetBool("Running", State == CharacterState.Moving);
+            Animator.SetBool("Running", State == CharacterState.Moving && !LockMovement);
 
             //OnGround
             Animator.SetBool("OnGround", OnGround);

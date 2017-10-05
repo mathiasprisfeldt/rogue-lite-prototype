@@ -75,11 +75,32 @@ namespace ItemSystem
             }
         }
 
-        public void Remove()
+        /// <summary>
+        /// Removes this item from its itemhandler.
+        /// </summary>
+        /// <param name="replacement">This item will be the replacement in the item handler.</param>
+        public void RemoveSelf(Item replacement = null)
         {
+            if (!ItemHandler)
+                return;
+
+            var ourself = ItemHandler.Items.Find(this);
+
             //If we havent removed this Item from its ItemHandler do so.
-            if (ItemHandler && ItemHandler.Items.Contains(this))
-                ItemHandler.Items.Remove(this);
+            if (ourself != null)
+            {
+                OnUnEquipped();
+
+                if (replacement)
+                {
+                    replacement.RemoveSelf();
+                    ourself.Value = replacement;
+                }
+                else
+                {
+                    ItemHandler.Items.Remove(ourself);
+                }
+            }
         }
 
         /// <summary>
@@ -122,7 +143,7 @@ namespace ItemSystem
 
         protected virtual void OnDestroy()
         {
-            Remove();
+            RemoveSelf();
             CooldownTimer.Destroy();
         }
     }

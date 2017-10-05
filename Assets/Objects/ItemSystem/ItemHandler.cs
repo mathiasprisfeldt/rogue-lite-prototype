@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Archon.SwissArmyLib.Events;
+using CharacterController;
 using Controllers;
 using Health;
+using ItemSystem.UI;
 using Managers;
 using RogueLiteInput;
 using UnityEngine;
@@ -20,9 +22,23 @@ namespace ItemSystem
             ON_ITEM_UNEQUIPPED = 0,
             ON_ITEM_EQUIPPED   = 1;
 
+        private ItemStealMenu _itemStealMenu;
+
+        [Header("Prefabs:")]
+        [SerializeField]
+        private ItemStealMenu _itemStealMenuPrefab;
+
+        [Space, Header("References:")]
+        [SerializeField]
+        private Character _character;
+
+        [SerializeField]
+        private RectTransform _uiParent;
+
         [SerializeField]
         private Character _owner;
 
+        [Space, Header("Settings:")]
         [SerializeField]
         private List<Item> _itemsAtStart;
 
@@ -70,9 +86,24 @@ namespace ItemSystem
             get { return _maxActives; }
         }
 
+        public Character Character
+        {
+            get { return _character; }
+        }
+
         void Start()
         {
             SetupStarterItems();
+
+            //If we take damage we want to cancel any stealing from this item handler.
+            if (Owner is ActionsController)
+            {
+                Owner.HealthController.OnDamage.AddListener(arg0 =>
+                {
+                    if (_itemStealMenu)
+                        _itemStealMenu.Close();
+                });
+            }
         }
 
         /// <summary>
@@ -107,7 +138,7 @@ namespace ItemSystem
         /// <param name="victim">The item handler to steal from</param>
         public bool Steal(ItemHandler victim)
         {
-            if (!victim.Items.Any())
+            if (!victim.Items.Any() || _itemStealMenu)
                 return false;
 
             bool success = true;
@@ -125,16 +156,28 @@ namespace ItemSystem
         /// </summary>
         public bool Steal(Item current, Item newItem)
         {
-            if (current)
-            {
-                current.OnUnEquipped();
+            if (current && current.Equals(newItem))
+                return false;
 
-                //TODO: Drop the item on the floor
-                //Meanwhile just destroy it.
-                Destroy(current);
+            if (current && Items.Contains(current))
+            {
+                newItem.ActivationAction = current.ActivationAction;
+
+                //If we are replacing an already existing item, replace it with new one.
+                var currPos = Items.Find(current);
+                if (currPos != null)
+                {
+                    current.RemoveSelf(newItem);
+                    Destroy(current.gameObject);
+                }
             }
 
             return AddItem(newItem);
+        }
+
+        public bool Steal(int index, Item newItem)
+        {
+            return Steal(Items.Where(item => item.Type == newItem.Type).ToList()[index], newItem);
         }
 
         /// <summary>
@@ -153,16 +196,27 @@ namespace ItemSystem
             if (!newItem)
                 return false;
 
-            if (!CanCarry(newItem.Type))
-                return false;
+            //If we dont already carry the new item, check if we can and add it.
+            if (!Items.Contains(newItem))
+            {
+                if (!CanCarry(newItem.Type))
+                {
+                    _itemStealMenu = Instantiate(_itemStealMenuPrefab, _uiParent, false);
+                    _itemStealMenu.Initialize(this, newItem);
+                    return false;
+                }
 
-            newItem.Remove();
-            Items.AddFirst(newItem);
+                newItem.RemoveSelf();
+                Items.AddFirst(newItem);
+            }
 
-            //Find a activationaction for the new item.
-            ProxyInputActions inputActions = GameManager.Instance.Player.C.PlayerActions.ProxyInputActions;
-            bool isSpecial1Occupied = Items.Any(item => item.ActivationAction == inputActions.Special1);
-            newItem.ActivationAction = isSpecial1Occupied ? inputActions.Special2 : inputActions.Special1;
+            //Find a activation action for the new item.
+            if (newItem.ActivationAction == null)
+            {
+                ProxyInputActions inputActions = GameManager.Instance.Player.C.PlayerActions.ProxyInputActions;
+                bool isSpecial1Occupied = Items.Any(item => item.ActivationAction == inputActions.Special1);
+                newItem.ActivationAction = isSpecial1Occupied ? inputActions.Special2 : inputActions.Special1;
+            }
 
             newItem.ItemHandler = this;
             newItem.OnEquipped();

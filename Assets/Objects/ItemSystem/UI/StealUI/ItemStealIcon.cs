@@ -25,11 +25,14 @@ namespace ItemSystem.UI
         [SerializeField]
         private bool _isLeft;
 
+        public Item Item { get; set; }
+
         public void SetItem(Item item)
         {
             _name.text = item.Name;
             _desc.text = item.Description;
             _icon.sprite = item.Icon;
+            Item = item;
         }
     }
 }
