@@ -13,17 +13,16 @@ namespace ManaPickup
         [SerializeField]
         private int _manaAmount;
 
-        private bool _used;
 
         public override void Apply(GameObject go)
         {
+            base.Apply(go);
             CollisionCheck cc = go.GetComponent<CollisionCheck>();
             ManaHandler mh = null;
             if (cc != null)
                 mh = cc.Character.ManaHandler;
-            if (mh != null && !_used)
+            if (mh != null)
             {
-                _used = true;
                 mh.Mana += _manaAmount;
                 Destroy(gameObject);
             }

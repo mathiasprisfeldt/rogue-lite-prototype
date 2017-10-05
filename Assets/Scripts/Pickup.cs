@@ -2,6 +2,7 @@
 using System.Linq;
 using AcrylecSkeleton.Utilities;
 using AcrylecSkeleton.Utilities.Collections;
+using Archon.SwissArmyLib.Events;
 using Archon.SwissArmyLib.Utils;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Pickups
     /// Purpose:
     /// Creator:
     /// </summary>
-    public abstract class Pickup : MonoBehaviour
+    public abstract class Pickup : MonoBehaviour, TellMeWhen.ITimerCallback
     {
         [SerializeField]
         private bool _active;
@@ -33,9 +34,12 @@ namespace Pickups
         [SerializeField]
         private float _distanceToSwitckDirection;
 
+        [SerializeField]
+        private float _timeUntilActive;
+
         private float _distanceTraveled;
         private Vector2 _currentDirection;
-
+        private bool _used;
 
         public bool Active
         {
@@ -51,16 +55,23 @@ namespace Pickups
 
         public virtual void Check(GameObject go)
         {
-            if (!_targetTags.Contains(go) || _targetLayers.Contains(go.layer) || !_active)
+            if (!_targetTags.Contains(go) || _targetLayers.Contains(go.layer) ||
+                !_active || _used)
                 return;
             Apply(go);
         }
 
-        public abstract void Apply(GameObject go);
+
 
         public void Awake()
         {
             _currentDirection = _travelDirection.normalized;
+
+            if (_timeUntilActive > 0)
+            {
+                TellMeWhen.Seconds(_timeUntilActive,this);
+                _used = true;
+            }
         }
 
         public void FixedUpdate()
@@ -83,5 +94,15 @@ namespace Pickups
             }
             
         }
-    }
+
+        public void OnTimesUp(int id, object args)
+        {
+            _used = false;
+        }
+
+        public virtual void Apply(GameObject go)
+        {
+            _used = true;
+        }
+}
 }

@@ -624,12 +624,12 @@ MonoBehaviour:
   - {fileID: 1337813008820028, guid: 4554cc847908fbd4abe471b94a3f7347, type: 2}
   - {fileID: 1337813008820028, guid: 39c2d519cbc0d224889b2889a3086996, type: 2}
   - {fileID: 1337813008820028, guid: 3583bc38b9ba58940bb559e10c646f25, type: 2}
-  _rarityValue: 0.1
+  _rarityValue: 0.05
   _dropAngle: 60
   _minDropAmount: 1
   _maxDropAmount: 1
-  _minForce: 3
-  _maxForce: 5
+  _minForce: 8
+  _maxForce: 10
   _chanceToDrop: 1
   _character: {fileID: 114347498557357304}
 --- !u!114 &114403488158740806
