@@ -79,7 +79,7 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
     public override void Begin()
     {
         base.Begin();
-        _dashDirection = Context.C.ToPlayer.normalized;
+        _dashDirection = Context.C.ToPlayer.normalized.x > 0 ? new Vector2(1,0) : new Vector2(-1, 0);
         _isDashing = true;
         DashItem.Activate();
         TellMeWhen.Seconds(_chargeUp, this);

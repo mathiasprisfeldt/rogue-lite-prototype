@@ -13,8 +13,6 @@ namespace Pickups
         [Header("Health Properties"), SerializeField]
         private float _healthAmount;
 
-        private bool _used;
-
         public void OnTriggerStay2D(Collider2D collision)
         {
             Check(collision.gameObject);
@@ -34,10 +32,8 @@ namespace Pickups
             }
 
         }
+
     }
 }
 
-        public void OnTriggerStay2D(Collider2D collision)
-        {
-            Check(collision.gameObject);
-        }
+        
