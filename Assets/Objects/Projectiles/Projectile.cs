@@ -19,7 +19,7 @@ namespace Projectiles
     public class Projectile : MonoBehaviour, TellMeWhen.ITimerCallback
     {
         [Header("Settings:"), SerializeField]
-        private float _damage;
+        protected float _damage;
 
         [SerializeField, Tooltip("Amount of time in seconds it takes before it kills itself.")]
         private float _timeToLive = 15;
@@ -34,13 +34,13 @@ namespace Projectiles
         private float _additionalYDirection;
 
         [SerializeField]
-        private LayerMask _layersToHit;
+        protected LayerMask _layersToHit;
 
         [SerializeField]
         private LayerMask _layerToDestoryOn;
 
         [SerializeField]
-        private List<string> _tagsToHit = new List<string>();
+        protected List<string> _tagsToHit = new List<string>();
 
         [SerializeField]
         private bool _animHandlesDestruction;
@@ -53,8 +53,9 @@ namespace Projectiles
         private GameObject _hitEffectPrefab;
 
         private Vector2 _direction;
-        private bool _used;
+        protected bool _used;
 
+        public UnityEvent OnDestroy { get { return _onDestroy; } }
         public Rigidbody2D RigidBody { get; set; }
 
         public Vector2 Direction
@@ -73,12 +74,13 @@ namespace Projectiles
 
         public Character Owner { get; set; }
 
-        public void Awake()
+        public virtual void Awake()
         {
             RigidBody = GetComponent<Rigidbody2D>();
 
             //When times up kill itself.
-            TellMeWhen.Seconds(_timeToLive, this);
+            if (_timeToLive > 0)
+                TellMeWhen.Seconds(_timeToLive, this);
         }
 
         public void Shoot()
@@ -96,7 +98,7 @@ namespace Projectiles
                 RigidBody.AddForce(Direction * _force, ForceMode2D.Impulse);
         }
 
-        public void Update()
+        public virtual void Update()
         {
             if (RigidBody.velocity.x > 0 && transform.localScale.x < 0)
                 transform.localScale = new Vector3(1, transform.localScale.y);
@@ -139,10 +141,10 @@ namespace Projectiles
         /// <summary>
         /// Used to trigger onDestroy and destroy this gameobject.
         /// </summary>
-        void Kill()
+        protected virtual void Kill()
         {
             RigidBody.simulated = false;
-            _onDestroy.Invoke();
+            OnDestroy.Invoke();
 
             if (!_animHandlesDestruction)
                 Remove();
@@ -168,7 +170,7 @@ namespace Projectiles
                 {
                     if (!cc.Character.HealthController.IsDead && !_used)
                     {
-                        cc.Character.HealthController.Damage(_damage, pos: transform.position, from: Owner);
+                        HandleDamage(cc);
                         _used = true;
                     }
                     else
@@ -179,7 +181,12 @@ namespace Projectiles
             return targetHit;
         }
 
-        public void OnTimesUp(int id, object args)
+        protected virtual void HandleDamage(CollisionCheck cc)
+        {
+            cc.Character.HealthController.Damage(_damage, pos: transform.position, from: Owner);
+        }
+
+        public virtual void OnTimesUp(int id, object args)
         {
             if (this)
                 Kill();

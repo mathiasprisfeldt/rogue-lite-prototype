@@ -773,7 +773,6 @@ MonoBehaviour:
   _hasWallHack: 0
   _isFlying: 0
   _neverForget: 0
-  _staggerDuration: 0.5
   _memoryDuration: 5
 --- !u!114 &114120916525324648
 MonoBehaviour:
@@ -907,6 +906,9 @@ MonoBehaviour:
   _owner: {fileID: 114948007235721488}
   _itemsAtStart:
   - {fileID: 114221420086673964, guid: 587bd346537c72743a5a64f07e3738bf, type: 2}
+  _popupOffset: {x: 0, y: 0}
+  _maxPassives: 2
+  _maxActives: 2
 --- !u!114 &114428741575656018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1131,7 +1133,7 @@ MonoBehaviour:
   _bumberCollisionCheck: {fileID: 114513903109215036}
   _safetyRespawn: {fileID: 0}
   _modificationHandler: {fileID: 0}
-  _itemHandler: {fileID: 0}
+  _itemHandler: {fileID: 114395861825441054}
   _startDirection: 1
   _damage: 1
   _movementSpeed: 100

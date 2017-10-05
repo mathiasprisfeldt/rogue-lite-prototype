@@ -16,7 +16,7 @@ namespace ItemSystem
     {
         public const int
             ON_ITEM_UNEQUIPPED = 0,
-            ON_ITEM_EQUIPPED   = 1;
+            ON_ITEM_EQUIPPED = 1;
 
         [SerializeField]
         private Character _owner;
@@ -95,6 +95,12 @@ namespace ItemSystem
         /// <param name="victim">The item handler to steal from</param>
         public bool Steal(ItemHandler victim)
         {
+            if (!victim)
+            {
+                Debug.LogWarning("There is no itemhandler on the victim");
+                return false;
+            }
+
             if (!victim.Items.Any())
                 return false;
 
