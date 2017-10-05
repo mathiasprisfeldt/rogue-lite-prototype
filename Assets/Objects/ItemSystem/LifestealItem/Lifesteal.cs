@@ -30,15 +30,25 @@ public class Lifesteal : Item
 
     public override void OnHit(HealthController victim)
     {
-        base.OnHit(victim);        
+        base.OnHit(victim);
 
         ItemHandler.Owner.HealthController.Heal(victim.LastDamageRcieved);
     }
 
+
+    public override void OnEquipped()
+    {
+        base.OnEquipped();
+
+        GetComponent<ParticleSystem>().Play();
+
+        ItemHandler.Owner.HealthController.OnDead.AddListener(OnDead);
+    }
+
     private void Update()
     {
-        if(Other && _slaveState == ItemSlave.Master)
-            transform.Rotate(new Vector3(0, 0, _gemSpeed * BetterTime.DeltaTime));        
+        if (Other && _slaveState == ItemSlave.Master)
+            transform.Rotate(new Vector3(0, 0, _gemSpeed * BetterTime.DeltaTime));
     }
 
     protected override void DoubleUp()
@@ -59,8 +69,6 @@ public class Lifesteal : Item
             _gems[i].Shoot();
             _gems[i].LOwner = this;
         }
-
-        ItemHandler.Owner.HealthController.OnDead.AddListener(OnDead);
     }
 
     private Vector3 PlaceOnCircle(Vector3 center, float radius, float ang)
@@ -86,12 +94,21 @@ public class Lifesteal : Item
 
     private void OnDead()
     {
+        GetComponent<ParticleSystem>().Stop();
+
         DoubleDown();
+    }
+
+    public override void OnUnEquipped()
+    {
+        base.OnUnEquipped();
+        ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
     }
 
     protected override void OnDestroy()
     {
-        ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
+        if (ItemHandler)
+            ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
 
         base.OnDestroy();
     }

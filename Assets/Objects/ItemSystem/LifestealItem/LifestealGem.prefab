@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Bits: 16384
   _layerToDestoryOn:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 524288
   _tagsToHit: []
   _animHandlesDestruction: 0
   _onDestroy:
