@@ -37,7 +37,7 @@ namespace Projectiles
         protected LayerMask _layersToHit;
 
         [SerializeField]
-        private LayerMask _layerToDestoryOn;
+        protected LayerMask _layerToDestoryOn;
 
         [SerializeField]
         protected List<string> _tagsToHit = new List<string>();
@@ -83,7 +83,7 @@ namespace Projectiles
                 TellMeWhen.Seconds(_timeToLive, this);
         }
 
-        public void Shoot()
+        public virtual void Shoot()
         {
             if (Owner is ActionsController)
             {

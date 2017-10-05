@@ -893,7 +893,7 @@ GameObject:
   - component: {fileID: 4356642772495062}
   - component: {fileID: 114338725969828870}
   - component: {fileID: 60781691209320314}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: MeleeCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -536,7 +536,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _owner: {fileID: 114347498557357304}
-  _itemsAtStart: []
+  _itemsAtStart:
+  - {fileID: 114780765771310688, guid: 8cccfabe56b05fb4fa277bd3ecbf2ceb, type: 2}
   _popupOffset: {x: 0, y: 0}
   _maxPassives: 2
   _maxActives: 2

@@ -6,6 +6,7 @@ using Health;
 using Archon.SwissArmyLib.Utils;
 using CharacterController;
 using System.Linq;
+using InControl;
 
 public class Lifesteal : Item
 {
@@ -16,7 +17,7 @@ public class Lifesteal : Item
     private GameObject _gemPrefab;
 
     [SerializeField]
-    private int _gemCount;
+    protected int _gemCount;
 
     [SerializeField]
     private float _gemRadius;
@@ -32,17 +33,17 @@ public class Lifesteal : Item
         base.OnHit(victim);        
 
         ItemHandler.Owner.HealthController.Heal(victim.LastDamageRcieved);
-
     }
 
     private void Update()
     {
-        transform.Rotate(new Vector3(0, 0, _gemSpeed * BetterTime.DeltaTime));
+        if(Other && _slaveState == ItemSlave.Master)
+            transform.Rotate(new Vector3(0, 0, _gemSpeed * BetterTime.DeltaTime));        
     }
 
-    public override void OnEquipped()
+    protected override void DoubleUp()
     {
-        base.OnEquipped();
+        base.DoubleUp();
 
         float angle = 360 / _gemCount;
         for (int i = 0; i < _gemCount; i++)
@@ -58,6 +59,8 @@ public class Lifesteal : Item
             _gems[i].Shoot();
             _gems[i].LOwner = this;
         }
+
+        ItemHandler.Owner.HealthController.OnDead.AddListener(OnDead);
     }
 
     private Vector3 PlaceOnCircle(Vector3 center, float radius, float ang)
@@ -67,5 +70,29 @@ public class Lifesteal : Item
         pos.y = center.y + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
         pos.z = center.z;
         return pos;
+    }
+
+    protected override void DoubleDown()
+    {
+        base.DoubleDown();
+
+        foreach (var item in _gems)
+        {
+            item.Value.Remove();
+        }
+
+        _gems.Clear();
+    }
+
+    private void OnDead()
+    {
+        DoubleDown();
+    }
+
+    protected override void OnDestroy()
+    {
+        ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
+
+        base.OnDestroy();
     }
 }
