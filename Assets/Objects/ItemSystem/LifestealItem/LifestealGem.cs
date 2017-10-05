@@ -1,6 +1,7 @@
 ﻿using AcrylecSkeleton.Utilities;
 using Archon.SwissArmyLib.Events;
 using Archon.SwissArmyLib.Utils;
+using CharacterController;
 using Controllers;
 using Projectiles;
 using System.Collections;
@@ -37,6 +38,19 @@ public class LifestealGem : Projectile
         base.Update();
 
         transform.Rotate(new Vector3(0, 0, _rotSpeed * BetterTime.DeltaTime));
+    }
+
+    public override void Shoot()
+    {
+        if (Owner is ActionsController)
+        {
+            _tagsToHit = new List<string>() { "Enemy" };
+            _layerToDestoryOn = new LayerMask();
+        }
+        else
+        {
+            _tagsToHit = new List<string>() { "Player" };
+        }
     }
 
     protected override void Kill()

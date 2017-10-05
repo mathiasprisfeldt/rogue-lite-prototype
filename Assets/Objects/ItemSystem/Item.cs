@@ -2,16 +2,15 @@
 using InControl;
 using Managers;
 using RogueLiteInput;
+using System;
+using System.Linq;
 using UnityEngine;
 using Timer = AcrylecSkeleton.Utilities.Timer;
 
 namespace ItemSystem
 {
-    public enum ItemType
-    {
-        Passive,
-        Active
-    }
+    public enum ItemType { Passive, Active }
+    public enum ItemSlave { Master, Slave }
 
     /// <summary>
     /// Purpose: Base class for all items.
@@ -25,11 +24,14 @@ namespace ItemSystem
         [SerializeField]
         private ItemType _type;
 
+        protected ItemSlave _slaveState;
+
         public ProxyPlayerAction ActivationAction { get; set; }
         public ItemHandler ItemHandler { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Sprite Icon { get; set; }
+        public Item Other { get; set; }
 
         public ItemType Type
         {
@@ -86,7 +88,23 @@ namespace ItemSystem
         public virtual void OnEquipped()
         {
             ItemHandler.ItemEquipped.Invoke(this);
+
+
+            foreach (var item in ItemHandler.Items)
+            {
+                if (item != this && item.GetType() == GetType())
+                {
+                    item.Other = this;
+                    item._slaveState = ItemSlave.Master;
+                    _slaveState = ItemSlave.Slave;
+                    item.DoubleUp();
+                }
+            }
         }
+
+        protected virtual void DoubleUp() { }
+
+        protected virtual void DoubleDown() { }
 
         /// <summary>
         /// Called when an item gets unequipped.
@@ -94,6 +112,9 @@ namespace ItemSystem
         public virtual void OnUnEquipped()
         {
             ItemHandler.ItemUnEquipped.Invoke(this);
+
+            if (Other)
+                Other.DoubleDown();
         }
 
         /// <summary>
