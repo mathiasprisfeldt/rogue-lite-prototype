@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using AcrylecSkeleton.Managers;
 using Managers;
+using RogueLiteInput;
 using UnityEngine;
 
 namespace ItemSystem.UI
@@ -11,6 +12,9 @@ namespace ItemSystem.UI
     /// </summary>
     public class ItemStealMenu : MonoBehaviour
     {
+        private ProxyPlayerAction _leftAction;
+        private ProxyPlayerAction _rightAction;
+
         private ItemHandler _context;
 
         [SerializeField]
@@ -32,19 +36,19 @@ namespace ItemSystem.UI
             Item oldItem = null;
             ItemStealIcon oldItemIcon = null;
 
-            if (_left.Item.ActivationAction.Action.WasPressed)
+            if (_leftAction.Action.WasPressed)
             {
                 oldItem = _left.Item;
                 oldItemIcon = _left;
             }
 
-            if (_right.Item.ActivationAction.Action.WasPressed)
+            if (_rightAction.Action.WasPressed)
             {
                 oldItem = _right.Item;
                 oldItemIcon = _right;
             }
 
-            if (oldItem && oldItem.GetType() != _new.Item.GetType())
+            if (oldItem)
             {
                 var newItem = _new.Item;
                 oldItemIcon.SetItem(newItem);
@@ -71,6 +75,9 @@ namespace ItemSystem.UI
                 _right.gameObject.SetActive(false);
 
             _new.SetItem(newItem);
+
+            _leftAction = _left.Item.ActivationAction;
+            _rightAction = _right.Item.ActivationAction;
         }
 
         /// <summary>
@@ -78,13 +85,15 @@ namespace ItemSystem.UI
         /// </summary>
         public void Close(bool applyLoadout = false)
         {
-                if (applyLoadout)
+            if (applyLoadout)
             {
                 if (_left && _left.Item)
-                    _context.Steal(1, _left.Item);
+                    _context.Steal(1, _left.Item, false);
 
                 if (_right && _right.Item)
-                    _context.Steal(0, _right.Item);
+                    _context.Steal(0, _right.Item, false);
+
+                Destroy(_new.Item.gameObject);
             }
 
             if (_context)

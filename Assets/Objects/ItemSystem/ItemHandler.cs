@@ -145,7 +145,7 @@ namespace ItemSystem
 
             foreach (Item victimItem in victim.Items.ToList())
             {
-                success &= Steal(null, victimItem);
+                success &= Steal(null, victimItem, true);
             }
 
             return success;
@@ -154,30 +154,37 @@ namespace ItemSystem
         /// <summary>
         /// Steals specific item from an ItemHandler and replaces it.
         /// </summary>
-        public bool Steal(Item current, Item newItem)
+        public bool Steal(Item current, Item newItem, bool destoyOld)
         {
             if (current && current.Equals(newItem))
                 return false;
 
-            if (current && Items.Contains(current))
+            newItem.ActivationAction = null;
+
+            //If the item we're replacing already is on the itemhandler and there isn't
+            //space for a new one, replace it.
+            if (current && Items.Contains(current) && !CanCarry(newItem.Type))
             {
                 newItem.ActivationAction = current.ActivationAction;
 
                 //If we are replacing an already existing item, replace it with new one.
                 var currPos = Items.Find(current);
+
                 if (currPos != null)
                 {
                     current.RemoveSelf(newItem);
-                    Destroy(current.gameObject);
+
+                    if (destoyOld)
+                        Destroy(current.gameObject);
                 }
             }
 
             return AddItem(newItem);
         }
 
-        public bool Steal(int index, Item newItem)
+        public bool Steal(int index, Item newItem, bool destoyOld)
         {
-            return Steal(Items.Where(item => item.Type == newItem.Type).ToList()[index], newItem);
+            return Steal(Items.Where(item => item.Type == newItem.Type).ToList()[index], newItem, destoyOld);
         }
 
         /// <summary>

@@ -4277,6 +4277,22 @@ Prefab:
       propertyPath: _character
       value: 
       objectReference: {fileID: 414478781}
+    - target: {fileID: 114559391345834806, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _itemsAtStart.Array.data[0]
+      value: 
+      objectReference: {fileID: 114221420086673964, guid: 587bd346537c72743a5a64f07e3738bf,
+        type: 2}
+    - target: {fileID: 114559391345834806, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _maxPassives
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114559391345834806, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _maxActives
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
   m_IsPrefabParent: 0
