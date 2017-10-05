@@ -2535,6 +2535,22 @@ Transform:
   m_PrefabParentObject: {fileID: 4273749052745280, guid: 4052246ce7645ba4cafddf1a4ca138eb,
     type: 2}
   m_PrefabInternal: {fileID: 1946389098}
+--- !u!1 &873105728 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1816082139719966, guid: 809488f2488c7dc40af663109671b8b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 1588487230}
+--- !u!114 &873105735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 873105728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc44b591885824c4eb774adb807075a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &880834441 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4273749052745280, guid: 4052246ce7645ba4cafddf1a4ca138eb,
@@ -3315,6 +3331,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114559391345834806, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _itemsAtStart.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4172535266255454, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
       propertyPath: m_LocalPosition.x
       value: 4.58
@@ -3577,6 +3598,17 @@ Prefab:
       propertyPath: m_Size.y
       value: 1.5759697
       objectReference: {fileID: 0}
+    - target: {fileID: 114559391345834806, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _itemsAtStart.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114559391345834806, guid: 841d69d824d4a674bb5ca8ff0f99432c,
+        type: 2}
+      propertyPath: _itemsAtStart.Array.data[0]
+      value: 
+      objectReference: {fileID: 114440445277494354, guid: 737a931d6c0245347ae5f717270c407d,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 841d69d824d4a674bb5ca8ff0f99432c, type: 2}
   m_IsPrefabParent: 0
@@ -4350,9 +4382,9 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 114159514260344410, guid: 71c0bbfd6c6997f46846a257db3bf676,
     type: 2}
   _throwForce: 0.002
-  _cooldown: 0.4
   _actionsController: {fileID: 1916660777}
   _manaCost: 1
+  Item: {fileID: 0}
 --- !u!4 &1453253871 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4273749052745280, guid: 4052246ce7645ba4cafddf1a4ca138eb,
@@ -4616,6 +4648,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 114220297533216582, guid: 809488f2488c7dc40af663109671b8b5,
+        type: 2}
+      propertyPath: _modificationHandler
+      value: 
+      objectReference: {fileID: 873105735}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
   m_IsPrefabParent: 0
