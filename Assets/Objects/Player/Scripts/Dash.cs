@@ -28,6 +28,7 @@ namespace CharacterController
         public bool InitialDash { get; set; }
         public DashItem Item { get; set; }
 
+        private Trigger _dashTrigger = new Trigger();
         private bool _dashing;
         private float _dashingTimer;
         private Vector2 _oldVelocity;
@@ -82,6 +83,8 @@ namespace CharacterController
                     _actionsController.HealthController.IsInvurnable = true;
                     return true;
                 }
+                if (_dashTrigger.Value)
+                    _actionsController.HealthController.IsInvurnable = false;
                 return false;
             }
         }
@@ -142,6 +145,7 @@ namespace CharacterController
                 _dashingTimer = 0;
                 velocity = _oldVelocity;
                 _dashing = false;
+                _dashTrigger.Value = true;
                 Item.CooldownTimer.StartTimer();
                 _dirtyColls = new List<Character>();
             }
