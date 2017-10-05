@@ -839,7 +839,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isEnabled: 0
-  _range: 5
+  _range: 6
   _dashSpeed: 400
   _ydashSpeed: 400
   _dashTimer:
@@ -956,6 +956,9 @@ MonoBehaviour:
   _owner: {fileID: 114070941598918422}
   _itemsAtStart:
   - {fileID: 114687679948778786, guid: de8016fe69a7a614b9e5c510f8643dcf, type: 2}
+  _popupOffset: {x: 0, y: 0}
+  _maxPassives: 2
+  _maxActives: 2
 --- !u!114 &114553351756831982
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1070,13 +1073,12 @@ MonoBehaviour:
   _indicatorDuration: 0
   _targetBehind: 1
   _turnSpeed: 0.25
-  _canBackPaddle: 0
+  _canBackPaddle: 1
   _turnOnBackstab: 1
   _engageSpeed: 200
   _hasWallHack: 0
   _isFlying: 0
   _neverForget: 0
-  _staggerDuration: 0
   _memoryDuration: 2
 --- !u!114 &114716576231743168
 MonoBehaviour:

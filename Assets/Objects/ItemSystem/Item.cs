@@ -1,16 +1,14 @@
 ﻿using Health;
 using RogueLiteInput;
+using System;
+using System.Linq;
 using UnityEngine;
 using Timer = AcrylecSkeleton.Utilities.Timer;
 
 namespace ItemSystem
 {
-    public enum ItemType
-    {
-        None,
-        Passive,
-        Active
-    }
+    public enum ItemType { None, Passive, Active }
+    public enum ItemSlave { Master, Slave }
 
     /// <summary>
     /// Purpose: Base class for all items.
@@ -26,6 +24,7 @@ namespace ItemSystem
 
         [SerializeField]
         private Sprite _icon;
+        protected ItemSlave _slaveState;
 
         public ProxyPlayerAction ActivationAction { get; set; }
         public ItemHandler ItemHandler { get; set; }
@@ -37,6 +36,7 @@ namespace ItemSystem
             get { return _icon; }
             set { _icon = value; }
         }
+        public Item Other { get; set; }
 
         public ItemType Type
         {
@@ -113,9 +113,24 @@ namespace ItemSystem
         /// </summary>
         public virtual void OnEquipped()
         {
-            if (ItemHandler && ItemHandler.ItemEquipped != null)
-                ItemHandler.ItemEquipped.Invoke(this);
+			if (ItemHandler && ItemHandler.ItemEquipped != null)            
+				ItemHandler.ItemEquipped.Invoke(this);
+
+            foreach (var item in ItemHandler.Items)
+            {
+                if (item != this && item.GetType() == GetType())
+                {
+                    item.Other = this;
+                    item._slaveState = ItemSlave.Master;
+                    _slaveState = ItemSlave.Slave;
+                    item.DoubleUp();
+                }
+            }
         }
+
+        protected virtual void DoubleUp() { }
+
+        protected virtual void DoubleDown() { }
 
         /// <summary>
         /// Called when an item gets unequipped.
@@ -124,6 +139,9 @@ namespace ItemSystem
         {
             if (ItemHandler && ItemHandler.ItemUnEquipped != null)
                 ItemHandler.ItemUnEquipped.Invoke(this);
+
+            if (Other)
+                Other.DoubleDown();
         }
 
         /// <summary>

@@ -36,13 +36,13 @@ namespace ItemSystem.UI
             Item oldItem = null;
             ItemStealIcon oldItemIcon = null;
 
-            if (_leftAction.Action.WasPressed)
+            if (_leftAction != null && _leftAction.Action.WasPressed)
             {
                 oldItem = _left.Item;
                 oldItemIcon = _left;
             }
 
-            if (_rightAction.Action.WasPressed)
+            if (_rightAction != null && _rightAction.Action.WasPressed)
             {
                 oldItem = _right.Item;
                 oldItemIcon = _right;

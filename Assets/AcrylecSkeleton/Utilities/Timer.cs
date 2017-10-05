@@ -85,6 +85,7 @@ namespace AcrylecSkeleton.Utilities
         private UnityEvent _finished = new UnityEvent();
         // ReSharper restore FieldCanBeMadeReadOnly.Local
 
+        public float Interval { get { return _interval; } }
         public TimeSpan Clock { get; private set; }
         public bool IsRunning { get; private set; }
         public double Normalized { get; set; }
@@ -198,6 +199,11 @@ namespace AcrylecSkeleton.Utilities
         {
             if (TimeManager.CheckSanity())
                 TimerUpdater.Instance.Remove(this);
+        }
+
+        public Timer Clone()
+        {
+            return new Timer((float)Duration.TotalSeconds, Interval);
         }
     }
 }

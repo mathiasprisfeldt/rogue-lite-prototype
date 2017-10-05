@@ -54,17 +54,14 @@ namespace Enemy
         [SerializeField, Tooltip("Speed added to enemy when player is targeted.")]
         private float _engageSpeed;
 
-	    [SerializeField]
-	    private bool _hasWallHack;
+        [SerializeField]
+        private bool _hasWallHack;
 
         [SerializeField]
         private bool _isFlying;
 
-	    [SerializeField, Tooltip("The enemy never loses it target.")]
-	    private bool _neverForget;
-
-        [SerializeField, Tooltip("If 0, it doesn't stagger.")]
-        private float _staggerDuration;
+        [SerializeField, Tooltip("The enemy never loses it target.")]
+        private bool _neverForget;
 
         [SerializeField, Tooltip("How long it takes for the enemy to forget the player.")]
         private float _memoryDuration;
@@ -140,28 +137,22 @@ namespace Enemy
             set { _engageSpeed = value; }
         }
 
-	    public bool IsFlying
-	    {
-	        get { return _isFlying; }
-	        set { _isFlying = value; }
-	    }
-	
-	    public bool HasWallHack
-	    {
-	        get { return _hasWallHack; }
-	        set { _hasWallHack = value; }
-	    }
+        public bool IsFlying
+        {
+            get { return _isFlying; }
+            set { _isFlying = value; }
+        }
+
+        public bool HasWallHack
+        {
+            get { return _hasWallHack; }
+            set { _hasWallHack = value; }
+        }
 
         public bool NeverForget
         {
             get { return _neverForget; }
             set { _neverForget = value; }
-        }
-
-        public float StaggerDuration
-        {
-            get { return _staggerDuration; }
-            set { _staggerDuration = value; }
         }
 
         public float MemoryDuration

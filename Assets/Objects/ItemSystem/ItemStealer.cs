@@ -34,7 +34,7 @@ public class ItemStealer : MonoBehaviour, IEventListener<Collider2D>
 
         //If we're the player, we pressed attack and we got a victim.
         if (_itemHandler.Owner is ActionsController &&
-            GameManager.Instance.Player.C.PlayerActions.Interact.WasPressed && 
+            GameManager.Instance.Player.C.PlayerActions.Interact.WasPressed &&
             _currentVictim)
         {
             if (_itemHandler.Steal(_currentVictim.ItemHandler))
@@ -56,14 +56,21 @@ public class ItemStealer : MonoBehaviour, IEventListener<Collider2D>
             case CollisionCheck.ON_TRIGGER_STAY:
                 var closests = _itemHandler.Owner.Hitbox.Sides.TargetColliders.OrderBy(d => Vector2.Distance(d.transform.position, transform.position));
 
-                Collider2D bestCandidate = closests.FirstOrDefault(d => d.GetComponent<CollisionCheck>().Character.ItemHandler.CanStealFrom);
+                Collider2D bestCandidate = closests.FirstOrDefault(d =>
+                {
+                    ItemHandler handler = d.GetComponent<CollisionCheck>().Character.ItemHandler;
+                    if (handler)
+                        return handler.CanStealFrom;
+                    else
+                        return false;
+                });
 
                 if (closests.Any() && (bestCandidate && bestCandidate != _victimCol))
                 {
                     NewVictim(col);
                     _victimCol = col;
                 }
-                
+
                 break;
         }
     }

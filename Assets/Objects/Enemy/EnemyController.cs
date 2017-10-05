@@ -215,7 +215,7 @@ namespace Enemy
         /// <summary>
         /// Flips/Turns the enemy around.
         /// </summary>
-	    public void Turn()
+        public void Turn()
         {
             Turn(0, true);
         }
@@ -252,7 +252,7 @@ namespace Enemy
         /// <summary>
         /// If it can, remember the player in x duration with what is given in model.
         /// </summary>
-	    public void Remember()
+        public void Remember()
         {
             //If the enemy can remember the player, do so.
             if (App.M.MemoryDuration != 0)
@@ -278,17 +278,18 @@ namespace Enemy
 
             if (App.M.TurnOnBackstab && IsTargetBehind)
                 Turn();
+        }
 
-            float staggingDuration = App.M.StaggerDuration;
-
-            if (staggingDuration != 0 && !IsStagging)
+        public void Stun(float time)
+        {
+            if (time != 0)
             {
                 StopTurn();
 
                 IsStagging = true;
 
                 TellMeWhen.CancelScaled(this, EVENT_STAGGING);
-                TellMeWhen.Seconds(staggingDuration, this, EVENT_STAGGING);
+                TellMeWhen.Seconds(time, this, EVENT_STAGGING);
 
                 App.M.Character.StandStill();
 

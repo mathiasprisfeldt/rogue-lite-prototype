@@ -20,7 +20,7 @@ namespace ItemSystem
     {
         public const int
             ON_ITEM_UNEQUIPPED = 0,
-            ON_ITEM_EQUIPPED   = 1;
+            ON_ITEM_EQUIPPED = 1;
 
         private ItemStealMenu _itemStealMenu;
 
@@ -138,7 +138,13 @@ namespace ItemSystem
         /// <param name="victim">The item handler to steal from</param>
         public bool Steal(ItemHandler victim)
         {
-            if (!victim.Items.Any() || _itemStealMenu)
+			if (!victim)
+            {
+                Debug.LogWarning("There is no itemhandler on the victim");
+                return false;
+            }            
+
+			if (!victim.Items.Any() || _itemStealMenu)
                 return false;
 
             bool success = true;
@@ -206,7 +212,7 @@ namespace ItemSystem
             //If we dont already carry the new item, check if we can and add it.
             if (!Items.Contains(newItem))
             {
-                if (!CanCarry(newItem.Type))
+                if (!CanCarry(newItem.Type) && _itemStealMenuPrefab && _uiParent)
                 {
                     _itemStealMenu = Instantiate(_itemStealMenuPrefab, _uiParent, false);
                     _itemStealMenu.Initialize(this, newItem);

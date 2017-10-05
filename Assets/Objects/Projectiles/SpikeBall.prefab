@@ -184,7 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damage: 1
-  _timeToLive: 5
+  _timeToLive: 3
   _useConstantForce: 0
   _force: 8
   _additionalYDirection: 0.6
