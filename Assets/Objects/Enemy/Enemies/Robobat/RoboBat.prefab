@@ -188,6 +188,7 @@ GameObject:
   - component: {fileID: 114409723073249728}
   - component: {fileID: 114539416218621420}
   - component: {fileID: 114476628583269184}
+  - component: {fileID: 114670024491005800}
   m_Layer: 12
   m_Name: Controller
   m_TagString: Enemy
@@ -537,8 +538,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _owner: {fileID: 114347498557357304}
-  _itemsAtStart:
-  - {fileID: 114780765771310688, guid: 8cccfabe56b05fb4fa277bd3ecbf2ceb, type: 2}
+  _itemsAtStart: []
   _popupOffset: {x: 0, y: 0}
   _maxPassives: 2
   _maxActives: 2
@@ -847,6 +847,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _application: {fileID: 114131460394400532}
+--- !u!114 &114670024491005800
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1728012845697302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa918886b75a4be45b4a8b261b53ccfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _randomItems:
+  - {fileID: 114440445277494354, guid: 737a931d6c0245347ae5f717270c407d, type: 2}
+  - {fileID: 114655605774163738, guid: d088551c386684f4b807674140e43335, type: 2}
+  - {fileID: 114780765771310688, guid: 8cccfabe56b05fb4fa277bd3ecbf2ceb, type: 2}
 --- !u!114 &114756186713424770
 MonoBehaviour:
   m_ObjectHideFlags: 1
