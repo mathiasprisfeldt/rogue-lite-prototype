@@ -27,6 +27,21 @@ public class HealthContainers : MonoBehaviour
     [SerializeField]
     private Sprite _full;
 
+    [SerializeField]
+    private Sprite _empty;
+
+    [SerializeField]
+    private Image _background;
+
+    [SerializeField]
+    private GameObject _hearth;
+
+    [SerializeField]
+    private HorizontalLayoutGroup _layout;
+
+    [SerializeField]
+    private float _widthPerHearth;
+
     private PlayerApplication _playerApplication;
 
 
@@ -55,25 +70,49 @@ public class HealthContainers : MonoBehaviour
     private void UpdateHealthbar()
     {
         var temp = MathUtils.RoundToNearest(_healthController.HealthAmount, 2);
-        for (int i = 0; i < _healthContainers.Count; i++)
+        float backgroundXSize = 0;
+
+        if (_healthController.MaxHealth < _healthContainers.Count)
         {
+            for (int i = (_healthContainers.Count - 1); i >= _healthController.MaxHealth; i--)
+            {
+                if(_healthContainers[i] != null)
+                    Destroy(_healthContainers[i].gameObject);
+                _healthContainers.RemoveAt(i);
+            }
+        }
+
+        for (int i = 0; i < _healthController.MaxHealth; i++)
+        {
+            if (_healthContainers.Count <= i || _healthContainers[i] == null)
+            {
+                GameObject newHearth = Instantiate(_hearth, _layout.transform);
+                if (_healthContainers[i] == null)
+                    _healthContainers[i] = newHearth.GetComponent<Image>();
+                else
+                    _healthContainers.Add(newHearth.GetComponent<Image>());
+            }
+
             if (Mathf.Floor(temp) >= i + 1)
             {
-                _healthContainers[i].enabled = true;
                 _healthContainers[i].sprite = _full;
             }
             else if (temp == i + .5f)
             {
-                _healthContainers[i].enabled = true;
                 _healthContainers[i].sprite = _half;
             }
             else
             {
-                _healthContainers[i].enabled = false;
+                _healthContainers[i].sprite = _empty;
             }
-            
+            backgroundXSize += _healthContainers[i].rectTransform.rect.width;
         }
-        _overflowText.text = _healthController.HealthAmount > _healthContainers.Count ? "+" + (Mathf.Floor(_healthController.HealthAmount - _healthContainers.Count)) : "";
+
+
+
+        _background.rectTransform.sizeDelta = new Vector2(_widthPerHearth * _healthContainers.Count, _background.rectTransform.sizeDelta.y);
+
+        //_overflowText.text = _healthController.HealthAmount > _healthContainers.Count ? "+" + (Mathf.Floor(_healthController.HealthAmount - _healthContainers.Count)) : "";
     }
 
     public void OnDestroy()

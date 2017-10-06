@@ -10,8 +10,15 @@ using System;
 using System.Linq;
 using Controllers;
 
+
+
 public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
 {
+    private enum TellMeWhenReason
+    {
+        ChargeUp, Indicator
+    }
+
     [SerializeField]
     private float _range;
     [SerializeField]
@@ -58,7 +65,7 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
         }
         else
         {
-            Context.M.Character.StandStill(); ;
+            Context.M.Character.StandStill();
         }
 
         var colls = Context.M.Character.Hitbox.Sides.TargetColliders.Where(x => x.tag.Equals("Player"));
@@ -82,13 +89,28 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
         _dashDirection = Context.C.ToPlayer.normalized.x > 0 ? new Vector2(1,0) : new Vector2(-1, 0);
         _isDashing = true;
         DashItem.Activate();
-        TellMeWhen.Seconds(_chargeUp, this);
+        TellMeWhen.Seconds(_chargeUp, this,(int)TellMeWhenReason.ChargeUp);
         _dirtyCols = new List<Character>();
+        HandleAnimation(true);
     }
 
     public void OnDashEnded()
     {
         _isDashing = false;
+        Context.M.AttackIndicator.HideIndicator(0.1f);
+    }
+
+    public void HandleAnimation(bool initialze)
+    {
+        if(!Context.M.Character.MainAnimator)
+            return;
+        if (initialze)
+        {
+            Context.M.Character.MainAnimator.SetTrigger("PreDash");
+            Context.M.Character.MainAnimator.SetBool("Dash",true);
+        }
+        else
+            Context.M.Character.MainAnimator.SetBool("Dash",false);
     }
 
     /// <summary>
@@ -117,7 +139,22 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
 
     public void OnTimesUp(int id, object args)
     {
+
+        switch (id)
+        {
+            case (int)TellMeWhenReason.ChargeUp:
+                Context.M.AttackIndicator.ShowIndicator(0.05f);
+                TellMeWhen.Seconds(0.1f,this,(int)TellMeWhenReason.Indicator);
+                break;
+            case (int)TellMeWhenReason.Indicator:
+                HandleAnimation(false);
+                Context.M.Character.MainAnimator.SetTrigger("Attack");
+                _dashTimer.StartTimer();
+                Context.M.AttackIndicator.HideIndicator(0.15f);
+                break;
+        }
+
         ///Starts the dash after the charge up
-        _dashTimer.StartTimer();
+        
     }
 }

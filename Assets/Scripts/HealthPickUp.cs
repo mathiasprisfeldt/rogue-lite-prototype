@@ -1,4 +1,5 @@
-﻿using Health;
+﻿using System;
+using Health;
 using UnityEngine;
 
 namespace Pickups
@@ -10,8 +11,16 @@ namespace Pickups
     [RequireComponent(typeof(Collider2D))]
     public class HealthPickUp : Pickup
     {
+        private enum HealthPickupType
+        {
+            Heal, MaxHealth
+        }
+        
         [Header("Health Properties"), SerializeField]
         private float _healthAmount;
+
+        [SerializeField]
+        private HealthPickupType _type;
 
         public void OnTriggerStay2D(Collider2D collision)
         {
@@ -27,9 +36,20 @@ namespace Pickups
                 hc = cc.Character.HealthController;
             if (hc != null )
             {
-                hc.Heal(_healthAmount);
-                Destroy(gameObject);
-            }
+                switch (_type)
+                {
+                    case HealthPickupType.Heal:
+                        hc.Heal(_healthAmount);
+                        break;
+                    case HealthPickupType.MaxHealth:
+                        hc.MaxHealth += _healthAmount;
+                        hc.Heal(_healthAmount);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }   
+            Destroy(gameObject);
 
         }
 

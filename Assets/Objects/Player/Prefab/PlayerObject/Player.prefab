@@ -4685,7 +4685,8 @@ MonoBehaviour:
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
   _healthAmount: 3
-  _healthInterval: {x: 0, y: 100}
+  _maxHealth: 3
+  _healthInterval: {x: 0, y: 15}
   _knockbackForce: 600
   _knockbackDuration: 0.1
   _responsibleGameObject: {fileID: 1182516208491314}

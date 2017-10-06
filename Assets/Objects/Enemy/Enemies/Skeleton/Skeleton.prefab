@@ -321,7 +321,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1319886293620598}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.392, y: 2.069, z: 0}
+  m_LocalPosition: {x: 0, y: 2.069, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 1}
   m_Children:
   - {fileID: 4908436915350506}
@@ -1124,7 +1124,7 @@ MonoBehaviour:
   _staggerIndicator: {fileID: 114466314149153096}
   _viewBox: {fileID: 114000060024915830}
   _attackCooldown: 2
-  _indicatorDuration: 0
+  _indicatorDuration: 0.1
   _targetBehind: 1
   _turnSpeed: 0.25
   _canBackPaddle: 1
