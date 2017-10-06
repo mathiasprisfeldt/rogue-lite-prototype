@@ -74,6 +74,8 @@ MonoBehaviour:
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
   _type: 0
+  _name: Electric
+  _description: Stun your enemies
   _stunTime: 1
 --- !u!198 &198947256035629350
 ParticleSystem:

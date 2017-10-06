@@ -74,6 +74,8 @@ MonoBehaviour:
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
   _type: 0
+  _name: Poison
+  _description: Poison on hit
   _onHitDamage: 0.5
 --- !u!198 &198683059699751902
 ParticleSystem:

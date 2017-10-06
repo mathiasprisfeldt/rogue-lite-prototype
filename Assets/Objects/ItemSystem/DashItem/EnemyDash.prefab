@@ -72,3 +72,5 @@ MonoBehaviour:
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
   _type: 1
+  _name: Dash
+  _description: Dash through the air, like you always dreamed of!

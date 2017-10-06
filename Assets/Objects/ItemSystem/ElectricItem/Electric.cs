@@ -23,6 +23,8 @@ namespace ItemSystem.Items
 
             if (!(victim.Character is ActionsController))
                 victim.Character.GetComponent<EnemyController>().Stun(_stunTime);
+
+            //Cannot stun player
         }
     }
 }

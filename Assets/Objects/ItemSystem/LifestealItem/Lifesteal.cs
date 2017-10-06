@@ -35,16 +35,6 @@ public class Lifesteal : Item
         ItemHandler.Owner.HealthController.Heal(victim.LastDamageRcieved);
     }
 
-
-    public override void OnEquipped()
-    {
-        base.OnEquipped();
-
-        GetComponent<ParticleSystem>().Play();
-
-        ItemHandler.Owner.HealthController.OnDead.AddListener(OnDead);
-    }
-
     private void Update()
     {
         if (Other && _slaveState == ItemSlave.Master)
@@ -83,6 +73,7 @@ public class Lifesteal : Item
     protected override void DoubleDown()
     {
         base.DoubleDown();
+        Other = null;
 
         foreach (var item in _gems)
         {
@@ -90,26 +81,5 @@ public class Lifesteal : Item
         }
 
         _gems.Clear();
-    }
-
-    private void OnDead()
-    {
-        GetComponent<ParticleSystem>().Stop();
-
-        DoubleDown();
-    }
-
-    public override void OnUnEquipped()
-    {
-        base.OnUnEquipped();
-        ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
-    }
-
-    protected override void OnDestroy()
-    {
-        if (ItemHandler)
-            ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
-
-        base.OnDestroy();
     }
 }
