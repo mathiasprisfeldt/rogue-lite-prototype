@@ -73,9 +73,10 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  _type: 0
+  _type: 1
   _name: Lifesteal
   _description: Steal life on hit
+  _icon: {fileID: 21300000, guid: b9833a45c07d52f459d9b2d23b9d43f8, type: 3}
   _stealAmount: 0.5
   _gemPrefab: {fileID: 1956144565332454, guid: d2c65fee0e671f640a14fecb38f4fed7, type: 2}
   _gemCount: 3

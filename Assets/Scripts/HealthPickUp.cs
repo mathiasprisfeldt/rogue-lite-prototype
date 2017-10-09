@@ -27,7 +27,7 @@ namespace Pickups
             HealthController hc = null;
             if (cc != null)
                 hc = cc.Character.HealthController;
-            if (hc != null )
+            if (hc != null)
             {
                 hc.Heal(_healthAmount);
                 Destroy(gameObject);
@@ -36,8 +36,3 @@ namespace Pickups
         }
     }
 }
-
-        public void OnTriggerStay2D(Collider2D collision)
-        {
-            Check(collision.gameObject);
-        }

@@ -73,9 +73,10 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  _type: 0
+  _type: 1
   _name: Poison
   _description: Poison on hit
+  _icon: {fileID: 21300000, guid: 1faa7e4b872e2d54791ca88ce1ae7f9f, type: 3}
   _onHitDamage: 0.5
 --- !u!198 &198683059699751902
 ParticleSystem:

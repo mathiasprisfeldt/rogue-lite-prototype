@@ -28,10 +28,9 @@ namespace ItemSystem
             base.OnEquipped();
 
             ActionsController ac = ItemHandler.Owner as ActionsController;
-
+            
             if (ac)
             {
-                ActivationAction = ac.App.C.PlayerActions.ProxyInputActions.Special2;
                 (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(
                        _throwType == ThrowType.Throw ?
                         HandledAbility.Throw :

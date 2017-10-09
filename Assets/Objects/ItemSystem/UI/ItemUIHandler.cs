@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Archon.SwissArmyLib.Events;
 using ItemSystem;
@@ -20,12 +21,30 @@ public class ItemUIHandler : MonoBehaviour, IEventListener<Item>
 
     [SerializeField]
     private Transform _playerUiItemParent;
+
+    [SerializeField]
+    private List<ItemInputImage> _inputImages;
 #pragma warning restore 649
 
-    void Start()
+    public List<ItemInputImage> InputImages
+    {
+        get { return _inputImages; }
+    }
+
+    void Awake()
     {
         _itemHandler.ItemEquipped.AddListener(this);
         _itemHandler.ItemUnEquipped.AddListener(this);
+
+        for (int i = 0; i < _itemHandler.MaxActives + _itemHandler.MaxPassives; i++)
+        {
+            PlayerUIItem newUiItem = Instantiate(_playerUiItemPrefab, _playerUiItemParent);
+            newUiItem.gameObject.SetActive(true);
+            _playerUiItems.AddLast(newUiItem);
+
+            newUiItem.Owner = this;
+            newUiItem.ItemType = i < _itemHandler.MaxActives ? ItemType.Active : ItemType.Passive;
+        }
     }
 
     public void OnEvent(int eventId, Item item)
@@ -33,19 +52,25 @@ public class ItemUIHandler : MonoBehaviour, IEventListener<Item>
         switch (eventId)
         {
             case ItemHandler.ON_ITEM_EQUIPPED:
+                PlayerUIItem unusedItemIcon = _playerUiItems.FirstOrDefault(uiItem => uiItem.ItemType == item.Type && !uiItem.Item);
 
-                PlayerUIItem newUiItem = Instantiate(_playerUiItemPrefab, _playerUiItemParent);
-                newUiItem.Item = item;
-                _playerUiItems.AddLast(newUiItem);
-
+                if (unusedItemIcon)
+                {
+                    unusedItemIcon.SetItem(item);
+                }
                 break;
             case ItemHandler.ON_ITEM_UNEQUIPPED:
-
                 PlayerUIItem foundItem = _playerUiItems.FirstOrDefault(uiItem => uiItem.Item == item);
-                _playerUiItems.Remove(foundItem);
-                Destroy(foundItem);
-
+                if (foundItem)
+                    foundItem.SetItem(null);
                 break;
         }
+    }
+
+    [Serializable]
+    public class ItemInputImage
+    {
+        public string Name;
+        public Sprite Sprite;
     }
 }

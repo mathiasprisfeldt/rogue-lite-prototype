@@ -41,7 +41,7 @@ namespace AcrylecSkeleton.Managers
             get { return _isPaused; }
             set
             {
-                _isPaused = value; 
+                _isPaused = value;
                 SetTime(value ? 0 : _slowmotionAnimationIsRunning ? _currentAnimTime : 1, false);
                 if (Paused != null) Paused(value);
             }
