@@ -30,15 +30,15 @@ public class Lifesteal : Item
 
     public override void OnHit(HealthController victim)
     {
-        base.OnHit(victim);        
+        base.OnHit(victim);
 
         ItemHandler.Owner.HealthController.Heal(victim.LastDamageRcieved);
     }
 
     private void Update()
     {
-        if(Other && _slaveState == ItemSlave.Master)
-            transform.Rotate(new Vector3(0, 0, _gemSpeed * BetterTime.DeltaTime));        
+        if (Other && _slaveState == ItemSlave.Master)
+            transform.Rotate(new Vector3(0, 0, _gemSpeed * BetterTime.DeltaTime));
     }
 
     protected override void DoubleUp()
@@ -59,8 +59,6 @@ public class Lifesteal : Item
             _gems[i].Shoot();
             _gems[i].LOwner = this;
         }
-
-        ItemHandler.Owner.HealthController.OnDead.AddListener(OnDead);
     }
 
     private Vector3 PlaceOnCircle(Vector3 center, float radius, float ang)
@@ -75,6 +73,7 @@ public class Lifesteal : Item
     protected override void DoubleDown()
     {
         base.DoubleDown();
+        Other = null;
 
         foreach (var item in _gems)
         {
@@ -82,17 +81,5 @@ public class Lifesteal : Item
         }
 
         _gems.Clear();
-    }
-
-    private void OnDead()
-    {
-        DoubleDown();
-    }
-
-    protected override void OnDestroy()
-    {
-        ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
-
-        base.OnDestroy();
     }
 }

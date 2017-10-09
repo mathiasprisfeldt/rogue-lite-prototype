@@ -24,14 +24,21 @@ namespace ItemSystem
         [SerializeField]
         private ItemType _type;
 
+        [SerializeField]
+        private string _name;
+
+        [SerializeField]
+        private string _description;
+
         protected ItemSlave _slaveState;
 
         public ProxyPlayerAction ActivationAction { get; set; }
         public ItemHandler ItemHandler { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get { return _name; } }
+        public string Description { get { return _description; } }
         public Sprite Icon { get; set; }
         public Item Other { get; set; }
+        public ParticleSystem _particleSystem { get; set; }
 
         public ItemType Type
         {
@@ -87,9 +94,6 @@ namespace ItemSystem
         /// </summary>
         public virtual void OnEquipped()
         {
-            ItemHandler.ItemEquipped.Invoke(this);
-
-
             foreach (var item in ItemHandler.Items)
             {
                 if (item != this && item.GetType() == GetType())
@@ -100,6 +104,21 @@ namespace ItemSystem
                     item.DoubleUp();
                 }
             }
+
+            _particleSystem = GetComponent<ParticleSystem>();
+            if (_particleSystem)
+                _particleSystem.Play();
+
+            ItemHandler.Owner.HealthController.OnDead.AddListener(OnDead);
+            ItemHandler.ItemEquipped.Invoke(this);
+        }
+
+        protected virtual void OnDead()
+        {
+            if (_particleSystem)
+                _particleSystem.Stop();
+
+            DoubleDown();
         }
 
         protected virtual void DoubleUp() { }
@@ -112,6 +131,8 @@ namespace ItemSystem
         public virtual void OnUnEquipped()
         {
             ItemHandler.ItemUnEquipped.Invoke(this);
+
+            ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
 
             if (Other)
                 Other.DoubleDown();
@@ -134,6 +155,9 @@ namespace ItemSystem
 
         protected virtual void OnDestroy()
         {
+            if (ItemHandler)
+                ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
+
             Remove();
             CooldownTimer.Destroy();
         }

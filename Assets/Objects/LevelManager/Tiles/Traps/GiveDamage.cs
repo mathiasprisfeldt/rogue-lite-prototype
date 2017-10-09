@@ -38,7 +38,7 @@ public class GiveDamage : MonoBehaviour
             if (_tileBehavior.BottomCollision && !_tileBehavior.BottomTile.IsTrap)
                 transform.rotation = Quaternion.AngleAxis(Mathf.Atan2(0, 1) * Mathf.Rad2Deg, Vector3.forward);
             else if (_tileBehavior.TopCollision && !_tileBehavior.TopTile.IsTrap)
-                transform.rotation = Quaternion.AngleAxis(Mathf.Atan2(0,-1) * Mathf.Rad2Deg,Vector3.forward);
+                transform.rotation = Quaternion.AngleAxis(Mathf.Atan2(0, -1) * Mathf.Rad2Deg, Vector3.forward);
             else if (_tileBehavior.LeftCollision && !_tileBehavior.LeftTile.IsTrap)
                 transform.rotation = Quaternion.AngleAxis(Mathf.Atan2(-1, 0) * Mathf.Rad2Deg, Vector3.forward);
             else if (_tileBehavior.RightCollision && !_tileBehavior.RightTile.IsTrap)

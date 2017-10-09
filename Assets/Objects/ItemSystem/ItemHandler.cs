@@ -47,6 +47,8 @@ namespace ItemSystem
             set { _popupOffset = value; }
         }
 
+        public List<Item> ItemsAtStart { get { return _itemsAtStart; } }
+
         public readonly Event<Item> ItemEquipped = new Event<Item>(ON_ITEM_EQUIPPED);
         public readonly Event<Item> ItemUnEquipped = new Event<Item>(ON_ITEM_UNEQUIPPED);
 

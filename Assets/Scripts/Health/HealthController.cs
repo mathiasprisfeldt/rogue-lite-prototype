@@ -179,7 +179,7 @@ namespace Health
             {
                 float newHealth = Mathf.Clamp(value, _healthInterval.x, _healthInterval.y);
 
-                if (IsInvurnable && newHealth < value)
+                if (IsInvurnable && _healthAmount > newHealth)
                 {
                     if (_dmgWhileInvurnable)
                         _healthAmount = newHealth;
@@ -265,7 +265,7 @@ namespace Health
             if (dmg <= 0 || IsDead)
                 return;
 
-            bool giveDamage = (!_isInvurnable || _dmgWhileInvurnable) || ignoreInvurnability;
+            bool giveDamage = (!IsInvurnable || _dmgWhileInvurnable) || ignoreInvurnability;
 
             var amountToDmg = dmg;
 
@@ -279,8 +279,6 @@ namespace Health
 
             if (giveDamage)
             {
-                OnDamage.Invoke(from);
-
                 //If damage dealer has a Hit items, find them and give them a call.
                 if (from != null && from.ItemHandler && triggerItemhandler)
                 {
@@ -327,6 +325,9 @@ namespace Health
 
             if (giveInvurnability || _invurnableOnDmg)
                 StartCoroutine(StartInvurnability(_invurnabilityDuration));
+
+            if (giveDamage)
+                OnDamage.Invoke(from);
         }
 
         /// <summary>

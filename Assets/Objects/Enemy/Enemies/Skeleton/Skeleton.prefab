@@ -224,6 +224,7 @@ GameObject:
   - component: {fileID: 114553832253138858}
   - component: {fileID: 114931462547594304}
   - component: {fileID: 114079908195764510}
+  - component: {fileID: 114409109266188826}
   m_Layer: 12
   m_Name: Controller
   m_TagString: Enemy
@@ -767,7 +768,7 @@ MonoBehaviour:
   _manaHandler: {fileID: 0}
   _bumberCollisionCheck: {fileID: 114129242314163612}
   _safetyRespawn: {fileID: 0}
-  _modificationHandler: {fileID: 0}
+  _modificationHandler: {fileID: 114409109266188826}
   _itemHandler: {fileID: 114518903331906888}
   _startDirection: 1
   _damage: 1
@@ -880,6 +881,17 @@ MonoBehaviour:
   _hitBoxOffset: {x: 0.8, y: 0.85}
   _attackBoxSize: {x: 1.6, y: 1.5}
   _attackBoxOffset: {x: 0.8, y: 0.85}
+--- !u!114 &114409109266188826
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1648019670418598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc44b591885824c4eb774adb807075a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114433637406253572
 MonoBehaviour:
   m_ObjectHideFlags: 1

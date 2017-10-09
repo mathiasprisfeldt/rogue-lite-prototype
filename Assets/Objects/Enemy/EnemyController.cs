@@ -66,7 +66,7 @@ namespace Enemy
 
         public FiniteStateMachine<EnemyApplication> StateMachine { get; set; }
 
-        void Awake()
+        protected virtual void Awake()
         {
             StateMachine = new FiniteStateMachine<EnemyApplication>(App);
 
@@ -298,7 +298,7 @@ namespace Enemy
             }
         }
 
-        private void OnDead()
+        protected virtual void OnDead()
         {
             IsTurning = false;
 

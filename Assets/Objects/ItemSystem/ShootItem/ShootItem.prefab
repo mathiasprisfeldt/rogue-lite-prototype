@@ -72,6 +72,8 @@ MonoBehaviour:
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
   _type: 1
+  _name: Shoot
+  _description: Shoot all around you
   _throwType: 0
   _projectile: {fileID: 114159514260344410, guid: f6f2a202e1deaf64c8613c8fcea309cc,
     type: 2}
