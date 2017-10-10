@@ -176,6 +176,7 @@ MonoBehaviour:
   _distanceToSwitckDirection: 0
   _timeUntilActive: 1
   _healthAmount: 1
+  _type: 1
 --- !u!212 &212858441498672992
 SpriteRenderer:
   m_ObjectHideFlags: 1

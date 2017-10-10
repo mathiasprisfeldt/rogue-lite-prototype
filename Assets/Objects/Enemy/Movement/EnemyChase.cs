@@ -1,4 +1,5 @@
-﻿using AcrylecSkeleton.Extensions;
+﻿using System.Runtime.InteropServices;
+using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.Utilities;
 using UnityEngine;
 
@@ -10,6 +11,9 @@ namespace Enemy
     /// </summary>
     public class EnemyChase : EnemyState
     {
+        [SerializeField]
+        private float _targetLenght;
+
         void FixedUpdate()
         {
             if (!IsActive)
@@ -21,7 +25,12 @@ namespace Enemy
                 {
                     float xDir = Mathf.Round(Context.C.ToPlayer.normalized.x);
 
-                    if (!xDir.FastApproximately(Context.M.Character.BumpingDirection))
+                    var chase = _targetLenght == 0 ||
+                                Vector2.Distance(transform.position.ToVector2(),
+                                    Context.C.Target.transform.position.ToVector2()) >
+                                _targetLenght;
+
+                    if (!xDir.FastApproximately(Context.M.Character.BumpingDirection) && chase)
                         Context.C.Move(xDir * Vector2.right, forceTurn: true);
                     else
                         Context.M.Character.StandStill();

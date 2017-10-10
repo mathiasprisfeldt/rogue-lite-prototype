@@ -2120,7 +2120,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1182516208491314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.58, y: 0.51, z: 0}
+  m_LocalPosition: {x: 4.65, y: -4.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4087813221417808}
@@ -6036,7 +6036,8 @@ MonoBehaviour:
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
   _healthAmount: 3
-  _healthInterval: {x: 0, y: 100}
+  _maxHealth: 3
+  _healthInterval: {x: 0, y: 15}
   _knockbackForce: 600
   _knockbackDuration: 0.1
   _responsibleGameObject: {fileID: 1182516208491314}

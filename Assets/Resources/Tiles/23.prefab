@@ -373,7 +373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ee2a2e426c57545a188048a87f1a03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cost: 100
+  _cost: 500
   _prefabDropper: {fileID: 114659577409144710}
   _text: {fileID: 114381591866930970}
 --- !u!212 &212143371731438872
