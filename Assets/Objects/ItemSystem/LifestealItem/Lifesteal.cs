@@ -73,7 +73,6 @@ public class Lifesteal : Item
     protected override void DoubleDown()
     {
         base.DoubleDown();
-        Other = null;
 
         foreach (var item in _gems)
         {

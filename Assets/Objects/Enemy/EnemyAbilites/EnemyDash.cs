@@ -42,10 +42,8 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
 
     public DashItem DashItem { get; set; }
 
-    public override void Act(float deltaTime)
+    private void FixedUpdate()
     {
-        base.Act(deltaTime);
-
         if (_dashTimer.IsRunning)
         {
 
@@ -61,12 +59,17 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
                 (float)_dashTimer.Duration.TotalSeconds) *
                 (_ydashSpeed / (float)_dashTimer.Duration.TotalSeconds);
 
-            Context.M.Character.SetVelocity(new Vector2(x, y * -1) * deltaTime);
+            Context.M.Character.SetVelocity(new Vector2(x, y * -1) * BetterTime.FixedDeltaTime);
         }
         else
         {
             Context.M.Character.StandStill();
         }
+    }
+
+    public override void Act(float deltaTime)
+    {
+        base.Act(deltaTime);
 
         var colls = Context.M.Character.Hitbox.Sides.TargetColliders.Where(x => x.tag.Equals("Player"));
 
@@ -86,10 +89,10 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
     public override void Begin()
     {
         base.Begin();
-        _dashDirection = Context.C.ToPlayer.normalized.x > 0 ? new Vector2(1,0) : new Vector2(-1, 0);
+        _dashDirection = Context.C.ToPlayer.normalized.x > 0 ? new Vector2(1, 0) : new Vector2(-1, 0);
         _isDashing = true;
         DashItem.Activate();
-        TellMeWhen.Seconds(_chargeUp, this,(int)TellMeWhenReason.ChargeUp);
+        TellMeWhen.Seconds(_chargeUp, this, (int)TellMeWhenReason.ChargeUp);
         _dirtyCols = new List<Character>();
         HandleAnimation(true);
     }
@@ -102,15 +105,15 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
 
     public void HandleAnimation(bool initialze)
     {
-        if(!Context.M.Character.MainAnimator)
+        if (!Context.M.Character.MainAnimator)
             return;
         if (initialze)
         {
             Context.M.Character.MainAnimator.SetTrigger("PreDash");
-            Context.M.Character.MainAnimator.SetBool("Dash",true);
+            Context.M.Character.MainAnimator.SetBool("Dash", true);
         }
         else
-            Context.M.Character.MainAnimator.SetBool("Dash",false);
+            Context.M.Character.MainAnimator.SetBool("Dash", false);
     }
 
     /// <summary>
@@ -144,7 +147,7 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
         {
             case (int)TellMeWhenReason.ChargeUp:
                 Context.M.AttackIndicator.ShowIndicator(0.05f);
-                TellMeWhen.Seconds(0.1f,this,(int)TellMeWhenReason.Indicator);
+                TellMeWhen.Seconds(0.1f, this, (int)TellMeWhenReason.Indicator);
                 break;
             case (int)TellMeWhenReason.Indicator:
                 HandleAnimation(false);
@@ -155,6 +158,6 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
         }
 
         ///Starts the dash after the charge up
-        
+
     }
 }

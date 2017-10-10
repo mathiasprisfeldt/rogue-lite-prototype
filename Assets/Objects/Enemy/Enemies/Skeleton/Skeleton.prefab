@@ -1023,6 +1023,7 @@ MonoBehaviour:
   _character: {fileID: 0}
   _uiParent: {fileID: 0}
   _owner: {fileID: 114070941598918422}
+  _canCarryMultipleAbilities: 0
   _itemsAtStart:
   - {fileID: 114687679948778786, guid: de8016fe69a7a614b9e5c510f8643dcf, type: 2}
   _popupOffset: {x: 0, y: 0}

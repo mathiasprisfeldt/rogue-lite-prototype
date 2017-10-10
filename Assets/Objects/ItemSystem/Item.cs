@@ -125,6 +125,7 @@ namespace ItemSystem
                 if (item != this && item.GetType() == GetType())
                 {
                     item.Other = this;
+                    Other = item;
                     item._slaveState = ItemSlave.Master;
                     _slaveState = ItemSlave.Slave;
                     item.DoubleUp();
