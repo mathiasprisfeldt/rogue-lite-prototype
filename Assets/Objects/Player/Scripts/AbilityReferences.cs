@@ -18,6 +18,7 @@ namespace Abilitys
         public Dash Dash;
         public LedgeHanging LedgeHanging;
         public ThrowProjectile Throw;
+        public ThrowGrenade Grenade;
         public Melee Melee;
         public Jump Jump;
         public Climbing Climing;

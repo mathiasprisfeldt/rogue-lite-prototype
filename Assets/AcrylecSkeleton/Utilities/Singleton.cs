@@ -30,8 +30,6 @@ namespace AcrylecSkeleton.Utilities
                         GameObject newInstance = new GameObject(typeof(T).ToString());
                         instance = newInstance.AddComponent<T>();
 
-                        Debug.LogWarning(String.Format("[SINGLETON] An instance of {0} is needed, instantiating {1} to compensate.", typeof(T), newInstance));
-
                         DontDestroyOnLoad(newInstance);
 
                         return instance;
@@ -41,14 +39,14 @@ namespace AcrylecSkeleton.Utilities
                 return instance;
             }
         }
-
+        
         /// <summary>
         /// Check if the instance has been instantiated.
         /// </summary>
         /// <returns>True if instance is not null</returns>
         public static bool CheckSanity()
         {
-            if (Instance != null)
+            if (instance != null)
                 return true;
 
             return false;

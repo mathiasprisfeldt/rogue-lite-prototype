@@ -21,6 +21,8 @@ namespace Managers
         private List<EnemyApplication> _enemies = new List<EnemyApplication>();
         public UnityEvent EnemiesChange = new Button.ButtonClickedEvent();
 
+        public int Gold { get; set; }
+
         public PlayerApplication Player
         {
             get
@@ -47,7 +49,7 @@ namespace Managers
 
             set
             {
-               _enemies = value;
+                _enemies = value;
             }
         }
 

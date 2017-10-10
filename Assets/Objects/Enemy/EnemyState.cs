@@ -1,4 +1,5 @@
 ﻿using Archon.SwissArmyLib.Automata;
+using Archon.SwissArmyLib.Utils.Editor;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Enemy
     public abstract class EnemyState : MonoBehaviour, IFsmState<EnemyApplication>
     {
 #pragma warning disable 414
-        [SerializeField] private bool _isEnabled;
+        [SerializeField, ReadOnly] private bool _isEnabled;
 #pragma warning restore 414
         
         public FiniteStateMachine<EnemyApplication> Machine { get; set; }

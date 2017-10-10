@@ -1,4 +1,5 @@
-﻿using AcrylecSkeleton.Extensions;
+﻿using System.Runtime.InteropServices;
+using AcrylecSkeleton.Extensions;
 using AcrylecSkeleton.Utilities;
 using UnityEngine;
 
@@ -10,19 +11,26 @@ namespace Enemy
     /// </summary>
     public class EnemyChase : EnemyState
     {
+        [SerializeField]
+        private float _targetLenght;
+
         void FixedUpdate()
         {
             if (!IsActive)
                 return;
 
-            if (Context.C.Target &&
-                Context.C.ToPlayer.magnitude > 1f)
+            if (Context.C.Target && Context.C.ToPlayer.magnitude > 1f)
             {
                 if (Context.M.Character.OnGround && !Context.M.Character.IsFlying)
                 {
                     float xDir = Mathf.Round(Context.C.ToPlayer.normalized.x);
 
-                    if (!xDir.FastApproximately(Context.M.Character.BumpingDirection))
+                    var chase = _targetLenght == 0 ||
+                                Vector2.Distance(transform.position.ToVector2(),
+                                    Context.C.Target.transform.position.ToVector2()) >
+                                _targetLenght;
+
+                    if (!xDir.FastApproximately(Context.M.Character.BumpingDirection) && chase)
                         Context.C.Move(xDir * Vector2.right, forceTurn: true);
                     else
                         Context.M.Character.StandStill();
@@ -44,9 +52,10 @@ namespace Enemy
 
         public override bool ShouldTakeover()
         {
-            if (Context.C.Target && 
+            if (Context.C.Target &&
                 !IsState<EnemyAttack>() &&
-                !IsState<EnemyAvoid>())
+                !IsState<EnemyAvoid>() &&
+                !IsState<EnemyDash>())
                 return true;
 
             return false;

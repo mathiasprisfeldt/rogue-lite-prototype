@@ -6,7 +6,7 @@ namespace Abilitys
 {
     public enum HandledAbility
     {
-        None, DoubleJump, WallSlide, WallJump, Dash, LedgeHanging, Throw
+        None, DoubleJump, WallSlide, WallJump, Dash, LedgeHanging, Throw, Grenade
     }
 
     /// <summary>
@@ -36,17 +36,20 @@ namespace Abilitys
         [SerializeField]
         private bool _throw;
 
+        [SerializeField]
+        private bool _grenade;
+
         public UnityEvent OnAbilityChange;
 
         public void Awake()
         {
             OnAbilityChange = new UnityEvent();
-            UpdateAbilities();  
+            UpdateAbilities();
         }
 
         public void Update()
         {
-            
+            UpdateAbilities();
         }
 
         private void UpdateAbilities()
@@ -57,6 +60,7 @@ namespace Abilitys
             _abilityReferences.Dash.Active = _dash;
             _abilityReferences.LedgeHanging.Active = _ledgeHanging;
             _abilityReferences.Throw.Active = _throw;
+            _abilityReferences.Grenade.Active = _grenade;
         }
 
         public void UnlockAbility(HandledAbility ab, bool unlock = true)
@@ -81,6 +85,9 @@ namespace Abilitys
                 case HandledAbility.Throw:
                     _throw = unlock;
                     break;
+                case HandledAbility.Grenade:
+                    _grenade = unlock;
+                    break;
             }
             UpdateAbilities();
             OnAbilityChange.Invoke();
@@ -102,6 +109,8 @@ namespace Abilitys
                     return _abilityReferences.LedgeHanging;
                 case HandledAbility.Throw:
                     return _abilityReferences.Throw;
+                case HandledAbility.Grenade:
+                    return _abilityReferences.Grenade;
             }
             return null;
         }

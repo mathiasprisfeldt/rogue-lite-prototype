@@ -7,15 +7,20 @@ using UnityEngine.SceneManagement;
 
 public class CameraPoint : MonoBehaviour
 {
-    [SerializeField] private ActionsController _actionsController;
+    [SerializeField]
+    private ActionsController _actionsController;
 
-    [SerializeField] private Transform _target;
+    [SerializeField]
+    private Transform _target;
 
-    [SerializeField] private float _peekAmount;
+    [SerializeField]
+    private float _peekAmount;
 
-    [SerializeField] private float _durationUntilPeek;
+    [SerializeField]
+    private float _durationUntilPeek;
 
-    [SerializeField] private float _peekDeadZone;
+    [SerializeField]
+    private float _peekDeadZone;
 
     private float _xPosition;
     private float _peekTImer;
@@ -26,6 +31,7 @@ public class CameraPoint : MonoBehaviour
         _xPosition = transform.localPosition.x;
         GetCamera();
         SceneManager.sceneLoaded += OnSceneLoaded;
+
     }
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode loadSceneMode)
@@ -40,6 +46,7 @@ public class CameraPoint : MonoBehaviour
         {
             FollowTransform ft = mainCam.GetComponent<FollowTransform>();
             ft.Target = gameObject.transform;
+            ft.transform.position = transform.position;
         }
     }
 

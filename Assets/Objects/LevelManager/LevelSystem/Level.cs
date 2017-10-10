@@ -15,6 +15,8 @@ public class Level
     /// </summary>
     public Layout[,] Layouts { get; set; }
 
+    public int[,] LayoutsData { get; set; }
+
     public Dictionary<TilePos, TileBehaviour> BorderTiles { get; set; }
 
     /// <summary>
@@ -39,6 +41,8 @@ public class Level
     /// <param name="id">id</param>
     public Level(int[,] l)
     {
+        LayoutsData = l;
+
         //Create new array and fill with layouts corresponding to the ids given
         Layouts = new Layout[l.GetLength(0), l.GetLength(1)];
         for (int i = 0; i < l.GetLength(0); i++)
@@ -108,7 +112,7 @@ public class Level
             if (BorderTiles.Keys.Contains(t))
             {
                 TileBehaviour tileBehaviour = BorderTiles[t].gameObject.GetComponent<TileBehaviour>();
-                return new Tile(1, BorderTiles[t].gameObject, tileBehaviour.PhsyicalBlock,tileBehaviour.Trap);
+                return new Tile(1, BorderTiles[t].gameObject, tileBehaviour.PhsyicalBlock, tileBehaviour.Trap);
             }
             else
                 return new Tile(null, -1);
@@ -221,6 +225,7 @@ public class Level
             }
         }
 
+        borderTileList.ForEach(x => x.SetupTile());
         foreach (var item in tileList)
         {
             item.SetupTile();

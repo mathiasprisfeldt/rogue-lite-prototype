@@ -129,12 +129,9 @@ MonoBehaviour:
   _travelDirection: {x: 0, y: 1}
   _speed: 20
   _distanceToSwitckDirection: 10
-  _autoAbilities: 0100000002000000030000000400000006000000
+  _autoAbilities: 0100000006000000
   _autoSkins:
   - {fileID: 21300000, guid: eaffda9d2d2ca8c4bbce425bebd44b53, type: 3}
-  - {fileID: 21300000, guid: d661ae079bc105c48b8179d6dcd8cc20, type: 3}
-  - {fileID: 21300000, guid: a845e8aceb651694dbee64d23165a3c5, type: 3}
-  - {fileID: 21300000, guid: a9dd0ac7c56823d48a20332c21feb524, type: 3}
   - {fileID: 21300000, guid: aedb80ce98104c641a977d11a1df5cb6, type: 3}
   _spriteRenderer: {fileID: 212409613900107902}
 --- !u!212 &212409613900107902

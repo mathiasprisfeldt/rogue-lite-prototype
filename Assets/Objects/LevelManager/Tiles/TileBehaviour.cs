@@ -291,8 +291,6 @@ public class TileBehaviour : MonoBehaviour
             PlatformBehavior pb = parent.AddComponent<PlatformBehavior>();
             pb.IsGrabable = true;
             pb.IsSlideable = true;
-            pb.Left = true;
-            pb.Right = true;
 
             foreach (var target in targets)
             {
@@ -304,10 +302,12 @@ public class TileBehaviour : MonoBehaviour
                 TileBehaviour tb = target.GetComponent<TileBehaviour>();
                 if (tb)
                 {
-                    if (!tb.LeftCollision)
-                        pb.Left = false;
-                    if (!tb.RightCollision)
-                        pb.Right = false;
+                    if (tb.gameObject == gameObject)
+                    {
+                        pb.Left = tb.LeftCollision;
+                        pb.Right = tb.RightCollision;
+                    }
+                        
                     if (!tb.IsGrabable)
                         pb.IsGrabable = false;
                     if (!tb.IsSlideable)
@@ -362,7 +362,7 @@ public class TileBehaviour : MonoBehaviour
 
         var goDown = _isTop && ((tLeft && tLeft.TargetTag != _targetTag) && (tRight && tRight.TargetTag != TargetTag));
 
-        if (goDown || tDown && !tDown.LeftCollision && !tDown.RightCollision || nextShouldDown)
+        if (goDown || !_isTop && (!tLeft && !tRight) || nextShouldDown)
             nextShouldDown = true;
 
         if (nextShouldDown && tDown && (tDown.TargetTag == TargetTag))

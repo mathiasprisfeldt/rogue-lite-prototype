@@ -22,6 +22,9 @@ public class PlayerGoalDoor : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI _text;
 
+    [SerializeField]
+    private bool _killEnemiesToOpen;
+
     private float _numberOfEnemies;
     private float _currentNumberOfEnemies;
     private bool _isOpen = true;
@@ -40,21 +43,31 @@ public class PlayerGoalDoor : MonoBehaviour
 
     private void OnEnemyChange()
     {
-        _isOpen = true;
-        _currentNumberOfEnemies = 0;
-        if (GameManager.Instance != null)
+        if (!_killEnemiesToOpen)
         {
-            foreach (var e in GameManager.Instance.Enemies)
+            _isOpen = true;
+            _spriteRenderer.sprite = _isOpen ? _open : _closed;
+            _text.text = "";
+        }
+        else
+        {
+            _isOpen = true;
+            _currentNumberOfEnemies = 0;
+            if (GameManager.Instance != null)
             {
-                if (!e.M.Character.HealthController.IsDead)
+                foreach (var e in GameManager.Instance.Enemies)
                 {
-                    _currentNumberOfEnemies++;
-                    _isOpen = false;
+                    if (!e.M.Character.HealthController.IsDead)
+                    {
+                        _currentNumberOfEnemies++;
+                        _isOpen = false;
+                    }
                 }
             }
+            _spriteRenderer.sprite = _isOpen ? _open : _closed;
+            _text.text = _numberOfEnemies - _currentNumberOfEnemies + "/" + _numberOfEnemies;
         }
-        _spriteRenderer.sprite = _isOpen ? _open : _closed;
-        _text.text = _numberOfEnemies - _currentNumberOfEnemies + "/" + _numberOfEnemies;
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

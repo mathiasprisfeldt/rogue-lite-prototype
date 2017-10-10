@@ -30,7 +30,9 @@ public class Jump : MovementAbility {
     // Update is called once per frame
     void Update ()
     {
-        if (_actionsController.OnGround && _jumpTimer <= 0)
+        if ((_actionsController.OnGround || (_actionsController.AbilityReferences.Climing 
+            && _actionsController.AbilityReferences.Climing.VerticalActive)) 
+            && _jumpTimer <= 0)
             _gracePeriodTimer = _gracePeriod;
         else if (_gracePeriodTimer > 0)
             _gracePeriodTimer -= BetterTime.DeltaTime;
@@ -46,10 +48,12 @@ public class Jump : MovementAbility {
     {
         get
         {
-            InputActions pa = _actionsController.App.C.PlayerActions;
+            InputActions playerActions = _actionsController.App.C.PlayerActions;
             if (!base.VerticalActive)
                 return false;
-            if (pa != null && pa.ProxyInputActions.Jump.WasPressed && _gracePeriodTimer > 0 && _jumpTimer <= 0)
+            if (playerActions != null && playerActions.ProxyInputActions.Jump.WasPressed 
+                && !playerActions.Down   
+                && _gracePeriodTimer > 0 && _jumpTimer <= 0)
             {
                 _jumpTimer = _jumpDuration;
                 _initialJumpTimer = _initialJumpDuration;
@@ -58,7 +62,7 @@ public class Jump : MovementAbility {
             }
 
             if(_initialJumpTimer <= 0)
-                if (!(pa != null && pa.Jump.IsPressed) && _jumpTimer > 0)
+                if (!(playerActions != null && playerActions.Jump.IsPressed) && _jumpTimer > 0)
                 {
                     _jumpTimer = 0;
                 }
@@ -66,7 +70,7 @@ public class Jump : MovementAbility {
 
             if ((_actionsController.GroundCollisionCheck.Sides.BottomColliders != null 
                 && _actionsController.GroundCollisionCheck.Sides.BottomColliders.Count > 0 
-                && pa != null && pa.Down && pa.ProxyInputActions.Jump.WasPressed))
+                && playerActions != null && playerActions.Down && playerActions.ProxyInputActions.Jump.WasPressed))
                 return true;
 
             if (_actionsController.AbilityReferences.Dash.InitialDash)
@@ -89,8 +93,6 @@ public class Jump : MovementAbility {
         }
 
         velocity = new Vector2(velocity.x, force);
-
-        
 
     }
 

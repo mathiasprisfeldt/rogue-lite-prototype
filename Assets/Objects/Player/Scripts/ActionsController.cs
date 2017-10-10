@@ -14,7 +14,7 @@ namespace CharacterController
 
     public enum CombatAbility
     {
-        None, Melee, Throw, DownMelee
+        None, Melee, Throw, DownMelee, Grenade
     }
 
     public class ActionsController : Character
@@ -24,9 +24,6 @@ namespace CharacterController
 
         [SerializeField]
         private AbilityReferences _abilityReferences;
-
-        [SerializeField]
-        private ModificationHandler _modificationHandler;
 
         [SerializeField]
         private CollisionCheck _triggerCheck;
@@ -55,9 +52,7 @@ namespace CharacterController
         [SerializeField]
         private Transform _throwPoint;
 
-
         private Vector2 _velocity;
-
         private bool _shouldDash;
         private float _dashTimer;
         private Vector2 _savedVelocity;
@@ -114,12 +109,6 @@ namespace CharacterController
             set { _lastUsedCombatAbility = value; }
         }
 
-        public ModificationHandler ModificationHandler
-        {
-            get { return _modificationHandler; }
-            set { _modificationHandler = value; }
-        }
-
         public CollisionCheck CollisionCheck
         {
             get { return _collisionCheck; }
@@ -139,11 +128,13 @@ namespace CharacterController
 
         public bool Combat { get; set; }
         public bool ClimbEnd { get; set; }
+        public bool WaitForInputHorizontal { get; set; }
         public Trigger StartJump { get; set; }
         public Trigger StartDash { get; set; }
         public Trigger StartGrab { get; set; }
         public Trigger StartCombat { get; set; }
         public Trigger StartThrow { get; set; }
+        public Trigger StartGrenade { get; set; }
         public Trigger StartMelee { get; set; }
         public Trigger StartClimbing { get; set; }
         public Trigger StartDownMeele { get; set; }
@@ -177,7 +168,6 @@ namespace CharacterController
             set { _downCheck = value; }
         }
 
-
         // Update is called once per frame
         public override void Update()
         {
@@ -195,6 +185,7 @@ namespace CharacterController
             LastHorizontalDirection = LookDirection;
             ClimbEnd = true;
             StartThrow = new Trigger();
+            StartGrenade = new Trigger();
             StartCombat = new Trigger();
             StartDash = new Trigger();
             StartGrab = new Trigger();
@@ -207,7 +198,7 @@ namespace CharacterController
         void FixedUpdate()
         {
             _velocity = new Vector2(0, 0);
-             
+
             HandleCombat();
             HandleHorizontalMovement(ref _velocity);
             HandleVerticalMovement(ref _velocity);
@@ -229,7 +220,6 @@ namespace CharacterController
                 App.C.PlayerActions.ResetProxy();
             _animator.SetBool("MovingUp", Rigidbody.velocity.y > 0);
             _animator.SetFloat("Speed", Mathf.Clamp01(new Vector2(Horizontal, Vertical).magnitude));
-
         }
 
         private bool HandleOnewayColliders()
@@ -255,7 +245,7 @@ namespace CharacterController
         private void HandleMaxSpeed()
         {
             var predictGravity = Rigidbody.velocity.y + Physics2D.gravity.y * Rigidbody.gravityScale;
-            if (predictGravity <= -_maxFallSpeed)
+            if (predictGravity <= -_maxFallSpeed && !OnGround)
             {
                 Rigidbody.velocity -= new Vector2(0, Rigidbody.CounterGravity(-Mathf.Abs(predictGravity - _maxFallSpeed)) * BetterTime.FixedDeltaTime);
             }
@@ -263,7 +253,7 @@ namespace CharacterController
 
         protected override void UpdateState()
         {
-            if (OnGround && (App.C.PlayerActions != null && App.C.PlayerActions.Horizontal != 0))
+            if (OnGround && !WaitForInputHorizontal && (App.C.PlayerActions != null && App.C.PlayerActions.Horizontal != 0))
                 State = CharacterState.Moving;
             else if (OnGround)
                 State = CharacterState.Idle;
@@ -280,7 +270,7 @@ namespace CharacterController
         private void HandleAnimationParameters()
         {
             //Running
-            Animator.SetBool("Running", State == CharacterState.Moving);
+            Animator.SetBool("Running", State == CharacterState.Moving && !LockMovement);
 
             //OnGround
             Animator.SetBool("OnGround", OnGround);
@@ -301,11 +291,13 @@ namespace CharacterController
             if (LastUsedHorizontalMoveAbility == MoveAbility.Dash && StartDash.Value && !Combat)
                 Animator.SetTrigger("Dash");
 
-
             //Melee
             if (StartMelee.Value)
                 Animator.SetTrigger("Melee");
 
+            //Grenade
+            if (StartGrenade.Value)
+                Animator.SetTrigger("Grenade");
 
             //Throw
             if (StartThrow.Value)
@@ -339,6 +331,10 @@ namespace CharacterController
             {
                 BeginCombat(CombatAbility.Throw);
             }
+            else if (_abilityReferences.Grenade && _abilityReferences.Grenade.KnifeActive)
+            {
+                BeginCombat(CombatAbility.Grenade);
+            }
             else if (_abilityReferences.DownMeele && _abilityReferences.DownMeele.Active)
             {
                 BeginCombat(CombatAbility.DownMelee);
@@ -362,7 +358,6 @@ namespace CharacterController
             {
                 StartCombat.Value = true;
                 LastUsedCombatAbility = combatAbility;
-
             }
 
             Combat = true;
@@ -417,6 +412,7 @@ namespace CharacterController
                 else
                     velocity = new Vector2(velocity.x, 0);
             }
+            
         }
 
         public override void Flip(float dir)
@@ -433,16 +429,20 @@ namespace CharacterController
 
             LastUsedHorizontalMoveAbility = MoveAbility.None;
             Horizontal = App.C.PlayerActions.Horizontal;
+
             if (!Combat)
                 Flip(Horizontal);
 
-            if (CollisionCheck.Sides.Left && Horizontal < 0)
+            if (CollisionCheck.Sides.Left && Horizontal < 0 ||
+                CollisionCheck.Sides.Right && Horizontal > 0)
                 Horizontal = 0;
 
-            if (CollisionCheck.Sides.Right && Horizontal > 0)
-                Horizontal = 0;
+            if (WaitForInputHorizontal &&
+                App.C.PlayerActions.ProxyInputActions.AnyWasPressed)
+                WaitForInputHorizontal = false;
 
-            velocity += new Vector2(MovementSpeed * Horizontal, 0);
+            if (!WaitForInputHorizontal)
+                velocity += new Vector2(MovementSpeed * Horizontal, 0);
 
             if (_abilityReferences.Dash && _abilityReferences.Dash.HorizontalActive)
             {

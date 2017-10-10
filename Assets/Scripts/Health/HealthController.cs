@@ -5,6 +5,7 @@ using AcrylecSkeleton.Utilities;
 using Archon.SwissArmyLib.ResourceSystem;
 using Archon.SwissArmyLib.Utils;
 using Controllers;
+using ItemSystem;
 using Managers;
 using Spriter2UnityDX;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace Health
     [Serializable]
     public class OnDamageEvent : UnityEvent<Character>
     {
-        
+
     }
 
     /// <summary>
@@ -81,7 +82,10 @@ namespace Health
         private float _healthAmount = 100; //Amount of health
 
         [SerializeField]
-        private Vector2 _healthInterval = new Vector2(0, 100); //Health is clamped to these values.
+        private float _maxHealth = 3;
+
+        [SerializeField]
+        private Vector2 _healthInterval = new Vector2(0, 15); //Health is clamped to these values.
 
         [SerializeField]
         private float _knockbackForce = 300;
@@ -134,7 +138,7 @@ namespace Health
                     Character.MainAnimator.SetTrigger("Die");
                 }
 
-                _isDead = value; 
+                _isDead = value;
             }
         }
 
@@ -166,7 +170,7 @@ namespace Health
             get { return _isInvurnable; }
             set
             {
-                _isInvurnable = value; 
+                _isInvurnable = value;
                 CheckHealth();
             }
         }
@@ -176,9 +180,9 @@ namespace Health
             get { return _healthAmount; }
             set
             {
-                float newHealth = Mathf.Clamp(value, _healthInterval.x, _healthInterval.y);
+                float newHealth = Mathf.Clamp(value, HealthInterval.x, HealthInterval.y);
 
-                if (IsInvurnable)
+                if (IsInvurnable && _healthAmount > newHealth)
                 {
                     if (_dmgWhileInvurnable)
                         _healthAmount = newHealth;
@@ -207,9 +211,23 @@ namespace Health
             set { _character = value; }
         }
 
+        public float LastDamageRcieved { get; set; }
+
         public bool TrapImmune
         {
             get { return _trapImmune; }
+        }
+
+        public Vector2 HealthInterval
+        {
+            get { return _healthInterval; }
+            set { _healthInterval = value; }
+        }
+
+        public float MaxHealth
+        {
+            get { return _maxHealth; }
+            set { _maxHealth = Mathf.Clamp(value,_healthInterval.x,_healthInterval.y); }
         }
 
         void Awake()
@@ -224,6 +242,8 @@ namespace Health
 
             if (_entityRenderer)
                 _originalColor = _entityRenderer.Color;
+
+            CheckHealth();
         }
 
         void Update()
@@ -254,12 +274,13 @@ namespace Health
         /// <param name="pos">Position from where the damage came from</param>
         /// <param name="from">Did the damage come from a specific character?</param>
         /// <param name="ignoreInvurnability">Should we force damage onto health controller?</param>
-        public void Damage(float dmg, bool giveInvurnability = false, Vector2 pos = default(Vector2), Character from = null, bool ignoreInvurnability = false)
+        /// <param name="triggerItemhandler">Used to make direct damage that shouldn't call item handlers' <see cref="ItemHandler.OnHit"/></param>
+        public void Damage(float dmg, bool giveInvurnability = false, Vector2 pos = default(Vector2), Character from = null, bool ignoreInvurnability = false, bool triggerItemhandler = true)
         {
             if (dmg <= 0 || IsDead)
                 return;
 
-            bool giveDamage = (!_isInvurnable || _dmgWhileInvurnable) || ignoreInvurnability;
+            bool giveDamage = (!IsInvurnable || _dmgWhileInvurnable) || ignoreInvurnability;
 
             var amountToDmg = dmg;
 
@@ -269,6 +290,16 @@ namespace Health
                     MathUtils.RoundToNearest(dmg, 2);
                     amountToDmg = dmg * GSManager.Instance.HealthContainerSize;
                     break;
+            }
+
+            if (giveDamage)
+            {
+                //If damage dealer has a Hit items, find them and give them a call.
+                if (from != null && from.ItemHandler && triggerItemhandler)
+                {
+                    LastDamageRcieved = amountToDmg;
+                    from.ItemHandler.OnHit(this);
+                }
             }
 
             HealthAmount -= amountToDmg;
@@ -307,11 +338,11 @@ namespace Health
                     Character.MainAnimator.SetTrigger("Hit");
             }
 
-            if (giveDamage)
-                OnDamage.Invoke(from);
-
             if (giveInvurnability || _invurnableOnDmg)
                 StartCoroutine(StartInvurnability(_invurnabilityDuration));
+
+            if (giveDamage)
+                OnDamage.Invoke(from);
         }
 
         /// <summary>
@@ -320,8 +351,10 @@ namespace Health
         /// <param name="health">Amount to heal</param>
         public void Heal(float health)
         {
-            HealthAmount += health;
-            OnHealEvent.Invoke();
+            var oldHealth = HealthAmount;
+            HealthAmount = Mathf.Clamp(HealthAmount + health,_healthInterval.x,MaxHealth);
+            if(HealthAmount != oldHealth)
+                OnHealEvent.Invoke();
         }
 
         /// <summary>
@@ -329,15 +362,16 @@ namespace Health
         /// </summary>
         public void CheckHealth()
         {
-            bool gotKilled = HealthAmount <= _healthInterval.x;
+            bool gotKilled = HealthAmount <= HealthInterval.x;
 
             if (!IsDead && gotKilled)
             {
                 IsDead = true;
-                OnDead.Invoke();
 
                 if (_destroyOnDead)
-                    Kill();
+                        Kill();
+                OnDead.Invoke();
+
             }
 
             IsDead = gotKilled;
@@ -357,7 +391,7 @@ namespace Health
         public void Kill()
         {
             IsDead = true;
-            HealthAmount = _healthInterval.x;
+            HealthAmount = HealthInterval.x;
             Destroy(_responsibleGameObject ? _responsibleGameObject : gameObject);
 
         }
@@ -391,7 +425,7 @@ namespace Health
                     yield return new WaitForEndOfFrame();
                     timer -= BetterTime.UnscaledDeltaTime / duration;
                 }
-                
+
                 IsInvurnable = false;
             }
         }
@@ -408,7 +442,7 @@ namespace Health
         /// </summary>
         public bool WouldKill(float damage)
         {
-            return HealthAmount - damage <= _healthInterval.x;
+            return HealthAmount - damage <= HealthInterval.x;
         }
     }
 }

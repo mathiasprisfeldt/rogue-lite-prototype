@@ -54,24 +54,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DontDestroyOnLoadConfig: 1
+  _resetMapOnDeath: 0
   _tileSpawnOffset: {x: 0.5, y: -0.5}
   _borderTile: {fileID: 1539316592123730, guid: 4052246ce7645ba4cafddf1a4ca138eb,
     type: 2}
   _backGround: {fileID: 1964096409743636, guid: 247b7415f2c656547b7f9f9a15bcad1e,
     type: 2}
   _forcedLevelsText:
-  - {fileID: 4900000, guid: 7bb9ad2daceb4dd4585a3536be0d7253, type: 3}
-  - {fileID: 4900000, guid: bd5daeb825e5274449afbcdc42a13e06, type: 3}
+  - {fileID: 4900000, guid: 5cbc379a48f837449917f94ee993aaa2, type: 3}
+  - {fileID: 4900000, guid: 61aa76687d6efb041b6655613ecb49a2, type: 3}
+  - {fileID: 4900000, guid: d3d8339feb597fe4d8d0bb700e3d1418, type: 3}
   _randomLevelsEasyText:
-  - {fileID: 4900000, guid: 6da42211e9b96bf4e8539f7f894d1b30, type: 3}
+  - {fileID: 4900000, guid: 49c99e1aaa8b0f141ae35bc43510bd81, type: 3}
+  - {fileID: 4900000, guid: 51c897e3cc3a9e34fa3ddaaa21557569, type: 3}
   _randomLevelsMediumText: []
   _randomLevelsHardText:
-  - {fileID: 4900000, guid: dee97b64b968ce54e8c2611a66129894, type: 3}
-  - {fileID: 4900000, guid: 8f54e9d5935b6d34da942b0bce8720dd, type: 3}
-  - {fileID: 4900000, guid: 13d6df572aafc3240af5df091646c39f, type: 3}
-  - {fileID: 4900000, guid: 70270c42d2d462243a34604381907de7, type: 3}
-  - {fileID: 4900000, guid: c8cf55e572ae1424fb6cad2b219ecfd4, type: 3}
-  - {fileID: 4900000, guid: 9db9c9d3873ebd0498926fac6ac5e40f, type: 3}
+  - {fileID: 4900000, guid: f78c1da8b46aa924ba0b8ebf9b5ddc3d, type: 3}
+  - {fileID: 4900000, guid: 560d6911834e28b44b9c2cdf0d55a3a1, type: 3}
+  - {fileID: 4900000, guid: 170ffc8c7be162f4e9e0740d8ac80f87, type: 3}
+  - {fileID: 4900000, guid: eb8bcac86a8c22148ad5583ca3fc88aa, type: 3}
 --- !u!114 &114584274024809242
 MonoBehaviour:
   m_ObjectHideFlags: 1
