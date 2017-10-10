@@ -2,7 +2,6 @@
 using System.Linq;
 using UnityEngine;
 using InControl;
-using UnityEditor;
 
 namespace RogueLiteInput
 {

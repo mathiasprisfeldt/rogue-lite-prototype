@@ -29,13 +29,15 @@ namespace Pickups
 
         public override void Apply(GameObject go)
         {
-            base.Apply(go);
             CollisionCheck cc = go.GetComponent<CollisionCheck>();
             HealthController hc = null;
             if (cc != null)
                 hc = cc.Character.HealthController;
             if (hc != null)
             {
+                if(hc.HealthAmount >= hc.MaxHealth)
+                    return;
+                base.Apply(go);
                 switch (_type)
                 {
                     case HealthPickupType.Heal:

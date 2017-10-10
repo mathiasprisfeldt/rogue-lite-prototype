@@ -126,8 +126,3 @@ public class HealthContainers : MonoBehaviour
 
     }
 }
-
-            }
-                
-        }	    
-            backgroundXSize += _healthContainers[i].rectTransform.rect.width;

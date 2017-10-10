@@ -351,8 +351,10 @@ namespace Health
         /// <param name="health">Amount to heal</param>
         public void Heal(float health)
         {
-            HealthAmount += health;
-            OnHealEvent.Invoke();
+            var oldHealth = HealthAmount;
+            HealthAmount = Mathf.Clamp(HealthAmount + health,_healthInterval.x,MaxHealth);
+            if(HealthAmount != oldHealth)
+                OnHealEvent.Invoke();
         }
 
         /// <summary>

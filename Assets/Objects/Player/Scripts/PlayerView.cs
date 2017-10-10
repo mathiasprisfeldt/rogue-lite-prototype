@@ -54,31 +54,3 @@ namespace Assets.Objects.PlayerMovement.Player.Prefab.Player
         }
     }
 }
-        private ActionsController _actionController;
-
-        public ScreenFlash ScreenFlash { get; set; }
-
-        {
-            if (App.C.Character.HealthController)
-            {
-                App.C.Character.HealthController.OnHealEvent.AddListener(OnHeal);
-                App.C.Character.HealthController.OnDamage.AddListener(OnDamage);
-                App.C.Character.OnSafetyRespawn.AddListener(OnSafetyRespawn);
-
-
-        private void OnSafetyRespawn()
-        {
-            if (ScreenFlash != null)
-            {
-                _actionController.WaitForInputHorizontal = true;
-            }
-
-        private void OnDamage(Character arg0)
-        {
-            if (ScreenFlash != null)
-                ScreenFlash.StartFlash(ScreenFlash.DamageColor, 1f, 0.1f);
-        }
-        private void OnHeal()
-        {
-            if (ScreenFlash != null)
-                ScreenFlash.StartFlash(ScreenFlash.HealColor, 1f, 0.1f);

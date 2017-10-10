@@ -871,7 +871,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1030121022898582}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f0d2adddc455124799444b14f60f4e2, type: 3}
   m_Name: 
@@ -1019,6 +1019,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d2a1f74df6189c4cb646e243eb2b78c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemStealMenuPrefab: {fileID: 0}
+  _character: {fileID: 0}
+  _uiParent: {fileID: 0}
   _owner: {fileID: 114070941598918422}
   _itemsAtStart:
   - {fileID: 114687679948778786, guid: de8016fe69a7a614b9e5c510f8643dcf, type: 2}
@@ -1079,6 +1082,7 @@ MonoBehaviour:
   _isInvurnable: 0
   _dmgWhileInvurnable: 0
   _healthAmount: 3
+  _maxHealth: 3
   _healthInterval: {x: 0, y: 100}
   _knockbackForce: 600
   _knockbackDuration: 0.1
