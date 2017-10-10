@@ -71,4 +71,7 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  _type: 1
+  _type: 2
+  _name: Dash
+  _description: Dash through the air, like you always dreamed of!
+  _icon: {fileID: 21300000, guid: 492506827ca5fba46b3ec90806f03b50, type: 3}

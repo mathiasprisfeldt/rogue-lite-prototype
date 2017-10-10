@@ -71,7 +71,10 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  _type: 1
+  _type: 2
+  _name: Grenade
+  _description: Throw grenades
+  _icon: {fileID: 21300000, guid: 763a47fc972a7a949bf7d49e7bfd7a81, type: 3}
   _throwType: 1
   _projectile: {fileID: 114159514260344410, guid: 71c0bbfd6c6997f46846a257db3bf676,
     type: 2}

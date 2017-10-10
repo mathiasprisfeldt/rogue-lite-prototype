@@ -82,7 +82,10 @@ namespace Health
         private float _healthAmount = 100; //Amount of health
 
         [SerializeField]
-        private Vector2 _healthInterval = new Vector2(0, 100); //Health is clamped to these values.
+        private float _maxHealth = 3;
+
+        [SerializeField]
+        private Vector2 _healthInterval = new Vector2(0, 15); //Health is clamped to these values.
 
         [SerializeField]
         private float _knockbackForce = 300;
@@ -177,9 +180,9 @@ namespace Health
             get { return _healthAmount; }
             set
             {
-                float newHealth = Mathf.Clamp(value, _healthInterval.x, _healthInterval.y);
+                float newHealth = Mathf.Clamp(value, HealthInterval.x, HealthInterval.y);
 
-                if (IsInvurnable && newHealth < value)
+                if (IsInvurnable && _healthAmount > newHealth)
                 {
                     if (_dmgWhileInvurnable)
                         _healthAmount = newHealth;
@@ -213,6 +216,18 @@ namespace Health
         public bool TrapImmune
         {
             get { return _trapImmune; }
+        }
+
+        public Vector2 HealthInterval
+        {
+            get { return _healthInterval; }
+            set { _healthInterval = value; }
+        }
+
+        public float MaxHealth
+        {
+            get { return _maxHealth; }
+            set { _maxHealth = Mathf.Clamp(value,_healthInterval.x,_healthInterval.y); }
         }
 
         void Awake()
@@ -265,7 +280,7 @@ namespace Health
             if (dmg <= 0 || IsDead)
                 return;
 
-            bool giveDamage = (!_isInvurnable || _dmgWhileInvurnable) || ignoreInvurnability;
+            bool giveDamage = (!IsInvurnable || _dmgWhileInvurnable) || ignoreInvurnability;
 
             var amountToDmg = dmg;
 
@@ -279,8 +294,6 @@ namespace Health
 
             if (giveDamage)
             {
-                OnDamage.Invoke(from);
-
                 //If damage dealer has a Hit items, find them and give them a call.
                 if (from != null && from.ItemHandler && triggerItemhandler)
                 {
@@ -327,6 +340,9 @@ namespace Health
 
             if (giveInvurnability || _invurnableOnDmg)
                 StartCoroutine(StartInvurnability(_invurnabilityDuration));
+
+            if (giveDamage)
+                OnDamage.Invoke(from);
         }
 
         /// <summary>
@@ -335,8 +351,10 @@ namespace Health
         /// <param name="health">Amount to heal</param>
         public void Heal(float health)
         {
-            HealthAmount += health;
-            OnHealEvent.Invoke();
+            var oldHealth = HealthAmount;
+            HealthAmount = Mathf.Clamp(HealthAmount + health,_healthInterval.x,MaxHealth);
+            if(HealthAmount != oldHealth)
+                OnHealEvent.Invoke();
         }
 
         /// <summary>
@@ -344,7 +362,7 @@ namespace Health
         /// </summary>
         public void CheckHealth()
         {
-            bool gotKilled = HealthAmount <= _healthInterval.x;
+            bool gotKilled = HealthAmount <= HealthInterval.x;
 
             if (!IsDead && gotKilled)
             {
@@ -373,7 +391,7 @@ namespace Health
         public void Kill()
         {
             IsDead = true;
-            HealthAmount = _healthInterval.x;
+            HealthAmount = HealthInterval.x;
             Destroy(_responsibleGameObject ? _responsibleGameObject : gameObject);
 
         }
@@ -424,7 +442,7 @@ namespace Health
         /// </summary>
         public bool WouldKill(float damage)
         {
-            return HealthAmount - damage <= _healthInterval.x;
+            return HealthAmount - damage <= HealthInterval.x;
         }
     }
 }

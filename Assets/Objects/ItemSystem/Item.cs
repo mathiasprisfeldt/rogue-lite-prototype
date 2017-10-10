@@ -1,6 +1,4 @@
 ﻿using Health;
-using InControl;
-using Managers;
 using RogueLiteInput;
 using System;
 using System.Linq;
@@ -9,7 +7,7 @@ using Timer = AcrylecSkeleton.Utilities.Timer;
 
 namespace ItemSystem
 {
-    public enum ItemType { Passive, Active }
+    public enum ItemType { None, Passive, Active }
     public enum ItemSlave { Master, Slave }
 
     /// <summary>
@@ -24,14 +22,28 @@ namespace ItemSystem
         [SerializeField]
         private ItemType _type;
 
+        [SerializeField]
+        private string _name;
+
+        [SerializeField]
+        private string _description;
+
+        [SerializeField]
+        private Sprite _icon;
         protected ItemSlave _slaveState;
 
         public ProxyPlayerAction ActivationAction { get; set; }
         public ItemHandler ItemHandler { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public Sprite Icon { get; set; }
+        public string Name { get { return _name; } }
+        public string Description { get { return _description; } }
+        public Sprite Icon
+        {
+            get { return _icon; }
+            set { _icon = value; }
+        }
+
         public Item Other { get; set; }
+        public ParticleSystem _particleSystem { get; set; }
 
         public ItemType Type
         {
@@ -70,11 +82,32 @@ namespace ItemSystem
             }
         }
 
-        public void Remove()
+        /// <summary>
+        /// Removes this item from its itemhandler.
+        /// </summary>
+        /// <param name="replacement">This item will be the replacement in the item handler.</param>
+        public void RemoveSelf(Item replacement = null)
         {
+            if (!ItemHandler)
+                return;
+
+            var ourself = ItemHandler.Items.Find(this);
+
             //If we havent removed this Item from its ItemHandler do so.
-            if (ItemHandler && ItemHandler.Items.Contains(this))
-                ItemHandler.Items.Remove(this);
+            if (ourself != null)
+            {
+                OnUnEquipped();
+
+                if (replacement)
+                {
+                    replacement.RemoveSelf();
+                    ourself.Value = replacement;
+                }
+                else
+                {
+                    ItemHandler.Items.Remove(ourself);
+                }
+            }
         }
 
         /// <summary>
@@ -87,9 +120,6 @@ namespace ItemSystem
         /// </summary>
         public virtual void OnEquipped()
         {
-            ItemHandler.ItemEquipped.Invoke(this);
-
-
             foreach (var item in ItemHandler.Items)
             {
                 if (item != this && item.GetType() == GetType())
@@ -100,6 +130,23 @@ namespace ItemSystem
                     item.DoubleUp();
                 }
             }
+
+            _particleSystem = GetComponent<ParticleSystem>();
+            if (_particleSystem)
+                _particleSystem.Play();
+
+            ItemHandler.Owner.HealthController.OnDead.AddListener(OnDead);
+
+            if (ItemHandler && ItemHandler.ItemEquipped != null)
+                ItemHandler.ItemEquipped.Invoke(this);
+        }
+
+        protected virtual void OnDead()
+        {
+            if (_particleSystem)
+                _particleSystem.Stop();
+
+            DoubleDown();
         }
 
         protected virtual void DoubleUp() { }
@@ -111,7 +158,10 @@ namespace ItemSystem
         /// </summary>
         public virtual void OnUnEquipped()
         {
-            ItemHandler.ItemUnEquipped.Invoke(this);
+            if (ItemHandler && ItemHandler.ItemUnEquipped != null)
+                ItemHandler.ItemUnEquipped.Invoke(this);
+
+            ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
 
             if (Other)
                 Other.DoubleDown();
@@ -134,7 +184,9 @@ namespace ItemSystem
 
         protected virtual void OnDestroy()
         {
-            Remove();
+            if (ItemHandler)
+                ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
+            RemoveSelf();
             CooldownTimer.Destroy();
         }
     }

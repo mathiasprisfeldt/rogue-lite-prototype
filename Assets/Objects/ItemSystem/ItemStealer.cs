@@ -29,6 +29,9 @@ public class ItemStealer : MonoBehaviour, IEventListener<Collider2D>
 
     void Update()
     {
+        if (_currentVictim && !_currentVictim.ItemHandler.Items.Any())
+            ForgetVictim();
+
         //If we're the player, we pressed attack and we got a victim.
         if (_itemHandler.Owner is ActionsController &&
             GameManager.Instance.Player.C.PlayerActions.Interact.WasPressed &&
@@ -57,9 +60,9 @@ public class ItemStealer : MonoBehaviour, IEventListener<Collider2D>
                 {
                     ItemHandler handler = d.GetComponent<CollisionCheck>().Character.ItemHandler;
                     if (handler)
-                        return handler.CanStealFrom;
-                    else
-                        return false;
+                        return handler.CanStealFrom && _itemHandler.CanCarry(handler);
+
+                    return false;
                 });
 
                 if (closests.Any() && (bestCandidate && bestCandidate != _victimCol))

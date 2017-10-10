@@ -1,5 +1,6 @@
 ﻿using AcrylecSkeleton.ModificationSystem;
 using AcrylecSkeleton.Utilities;
+using CharacterController;
 using Controllers;
 using Enemy;
 using Health;
@@ -19,7 +20,11 @@ namespace ItemSystem.Items
         public override void OnHit(HealthController victim)
         {
             base.OnHit(victim);
-            victim.Character.GetComponent<EnemyController>().Stun(_stunTime);
+
+            if (!(victim.Character is ActionsController))
+                victim.Character.GetComponent<EnemyController>().Stun(_stunTime);
+
+            //Cannot stun player
         }
     }
 }

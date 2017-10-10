@@ -122,7 +122,7 @@ namespace RogueLiteInput
 
             RawHorizontal = CreateOneAxisPlayerAction(LeftInput, RightInput);
             RawVertical = CreateOneAxisPlayerAction(DownInput, UpInput);
-            ProxyInputActions = new ProxyInputActions();
+            ProxyInputActions = new ProxyInputActions(this);
 
             //Keyboard inputs
             //Left keyboard
@@ -218,7 +218,7 @@ namespace RogueLiteInput
 
         public void UpdateProxy()
         {
-            ProxyInputActions.UpdateData(this);
+            ProxyInputActions.UpdateData();
         }
 
         public void ResetProxy()
@@ -237,12 +237,19 @@ namespace RogueLiteInput
         public bool IsPressed { get; set; }
         public bool WasRepeated { get; set; }
 
-        public void UpdateData(PlayerAction action)
+        public PlayerAction Action { get; set; }
+
+        public ProxyPlayerAction(PlayerAction action)
         {
-            WasPressed = WasPressed || action.WasPressed;
-            WasReleased = WasReleased || action.WasReleased;
-            IsPressed = action.IsPressed;
-            WasRepeated = WasRepeated || action.WasRepeated;
+            Action = action;
+        }
+
+        public void UpdateData()
+        {
+            WasPressed = WasPressed || Action.WasPressed;
+            WasReleased = WasReleased || Action.WasReleased;
+            IsPressed = Action.IsPressed;
+            WasRepeated = WasRepeated || Action.WasRepeated;
             _wasreset = false;
         }
 
@@ -279,36 +286,49 @@ namespace RogueLiteInput
             get{ return _proxyActions.Any(proxyPlayerAction => proxyPlayerAction.WasPressed); }
         }
 
-        public ProxyInputActions()
+        public ProxyInputActions(InputActions actions)
         {
-            Jump = new ProxyPlayerAction();
-            Dash = new ProxyPlayerAction();
-            Attack = new ProxyPlayerAction();
-            Special1 = new ProxyPlayerAction();
-            Special2 = new ProxyPlayerAction();
-            Up = new ProxyPlayerAction();
-            Down = new ProxyPlayerAction();
-            Left = new ProxyPlayerAction();
-            Right = new ProxyPlayerAction();
-            Sprint = new ProxyPlayerAction();
-            Interact = new ProxyPlayerAction();
+            Jump = new ProxyPlayerAction(actions.Jump);
+            Dash = new ProxyPlayerAction(actions.Dash);
+            Attack = new ProxyPlayerAction(actions.Attack);
+            Special1 = new ProxyPlayerAction(actions.Special1);
+            Special2 = new ProxyPlayerAction(actions.Special2);
+            Up = new ProxyPlayerAction(actions.UpInput);
+            Down = new ProxyPlayerAction(actions.DownInput);
+            Left = new ProxyPlayerAction(actions.LeftInput);
+            Right = new ProxyPlayerAction(actions.RightInput);
+            Sprint = new ProxyPlayerAction(actions.Sprint);
+            Interact = new ProxyPlayerAction(actions.Interact);
 
-            _proxyActions = new List<ProxyPlayerAction>() {Jump,Dash,Attack,Special,Up,Down,Left,Right,Sprint};
+            _proxyActions = new List<ProxyPlayerAction>()
+            {
+                Jump,
+                Dash,
+                Attack,
+                Special1,
+                Special2,
+                Up,
+                Down,
+                Left,
+                Right,
+                Sprint,
+                Interact
+            };
         }
 
-        public void UpdateData(InputActions actions)
+        public void UpdateData()
         {
-            Jump.UpdateData(actions.Jump);
-            Dash.UpdateData(actions.Dash);
-            Attack.UpdateData(actions.Attack);
-            Special1.UpdateData(actions.Special1);
-            Special2.UpdateData(actions.Special2);
-            Up.UpdateData(actions.UpInput);
-            Down.UpdateData(actions.DownInput);
-            Left.UpdateData(actions.LeftInput);
-            Right.UpdateData(actions.RightInput);
-            Sprint.UpdateData(actions.Sprint);
-            Interact.UpdateData(actions.Interact);
+            Jump.UpdateData();
+            Dash.UpdateData();
+            Attack.UpdateData();
+            Special1.UpdateData();
+            Special2.UpdateData();
+            Up.UpdateData();
+            Down.UpdateData();
+            Left.UpdateData();
+            Right.UpdateData();
+            Sprint.UpdateData();
+            Interact.UpdateData();
         }
 
         public void Reset()

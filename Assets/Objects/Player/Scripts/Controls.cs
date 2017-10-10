@@ -11,8 +11,6 @@ namespace Controls
     /// </summary>
     public class Controls : MonoBehaviour 
     {
-        [SerializeField]
-        private GameObject _dash;
 
         [SerializeField]
         private GameObject _special;
@@ -35,7 +33,6 @@ namespace Controls
 
         private void OnAbilityChange()
         {
-            _dash.SetActive(_abilityHandler.GetAbility(HandledAbility.Dash).Active);
             _special.SetActive(_abilityHandler.GetAbility(HandledAbility.Throw).Active);
             _doubleJump.SetActive(_abilityHandler.GetAbility(HandledAbility.DoubleJump).Active);
         }
