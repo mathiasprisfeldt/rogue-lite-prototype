@@ -52,7 +52,9 @@ public class ItemUIHandler : MonoBehaviour, IEventListener<Item>
         switch (eventId)
         {
             case ItemHandler.ON_ITEM_EQUIPPED:
-                PlayerUIItem unusedItemIcon = _playerUiItems.FirstOrDefault(uiItem => uiItem.ItemType == item.Type && !uiItem.Item);
+                PlayerUIItem unusedItemIcon = _playerUiItems.FirstOrDefault(uiItem => uiItem.ItemType == item.Type && 
+                    !uiItem.Item && 
+                    !_playerUiItems.Select(playerUiItem => playerUiItem.Item).Contains(item));
 
                 if (unusedItemIcon)
                 {

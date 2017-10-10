@@ -300,6 +300,21 @@ namespace RogueLiteInput
             Right = new ProxyPlayerAction(actions.RightInput);
             Sprint = new ProxyPlayerAction(actions.Sprint);
             Interact = new ProxyPlayerAction(actions.Interact);
+
+            _proxyActions = new List<ProxyPlayerAction>()
+            {
+                Jump,
+                Dash,
+                Attack,
+                Special1,
+                Special2,
+                Up,
+                Down,
+                Left,
+                Right,
+                Sprint,
+                Interact
+            };
         }
 
         public void UpdateData()

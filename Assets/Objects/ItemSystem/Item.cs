@@ -120,9 +120,6 @@ namespace ItemSystem
         /// </summary>
         public virtual void OnEquipped()
         {
-            if (ItemHandler && ItemHandler.ItemEquipped != null)
-                ItemHandler.ItemEquipped.Invoke(this);
-
             foreach (var item in ItemHandler.Items)
             {
                 if (item != this && item.GetType() == GetType())
@@ -139,7 +136,9 @@ namespace ItemSystem
                 _particleSystem.Play();
 
             ItemHandler.Owner.HealthController.OnDead.AddListener(OnDead);
-            ItemHandler.ItemEquipped.Invoke(this);
+
+            if (ItemHandler && ItemHandler.ItemEquipped != null)
+                ItemHandler.ItemEquipped.Invoke(this);
         }
 
         protected virtual void OnDead()
