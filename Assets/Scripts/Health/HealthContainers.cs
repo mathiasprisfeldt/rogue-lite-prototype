@@ -70,7 +70,6 @@ public class HealthContainers : MonoBehaviour
     private void UpdateHealthbar()
     {
         var temp = MathUtils.RoundToNearest(_healthController.HealthAmount, 2);
-        float backgroundXSize = 0;
 
         if (_healthController.MaxHealth < _healthContainers.Count)
         {

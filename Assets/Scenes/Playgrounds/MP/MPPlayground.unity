@@ -6498,7 +6498,7 @@ Prefab:
         type: 2}
       propertyPath: _itemsAtStart.Array.data[0]
       value: 
-      objectReference: {fileID: 114634305877895132, guid: e7801b044e8e7794a839b1631dd56ffc,
+      objectReference: {fileID: 114221420086673964, guid: 587bd346537c72743a5a64f07e3738bf,
         type: 2}
     - target: {fileID: 1941947165937198, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
       propertyPath: m_Name
@@ -8899,6 +8899,63 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 61862504811616390, guid: 4052246ce7645ba4cafddf1a4ca138eb,
     type: 2}
   m_PrefabInternal: {fileID: 1374783688}
+--- !u!1001 &1379351855
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4079732551403322, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -4.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079732551403322, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079732551403322, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079732551403322, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079732551403322, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079732551403322, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079732551403322, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079732551403322, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114381869662297512, guid: 809488f2488c7dc40af663109671b8b5,
+        type: 2}
+      propertyPath: _healthAmount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114516529732688864, guid: 809488f2488c7dc40af663109671b8b5,
+        type: 2}
+      propertyPath: _itemsAtStart.Array.data[0]
+      value: 
+      objectReference: {fileID: 114655605774163738, guid: d088551c386684f4b807674140e43335,
+        type: 2}
+    - target: {fileID: 1941947165937198, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
+      propertyPath: m_Name
+      value: Flinger (3)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 809488f2488c7dc40af663109671b8b5, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1379470982
 GameObject:
   m_ObjectHideFlags: 0
@@ -12579,6 +12636,7 @@ MonoBehaviour:
   _character: {fileID: 2036677480}
   _uiParent: {fileID: 1921884385}
   _owner: {fileID: 2036677480}
+  _canCarryMultipleAbilities: 0
   _itemsAtStart: []
   _popupOffset: {x: 0, y: 0}
   _maxPassives: 2

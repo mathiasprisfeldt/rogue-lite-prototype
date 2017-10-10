@@ -12,9 +12,6 @@ namespace ItemSystem.UI
     /// </summary>
     public class ItemStealMenu : MonoBehaviour
     {
-        private ProxyPlayerAction _leftAction;
-        private ProxyPlayerAction _rightAction;
-
         private ItemHandler _context;
 
         [SerializeField]
@@ -36,13 +33,13 @@ namespace ItemSystem.UI
             Item oldItem = null;
             ItemStealIcon oldItemIcon = null;
 
-            if (_leftAction != null && _leftAction.Action.WasPressed)
+            if (GameManager.Instance.Player.C.PlayerActions.ProxyInputActions.Special1.Action.WasPressed)
             {
                 oldItem = _left.Item;
                 oldItemIcon = _left;
             }
 
-            if (_rightAction != null && _rightAction.Action.WasPressed)
+            if (GameManager.Instance.Player.C.PlayerActions.ProxyInputActions.Special2.Action.WasPressed)
             {
                 oldItem = _right.Item;
                 oldItemIcon = _right;
@@ -75,9 +72,6 @@ namespace ItemSystem.UI
                 _right.gameObject.SetActive(false);
 
             _new.SetItem(newItem);
-
-            _leftAction = _left.Item.ActivationAction;
-            _rightAction = _right.Item.ActivationAction;
         }
 
         /// <summary>

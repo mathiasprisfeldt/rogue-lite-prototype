@@ -60,9 +60,9 @@ public class ItemStealer : MonoBehaviour, IEventListener<Collider2D>
                 {
                     ItemHandler handler = d.GetComponent<CollisionCheck>().Character.ItemHandler;
                     if (handler)
-                        return handler.CanStealFrom;
-                    else
-                        return false;
+                        return handler.CanStealFrom && _itemHandler.CanCarry(handler);
+
+                    return false;
                 });
 
                 if (closests.Any() && (bestCandidate && bestCandidate != _victimCol))

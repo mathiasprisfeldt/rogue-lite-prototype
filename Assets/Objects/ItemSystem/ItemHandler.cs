@@ -40,6 +40,9 @@ namespace ItemSystem
 
         [Space, Header("Settings:")]
         [SerializeField]
+        private bool _canCarryMultipleAbilities;
+
+        [SerializeField]
         private List<Item> _itemsAtStart;
 
         [SerializeField]
@@ -257,6 +260,29 @@ namespace ItemSystem
                 default:
                     return false;
             }
+        }
+
+        /// <summary>
+        /// Can this ItemHandler carry anything from target ItemHandler?
+        /// Uses <see cref="_canCarryMultipleAbilities"/>
+        /// </summary>
+        public bool CanCarry(ItemHandler target)
+        {
+            bool canCarry = true;
+
+            //If we cant carry multiple abilities check if we already have an item we want to steal.
+            if (!_canCarryMultipleAbilities)
+            {
+                IEnumerable<string> itemNames = target.Items
+                    .Where(item => item.Type == ItemType.Active)
+                    .Select(item1 => item1.Name);
+
+                foreach (Item item in Items)
+                    if (item.Type == ItemType.Active)
+                        canCarry &= !itemNames.Contains(item.Name);
+            }
+
+            return canCarry;
         }
     }
 }
