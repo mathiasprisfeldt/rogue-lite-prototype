@@ -87,7 +87,7 @@ public class HealthContainers : MonoBehaviour
             if (_healthContainers.Count <= i || _healthContainers[i] == null)
             {
                 GameObject newHearth = Instantiate(_hearth, _layout.transform);
-                if (_healthContainers[i] == null)
+                if (_healthContainers.Count > i && _healthContainers[i] == null)
                     _healthContainers[i] = newHearth.GetComponent<Image>();
                 else
                     _healthContainers.Add(newHearth.GetComponent<Image>());
