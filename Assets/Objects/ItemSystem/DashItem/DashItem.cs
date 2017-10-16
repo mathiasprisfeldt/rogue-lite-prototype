@@ -20,11 +20,11 @@ namespace ItemSystem
             base.OnEquipped();
 
             ActionsController ac = ItemHandler.Owner as ActionsController;
-            
+
             if (ac)
             {
                 ac.AbilityHandler.UnlockAbility(HandledAbility.Dash);
-                (ac.AbilityHandler.GetAbility(HandledAbility.Dash) as Dash).Item = this;
+                (ac.AbilityHandler.GetAbility(HandledAbility.Dash) as Dash).Items.Add(this);
             }
             else
             {
@@ -48,7 +48,11 @@ namespace ItemSystem
             switch (state)
             {
                 case ItemState.player:
-                    (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(HandledAbility.Dash, false);
+                    var ac =
+
+                    (ItemHandler.Owner as ActionsController);
+                    ac.AbilityHandler.UnlockAbility(HandledAbility.Dash, false);
+                    (ac.AbilityHandler.GetAbility(HandledAbility.Dash) as Dash).Items.Remove(this);
                     break;
                 case ItemState.enemy:
                     _enemyDash.DashItem = null;

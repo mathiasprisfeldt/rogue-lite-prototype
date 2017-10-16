@@ -2,6 +2,8 @@
 using CharacterController;
 using ItemSystem;
 using Projectiles;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Special
@@ -26,7 +28,10 @@ namespace Special
 
         private bool _throwActive;
 
-        public ShootItem Item;
+        private List<ShootItem> items = new List<ShootItem>();
+
+        public List<ShootItem> Items { get { return items; } }
+        public ShootItem CurrentItem { get; set; }
 
         public bool KnifeActive
         {
@@ -37,12 +42,23 @@ namespace Special
                 var throwOnWAll = _actionsController.TriggerCheck.Sides.Left && _actionsController.LastHorizontalDirection < 0
                     || _actionsController.TriggerCheck.Sides.Right && _actionsController.LastHorizontalDirection > 0;
 
-                if (Item && Item.ActivationAction != null && Item.ActivationAction.WasPressed &&
-                    !Item.CooldownTimer.IsRunning && _actionsController.LastUsedCombatAbility == CombatAbility.None
+                bool input = false;
+
+                if (Items.Any())
+                {
+                    ShootItem tempItem = Items.FirstOrDefault(x => x.ActivationAction != null && x.ActivationAction.WasPressed && !x.CooldownTimer.IsRunning);
+                    if (tempItem)
+                    {
+                        input = true;
+                        CurrentItem = tempItem;
+                    }
+                }
+
+                if (input && _actionsController.LastUsedCombatAbility == CombatAbility.None
                     && !throwOnWAll)
                 {
                     _throwActive = true;
-                    Item.CooldownTimer.StartTimer();
+                    CurrentItem.CooldownTimer.StartTimer();
                     _actionsController.StartGrenade.Value = true;
                     Throw();
                     if (_actionsController.Horizontal != 0)

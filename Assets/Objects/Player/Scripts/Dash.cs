@@ -26,8 +26,10 @@ namespace CharacterController
         private float _damage;
 
         public bool InitialDash { get; set; }
-        public DashItem Item { get; set; }
+        public DashItem CurrentItem { get; set; }
+        public List<DashItem> Items { get { return items; } }
 
+        private List<DashItem> items = new List<DashItem>();
         private Trigger _dashTrigger = new Trigger();
         private bool _dashing;
         private float _dashingTimer;
@@ -43,18 +45,26 @@ namespace CharacterController
         {
             get
             {
-                var input = Item &&
-                    Item.ActivationAction != null &&
-                    Item.ActivationAction.WasPressed &&
-                    !Item.CooldownTimer.IsRunning &&
-                    !_dashing;
+                bool input = false;
+
+                if (Items.Any())
+                {
+                    DashItem tempItem = Items.FirstOrDefault(x => x.ActivationAction != null && x.ActivationAction.WasPressed && !x.CooldownTimer.IsRunning);
+                    if (tempItem)
+                    {
+                        input = !_dashing;
+
+                        if (input)
+                            CurrentItem = tempItem;
+                    }
+                }
 
                 InitialDash = false;
 
                 if (!base.HorizontalActive)
                     return false;
 
-                if ((input && _canDash || _dashing) && !Item.CooldownTimer.IsRunning && !_actionsController.Combat)
+                if ((input && _canDash || _dashing) && !_actionsController.Combat && CurrentItem && !CurrentItem.CooldownTimer.IsRunning)
                 {
                     if (input)
                     {
@@ -146,7 +156,8 @@ namespace CharacterController
                 velocity = _oldVelocity;
                 _dashing = false;
                 _dashTrigger.Value = true;
-                Item.CooldownTimer.StartTimer();
+                if (CurrentItem)
+                    CurrentItem.CooldownTimer.StartTimer();
                 _dirtyColls = new List<Character>();
             }
             else

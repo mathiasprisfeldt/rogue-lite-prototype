@@ -28,7 +28,7 @@ namespace ItemSystem
             base.OnEquipped();
 
             ActionsController ac = ItemHandler.Owner as ActionsController;
-            
+
             if (ac)
             {
                 (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(
@@ -37,9 +37,13 @@ namespace ItemSystem
                         HandledAbility.Grenade);
 
                 if (_throwType == ThrowType.Throw)
-                    (ac.AbilityHandler.GetAbility(HandledAbility.Throw) as ThrowProjectile).Item = this;
+                {
+                    (ac.AbilityHandler.GetAbility(HandledAbility.Throw) as ThrowProjectile).Items.Add(this);
+                }
                 else
-                    (ac.AbilityHandler.GetAbility(HandledAbility.Grenade) as ThrowGrenade).Item = this;
+                {
+                    (ac.AbilityHandler.GetAbility(HandledAbility.Grenade) as ThrowGrenade).Items.Add(this);
+                }
             }
             else
             {
@@ -64,10 +68,17 @@ namespace ItemSystem
             switch (_state)
             {
                 case ItemState.player:
-                    (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(
-                    _throwType == ThrowType.Throw ?
+
+                    var ac =
+                    (ItemHandler.Owner as ActionsController);
+                    ac.AbilityHandler.UnlockAbility(_throwType == ThrowType.Throw ?
                      HandledAbility.Throw :
                      HandledAbility.Grenade, false);
+
+                    if (_throwType == ThrowType.Throw)
+                        (ac.AbilityHandler.GetAbility(HandledAbility.Throw) as ThrowProjectile).Items.Remove(this);
+                    else
+                        (ac.AbilityHandler.GetAbility(HandledAbility.Grenade) as ThrowGrenade).Items.Remove(this);
                     break;
                 case ItemState.enemy:
                     _enemyShoot.ShootItem = null;
