@@ -8,7 +8,7 @@ namespace AnimationDestroy
     /// </summary>
     public class AnimationDestroy : MonoBehaviour 
     {
-        public void DestroyObjecy()
+        public void DestroyObject()
         {
             Destroy(gameObject);
         }

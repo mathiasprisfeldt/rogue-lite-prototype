@@ -57,8 +57,6 @@ namespace ItemSystem.Items
             TellMeWhen.Seconds(_trapImmuneDuration,this);
             _shieldCooldownTimer = _shieldCooldown;
             DestroyShield();
-            _shieldObject = null;
-
         }
 
         private void Update()
@@ -97,6 +95,7 @@ namespace ItemSystem.Items
             Animator shieldAnimator = _shieldObject.GetComponent<Animator>();
             if (shieldAnimator)
                 shieldAnimator.SetTrigger("Destroy");
+
         }
 
         public void OnTimesUp(int id, object args)
