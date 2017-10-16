@@ -52,8 +52,6 @@ namespace ItemSystem.Items
 
         private void OnNonDamage(Character arg0)
         {
-            ItemHandler.Owner.HealthController.IsInvurnable = false;
-            ItemHandler.Owner.HealthController.TrapImmune = true;
             TellMeWhen.Seconds(_trapImmuneDuration,this);
             _shieldCooldownTimer = _shieldCooldown;
             DestroyShield();
@@ -100,7 +98,7 @@ namespace ItemSystem.Items
 
         public void OnTimesUp(int id, object args)
         {
-            ItemHandler.Owner.HealthController.TrapImmune = false;
+            ItemHandler.Owner.HealthController.IsInvurnable = false;
         }
     }
 }
