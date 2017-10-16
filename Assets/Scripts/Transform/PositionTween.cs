@@ -1,7 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using InControl;
+using Managers;
+using UnityEngine;
+using UnityEngine.Events;
 
 public class PositionTween : MonoBehaviour
 {
+    [Serializable]
+    public class InputChange : UnityEvent<BindingSourceType> { }
+
     private float _timer;
 
     [SerializeField]

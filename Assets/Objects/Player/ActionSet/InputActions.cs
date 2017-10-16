@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using InControl;
+using Managers;
 
 namespace RogueLiteInput
 {
@@ -107,6 +110,11 @@ namespace RogueLiteInput
         }
         public InputActions()
         {
+            OnLastInputTypeChanged += type =>
+            {
+                if(GameManager.Instance && GameManager.Instance.InputTypeChange != null)
+                    GameManager.Instance.InputTypeChange.Invoke(type);
+            };
 
             LeftInput = CreatePlayerAction("Left");
             RightInput = CreatePlayerAction("Right");
@@ -226,6 +234,7 @@ namespace RogueLiteInput
             ProxyInputActions.Reset();
         }
 
+        
     }
 
     public class ProxyPlayerAction

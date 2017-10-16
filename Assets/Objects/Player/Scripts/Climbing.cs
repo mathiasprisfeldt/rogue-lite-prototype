@@ -53,7 +53,7 @@ public class Climbing : MovementAbility
                           !_actionsController.OnGround));
 
             var isActive =  input && !_waitForJumpRelease
-                && !_actionsController.Combat|| OnLadder(_actionsController.GroundCollisionCheck) != null 
+                && !_actionsController.Combat || OnLadder(_actionsController.GroundCollisionCheck) != null 
                 && _actionsController.App.C.PlayerActions.Down 
                 && !_actionsController.Combat;
 
@@ -67,9 +67,8 @@ public class Climbing : MovementAbility
             {
                 _climbing = false;
                 isActive = false;
-                _waitForJumpRelease = true;
+                _cooldown = 0.2f;
             }
-
             return (isActive || _climbing) && _cooldown <= 0;
         }
     }
@@ -127,7 +126,7 @@ public class Climbing : MovementAbility
 
     public void Update()
     {
-        if (_actionsController.App.C.PlayerActions.ProxyInputActions.Down.WasReleased &&
+        if (_actionsController.App.C.PlayerActions.ProxyInputActions.AnyWasPressed &&
             _waitForJumpRelease || _actionsController.OnGround)
             _waitForJumpRelease = false;
     }

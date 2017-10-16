@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AcrylecSkeleton.Utilities;
 using Assets.Objects.PlayerMovement.Player.Prefab.Player;
 using Enemy;
+using InControl;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -16,10 +17,13 @@ namespace Managers
     /// </summary>
     public class GameManager : Singleton<GameManager>
     {
+        public class InputChange : UnityEvent<BindingSourceType>{}
+
         private PlayerApplication _player;
 
         private List<EnemyApplication> _enemies = new List<EnemyApplication>();
         public UnityEvent EnemiesChange = new Button.ButtonClickedEvent();
+        public InputChange InputTypeChange = new InputChange();
 
         public int Gold { get; set; }
 

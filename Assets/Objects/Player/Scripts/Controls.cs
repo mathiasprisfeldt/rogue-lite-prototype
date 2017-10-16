@@ -13,9 +13,6 @@ namespace Controls
     {
 
         [SerializeField]
-        private GameObject _special;
-
-        [SerializeField]
         private GameObject _doubleJump;
 
         private AbilityHandler _abilityHandler;
@@ -33,7 +30,6 @@ namespace Controls
 
         private void OnAbilityChange()
         {
-            _special.SetActive(_abilityHandler.GetAbility(HandledAbility.Throw).Active);
             _doubleJump.SetActive(_abilityHandler.GetAbility(HandledAbility.DoubleJump).Active);
         }
 
