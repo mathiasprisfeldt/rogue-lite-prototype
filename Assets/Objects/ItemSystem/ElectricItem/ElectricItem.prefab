@@ -78,6 +78,11 @@ MonoBehaviour:
   _description: Stun your enemies
   _icon: {fileID: 21300000, guid: c582b7509494cd242a46d75c3c584a6c, type: 3}
   _stunTime: 1
+  _shieldCooldown: 3
+  _trapImmuneDuration: 0.3
+  _shieldPrefab: {fileID: 1210044912002358, guid: dcdbceeb1fdf18a449e6bc7916bbd9bb,
+    type: 2}
+  _shieldSpawnOffset: {x: 0, y: 0.1}
 --- !u!198 &198947256035629350
 ParticleSystem:
   m_ObjectHideFlags: 1
