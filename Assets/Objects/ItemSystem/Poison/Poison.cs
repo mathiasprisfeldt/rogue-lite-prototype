@@ -15,12 +15,35 @@ namespace ItemSystem.Items
         [SerializeField]
         private float _onHitDamage = .5f;
 
+        private PoisonTrail _trail;
+
         public float OnHitDamage { get { return _onHitDamage; } }
 
         public override void OnHit(HealthController victim)
         {
             base.OnHit(victim);
             victim.Character.ModificationHandler.AddModification(new PoisonModification(victim, this, "Poison"));
+        }
+
+        public override void OnEquipped()
+        {
+            base.OnEquipped();
+            _trail = GetComponentInChildren<PoisonTrail>();
+            _trail.Owner = this;
+        }
+
+        protected override void DoubleUp()
+        {
+            base.DoubleUp();
+
+            _trail.StartEmmision();
+        }
+
+        protected override void DoubleDown()
+        {
+            base.DoubleDown();
+
+            _trail.StopEmmision();
         }
     }
 
