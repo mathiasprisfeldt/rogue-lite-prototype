@@ -164,7 +164,9 @@ namespace ItemSystem
 
             ItemHandler.Owner.HealthController.OnDead.RemoveListener(OnDead);
 
-            if (Other)
+            if (_slaveState == ItemSlave.Master)
+                DoubleDown();
+            else if (Other)
                 Other.DoubleDown();
         }
 
