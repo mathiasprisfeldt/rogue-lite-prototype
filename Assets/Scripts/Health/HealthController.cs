@@ -108,7 +108,9 @@ namespace Health
         [SerializeField]
         private OnDamageEvent _onDamage;
 
-
+        [SerializeField]
+        private OnDamageEvent _onNonDamage;
+        
         [Header("References:"), Space]
         [SerializeField]
         private Character _character;
@@ -216,6 +218,7 @@ namespace Health
         public bool TrapImmune
         {
             get { return _trapImmune; }
+            set { _trapImmune = value; }
         }
 
         public Vector2 HealthInterval
@@ -228,6 +231,12 @@ namespace Health
         {
             get { return _maxHealth; }
             set { _maxHealth = Mathf.Clamp(value,_healthInterval.x,_healthInterval.y); }
+        }
+
+        public OnDamageEvent OnNonDamage
+        {
+            get { return _onNonDamage; }
+            set { _onNonDamage = value; }
         }
 
         void Awake()
@@ -343,6 +352,8 @@ namespace Health
 
             if (giveDamage)
                 OnDamage.Invoke(from);
+            else
+                OnNonDamage.Invoke(from);
         }
 
         /// <summary>
