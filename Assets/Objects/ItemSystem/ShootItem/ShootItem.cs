@@ -31,6 +31,10 @@ namespace ItemSystem
 
             if (ac)
             {
+                _state = ItemState.player;
+
+                CooldownTimer.ResetTimer();
+
                 (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(
                        _throwType == ThrowType.Throw ?
                         HandledAbility.Throw :

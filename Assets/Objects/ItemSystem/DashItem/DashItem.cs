@@ -13,7 +13,7 @@ namespace ItemSystem
     public class DashItem : Item
     {
         EnemyDash _enemyDash;
-        ItemState state;
+        ItemState _state;
 
         public override void OnEquipped()
         {
@@ -23,8 +23,11 @@ namespace ItemSystem
 
             if (ac)
             {
+                _state = ItemState.player;
                 ac.AbilityHandler.UnlockAbility(HandledAbility.Dash);
                 (ac.AbilityHandler.GetAbility(HandledAbility.Dash) as Dash).Items.Add(this);
+
+                CooldownTimer.ResetTimer();
             }
             else
             {
@@ -35,7 +38,7 @@ namespace ItemSystem
 
                 if (_enemyDash)
                 {
-                    state = ItemState.enemy;
+                    _state = ItemState.enemy;
                     _enemyDash.DashItem = this;
                 }
             }
@@ -45,7 +48,7 @@ namespace ItemSystem
         {
             base.OnUnEquipped();
 
-            switch (state)
+            switch (_state)
             {
                 case ItemState.player:
                     var ac =

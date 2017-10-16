@@ -179,6 +179,9 @@ namespace AcrylecSkeleton.Utilities
         /// <param name="interval"></param>
         public void StartTimer(float duration, float interval)
         {
+            _duration = duration;
+            _interval = interval;
+
             if (!_canOverride && IsRunning)
                 return;
 
@@ -188,6 +191,12 @@ namespace AcrylecSkeleton.Utilities
             IsRunning = true;
             Clock = TimeSpan.Zero;
             Started.Invoke();
+        }
+
+        public void ResetTimer()
+        {
+            IsRunning = false;
+            Clock = TimeSpan.Zero;
         }
 
         public void StartTimer()

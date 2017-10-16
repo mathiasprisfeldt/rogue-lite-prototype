@@ -3406,7 +3406,6 @@ MonoBehaviour:
   _throwForce: 0.002
   _actionsController: {fileID: 114173897078414380}
   _manaCost: 1
-  Item: {fileID: 0}
 --- !u!114 &114124136535018772
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4316,7 +4315,6 @@ MonoBehaviour:
   _throwForce: 0.002
   _actionsController: {fileID: 114173897078414380}
   _manaCost: 1
-  Item: {fileID: 0}
 --- !u!114 &114309314290104366
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4955,7 +4953,6 @@ MonoBehaviour:
   _throwForce: 0.002
   _actionsController: {fileID: 114173897078414380}
   _manaCost: 1
-  Item: {fileID: 0}
 --- !u!114 &114559391345834806
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4972,6 +4969,7 @@ MonoBehaviour:
   _character: {fileID: 114173897078414380}
   _uiParent: {fileID: 224375888665725558}
   _owner: {fileID: 114173897078414380}
+  _canCarryMultipleAbilities: 1
   _itemsAtStart: []
   _popupOffset: {x: 0, y: 0}
   _maxPassives: 2
