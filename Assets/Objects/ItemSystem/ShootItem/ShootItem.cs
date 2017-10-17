@@ -50,7 +50,7 @@ namespace ItemSystem
 
                 if (_enemyShoot)
                 {
-                    _state = ItemState.enemy;
+                    _state = ItemState.Enemy;
                     _enemyShoot.Projectile = _projectile;
                     _enemyShoot.ShootItem = this;
                 }
@@ -63,13 +63,13 @@ namespace ItemSystem
 
             switch (_state)
             {
-                case ItemState.player:
+                case ItemState.Player:
                     (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(
                     _throwType == ThrowType.Throw ?
                      HandledAbility.Throw :
                      HandledAbility.Grenade, false);
                     break;
-                case ItemState.enemy:
+                case ItemState.Enemy:
                     _enemyShoot.ShootItem = null;
                     break;
                 default:

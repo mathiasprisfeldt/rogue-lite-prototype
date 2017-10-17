@@ -1,5 +1,6 @@
 ﻿using AcrylecSkeleton.ModificationSystem;
 using AcrylecSkeleton.Utilities;
+using CharacterController;
 using Controllers;
 using Health;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace ItemSystem.Items
         private float _onHitDamage = .5f;
 
         private PoisonTrail _trail;
+        public ItemState State { get; set; }
 
         public float OnHitDamage { get { return _onHitDamage; } }
 
@@ -27,23 +29,32 @@ namespace ItemSystem.Items
 
         public override void OnEquipped()
         {
+            if (ItemHandler.Owner is ActionsController)
+                State = ItemState.Player;
+            else
+                State = ItemState.Enemy;
+
             base.OnEquipped();
             _trail = GetComponentInChildren<PoisonTrail>();
             _trail.Owner = this;
+
+            _trail.StopEmmision();
         }
 
         protected override void DoubleUp()
         {
             base.DoubleUp();
 
-            _trail.StartEmmision();
+            if (_trail)
+                _trail.StartEmmision();
         }
 
         protected override void DoubleDown()
         {
             base.DoubleDown();
 
-            _trail.StopEmmision();
+            if (_trail)
+                _trail.StopEmmision();
         }
     }
 

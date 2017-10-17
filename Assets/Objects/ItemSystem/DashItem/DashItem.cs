@@ -9,7 +9,7 @@ using Abilitys;
 
 namespace ItemSystem
 {
-    public enum ItemState { player, enemy }
+    public enum ItemState { Player, Enemy }
     public class DashItem : Item
     {
         EnemyDash _enemyDash;
@@ -20,7 +20,7 @@ namespace ItemSystem
             base.OnEquipped();
 
             ActionsController ac = ItemHandler.Owner as ActionsController;
-            
+
             if (ac)
             {
                 ac.AbilityHandler.UnlockAbility(HandledAbility.Dash);
@@ -35,7 +35,7 @@ namespace ItemSystem
 
                 if (_enemyDash)
                 {
-                    state = ItemState.enemy;
+                    state = ItemState.Enemy;
                     _enemyDash.DashItem = this;
                 }
             }
@@ -47,10 +47,10 @@ namespace ItemSystem
 
             switch (state)
             {
-                case ItemState.player:
+                case ItemState.Player:
                     (ItemHandler.Owner as ActionsController).AbilityHandler.UnlockAbility(HandledAbility.Dash, false);
                     break;
-                case ItemState.enemy:
+                case ItemState.Enemy:
                     _enemyDash.DashItem = null;
                     break;
                 default:
