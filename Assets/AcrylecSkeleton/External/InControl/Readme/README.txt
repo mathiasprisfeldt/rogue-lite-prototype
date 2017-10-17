@@ -1,4 +1,4 @@
-## InControl (version 1.6.15 build 9079)
+## InControl (version 1.6.16 build 9118)
 
 Documentation and additional information is available online at:
 http://www.gallantgames.com/incontrol

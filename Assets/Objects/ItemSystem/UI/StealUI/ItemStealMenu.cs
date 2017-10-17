@@ -60,6 +60,7 @@ namespace ItemSystem.UI
         {
             _context = owner;
             _context.Character.LockMovement = true;
+            _context.Character.Rigidbody.velocity = Vector2.zero;
 
             var items = owner.Items.Where(item => item.Type == newItem.Type).ToList();
 

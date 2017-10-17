@@ -87,7 +87,7 @@ namespace CharacterController
                         _dashing = true;
                         _oldVelocity = _actionsController.Rigidbody.velocity;
                         _dashingTimer = _dashDuration;
-                        _canDash = false;
+                        //_canDash = false;
 
                     }
                     _actionsController.HealthController.IsInvurnable = true;

@@ -524,7 +524,7 @@ namespace InControl
 			for (var i = 0; i < deviceCount; i++)
 			{
 				var inputDevice = devices[i];
-				if (inputDevice.LastChangedAfter( ActiveDevice ))
+				if (inputDevice.LastChangedAfter( ActiveDevice ) && !inputDevice.Passive)
 				{
 					ActiveDevice = inputDevice;
 				}

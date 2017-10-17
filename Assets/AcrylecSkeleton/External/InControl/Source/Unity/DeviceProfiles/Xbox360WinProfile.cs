@@ -9,6 +9,9 @@ namespace InControl
 			Name = "Xbox 360 Controller";
 			Meta = "Xbox 360 Controller on Windows";
 
+			DeviceClass = InputDeviceClass.Controller;
+			DeviceStyle = InputDeviceStyle.Xbox360;
+
 			IncludePlatforms = new[] {
 				"Windows"
 			};

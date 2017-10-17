@@ -41,5 +41,7 @@ public class SafetyRespawn : MonoBehaviour
             _character.KnockbackHandler.Clear();
         }
         _character.Rigidbody.velocity = Vector2.zero;
+        //For some reason if you add velocity, then particle system will not break when you move the player
+        _character.Rigidbody.AddForce(Vector2.up * 100f);
     }
 }

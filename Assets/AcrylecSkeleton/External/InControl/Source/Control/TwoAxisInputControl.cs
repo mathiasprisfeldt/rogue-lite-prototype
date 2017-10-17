@@ -18,7 +18,7 @@ namespace InControl
 		public ulong UpdateTick { get; protected set; }
 
 		float sensitivity = 1.0f;
-		float lowerDeadZone = 0.2f;
+		float lowerDeadZone = 0.0f;
 		float upperDeadZone = 1.0f;
 		float stateThreshold = 0.0f;
 

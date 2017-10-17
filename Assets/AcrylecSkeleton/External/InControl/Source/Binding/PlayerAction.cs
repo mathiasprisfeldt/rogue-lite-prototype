@@ -301,6 +301,13 @@
 		}
 
 
+		/// <summary>
+		/// Searches all the bindings on this action to see if any that match
+		/// the provided binding object.
+		/// </summary>
+		/// <returns><c>true</c>, if a matching binding is found on this action, 
+		/// <c>false</c> otherwise.</returns>
+		/// <param name="binding">The BindingSource template to search for.</param>
 		public bool HasBinding( BindingSource binding )
 		{
 			if (binding == null)
@@ -318,7 +325,12 @@
 		}
 
 
-		internal BindingSource FindBinding( BindingSource binding )
+		/// <summary>
+		/// Searches all the bindings on this action to see if any that match
+		/// the provided binding object and, if found, returns it.
+		/// </summary>
+		/// <param name="binding">The BindingSource template to search for.</param>
+		public BindingSource FindBinding( BindingSource binding )
 		{
 			if (binding == null)
 			{
@@ -335,7 +347,16 @@
 		}
 
 
-		internal void FindAndRemoveBinding( BindingSource binding )
+		/// <summary>
+		/// Searches all the bindings on this action to see if any that match
+		/// the provided binding object and, if found, removes it.
+		/// Unlike RemoveBinding, this immediately removes it from the Bindings 
+		/// collection and updates the visible set.
+		/// WARNING: This is unsafe to call unless absolutely sure it won't be 
+		/// called while anything is iterating over the Bindings collection.
+		/// </summary>
+		/// <param name="binding">The BindingSource template to search for.</param>
+		void HardRemoveBinding( BindingSource binding )
 		{
 			if (binding == null)
 			{
@@ -356,7 +377,46 @@
 		}
 
 
-		internal int CountBindingsOfType( BindingSourceType bindingSourceType )
+		/// <summary>
+		/// Searches all the bindings on this action to see if any that match
+		/// the provided binding object and, if found, removes it.
+		/// NOTE: the action is only marked for removal, and is not immediately 
+		/// removed. This is to allow for safe removal during iteration over the 
+		/// Bindings collection.
+		/// </summary>
+		/// <param name="binding">The BindingSource template to search for.</param>
+		public void RemoveBinding( BindingSource binding )
+		{
+			var foundBinding = FindBinding( binding );
+			if (foundBinding != null)
+			{
+				if (foundBinding.BoundTo == this)
+				{
+					foundBinding.BoundTo = null;
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Removes the binding at the specified index from the action.
+		/// Note: the action is only marked for removal, and is not immediately 
+		/// removed. This is to allow for safe removal during iteration over the 
+		/// Bindings collection.
+		/// </summary>
+		/// <param name="index">The index of the BindingSource in the Bindings collection to remove.</param>
+		public void RemoveBindingAt( int index )
+		{
+			if (index < 0 || index >= regularBindings.Count)
+			{
+				throw new InControlException( "Index is out of range for bindings on this action." );
+			}
+
+			regularBindings[index].BoundTo = null;
+		}
+
+
+		int CountBindingsOfType( BindingSourceType bindingSourceType )
 		{
 			var count = 0;
 			var bindingCount = regularBindings.Count;
@@ -372,7 +432,7 @@
 		}
 
 
-		internal void RemoveFirstBindingOfType( BindingSourceType bindingSourceType )
+		void RemoveFirstBindingOfType( BindingSourceType bindingSourceType )
 		{
 			var bindingCount = regularBindings.Count;
 			for (var i = 0; i < bindingCount; i++)
@@ -388,7 +448,7 @@
 		}
 
 
-		internal int IndexOfFirstInvalidBinding()
+		int IndexOfFirstInvalidBinding()
 		{
 			var bindingCount = regularBindings.Count;
 			for (var i = 0; i < bindingCount; i++)
@@ -400,45 +460,6 @@
 			}
 
 			return -1;
-		}
-
-
-		/// <summary>
-		/// Removes the binding from the action.
-		/// Note: the action is only marked for removal, and is not immediately removed. This is
-		/// to allow for safe removal during iteration over the Bindings collection.
-		/// </summary>
-		/// <param name="binding">The BindingSource to remove.</param>
-		public void RemoveBinding( BindingSource binding )
-		{
-			if (binding == null)
-			{
-				return;
-			}
-
-			if (binding.BoundTo != this)
-			{
-				throw new InControlException( "Cannot remove a binding source not bound to this action." );
-			}
-
-			binding.BoundTo = null;
-		}
-
-
-		/// <summary>
-		/// Removes the binding at the specified index from the action.
-		/// Note: the action is only marked for removal, and is not immediately removed. This is
-		/// to allow for safe removal during iteration over the Bindings collection.
-		/// </summary>
-		/// <param name="index">The index of the BindingSource in the Bindings collection to remove.</param>
-		public void RemoveBindingAt( int index )
-		{
-			if (index < 0 || index >= regularBindings.Count)
-			{
-				throw new InControlException( "Index is out of range for bindings on this action." );
-			}
-
-			regularBindings[index].BoundTo = null;
 		}
 
 
@@ -701,7 +722,11 @@
 
 				if (listenOptions.UnsetDuplicateBindingsOnSet)
 				{
-					Owner.RemoveBinding( binding );
+					var actionsCount = Owner.Actions.Count;
+					for (var i = 0; i < actionsCount; i++)
+					{
+						Owner.Actions[i].HardRemoveBinding( binding );
+					}
 				}
 
 				if (!listenOptions.AllowDuplicateBindingsPerSet && Owner.HasBinding( binding ))

@@ -17,6 +17,11 @@ namespace ItemSystem.Items
     /// </summary>
     public class Electric : Item, TellMeWhen.ITimerCallback
     {
+        private enum TellMeWhemType
+        {
+            SpawnShield, Invurnable
+        }
+
         [SerializeField]
         private float _stunTime = .5f;
 
@@ -24,7 +29,7 @@ namespace ItemSystem.Items
         private float _shieldCooldown = 2f;
 
         [SerializeField]
-        private float _trapImmuneDuration = 1f;
+        private float _immuneDuration = 1f;
 
         [SerializeField]
         private GameObject _shieldPrefab;
@@ -34,6 +39,7 @@ namespace ItemSystem.Items
 
         private float _shieldCooldownTimer;
         private GameObject _shieldObject;
+        private bool _onCooldown;
 
         protected override void DoubleUp()
         {
@@ -52,20 +58,12 @@ namespace ItemSystem.Items
 
         private void OnNonDamage(Character arg0)
         {
-            TellMeWhen.Seconds(_trapImmuneDuration,this);
-            _shieldCooldownTimer = _shieldCooldown;
+            if(_onCooldown)
+                return;
+            TellMeWhen.Seconds(_immuneDuration,this, (int)TellMeWhemType.Invurnable);
+            TellMeWhen.Seconds(_shieldCooldown,this, (int)TellMeWhemType.SpawnShield);
             DestroyShield();
-        }
-
-        private void Update()
-        {
-            if (Other && _slaveState == ItemSlave.Master)
-            {
-                if (_shieldCooldownTimer > 0)
-                    _shieldCooldownTimer -= BetterTime.DeltaTime;
-                else if (!ItemHandler.Owner.HealthController.IsInvurnable)
-                    SpawnShield();
-            }
+            _onCooldown = true;
         }
 
         public override void OnHit(HealthController victim)
@@ -83,6 +81,9 @@ namespace ItemSystem.Items
             ItemHandler.Owner.HealthController.IsInvurnable = true;
             _shieldObject = Instantiate(_shieldPrefab, ItemHandler.Owner.transform);
             _shieldObject.transform.localPosition = _shieldSpawnOffset;
+            ShieldBehavior shieldBehavior = _shieldObject.GetComponent<ShieldBehavior>();
+            if (shieldBehavior != null)
+                shieldBehavior.Owner = this;
         }
 
         private void DestroyShield()
@@ -90,15 +91,26 @@ namespace ItemSystem.Items
             if(_shieldObject == null)
                 return;
 
-            Animator shieldAnimator = _shieldObject.GetComponent<Animator>();
-            if (shieldAnimator)
-                shieldAnimator.SetTrigger("Destroy");
+            //Animator shieldAnimator = _shieldObject.GetComponent<Animator>();
+            //if (shieldAnimator)
+            //    shieldAnimator.SetTrigger("Destroy");
 
         }
 
         public void OnTimesUp(int id, object args)
         {
-            ItemHandler.Owner.HealthController.IsInvurnable = false;
+            if (!(Other && _slaveState == ItemSlave.Master))
+                return;
+                switch (id)
+            {
+                case (int)TellMeWhemType.SpawnShield:
+                    SpawnShield();
+                    _onCooldown = false;
+                    break;
+                case (int)TellMeWhemType.Invurnable:
+                    ItemHandler.Owner.HealthController.IsInvurnable = false;
+                    break;
+            }
         }
     }
 }
