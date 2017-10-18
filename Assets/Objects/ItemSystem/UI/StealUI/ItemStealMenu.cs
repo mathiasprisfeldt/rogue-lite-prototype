@@ -25,7 +25,8 @@ namespace ItemSystem.UI
 
         void Update()
         {
-            if (GameManager.Instance.Player.C.PlayerActions.Interact.WasPressed)
+            if (GameManager.Instance.Player.C.PlayerActions.Jump.WasPressed ||
+                Input.GetKeyDown(KeyCode.Escape))
             {
                 Close(true);
             }
@@ -73,6 +74,8 @@ namespace ItemSystem.UI
                 _right.gameObject.SetActive(false);
 
             _new.SetItem(newItem);
+            if (LevelManager.Instance)
+                LevelManager.Instance.EscapeIsActive = false;
         }
 
         /// <summary>
@@ -93,6 +96,9 @@ namespace ItemSystem.UI
 
             if (_context)
                 _context.Character.LockMovement = false;
+
+            if (LevelManager.Instance)
+                LevelManager.Instance.EscapeIsActive = true;
 
             Destroy(gameObject);
         }

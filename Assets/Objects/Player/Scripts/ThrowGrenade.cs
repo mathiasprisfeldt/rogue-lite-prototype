@@ -39,8 +39,8 @@ namespace Special
             {
                 if (!Active)
                     return Active;
-                var throwOnWAll = _actionsController.TriggerCheck.Sides.Left && _actionsController.LastHorizontalDirection < 0
-                    || _actionsController.TriggerCheck.Sides.Right && _actionsController.LastHorizontalDirection > 0;
+                var throwOnWAll = _actionsController.WallSlideCheck.Sides.Left && _actionsController.LastHorizontalDirection < 0
+                    || _actionsController.WallSlideCheck.Sides.Right && _actionsController.LastHorizontalDirection > 0;
 
                 bool input = false;
 

@@ -24,6 +24,9 @@ namespace Projectiles
         [SerializeField, Tooltip("Amount of time in seconds it takes before it kills itself.")]
         private float _timeToLive = 15;
 
+        [SerializeField,Tooltip("if true, then the time to live counter will count in the air")]
+        private bool _destroyInAir = true;
+
         [SerializeField, Tooltip("Should force be set constantly, or with AddForce.")]
         private bool _useConstantForce;
 
@@ -54,6 +57,7 @@ namespace Projectiles
 
         private Vector2 _direction;
         protected bool _used;
+        private float _onGroundTimer;
 
         public UnityEvent OnDestroy { get { return _onDestroy; } }
         public Rigidbody2D RigidBody { get; set; }
@@ -79,7 +83,7 @@ namespace Projectiles
             RigidBody = GetComponent<Rigidbody2D>();
 
             //When times up kill itself.
-            if (_timeToLive > 0)
+            if (_timeToLive > 0 && _destroyInAir)
                 TellMeWhen.Seconds(_timeToLive, this);
         }
 
@@ -136,6 +140,17 @@ namespace Projectiles
         {
             if (TargetCheck(collision.gameObject))
                 Kill();
+        }
+
+        public void OnCollisionStay2D(Collision2D collision)
+        {
+            if (!_destroyInAir)
+            {
+                if (_onGroundTimer < _timeToLive)
+                    _onGroundTimer += Time.deltaTime;
+                else
+                    Kill();
+            }
         }
 
         /// <summary>

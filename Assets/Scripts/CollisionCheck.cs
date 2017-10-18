@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Archon.SwissArmyLib.Events;
+using Archon.SwissArmyLib.Utils.Editor;
 using Controllers;
 using UnityEngine;
 
@@ -28,9 +29,10 @@ public class CollisionCheck : MonoBehaviour
     [SerializeField]
     private Character _character;
 
-    private bool _isDirty;
-
+    [SerializeField]
     private CollisionSides _collisionSides = new CollisionSides();
+
+    private bool _isDirty;
     private List<Collider2D> _collisionColliders = new List<Collider2D>();
     private Collider2D[] _contacts = new Collider2D[30];
     private ContactFilter2D _contactFilter = new ContactFilter2D();
@@ -293,8 +295,30 @@ public class CollisionCheck : MonoBehaviour
     }
 }
 
+[Serializable]
 public class CollisionSides
 {
+    [SerializeField,ReadOnly]
+    private bool top;
+    [SerializeField, ReadOnly]
+    private bool bottom;
+    [SerializeField, ReadOnly]
+    private bool right;
+    [SerializeField, ReadOnly]
+    private bool left;
+
+    [SerializeField, ReadOnly]
+    private List<Collider2D> topColliders;
+    [SerializeField, ReadOnly]
+    private List<Collider2D> bottomColliders;
+    [SerializeField, ReadOnly]
+    private List<Collider2D> rightColliders;
+    [SerializeField, ReadOnly]
+    private List<Collider2D> leftColliders;
+    [SerializeField, ReadOnly]
+    private List<Collider2D> targetColliders;
+    
+
     public enum ColHorizontal
     {
         None,
@@ -312,16 +336,59 @@ public class CollisionSides
     public ColHorizontal ApproxHorizontal { get; set; }
     public ColVertical ApproxVertical { get; set; }
 
-    public bool Top { get; set; }
-    public bool Bottom { get; set; }
-    public bool Right { get; set; }
-    public bool Left { get; set; }
+    public bool Top
+    {
+        get { return top; }
+        set { top = value; }
+    }
 
-    public List<Collider2D> TopColliders { get; set; }
-    public List<Collider2D> BottomColliders { get; set; }
-    public List<Collider2D> RightColliders { get; set; }
-    public List<Collider2D> LeftColliders { get; set; }
-    public List<Collider2D> TargetColliders { get; set; }
+    public bool Bottom
+    {
+        get { return bottom; }
+        set { bottom = value; }
+    }
+
+    public bool Right
+    {
+        get { return right; }
+        set { right = value; }
+    }
+
+    public bool Left
+    {
+        get { return left; }
+        set { left = value; }
+    }
+
+    public List<Collider2D> TopColliders
+    {
+        get { return topColliders; }
+        set { topColliders = value; }
+    }
+
+    public List<Collider2D> BottomColliders
+    {
+        get { return bottomColliders; }
+        set { bottomColliders = value; }
+    }
+
+    public List<Collider2D> RightColliders
+    {
+        get { return rightColliders; }
+        set { rightColliders = value; }
+    }
+
+    public List<Collider2D> LeftColliders
+    {
+        get { return leftColliders; }
+        set { leftColliders = value; }
+    }
+
+    public List<Collider2D> TargetColliders
+    {
+        get { return targetColliders; }
+        set { targetColliders = value; }
+    }
 
     public CollisionSides()
     {

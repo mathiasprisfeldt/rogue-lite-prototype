@@ -39,6 +39,9 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField]
     private List<TextAsset> _randomLevelsHardText;
 
+    [SerializeField]
+    private bool _escapeIsActive = true;
+
     private List<int[,]> _forcedLevels = new List<int[,]>();
     private List<int[,]> _randomLevelsEasy = new List<int[,]>();
     private List<int[,]> _randomLevelsMedium = new List<int[,]>();
@@ -52,6 +55,12 @@ public class LevelManager : Singleton<LevelManager>
     public Level CurrentLevel { get; set; }
     public float SavedPlayerHealth { get; set; }
     public bool SetPlayerHealth { get; set; }
+
+    public bool EscapeIsActive
+    {
+        get { return _escapeIsActive; }
+        set { _escapeIsActive = value; }
+    }
 
 
     /// <summary>
@@ -81,7 +90,7 @@ public class LevelManager : Singleton<LevelManager>
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && EscapeIsActive)
             ResetGame(true);
     }
 
