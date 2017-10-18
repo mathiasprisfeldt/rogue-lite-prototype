@@ -20,8 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4239320667949730}
   - component: {fileID: 114440445277494354}
-  - component: {fileID: 199002151375621472}
-  - component: {fileID: 198947256035629350}
+  - component: {fileID: 199193659501659998}
+  - component: {fileID: 198354336639091876}
   m_Layer: 0
   m_Name: ElectricItem
   m_TagString: Untagged
@@ -83,7 +83,7 @@ MonoBehaviour:
   _shieldPrefab: {fileID: 1210044912002358, guid: dcdbceeb1fdf18a449e6bc7916bbd9bb,
     type: 2}
   _shieldSpawnOffset: {x: 0, y: 0.1}
---- !u!198 &198947256035629350
+--- !u!198 &198354336639091876
 ParticleSystem:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -143,7 +143,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1232454123
+  randomSeed: 33970335
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -233,7 +233,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.20134082, g: 0.45527688, b: 0.5588235, a: 1}
+      maxColor: {r: 0.18549956, g: 0.4344977, b: 0.53676474, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -785,7 +785,7 @@ ParticleSystem:
     m_BurstCount: 0
     m_Bursts: []
   SizeModule:
-    enabled: 1
+    enabled: 0
     curve:
       serializedVersion: 2
       minMaxState: 1
@@ -798,23 +798,17 @@ ParticleSystem:
           time: 0
           value: 0
           inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-        - serializedVersion: 2
-          time: 0.1000839
-          value: 1
-          inSlope: 0.5437806
-          outSlope: 0.5437806
+          outSlope: 1
           tangentMode: 0
         - serializedVersion: 2
           time: 1
-          value: 0
-          inSlope: -2
-          outSlope: -2
+          value: 1
+          inSlope: 1
+          outSlope: 0
           tangentMode: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
-        m_RotationOrder: 0
+        m_RotationOrder: 4
       minCurve:
         serializedVersion: 2
         m_Curve:
@@ -1336,8 +1330,8 @@ ParticleSystem:
     m_Curve:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.8
-      minScalar: 0.5
+      scalar: 0.5
+      minScalar: 0.3
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1674,7 +1668,7 @@ ParticleSystem:
     inWorldSpace: 0
     multiplyDragByParticleSize: 1
     multiplyDragByParticleVelocity: 1
-    dampen: 1
+    dampen: 0
     drag:
       serializedVersion: 2
       minMaxState: 0
@@ -3407,7 +3401,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!199 &199002151375621472
+--- !u!199 &199193659501659998
 ParticleSystemRenderer:
   serializedVersion: 4
   m_ObjectHideFlags: 1
@@ -3422,7 +3416,7 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 26cda5f419f4fe54fa83cfdc667c0324, type: 2}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
