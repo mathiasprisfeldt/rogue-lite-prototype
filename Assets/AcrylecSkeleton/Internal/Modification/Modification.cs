@@ -1,9 +1,19 @@
-﻿using AcrylecSkeleton.Utilities;
+﻿using System;
+using AcrylecSkeleton.Utilities;
+using UnityEngine;
+using Archon.SwissArmyLib.Utils.Editor;
 
 namespace AcrylecSkeleton.ModificationSystem
 {
-    public abstract class Modification
+    [Serializable]
+    public class Modification
     {
+        [SerializeField,ReadOnly]
+        private string _name;
+
+        [SerializeField, ReadOnly]
+        private Timer _timer;
+
         public enum ModificationTypeEnum
         {
             Timed, Infinite
@@ -13,8 +23,18 @@ namespace AcrylecSkeleton.ModificationSystem
         public ModificationHandler ModificationHandler { get; set; }
 
         //Propterties
-        public string Name { get; set; }
-        public Timer Timer { get; set; }
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        public Timer Timer
+        {
+            get { return _timer; }
+            set { _timer = value; }
+        }
+
         public float Value { get; set; }
         public ModificationTypeEnum ModificationType { get; set; }
 

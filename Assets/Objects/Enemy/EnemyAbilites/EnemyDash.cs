@@ -37,8 +37,10 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
     private float _damage;
 
     private bool _isDashing;
+    private bool _isCharging;
     private Vector2 _dashDirection;
     private List<Character> _dirtyCols;
+    private Trigger _dashEnded = new Trigger();
 
     public DashItem DashItem { get; set; }
 
@@ -71,13 +73,15 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
     {
         base.Act(deltaTime);
 
+        Context.M.Character.Flip(_dashDirection.x);
+
         var colls = Context.M.Character.Hitbox.Sides.TargetColliders.Where(x => x.tag.Equals("Player"));
 
         if (colls.Any())
         {
             Character character = colls.FirstOrDefault().GetComponent<CollisionCheck>().Character;
 
-            if (!_dirtyCols.Contains(character))
+            if (_isDashing && !_dirtyCols.Contains(character))
             {
                 character.HealthController.Damage(_damage, from: Context.M.Character, pos: transform.position);
 
@@ -90,16 +94,17 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
     {
         base.Begin();
         _dashDirection = Context.C.ToPlayer.normalized.x > 0 ? new Vector2(1, 0) : new Vector2(-1, 0);
-        _isDashing = true;
         DashItem.Activate();
         TellMeWhen.Seconds(_chargeUp, this, (int)TellMeWhenReason.ChargeUp);
         _dirtyCols = new List<Character>();
         HandleAnimation(true);
+        _isCharging = true;
     }
 
     public void OnDashEnded()
     {
         _isDashing = false;
+        _dashEnded.Value = true;
         Context.M.AttackIndicator.HideIndicator(0.1f);
     }
 
@@ -123,7 +128,7 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
     {
         base.Reason();
 
-        if (!Context.C.Target || (!_isDashing && !_dashTimer.IsRunning))
+        if (_dashEnded.Value)
             ChangeState<EnemyIdle>();
     }
 
@@ -154,6 +159,8 @@ public class EnemyDash : EnemyState, TellMeWhen.ITimerCallback
                 Context.M.Character.MainAnimator.SetTrigger("Attack");
                 _dashTimer.StartTimer();
                 Context.M.AttackIndicator.HideIndicator(0.15f);
+                _isDashing = true;
+                _isCharging = false;
                 break;
         }
 

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Archon.SwissArmyLib.Utils.Editor;
 
 namespace AcrylecSkeleton.ModificationSystem
 {
     public class ModificationHandler : MonoBehaviour
     {
         //The list containing the active modfications
+        [SerializeField,ReadOnly]
         private List<Modification> _activeModifiers = new List<Modification>();
 
         public List<Modification> ActiveModifiers
