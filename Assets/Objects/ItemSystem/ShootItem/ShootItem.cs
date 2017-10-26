@@ -31,7 +31,7 @@ namespace ItemSystem
 
             if (ac)
             {
-                _state = ItemState.player;
+                _state = ItemState.Player;
 
                 CooldownTimer.ResetTimer();
 
@@ -58,7 +58,7 @@ namespace ItemSystem
 
                 if (_enemyShoot)
                 {
-                    _state = ItemState.enemy;
+                    _state = ItemState.Enemy;
                     _enemyShoot.Projectile = _projectile;
                     _enemyShoot.ShootItem = this;
                 }
@@ -71,7 +71,7 @@ namespace ItemSystem
 
             switch (_state)
             {
-                case ItemState.player:
+                case ItemState.Player:
 
                     var ac =
                     (ItemHandler.Owner as ActionsController);
@@ -84,7 +84,7 @@ namespace ItemSystem
                     else
                         (ac.AbilityHandler.GetAbility(HandledAbility.Grenade) as ThrowGrenade).Items.Remove(this);
                     break;
-                case ItemState.enemy:
+                case ItemState.Enemy:
                     _enemyShoot.ShootItem = null;
                     break;
                 default:

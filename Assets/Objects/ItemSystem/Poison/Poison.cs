@@ -1,5 +1,6 @@
 ﻿using AcrylecSkeleton.ModificationSystem;
 using AcrylecSkeleton.Utilities;
+using CharacterController;
 using Controllers;
 using Health;
 using UnityEngine;
@@ -15,12 +16,45 @@ namespace ItemSystem.Items
         [SerializeField]
         private float _onHitDamage = .5f;
 
+        private PoisonTrail _trail;
+        public ItemState State { get; set; }
+
         public float OnHitDamage { get { return _onHitDamage; } }
 
         public override void OnHit(HealthController victim)
         {
             base.OnHit(victim);
             victim.Character.ModificationHandler.AddModification(new PoisonModification(victim, this, "Poison"));
+        }
+
+        public override void OnEquipped()
+        {
+            if (ItemHandler.Owner is ActionsController)
+                State = ItemState.Player;
+            else
+                State = ItemState.Enemy;
+
+            base.OnEquipped();
+            _trail = GetComponentInChildren<PoisonTrail>();
+            _trail.Owner = this;
+
+            _trail.StopEmmision();
+        }
+
+        protected override void DoubleUp()
+        {
+            base.DoubleUp();
+
+            if (_trail)
+                _trail.StartEmmision();
+        }
+
+        protected override void DoubleDown()
+        {
+            base.DoubleDown();
+
+            if (_trail)
+                _trail.StopEmmision();
         }
     }
 
