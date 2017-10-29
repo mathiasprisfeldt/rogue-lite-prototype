@@ -4599,9 +4599,11 @@ MonoBehaviour:
   _playerUiItemParent: {fileID: 224081842238157948}
   _inputImages:
   - Name: Special1
-    Sprite: {fileID: 21300000, guid: 71c44172a41cc7b4b8dbaaeb4566e547, type: 3}
+    KeyboardSprite: {fileID: 21300000, guid: 71c44172a41cc7b4b8dbaaeb4566e547, type: 3}
+    ControllerSprite: {fileID: 21300000, guid: 254d5a0778739714984fef30bfb2e837, type: 3}
   - Name: Special2
-    Sprite: {fileID: 21300000, guid: b4a28e72b07bf3f47b137e030a5fbeb7, type: 3}
+    KeyboardSprite: {fileID: 21300000, guid: b4a28e72b07bf3f47b137e030a5fbeb7, type: 3}
+    ControllerSprite: {fileID: 21300000, guid: bd7647fa3d992464cb9ebbe278de32ec, type: 3}
 --- !u!114 &114357250937730156
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5323,7 +5325,9 @@ MonoBehaviour:
   _icon: {fileID: 114156762113287306}
   _cooldownImage: {fileID: 114481127179870942}
   _cooldownText: {fileID: 114290507246920720}
-  _inputImage: {fileID: 114906102875811796}
+  _controllerIconsParent: {fileID: 0}
+  _keyboardImage: {fileID: 0}
+  _controllerImage: {fileID: 0}
 --- !u!114 &114623797188693894
 MonoBehaviour:
   m_ObjectHideFlags: 1
