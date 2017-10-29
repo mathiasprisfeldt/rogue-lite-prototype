@@ -73,6 +73,7 @@ public class ItemUIHandler : MonoBehaviour, IEventListener<Item>
     public class ItemInputImage
     {
         public string Name;
-        public Sprite Sprite;
+        public Sprite KeyboardSprite;
+        public Sprite ControllerSprite;
     }
 }

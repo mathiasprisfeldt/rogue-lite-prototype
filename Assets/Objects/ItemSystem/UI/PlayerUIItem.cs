@@ -21,7 +21,13 @@ public class PlayerUIItem : MonoBehaviour
     private TextMeshProUGUI _cooldownText;
 
     [SerializeField]
-    private Image _inputImage;
+    private GameObject _controllerIconsParent;
+
+    [SerializeField]
+    private Image _keyboardImage;
+
+    [SerializeField]
+    private Image _controllerImage;
 
     public Item Item { get; set; }
     public ItemType ItemType { get; set; }
@@ -51,7 +57,7 @@ public class PlayerUIItem : MonoBehaviour
     /// </summary>
     public void SetItem(Item item)
     {
-        _inputImage.enabled = item && item.Type != ItemType.Passive;
+        _controllerIconsParent.SetActive(item && item.Type != ItemType.Passive);
 
         if (item)
         {
@@ -67,7 +73,10 @@ public class PlayerUIItem : MonoBehaviour
                 .FirstOrDefault(image => image.Name == item.ActivationAction.Action.Name);
 
             if (inputImage != null)
-                _inputImage.sprite = inputImage.Sprite;
+            {
+                _keyboardImage.sprite = inputImage.KeyboardSprite;
+                _controllerImage.sprite = inputImage.ControllerSprite;
+            }
         }
 
         Item = item;

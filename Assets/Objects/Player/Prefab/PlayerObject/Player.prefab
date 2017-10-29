@@ -5050,9 +5050,7 @@ MonoBehaviour:
   _uiParent: {fileID: 224375888665725558}
   _owner: {fileID: 114173897078414380}
   _canCarryMultipleAbilities: 1
-  _itemsAtStart:
-  - {fileID: 114655605774163738, guid: d088551c386684f4b807674140e43335, type: 2}
-  - {fileID: 114655605774163738, guid: d088551c386684f4b807674140e43335, type: 2}
+  _itemsAtStart: []
   _popupOffset: {x: 0, y: 0}
   _maxPassives: 2
   _maxActives: 2

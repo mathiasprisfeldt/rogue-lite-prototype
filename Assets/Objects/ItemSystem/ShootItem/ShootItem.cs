@@ -73,16 +73,35 @@ namespace ItemSystem
             {
                 case ItemState.Player:
 
-                    var ac =
-                    (ItemHandler.Owner as ActionsController);
-                    ac.AbilityHandler.UnlockAbility(_throwType == ThrowType.Throw ?
-                     HandledAbility.Throw :
-                     HandledAbility.Grenade, false);
+                    var ac = ItemHandler.Owner as ActionsController;
 
-                    if (_throwType == ThrowType.Throw)
-                        (ac.AbilityHandler.GetAbility(HandledAbility.Throw) as ThrowProjectile).Items.Remove(this);
-                    else
-                        (ac.AbilityHandler.GetAbility(HandledAbility.Grenade) as ThrowGrenade).Items.Remove(this);
+                    if (!ac)
+                        return;
+
+                    var shoot = ac.AbilityHandler.GetAbility(HandledAbility.Throw) as ThrowProjectile;
+                    var grenade = ac.AbilityHandler.GetAbility(HandledAbility.Grenade) as ThrowGrenade;
+
+                    bool takeAbility = false;
+
+                    if (_throwType == ThrowType.Throw && shoot)
+                    {
+                        if (shoot.Items.Count <= 1)
+                            takeAbility = true;
+
+                        shoot.Items.Remove(this);
+                    }
+                    else if (grenade)
+                    {
+                        if (grenade.Items.Count <= 1)
+                            takeAbility = true;
+
+                        grenade.Items.Remove(this);
+                    }
+
+                    if (takeAbility)
+                        ac.AbilityHandler.UnlockAbility(_throwType == ThrowType.Throw ?
+                            HandledAbility.Throw :
+                            HandledAbility.Grenade, false);
                     break;
                 case ItemState.Enemy:
                     _enemyShoot.ShootItem = null;

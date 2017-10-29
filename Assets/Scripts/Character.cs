@@ -308,9 +308,6 @@ namespace Controllers
                 return;
             }
 
-            if(Rigidbody.velocity != Vector2.zero)
-                Debug.Log(Rigidbody.velocity);
-
             if (respectMovementSpeed)
             {
                 velocity.x *= MovementSpeed + movementSpeedAddtion;

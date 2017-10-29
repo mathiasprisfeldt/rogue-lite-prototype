@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Controllers;
 using Health;
 using UnityEngine;
@@ -51,11 +52,19 @@ namespace ItemSystem
             switch (_state)
             {
                 case ItemState.Player:
-                    var ac =
+                    var ac = ItemHandler.Owner as ActionsController;
 
-                    (ItemHandler.Owner as ActionsController);
-                    ac.AbilityHandler.UnlockAbility(HandledAbility.Dash, false);
-                    (ac.AbilityHandler.GetAbility(HandledAbility.Dash) as Dash).Items.Remove(this);
+                    if (!ac)
+                        return;
+
+                    var dash = ac.AbilityHandler.GetAbility(HandledAbility.Dash) as Dash;
+                    if (dash)
+                    {
+                        if (dash.Items.Count <= 1)
+                            ac.AbilityHandler.UnlockAbility(HandledAbility.Dash, false);
+
+                        dash.Items.Remove(this);
+                    }
                     break;
                 case ItemState.Enemy:
                     _enemyDash.DashItem = null;

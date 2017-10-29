@@ -228,8 +228,8 @@ namespace ItemSystem
                 Items.AddFirst(newItem);
             }
 
-            //Find a activation action for the new item.
-            if (newItem.ActivationAction == null)
+            //Find a activation action for the new item, if its an activateable.
+            if (newItem.ActivationAction == null && newItem.Type == ItemType.Active)
             {
                 ProxyInputActions inputActions = GameManager.Instance.Player.C.PlayerActions.ProxyInputActions;
                 bool isSpecial1Occupied = Items.Any(item => item.ActivationAction == inputActions.Special1);
@@ -273,13 +273,10 @@ namespace ItemSystem
             //If we cant carry multiple abilities check if we already have an item we want to steal.
             if (!_canCarryMultipleAbilities)
             {
-                IEnumerable<string> itemNames = target.Items
-                    .Where(item => item.Type == ItemType.Active)
-                    .Select(item1 => item1.Name);
-
-                foreach (Item item in Items)
-                    if (item.Type == ItemType.Active)
-                        canCarry &= !itemNames.Contains(item.Name);
+                foreach (Item targetItem in target.Items.Where(item => item.Type == ItemType.Active))
+                {
+                    canCarry &= Items.Count(item1 => item1.name == targetItem.name) >= 2;
+                }
             }
 
             return canCarry;
